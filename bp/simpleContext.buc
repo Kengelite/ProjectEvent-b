@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.contextFile org.eventb.core.configuration="org.eventb.core.fwd;de.prob.symbolic.ctxBase" version="3">
+    <org.eventb.core.carrierSet name="'" org.eventb.core.identifier="Messages"/>
+    <org.eventb.core.carrierSet name="(" org.eventb.core.identifier="Objects"/>
+    <org.eventb.core.carrierSet name=")" org.eventb.core.identifier="Data"/>
+    <org.eventb.core.constant name="*" org.eventb.core.identifier="User"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="true" name="+" org.eventb.core.identifier="PaymentService"/>
+    <org.eventb.core.constant name="," org.eventb.core.identifier="NotiService"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="-" org.eventb.core.identifier="submitPayment_1"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="." org.eventb.core.identifier="paymentDetails_2"/>
+    <org.eventb.core.constant name="8" org.eventb.core.identifier="data_amount"/>
+    <org.eventb.core.axiom name="=" org.eventb.core.label="axm1" org.eventb.core.predicate="partition(Objects, {User}, {PaymentService}, {NotiService})"/>
+    <org.eventb.core.axiom name="&gt;" org.eventb.core.label="axm2" org.eventb.core.predicate="partition(Messages, {submitPayment_1}, {paymentDetails_2}, {processLargePayment_3}, {approvalRequired_4}, {ProcessStandarddPayment_5}, {paymentConfirmation_6}, {validatePayment_7}, {validationResult_8}, {sendSMSNotification_9}, {sendEmailNotification_10}, {paymentStatus_11})"/>
+    <org.eventb.core.axiom name="?" org.eventb.core.label="axm3" org.eventb.core.predicate="partition(Data, {data_amount}, {success}, {transactionID})"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="@" org.eventb.core.identifier="processLargePayment_3"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="A" org.eventb.core.identifier="approvalRequired_4"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="B" org.eventb.core.identifier="ProcessStandarddPayment_5"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="C" org.eventb.core.identifier="paymentConfirmation_6"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="D" org.eventb.core.identifier="validatePayment_7"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="E" org.eventb.core.identifier="validationResult_8"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="F" org.eventb.core.identifier="sendSMSNotification_9"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="G" org.eventb.core.identifier="sendEmailNotification_10"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="H" org.eventb.core.identifier="paymentStatus_11"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="true" name="I" org.eventb.core.identifier="success"/>
+    <org.eventb.core.constant de.prob.symbolic.symbolicAttribute="false" name="J" org.eventb.core.identifier="transactionID"/>
+</org.eventb.core.contextFile>
