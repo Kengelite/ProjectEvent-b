@@ -18,6 +18,15 @@ def _data_map(m, data):
     return ", ".join(f"{m} ↦ {d}" for d in _data_items(data))
 
 
+def _partition(set_name, elements):
+    """Enumerated-set axiom that also asserts every element is distinct.
+    Empty element list degrades to `set_name = ∅` (matches rodin_exporter)."""
+    if not elements:
+        return f"{set_name} = ∅"
+    parts = ", ".join(f"{{{e}}}" for e in elements)
+    return f"partition({set_name}, {parts})"
+
+
 def generate_step_events(edges, time_model=None):
     events = []
     for i, edge in enumerate(edges, 1):
@@ -161,18 +170,19 @@ def apply_rules_1_and_2(xml_path: str, version: int = 1) -> str:
     enum_const_line = f"\n    {', '.join(enum_consts)}" if enum_consts else ""
     enum_axioms = "".join(f"\n    axm{4 + j}: {ev} = {j}" for j, ev in enumerate(enum_consts))
 
+    # Only message instances are declared as constants — raw message names are
+    # unused by the machine (kept out to match the exported .buc).
     return f"""CONTEXT {context_name}
 SETS
     Objects; Messages; DataMessages
 CONSTANTS
     {", ".join(objects)}
-    {", ".join(raw_messages)}
     {", ".join(msg_instances)}
     {", ".join(data_messages) if data_messages else "/* No Data */"}{enum_const_line}
 AXIOMS
-    axm1: Objects = {{ {", ".join(objects)} }}
-    axm2: Messages = {{ {", ".join(raw_messages + msg_instances)} }}
-    axm3: DataMessages = {{ {", ".join(data_messages) if data_messages else ""} }}{enum_axioms}
+    axm1: {_partition("Objects", objects)}
+    axm2: {_partition("Messages", msg_instances)}
+    axm3: {_partition("DataMessages", data_messages)}{enum_axioms}
 END
 
 MACHINE {machine_name}
