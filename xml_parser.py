@@ -557,9 +557,11 @@ def build_frag_vars(conditions, fragments):
             enum_consts.add(rhs)
             frag_vars[name] = {'op': op, 'val': rhs, 'kind': 'enum'}
     for f in fragments:
-        if f['type'] == 'loop' and 'retry' not in frag_vars:
-            frag_vars['retry'] = {'op': '=', 'val': '0', 'kind': 'int'}
-        elif f['type'] == 'par':
+        # Loop counters are added later from build_loop_model() using the real
+        # annotation variable name (e.g. RetryCount), so we must NOT inject a
+        # hardcoded 'retry' here — that produced a dead, unused variable whenever
+        # the loop was annotated with any name other than "retry".
+        if f['type'] == 'par':
             pv = f"par_{f['id'].replace('par', '')}"
             if pv not in frag_vars:
                 frag_vars[pv] = {'op': '=', 'val': '0', 'kind': 'int'}
