@@ -290,17 +290,27 @@ def _build_machine_bum(machine_name, context_name, all_vars, frag_vars, edges, f
             child += 1
         lines.append('</org.eventb.core.event>')
 
-    # checkloop_* events — count the loop rounds (grd retry < N, act retry := retry + 1)
+    # checkloop_* events — count the loop rounds (grd retry < N, act retry := retry + 1).
+    # Enclosing-fragment guards (e.g. an outer alt's Moisture_v ≥ 720) are conjoined
+    # first per Rule 9 so the counter only ticks inside the branch owning the loop.
     for chk in loop_model["checks"]:
         v, n = chk["var"], chk["bound"]
+        guards = chk.get("guards", [])
         lines.append(f'<org.eventb.core.event name="internal_element{idx}" '
                      f'org.eventb.core.convergence="0" org.eventb.core.extended="false" '
                      f'org.eventb.core.label="{chk["name"]}">')
         idx += 1
-        lines.append(f'  <org.eventb.core.guard name="internal_element1" '
-                     f'org.eventb.core.label="grd1" org.eventb.core.predicate="{_x(f"{v} < {n}")}" '
+        en = 1
+        for g in guards:
+            lines.append(f'  <org.eventb.core.guard name="internal_element{en}" '
+                         f'org.eventb.core.label="grd{en}" org.eventb.core.predicate="{_x(g)}" '
+                         f'org.eventb.core.theorem="false"/>')
+            en += 1
+        lines.append(f'  <org.eventb.core.guard name="internal_element{en}" '
+                     f'org.eventb.core.label="grd{en}" org.eventb.core.predicate="{_x(f"{v} < {n}")}" '
                      f'org.eventb.core.theorem="false"/>')
-        lines.append(f'  <org.eventb.core.action name="internal_element2" '
+        en += 1
+        lines.append(f'  <org.eventb.core.action name="internal_element{en}" '
                      f'org.eventb.core.assignment="{_x(f"{v} ≔ {v} + 1")}" '
                      f'org.eventb.core.label="act1"/>')
         lines.append('</org.eventb.core.event>')

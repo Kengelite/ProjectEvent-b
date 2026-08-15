@@ -206,9 +206,13 @@ def _checkloop_events(loop_model):
     out = ""
     for chk in loop_model["checks"]:
         v, n = chk["var"], chk["bound"]
+        guards = chk.get("guards", [])
+        guard_lines = "".join(f"        grd{i + 1}: {g}\n" for i, g in enumerate(guards))
+        bound_idx = len(guards) + 1
         out += (f"\n    {chk['name']}\n"
                 f"    WHEN\n"
-                f"        grd1: {v} < {n}\n"
+                f"{guard_lines}"
+                f"        grd{bound_idx}: {v} < {n}\n"
                 f"    THEN\n"
                 f"        act1: {v} := {v} + 1\n"
                 f"    END\n")

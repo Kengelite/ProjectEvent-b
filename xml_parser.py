@@ -300,11 +300,17 @@ def extract_detailed_sequence(xml_path: str, return_warnings: bool = False):
         active = sorted(
             [f for f in fragments if (f['y_start'] - 20) <= y_pos <= (f['y_end'] + 20)],
             key=lambda x: x['y_end'] - x['y_start'], reverse=True)
+        # A non-alt fragment annotation (e.g. the loop's [retry < 5]) is also a
+        # "[...]" box; it must NOT be mistaken for an alt branch label when it sits
+        # between the alt condition and a nested message.
+        frag_conds = {f.get('condition', '').strip()
+                      for f in fragments if f['type'] != 'alt' and f.get('condition')}
         conditions = []
         for f in active:
             if f['type'] == 'alt':
                 above = [cb for cb in cond_boxes
-                         if (f['y_start'] - 30) <= cb['y'] <= y_pos + 10]
+                         if (f['y_start'] - 30) <= cb['y'] <= y_pos + 10
+                         and cb['text'].strip() not in frag_conds]
                 conditions.append(above[-1]['text'] if above else (f.get('condition') or ''))
             else:
                 conditions.append(f.get('condition') or '')
@@ -372,10 +378,17 @@ def extract_detailed_sequence(xml_path: str, return_warnings: bool = False):
                         if a['sender'] != a['receiver']
                         and a['sender'] != "Unknown" and a['receiver'] != "Unknown"]
 
-    # Orphan message labels: a standalone text box like "paymentStatus(..) {0..5}"
-    # whose arrow carries no label. Bind it to the nearest value-less arrow.
+    # Orphan message labels: a standalone text box like "paymentStatus(..) {0..5}",
+    # or a *detached* edgeLabel whose parent is not its edge (e.g. parent="1", a
+    # drawio quirk), so the arrow carries no inline label. Bind it to the nearest
+    # value-less arrow.
+    edge_ids = {e.get('id') for e in root.iter('mxCell') if e.get('edge') == '1'}
     for elem in root.iter('mxCell'):
-        if elem.get('edge') == '1' or 'text' not in (elem.get('style', '') or ''):
+        if elem.get('edge') == '1':
+            continue
+        style = elem.get('style', '') or ''
+        is_detached_label = 'edgeLabel' in style and elem.get('parent') not in edge_ids
+        if 'text' not in style and not is_detached_label:
             continue
         raw = clean_html(elem.get('value', '') or '').strip()
         if not raw or raw.startswith('[') or '(' not in raw:
@@ -590,13 +603,25 @@ def build_loop_model(edges, fragments):
             if f['type'] == 'loop' and f['id'] in loops:
                 loops[f['id']]['idxs'].append(idx)
     counters, checks = {}, []
+    frag_by_id = {f['id']: f for f in fragments}
     for lid, d in loops.items():
         if not d['idxs']:
             continue
         counters[d['var']] = d['bound']
         first = min(d['idxs'])
-        checks.append({'name': f"checkloop_{edges[first]['msg']}_{first + 1}_{lid}",
-                       'var': d['var'], 'bound': d['bound']})
+        fe = edges[first]
+        lf = frag_by_id.get(lid, {})
+        ls, le = lf.get('y_start', 0), lf.get('y_end', 0)
+        # Nested fragments: the checkloop counter inherits the guards of fragments
+        # that ENCLOSE the loop (their band contains it) — e.g. an outer alt branch
+        # [Moisture >= 720]. A fragment nested INSIDE the loop (e.g. an alt below a
+        # loop header) must NOT be pulled in, so filter by band containment.
+        enclosing = [c for f, c in zip(fe.get('fragments', []), fe.get('conditions', []))
+                     if f.get('id') != lid and c
+                     and f.get('y_start', le) <= ls and f.get('y_end', ls) >= le]
+        checks.append({'name': f"checkloop_{fe['msg']}_{first + 1}_{lid}",
+                       'var': d['var'], 'bound': d['bound'],
+                       'guards': edge_guard_conditions({'conditions': enclosing})})
     return {'counters': counters, 'checks': checks}
 
 
