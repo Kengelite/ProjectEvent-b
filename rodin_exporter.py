@@ -8,6 +8,7 @@ from xml_parser import (
     extract_fragments_from_xml,
     build_time_model,
     build_loop_model,
+    build_now_bindings,
     build_frag_vars,
     edge_guard_conditions,
     sanitize_conditions,
@@ -114,9 +115,10 @@ def _build_context_buc(context_name, objects, raw_messages, msg_instances, data_
 # ── Machine (.bum) ────────────────────────────────────────────────────────────
 
 def _build_machine_bum(machine_name, context_name, all_vars, frag_vars, edges, fragments,
-                       time_model=None, loop_model=None) -> str:
+                       time_model=None, loop_model=None, now_by_idx=None) -> str:
     time_model = time_model or {"vars": [], "invs": [], "inits": [], "success": {}}
     loop_model = loop_model or {"counters": {}, "checks": []}
+    now_by_idx = now_by_idx or {}
     lines = ['<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
              '<org.eventb.core.machineFile org.eventb.core.configuration="org.eventb.core.fwd" version="5">']
     idx = 1
@@ -282,6 +284,8 @@ def _build_machine_bum(machine_name, context_name, all_vars, frag_vars, edges, f
         if i in time_model["success"]:      # completion time = start + delay
             ts, tt, td = time_model["success"][i]
             racts.append((f'{ts} ≔ {tt} + {td}', f'act{len(racts) + 1}'))
+        for v, expr in now_by_idx.get(i, []):   # named observation: <var> ≔ now
+            racts.append((f'{v} ≔ {expr}', f'act{len(racts) + 1}'))
 
         for assignment, lbl in racts:
             lines.append(f'  <org.eventb.core.action name="internal_element{child}" '
@@ -369,6 +373,13 @@ def generate_rodin_zip(xml_path: str, version: int = 1) -> bytes:
     loop_model = build_loop_model(edges, fragments)
     for v in loop_model["counters"]:            # loop counters start at 0
         frag_vars[v] = {'op': '=', 'val': '0', 'kind': 'counter'}
+    now_bindings = build_now_bindings(edges)    # "<var> = now" → init 0, set at receive
+    for v in now_bindings:
+        if v in frag_vars:
+            frag_vars[v] = {'op': '=', 'val': '0', 'kind': 'counter'}
+    now_by_idx = {}
+    for v, (i, expr) in now_bindings.items():
+        now_by_idx.setdefault(i, []).append((v, expr))
 
     base_vars = ["sentMessages", "sender", "receiver", "receivedMessages",
                  "senderdataMessages", "currentMessage", "receiverdataMessages"]
@@ -377,7 +388,7 @@ def generate_rodin_zip(xml_path: str, version: int = 1) -> bytes:
     buc     = _build_context_buc(context_name, objects, raw_messages, msg_instances,
                                  data_messages, enum_consts)
     bum     = _build_machine_bum(machine_name, context_name, all_vars, frag_vars, edges,
-                                 fragments, time_model, loop_model)
+                                 fragments, time_model, loop_model, now_by_idx)
     project = _build_project_file(project_name)
 
     buf = io.BytesIO()

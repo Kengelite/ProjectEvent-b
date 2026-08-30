@@ -4,6 +4,7 @@ from xml_parser import (
     extract_detailed_sequence,
     build_time_model,
     build_loop_model,
+    build_now_bindings,
     build_frag_vars,
     edge_guard_conditions,
     sanitize_conditions,
@@ -27,7 +28,8 @@ def _partition(set_name, elements):
     return f"partition({set_name}, {parts})"
 
 
-def generate_step_events(edges, time_model=None):
+def generate_step_events(edges, time_model=None, now_by_idx=None):
+    now_by_idx = now_by_idx or {}
     events = []
     for i, edge in enumerate(edges, 1):
         m = f"{edge['msg']}_{i}"
@@ -90,6 +92,10 @@ def generate_step_events(edges, time_model=None):
         if time_model and i in time_model["success"]:
             ts, tt, td = time_model["success"][i]
             receive += f"\n        act{r_idx}: {ts} := {tt} + {td}"
+            r_idx += 1
+        for v, expr in now_by_idx.get(i, []):     # named observation: <var> := now
+            receive += f"\n        act{r_idx}: {v} := {expr}"
+            r_idx += 1
         receive += "\n    END"
 
         events.extend([send, receive])
@@ -117,6 +123,13 @@ def apply_rules_1_and_2(xml_path: str, version: int = 1) -> str:
     loop_model = build_loop_model(edges, fragments)
     for v in loop_model["counters"]:            # loop counters start at 0
         frag_vars[v] = {'op': '=', 'val': '0', 'kind': 'counter'}
+    now_bindings = build_now_bindings(edges)    # "<var> = now" → init 0, set at receive
+    for v in now_bindings:
+        if v in frag_vars:
+            frag_vars[v] = {'op': '=', 'val': '0', 'kind': 'counter'}
+    now_by_idx = {}
+    for v, (i, expr) in now_bindings.items():
+        now_by_idx.setdefault(i, []).append((v, expr))
 
     base_vars = ["sentMessages", "sender", "receiver", "receivedMessages",
                  "senderdataMessages", "currentMessage", "receiverdataMessages"]
@@ -196,7 +209,7 @@ EVENTS
         {"\n        ".join(inits)}
     END
 
-{generate_step_events(edges, time_model)}
+{generate_step_events(edges, time_model, now_by_idx)}
 {_checkloop_events(loop_model)}
 END"""
 

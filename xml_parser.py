@@ -273,6 +273,16 @@ def extract_detailed_sequence(xml_path: str, return_warnings: bool = False):
         receiver = lifelines.get(elem.get('target'))
         if not sender and sx is not None: sender = get_nearest_lifeline(sx)
         if not receiver and tx is not None: receiver = get_nearest_lifeline(tx)
+        # A reply/return message is drawn with its arrowhead at the SOURCE end
+        # (startArrow set, endArrow=none), so the message actually flows
+        # target -> source. The arrowhead always marks the receiver, so swap.
+        style = elem.get('style', '') or ''
+        sm = re.search(r'startArrow=([^;]+)', style)
+        em = re.search(r'endArrow=([^;]+)', style)
+        start_head = (sm.group(1).strip() if sm else 'none')
+        end_head = (em.group(1).strip() if em else 'classic')   # drawio default has a head
+        if start_head != 'none' and end_head == 'none':
+            sender, receiver = receiver, sender
         y_pos = sy if sy is not None else (ty if ty is not None else
                 (float(geo.get('y', 0)) + oy if geo is not None else 0))
         return (sender or "Unknown"), (receiver or "Unknown"), y_pos
@@ -330,6 +340,22 @@ def extract_detailed_sequence(xml_path: str, return_warnings: bool = False):
             geo = elem.find('mxGeometry')
             y = (float(geo.get('y')) + oy) if (geo is not None and geo.get('y')) else oy
             time_delays.append({'delay': dm.group(1), 'y': y})
+
+    # Named time observations "<var> = now" written at a message endpoint. When
+    # <var> also drives a branch guard (e.g. [t_desc <= 15]), it must equal the
+    # realised time of the message it annotates, not a free integer (see
+    # build_now_bindings).
+    now_obs = []
+    for elem in root.iter('mxCell'):
+        if elem.get('edge') == '1':
+            continue
+        nm = re.match(r'([A-Za-z_]\w*)\s*=\s*now\b',
+                      clean_html(elem.get('value', '') or '').strip())
+        if nm:
+            _, oy = abs_offset(elem)
+            geo = elem.find('mxGeometry')
+            y = (float(geo.get('y')) + oy) if (geo is not None and geo.get('y')) else oy
+            now_obs.append({'var': nm.group(1), 'y': y})
 
     # A message label can be the edge's own `value` OR a child edgeLabel cell.
     child_labels = {}
@@ -449,15 +475,24 @@ def extract_detailed_sequence(xml_path: str, return_warnings: bool = False):
             preds = _alt_branch_lasts(palt, i) if palt is not None else [i - 1]
         e['pred_idxs'] = preds
 
-    # Attach each separate delay box to the nearest message that has a duration.
+    # Attach each separate delay box {t..t+n} to the message nearest to it by
+    # vertical position. It need NOT be a duration-bearing message — a delay can
+    # sit on a message that has no {0..n} duration of its own (e.g. LowerBarrier),
+    # so binding to "the nearest message with a duration" would mis-route it.
     for td in time_delays:
-        timed = [e for e in edges if e['duration'] and not e['delay']]
-        pool = timed or edges
-        if not pool:
+        if not edges:
             continue
-        closest = min(pool, key=lambda e: abs(e['y'] - td['y']))
-        if timed or abs(closest['y'] - td['y']) < 100:
+        closest = min(edges, key=lambda e: abs(e['y'] - td['y']))
+        if abs(closest['y'] - td['y']) < 100:
             closest['delay'] = td['delay']
+
+    # Attach each "<var> = now" observation to the nearest message.
+    for ob in now_obs:
+        if not edges:
+            continue
+        closest = min(edges, key=lambda e: abs(e['y'] - ob['y']))
+        if abs(closest['y'] - ob['y']) < 120:
+            closest['now_var'] = ob['var']
 
     # Warn about arrows that look like a message but carry no label at all.
     warnings = [
@@ -623,6 +658,29 @@ def build_loop_model(edges, fragments):
                        'var': d['var'], 'bound': d['bound'],
                        'guards': edge_guard_conditions({'conditions': enclosing})})
     return {'counters': counters, 'checks': checks}
+
+
+def build_now_bindings(edges):
+    """Named observations '<var> = now' that also drive a branch condition.
+
+    Returns {var: (index_1based, expr)} where expr computes the realised time of
+    the annotated message (t_time_i + t_delay_i). Such a variable is initialised
+    to 0 and assigned at the message's receive event, so an alt guarded by e.g.
+    [t_desc <= 15] decides on the actual observed time rather than a free integer
+    (which would leave the state space unbounded and the branch meaningless).
+    """
+    cond_vars = set()
+    for e in edges:
+        for c in edge_guard_conditions(e):
+            m = re.match(r'([A-Za-z_]\w*)', c)
+            if m:
+                cond_vars.add(m.group(1))
+    bindings = {}
+    for i, e in enumerate(edges, 1):
+        v = e.get('now_var')
+        if v and v in cond_vars and (e.get('duration') or e.get('delay')):
+            bindings[v] = (i, f"t_time_{i} + t_delay_{i}")
+    return bindings
 
 
 def build_time_model(edges):
