@@ -1,0 +1,321 @@
+CONTEXT FleetFuelCardContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CardIssuer, Driver, FuelPump
+    releaseLimit_1, reportCard_2, sendFuel_3, issueLimit_4, issueCard_5, approveCard_6, issueFuel_7, cancelFuel_8, validateCard_9
+    cardInfo, cardValue, limitData, limitRef
+AXIOMS
+    axm1: partition(Objects, {CardIssuer}, {Driver}, {FuelPump})
+    axm2: partition(Messages, {releaseLimit_1}, {reportCard_2}, {sendFuel_3}, {issueLimit_4}, {issueCard_5}, {approveCard_6}, {issueFuel_7}, {cancelFuel_8}, {validateCard_9})
+    axm3: partition(DataMessages, {cardInfo}, {cardValue}, {limitData}, {limitRef})
+END
+
+MACHINE FleetFuelCardInteractionMachine_1
+SEES FleetFuelCardContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, temp, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: temp ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+    inv22: t_time_9 ∈ ℤ
+    inv23: t_delay_9 ∈ ℤ
+    inv24: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: temp :∈ ℤ
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..30
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 10..0
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 0..5
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+        act19: t_time_5 :∈ 0..8
+        act20: t_delay_5 := 5
+        act21: t_success_5 := 0
+        act22: t_time_9 :∈ 0..15
+        act23: t_delay_9 := 0
+        act24: t_success_9 := 0
+    END
+
+
+    sendreleaseLimit_1
+    WHEN
+        grd1: releaseLimit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLimit_1}
+        act2: sender := sender ∪ {releaseLimit_1 ↦ CardIssuer}
+        act3: receiver := receiver ∪ {releaseLimit_1 ↦ FuelPump}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseLimit_1}
+    END
+
+    receivereleaseLimit_1
+    WHEN
+        grd1: releaseLimit_1 ∈ sentMessages
+        grd2: releaseLimit_1 ↦ CardIssuer ∈ sender
+        grd3: releaseLimit_1 ↦ FuelPump ∈ receiver
+        grd4: releaseLimit_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseLimit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLimit_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreportCard_2
+    WHEN
+        grd1: reportCard_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLimit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportCard_2}
+        act2: sender := sender ∪ {reportCard_2 ↦ FuelPump}
+        act3: receiver := receiver ∪ {reportCard_2 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportCard_2}
+    END
+
+    receivereportCard_2
+    WHEN
+        grd1: reportCard_2 ∈ sentMessages
+        grd2: reportCard_2 ↦ FuelPump ∈ sender
+        grd3: reportCard_2 ↦ Driver ∈ receiver
+        grd4: reportCard_2 ∉ receivedMessages
+        grd5: currentMessage = {reportCard_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportCard_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendFuel_3
+    WHEN
+        grd1: sendFuel_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCard_2 ∈ receivedMessages
+        grd4: temp < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendFuel_3}
+        act2: sender := sender ∪ {sendFuel_3 ↦ FuelPump}
+        act3: receiver := receiver ∪ {sendFuel_3 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendFuel_3 ↦ cardValue}
+        act6: currentMessage := {sendFuel_3}
+    END
+
+    receivesendFuel_3
+    WHEN
+        grd1: sendFuel_3 ∈ sentMessages
+        grd2: sendFuel_3 ↦ FuelPump ∈ sender
+        grd3: sendFuel_3 ↦ Driver ∈ receiver
+        grd4: sendFuel_3 ∉ receivedMessages
+        grd5: currentMessage = {sendFuel_3}
+        grd6: temp < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendFuel_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendFuel_3 ↦ cardValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendissueLimit_4
+    WHEN
+        grd1: issueLimit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendFuel_3 ∈ receivedMessages
+        grd4: temp < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueLimit_4}
+        act2: sender := sender ∪ {issueLimit_4 ↦ CardIssuer}
+        act3: receiver := receiver ∪ {issueLimit_4 ↦ FuelPump}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueLimit_4 ↦ limitRef}
+        act6: currentMessage := {issueLimit_4}
+    END
+
+    receiveissueLimit_4
+    WHEN
+        grd1: issueLimit_4 ∈ sentMessages
+        grd2: issueLimit_4 ↦ CardIssuer ∈ sender
+        grd3: issueLimit_4 ↦ FuelPump ∈ receiver
+        grd4: issueLimit_4 ∉ receivedMessages
+        grd5: currentMessage = {issueLimit_4}
+        grd6: temp < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueLimit_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueLimit_4 ↦ limitRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendissueCard_5
+    WHEN
+        grd1: issueCard_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueLimit_4 ∈ receivedMessages
+        grd4: temp < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueCard_5}
+        act2: sender := sender ∪ {issueCard_5 ↦ Driver}
+        act3: receiver := receiver ∪ {issueCard_5 ↦ CardIssuer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueCard_5 ↦ limitData}
+        act6: currentMessage := {issueCard_5}
+    END
+
+    receiveissueCard_5
+    WHEN
+        grd1: issueCard_5 ∈ sentMessages
+        grd2: issueCard_5 ↦ Driver ∈ sender
+        grd3: issueCard_5 ↦ CardIssuer ∈ receiver
+        grd4: issueCard_5 ∉ receivedMessages
+        grd5: currentMessage = {issueCard_5}
+        grd6: temp < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueCard_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueCard_5 ↦ limitData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendapproveCard_6
+    WHEN
+        grd1: approveCard_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueCard_5 ∈ receivedMessages
+        grd4: temp < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveCard_6}
+        act2: sender := sender ∪ {approveCard_6 ↦ FuelPump}
+        act3: receiver := receiver ∪ {approveCard_6 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveCard_6}
+    END
+
+    receiveapproveCard_6
+    WHEN
+        grd1: approveCard_6 ∈ sentMessages
+        grd2: approveCard_6 ↦ FuelPump ∈ sender
+        grd3: approveCard_6 ↦ Driver ∈ receiver
+        grd4: approveCard_6 ∉ receivedMessages
+        grd5: currentMessage = {approveCard_6}
+        grd6: temp < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveCard_6}
+        act2: currentMessage := ∅
+    END
+
+    sendissueFuel_7
+    WHEN
+        grd1: issueFuel_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveCard_6 ∈ receivedMessages
+        grd4: temp < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueFuel_7}
+        act2: sender := sender ∪ {issueFuel_7 ↦ CardIssuer}
+        act3: receiver := receiver ∪ {issueFuel_7 ↦ FuelPump}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueFuel_7 ↦ cardInfo}
+        act6: currentMessage := {issueFuel_7}
+    END
+
+    receiveissueFuel_7
+    WHEN
+        grd1: issueFuel_7 ∈ sentMessages
+        grd2: issueFuel_7 ↦ CardIssuer ∈ sender
+        grd3: issueFuel_7 ↦ FuelPump ∈ receiver
+        grd4: issueFuel_7 ∉ receivedMessages
+        grd5: currentMessage = {issueFuel_7}
+        grd6: temp < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueFuel_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueFuel_7 ↦ cardInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelFuel_8
+    WHEN
+        grd1: cancelFuel_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCard_2 ∈ receivedMessages
+        grd4: temp ≥ 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelFuel_8}
+        act2: sender := sender ∪ {cancelFuel_8 ↦ FuelPump}
+        act3: receiver := receiver ∪ {cancelFuel_8 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelFuel_8}
+    END
+
+    receivecancelFuel_8
+    WHEN
+        grd1: cancelFuel_8 ∈ sentMessages
+        grd2: cancelFuel_8 ↦ FuelPump ∈ sender
+        grd3: cancelFuel_8 ↦ Driver ∈ receiver
+        grd4: cancelFuel_8 ∉ receivedMessages
+        grd5: currentMessage = {cancelFuel_8}
+        grd6: temp ≥ 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelFuel_8}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateCard_9
+    WHEN
+        grd1: validateCard_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueFuel_7 ∈ receivedMessages ∨ cancelFuel_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateCard_9}
+        act2: sender := sender ∪ {validateCard_9 ↦ FuelPump}
+        act3: receiver := receiver ∪ {validateCard_9 ↦ CardIssuer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateCard_9}
+    END
+
+    receivevalidateCard_9
+    WHEN
+        grd1: validateCard_9 ∈ sentMessages
+        grd2: validateCard_9 ↦ FuelPump ∈ sender
+        grd3: validateCard_9 ↦ CardIssuer ∈ receiver
+        grd4: validateCard_9 ∉ receivedMessages
+        grd5: currentMessage = {validateCard_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateCard_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+END

@@ -1,0 +1,260 @@
+CONTEXT MedicalImagingPACSContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Modality, PACSServer, RIS, Radiologist
+    checkImage_1, assignImage_2, assignReport_3, approveReport_4, requestImage_5, validateImage_6, syncReport_7
+    imageID, imageValue, reportCode, reportID
+AXIOMS
+    axm1: partition(Objects, {Modality}, {PACSServer}, {RIS}, {Radiologist})
+    axm2: partition(Messages, {checkImage_1}, {assignImage_2}, {assignReport_3}, {approveReport_4}, {requestImage_5}, {validateImage_6}, {syncReport_7})
+    axm3: partition(DataMessages, {imageID}, {imageValue}, {reportCode}, {reportID})
+END
+
+MACHINE MedicalImagingPACSInteractionMachine_1
+SEES MedicalImagingPACSContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_4 ∈ ℤ
+    inv13: t_delay_4 ∈ ℤ
+    inv14: t_success_4 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: t_time_3 :∈ 0..8
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+        act12: t_time_4 :∈ 0..60
+        act13: t_delay_4 := 10
+        act14: t_success_4 := 0
+        act15: t_time_6 :∈ 0..5
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendcheckImage_1
+    WHEN
+        grd1: checkImage_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkImage_1}
+        act2: sender := sender ∪ {checkImage_1 ↦ RIS}
+        act3: receiver := receiver ∪ {checkImage_1 ↦ Modality}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkImage_1}
+    END
+
+    receivecheckImage_1
+    WHEN
+        grd1: checkImage_1 ∈ sentMessages
+        grd2: checkImage_1 ↦ RIS ∈ sender
+        grd3: checkImage_1 ↦ Modality ∈ receiver
+        grd4: checkImage_1 ∉ receivedMessages
+        grd5: currentMessage = {checkImage_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkImage_1}
+        act2: currentMessage := ∅
+    END
+
+    sendassignImage_2
+    WHEN
+        grd1: assignImage_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkImage_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignImage_2}
+        act2: sender := sender ∪ {assignImage_2 ↦ Modality}
+        act3: receiver := receiver ∪ {assignImage_2 ↦ Radiologist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignImage_2}
+    END
+
+    receiveassignImage_2
+    WHEN
+        grd1: assignImage_2 ∈ sentMessages
+        grd2: assignImage_2 ↦ Modality ∈ sender
+        grd3: assignImage_2 ↦ Radiologist ∈ receiver
+        grd4: assignImage_2 ∉ receivedMessages
+        grd5: currentMessage = {assignImage_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignImage_2}
+        act2: currentMessage := ∅
+    END
+
+    sendassignReport_3
+    WHEN
+        grd1: assignReport_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignImage_2 ∈ receivedMessages
+        grd4: roundNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignReport_3}
+        act2: sender := sender ∪ {assignReport_3 ↦ PACSServer}
+        act3: receiver := receiver ∪ {assignReport_3 ↦ RIS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignReport_3}
+    END
+
+    receiveassignReport_3
+    WHEN
+        grd1: assignReport_3 ∈ sentMessages
+        grd2: assignReport_3 ↦ PACSServer ∈ sender
+        grd3: assignReport_3 ↦ RIS ∈ receiver
+        grd4: assignReport_3 ∉ receivedMessages
+        grd5: currentMessage = {assignReport_3}
+        grd6: roundNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignReport_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapproveReport_4
+    WHEN
+        grd1: approveReport_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignReport_3 ∈ receivedMessages
+        grd4: roundNo < 6
+        grd5: roundNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveReport_4}
+        act2: sender := sender ∪ {approveReport_4 ↦ PACSServer}
+        act3: receiver := receiver ∪ {approveReport_4 ↦ Radiologist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveReport_4 ↦ imageID, approveReport_4 ↦ reportID}
+        act6: currentMessage := {approveReport_4}
+    END
+
+    receiveapproveReport_4
+    WHEN
+        grd1: approveReport_4 ∈ sentMessages
+        grd2: approveReport_4 ↦ PACSServer ∈ sender
+        grd3: approveReport_4 ↦ Radiologist ∈ receiver
+        grd4: approveReport_4 ∉ receivedMessages
+        grd5: currentMessage = {approveReport_4}
+        grd6: roundNo < 6
+        grd7: roundNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveReport_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveReport_4 ↦ imageID, approveReport_4 ↦ reportID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendrequestImage_5
+    WHEN
+        grd1: requestImage_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignReport_3 ∈ receivedMessages
+        grd4: roundNo < 6
+        grd5: roundNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestImage_5}
+        act2: sender := sender ∪ {requestImage_5 ↦ Radiologist}
+        act3: receiver := receiver ∪ {requestImage_5 ↦ RIS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestImage_5 ↦ imageValue}
+        act6: currentMessage := {requestImage_5}
+    END
+
+    receiverequestImage_5
+    WHEN
+        grd1: requestImage_5 ∈ sentMessages
+        grd2: requestImage_5 ↦ Radiologist ∈ sender
+        grd3: requestImage_5 ↦ RIS ∈ receiver
+        grd4: requestImage_5 ∉ receivedMessages
+        grd5: currentMessage = {requestImage_5}
+        grd6: roundNo < 6
+        grd7: roundNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestImage_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestImage_5 ↦ imageValue}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateImage_6
+    WHEN
+        grd1: validateImage_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveReport_4 ∈ receivedMessages ∨ requestImage_5 ∈ receivedMessages
+        grd4: roundNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateImage_6}
+        act2: sender := sender ∪ {validateImage_6 ↦ Modality}
+        act3: receiver := receiver ∪ {validateImage_6 ↦ Radiologist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateImage_6 ↦ reportCode}
+        act6: currentMessage := {validateImage_6}
+    END
+
+    receivevalidateImage_6
+    WHEN
+        grd1: validateImage_6 ∈ sentMessages
+        grd2: validateImage_6 ↦ Modality ∈ sender
+        grd3: validateImage_6 ↦ Radiologist ∈ receiver
+        grd4: validateImage_6 ∉ receivedMessages
+        grd5: currentMessage = {validateImage_6}
+        grd6: roundNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateImage_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateImage_6 ↦ reportCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendsyncReport_7
+    WHEN
+        grd1: syncReport_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateImage_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncReport_7}
+        act2: sender := sender ∪ {syncReport_7 ↦ RIS}
+        act3: receiver := receiver ∪ {syncReport_7 ↦ Radiologist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncReport_7}
+    END
+
+    receivesyncReport_7
+    WHEN
+        grd1: syncReport_7 ∈ sentMessages
+        grd2: syncReport_7 ↦ RIS ∈ sender
+        grd3: syncReport_7 ↦ Radiologist ∈ receiver
+        grd4: syncReport_7 ∉ receivedMessages
+        grd5: currentMessage = {syncReport_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncReport_7}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_assignReport_3_loop1
+    WHEN
+        grd1: roundNo < 6
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

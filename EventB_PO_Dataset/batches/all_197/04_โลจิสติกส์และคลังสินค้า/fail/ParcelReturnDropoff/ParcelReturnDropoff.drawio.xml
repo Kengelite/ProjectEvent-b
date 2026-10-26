@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="ParcelReturnDropoff" id="parcelreturndropoff">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="20" y="215" width="390" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="par" vertex="1">
+          <mxGeometry x="20" y="410" width="390" height="225" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="482" width="390" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="532" width="390" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[useCache == 1]" vertex="1">
+          <mxGeometry x="105" y="220" width="135" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Customer" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="690" as="geometry" />
+        </mxCell>
+        <mxCell id="ll7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="DropBox" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="690" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="syncReturn()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="130" as="sourcePoint" />
+            <mxPoint x="90.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendRefund(returnRef) {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="180" as="sourcePoint" />
+            <mxPoint x="90.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="notifyReturn(refundCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="265" as="sourcePoint" />
+            <mxPoint x="90.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="scheduleReturn(labelRef)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="325" as="sourcePoint" />
+            <mxPoint x="340.0" y="325" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="ackReturn(refundInfo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="375" as="sourcePoint" />
+            <mxPoint x="340.0" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reportReturn()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="460" as="sourcePoint" />
+            <mxPoint x="90.0" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="logRefund(refundID) {3..1}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="510" as="sourcePoint" />
+            <mxPoint x="340.0" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="approveRefund()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="560" as="sourcePoint" />
+            <mxPoint x="90.0" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="assignLabel() {0..20}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="610" as="sourcePoint" />
+            <mxPoint x="340.0" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="validateRefund(labelID, refundData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="670" as="sourcePoint" />
+            <mxPoint x="90.0" y="670" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

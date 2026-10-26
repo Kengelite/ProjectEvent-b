@@ -1,0 +1,332 @@
+CONTEXT PrisonVisitBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Officer, PrisonDB, VisitPortal, Visitor
+    ackVisit_1, sendSlot_2, queryClearance_3, cancelSlot_4, issueVisit_5, issueClearance_6, requestClearance_7, syncVisit_8, approveClearance_9
+    clearanceRef, slotData, slotInfo
+AXIOMS
+    axm1: partition(Objects, {Officer}, {PrisonDB}, {VisitPortal}, {Visitor})
+    axm2: partition(Messages, {ackVisit_1}, {sendSlot_2}, {queryClearance_3}, {cancelSlot_4}, {issueVisit_5}, {issueClearance_6}, {requestClearance_7}, {syncVisit_8}, {approveClearance_9})
+    axm3: partition(DataMessages, {clearanceRef}, {slotData}, {slotInfo})
+END
+
+MACHINE PrisonVisitBookingInteractionMachine_1
+SEES PrisonVisitBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, optIn, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: optIn ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+    inv22: t_time_8 ∈ ℤ
+    inv23: t_delay_8 ∈ ℤ
+    inv24: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: optIn := 1
+        act10: t_time_3 :∈ 0..8
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_5 :∈ 0..30
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+        act16: t_time_6 :∈ 0..8
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+        act19: t_time_7 :∈ 2..1
+        act20: t_delay_7 := 0
+        act21: t_success_7 := 0
+        act22: t_time_8 :∈ 0..0
+        act23: t_delay_8 := 10
+        act24: t_success_8 := 0
+    END
+
+
+    sendackVisit_1
+    WHEN
+        grd1: ackVisit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackVisit_1}
+        act2: sender := sender ∪ {ackVisit_1 ↦ PrisonDB}
+        act3: receiver := receiver ∪ {ackVisit_1 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackVisit_1 ↦ slotData}
+        act6: currentMessage := {ackVisit_1}
+    END
+
+    receiveackVisit_1
+    WHEN
+        grd1: ackVisit_1 ∈ sentMessages
+        grd2: ackVisit_1 ↦ PrisonDB ∈ sender
+        grd3: ackVisit_1 ↦ Visitor ∈ receiver
+        grd4: ackVisit_1 ∉ receivedMessages
+        grd5: currentMessage = {ackVisit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackVisit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackVisit_1 ↦ slotData}
+        act3: currentMessage := ∅
+    END
+
+    sendsendSlot_2
+    WHEN
+        grd1: sendSlot_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackVisit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSlot_2}
+        act2: sender := sender ∪ {sendSlot_2 ↦ Visitor}
+        act3: receiver := receiver ∪ {sendSlot_2 ↦ Officer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendSlot_2 ↦ clearanceRef}
+        act6: currentMessage := {sendSlot_2}
+    END
+
+    receivesendSlot_2
+    WHEN
+        grd1: sendSlot_2 ∈ sentMessages
+        grd2: sendSlot_2 ↦ Visitor ∈ sender
+        grd3: sendSlot_2 ↦ Officer ∈ receiver
+        grd4: sendSlot_2 ∉ receivedMessages
+        grd5: currentMessage = {sendSlot_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSlot_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendSlot_2 ↦ clearanceRef}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryClearance_3
+    WHEN
+        grd1: queryClearance_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendSlot_2 ∈ receivedMessages
+        grd4: passNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryClearance_3}
+        act2: sender := sender ∪ {queryClearance_3 ↦ VisitPortal}
+        act3: receiver := receiver ∪ {queryClearance_3 ↦ Officer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryClearance_3}
+    END
+
+    receivequeryClearance_3
+    WHEN
+        grd1: queryClearance_3 ∈ sentMessages
+        grd2: queryClearance_3 ↦ VisitPortal ∈ sender
+        grd3: queryClearance_3 ↦ Officer ∈ receiver
+        grd4: queryClearance_3 ∉ receivedMessages
+        grd5: currentMessage = {queryClearance_3}
+        grd6: passNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryClearance_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcancelSlot_4_opt1
+    WHEN
+        grd1: cancelSlot_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryClearance_3 ∈ receivedMessages
+        grd4: passNo < 9
+        grd5: passNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSlot_4}
+        act2: sender := sender ∪ {cancelSlot_4 ↦ PrisonDB}
+        act3: receiver := receiver ∪ {cancelSlot_4 ↦ VisitPortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelSlot_4}
+    END
+
+    receivecancelSlot_4_opt1
+    WHEN
+        grd1: cancelSlot_4 ∈ sentMessages
+        grd2: cancelSlot_4 ↦ PrisonDB ∈ sender
+        grd3: cancelSlot_4 ↦ VisitPortal ∈ receiver
+        grd4: cancelSlot_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelSlot_4}
+        grd6: passNo < 9
+        grd7: passNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSlot_4}
+        act2: currentMessage := ∅
+    END
+
+    sendissueVisit_5
+    WHEN
+        grd1: issueVisit_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSlot_4 ∈ receivedMessages
+        grd4: passNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueVisit_5}
+        act2: sender := sender ∪ {issueVisit_5 ↦ Visitor}
+        act3: receiver := receiver ∪ {issueVisit_5 ↦ Officer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueVisit_5}
+    END
+
+    receiveissueVisit_5
+    WHEN
+        grd1: issueVisit_5 ∈ sentMessages
+        grd2: issueVisit_5 ↦ Visitor ∈ sender
+        grd3: issueVisit_5 ↦ Officer ∈ receiver
+        grd4: issueVisit_5 ∉ receivedMessages
+        grd5: currentMessage = {issueVisit_5}
+        grd6: passNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueVisit_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueClearance_6_opt2
+    WHEN
+        grd1: issueClearance_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueVisit_5 ∈ receivedMessages
+        grd4: passNo < 9
+        grd5: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueClearance_6}
+        act2: sender := sender ∪ {issueClearance_6 ↦ PrisonDB}
+        act3: receiver := receiver ∪ {issueClearance_6 ↦ Officer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueClearance_6 ↦ slotData}
+        act6: currentMessage := {issueClearance_6}
+    END
+
+    receiveissueClearance_6_opt2
+    WHEN
+        grd1: issueClearance_6 ∈ sentMessages
+        grd2: issueClearance_6 ↦ PrisonDB ∈ sender
+        grd3: issueClearance_6 ↦ Officer ∈ receiver
+        grd4: issueClearance_6 ∉ receivedMessages
+        grd5: currentMessage = {issueClearance_6}
+        grd6: passNo < 9
+        grd7: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueClearance_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueClearance_6 ↦ slotData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendrequestClearance_7
+    WHEN
+        grd1: requestClearance_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueClearance_6 ∈ receivedMessages
+        grd4: passNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestClearance_7}
+        act2: sender := sender ∪ {requestClearance_7 ↦ VisitPortal}
+        act3: receiver := receiver ∪ {requestClearance_7 ↦ PrisonDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestClearance_7}
+    END
+
+    receiverequestClearance_7
+    WHEN
+        grd1: requestClearance_7 ∈ sentMessages
+        grd2: requestClearance_7 ↦ VisitPortal ∈ sender
+        grd3: requestClearance_7 ↦ PrisonDB ∈ receiver
+        grd4: requestClearance_7 ∉ receivedMessages
+        grd5: currentMessage = {requestClearance_7}
+        grd6: passNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestClearance_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendsyncVisit_8
+    WHEN
+        grd1: syncVisit_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestClearance_7 ∈ receivedMessages
+        grd4: passNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncVisit_8}
+        act2: sender := sender ∪ {syncVisit_8 ↦ PrisonDB}
+        act3: receiver := receiver ∪ {syncVisit_8 ↦ Officer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncVisit_8 ↦ slotInfo}
+        act6: currentMessage := {syncVisit_8}
+    END
+
+    receivesyncVisit_8
+    WHEN
+        grd1: syncVisit_8 ∈ sentMessages
+        grd2: syncVisit_8 ↦ PrisonDB ∈ sender
+        grd3: syncVisit_8 ↦ Officer ∈ receiver
+        grd4: syncVisit_8 ∉ receivedMessages
+        grd5: currentMessage = {syncVisit_8}
+        grd6: passNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncVisit_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncVisit_8 ↦ slotInfo}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendapproveClearance_9
+    WHEN
+        grd1: approveClearance_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncVisit_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveClearance_9}
+        act2: sender := sender ∪ {approveClearance_9 ↦ Visitor}
+        act3: receiver := receiver ∪ {approveClearance_9 ↦ PrisonDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveClearance_9}
+    END
+
+    receiveapproveClearance_9
+    WHEN
+        grd1: approveClearance_9 ∈ sentMessages
+        grd2: approveClearance_9 ↦ Visitor ∈ sender
+        grd3: approveClearance_9 ↦ PrisonDB ∈ receiver
+        grd4: approveClearance_9 ∉ receivedMessages
+        grd5: currentMessage = {approveClearance_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveClearance_9}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_queryClearance_3_loop1
+    WHEN
+        grd1: passNo < 9
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

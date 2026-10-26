@@ -1,0 +1,343 @@
+CONTEXT SelfCheckoutLaneContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ScaleUnit, SelfCheckout, Shopper
+    reportItem_1, assignItem_2, cancelItem_3, scheduleItem_4, notifyReceipt_5, issueItem_6, issueReceipt_7, assignReceipt_8, reportReceipt_9
+    basketRef, basketValue, itemCode, receiptInfo, receiptValue
+AXIOMS
+    axm1: partition(Objects, {ScaleUnit}, {SelfCheckout}, {Shopper})
+    axm2: partition(Messages, {reportItem_1}, {assignItem_2}, {cancelItem_3}, {scheduleItem_4}, {notifyReceipt_5}, {issueItem_6}, {issueReceipt_7}, {assignReceipt_8}, {reportReceipt_9})
+    axm3: partition(DataMessages, {basketRef}, {basketValue}, {itemCode}, {receiptInfo}, {receiptValue})
+END
+
+MACHINE SelfCheckoutLaneInteractionMachine_1
+SEES SelfCheckoutLaneContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, stepNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: stepNo ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+    inv22: t_time_6 ∈ ℤ
+    inv23: t_delay_6 ∈ ℤ
+    inv24: t_success_6 ∈ ℤ
+    inv25: t_time_7 ∈ ℤ
+    inv26: t_delay_7 ∈ ℤ
+    inv27: t_success_7 ∈ ℤ
+    inv28: t_time_8 ∈ ℤ
+    inv29: t_delay_8 ∈ ℤ
+    inv30: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: stepNo := 0
+        act10: t_time_1 :∈ 0..15
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..20
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 0..5
+        act17: t_delay_4 := 1
+        act18: t_success_4 := 0
+        act19: t_time_5 :∈ 0..2
+        act20: t_delay_5 := 0
+        act21: t_success_5 := 0
+        act22: t_time_6 :∈ 0..15
+        act23: t_delay_6 := 0
+        act24: t_success_6 := 0
+        act25: t_time_7 :∈ 0..0
+        act26: t_delay_7 := 3
+        act27: t_success_7 := 0
+        act28: t_time_8 :∈ 0..10
+        act29: t_delay_8 := 0
+        act30: t_success_8 := 0
+    END
+
+
+    sendreportItem_1
+    WHEN
+        grd1: reportItem_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportItem_1}
+        act2: sender := sender ∪ {reportItem_1 ↦ ScaleUnit}
+        act3: receiver := receiver ∪ {reportItem_1 ↦ SelfCheckout}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportItem_1 ↦ receiptInfo, reportItem_1 ↦ receiptValue}
+        act6: currentMessage := {reportItem_1}
+    END
+
+    receivereportItem_1
+    WHEN
+        grd1: reportItem_1 ∈ sentMessages
+        grd2: reportItem_1 ↦ ScaleUnit ∈ sender
+        grd3: reportItem_1 ↦ SelfCheckout ∈ receiver
+        grd4: reportItem_1 ∉ receivedMessages
+        grd5: currentMessage = {reportItem_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportItem_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportItem_1 ↦ receiptInfo, reportItem_1 ↦ receiptValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignItem_2
+    WHEN
+        grd1: assignItem_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportItem_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignItem_2}
+        act2: sender := sender ∪ {assignItem_2 ↦ ScaleUnit}
+        act3: receiver := receiver ∪ {assignItem_2 ↦ Shopper}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignItem_2}
+    END
+
+    receiveassignItem_2
+    WHEN
+        grd1: assignItem_2 ∈ sentMessages
+        grd2: assignItem_2 ↦ ScaleUnit ∈ sender
+        grd3: assignItem_2 ↦ Shopper ∈ receiver
+        grd4: assignItem_2 ∉ receivedMessages
+        grd5: currentMessage = {assignItem_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignItem_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+        act4: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendcancelItem_3
+    WHEN
+        grd1: cancelItem_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignItem_2 ∈ receivedMessages
+        grd4: t_obs ≤ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelItem_3}
+        act2: sender := sender ∪ {cancelItem_3 ↦ Shopper}
+        act3: receiver := receiver ∪ {cancelItem_3 ↦ SelfCheckout}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelItem_3 ↦ itemCode}
+        act6: currentMessage := {cancelItem_3}
+    END
+
+    receivecancelItem_3
+    WHEN
+        grd1: cancelItem_3 ∈ sentMessages
+        grd2: cancelItem_3 ↦ Shopper ∈ sender
+        grd3: cancelItem_3 ↦ SelfCheckout ∈ receiver
+        grd4: cancelItem_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelItem_3}
+        grd6: t_obs ≤ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelItem_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelItem_3 ↦ itemCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleItem_4
+    WHEN
+        grd1: scheduleItem_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignItem_2 ∈ receivedMessages
+        grd4: t_obs > 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleItem_4}
+        act2: sender := sender ∪ {scheduleItem_4 ↦ SelfCheckout}
+        act3: receiver := receiver ∪ {scheduleItem_4 ↦ ScaleUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleItem_4}
+    END
+
+    receivescheduleItem_4
+    WHEN
+        grd1: scheduleItem_4 ∈ sentMessages
+        grd2: scheduleItem_4 ↦ SelfCheckout ∈ sender
+        grd3: scheduleItem_4 ↦ ScaleUnit ∈ receiver
+        grd4: scheduleItem_4 ∉ receivedMessages
+        grd5: currentMessage = {scheduleItem_4}
+        grd6: t_obs > 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleItem_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyReceipt_5
+    WHEN
+        grd1: notifyReceipt_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelItem_3 ∈ receivedMessages ∨ scheduleItem_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyReceipt_5}
+        act2: sender := sender ∪ {notifyReceipt_5 ↦ ScaleUnit}
+        act3: receiver := receiver ∪ {notifyReceipt_5 ↦ Shopper}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyReceipt_5}
+    END
+
+    receivenotifyReceipt_5
+    WHEN
+        grd1: notifyReceipt_5 ∈ sentMessages
+        grd2: notifyReceipt_5 ↦ ScaleUnit ∈ sender
+        grd3: notifyReceipt_5 ↦ Shopper ∈ receiver
+        grd4: notifyReceipt_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyReceipt_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyReceipt_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueItem_6
+    WHEN
+        grd1: issueItem_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyReceipt_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueItem_6}
+        act2: sender := sender ∪ {issueItem_6 ↦ SelfCheckout}
+        act3: receiver := receiver ∪ {issueItem_6 ↦ ScaleUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueItem_6 ↦ basketValue}
+        act6: currentMessage := {issueItem_6}
+    END
+
+    receiveissueItem_6
+    WHEN
+        grd1: issueItem_6 ∈ sentMessages
+        grd2: issueItem_6 ↦ SelfCheckout ∈ sender
+        grd3: issueItem_6 ↦ ScaleUnit ∈ receiver
+        grd4: issueItem_6 ∉ receivedMessages
+        grd5: currentMessage = {issueItem_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueItem_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueItem_6 ↦ basketValue}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendissueReceipt_7
+    WHEN
+        grd1: issueReceipt_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueItem_6 ∈ receivedMessages
+        grd4: stepNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueReceipt_7}
+        act2: sender := sender ∪ {issueReceipt_7 ↦ SelfCheckout}
+        act3: receiver := receiver ∪ {issueReceipt_7 ↦ ScaleUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueReceipt_7 ↦ basketRef}
+        act6: currentMessage := {issueReceipt_7}
+    END
+
+    receiveissueReceipt_7
+    WHEN
+        grd1: issueReceipt_7 ∈ sentMessages
+        grd2: issueReceipt_7 ↦ SelfCheckout ∈ sender
+        grd3: issueReceipt_7 ↦ ScaleUnit ∈ receiver
+        grd4: issueReceipt_7 ∉ receivedMessages
+        grd5: currentMessage = {issueReceipt_7}
+        grd6: stepNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueReceipt_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueReceipt_7 ↦ basketRef}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendassignReceipt_8
+    WHEN
+        grd1: assignReceipt_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueReceipt_7 ∈ receivedMessages
+        grd4: stepNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignReceipt_8}
+        act2: sender := sender ∪ {assignReceipt_8 ↦ Shopper}
+        act3: receiver := receiver ∪ {assignReceipt_8 ↦ ScaleUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignReceipt_8 ↦ basketRef}
+        act6: currentMessage := {assignReceipt_8}
+    END
+
+    receiveassignReceipt_8
+    WHEN
+        grd1: assignReceipt_8 ∈ sentMessages
+        grd2: assignReceipt_8 ↦ Shopper ∈ sender
+        grd3: assignReceipt_8 ↦ ScaleUnit ∈ receiver
+        grd4: assignReceipt_8 ∉ receivedMessages
+        grd5: currentMessage = {assignReceipt_8}
+        grd6: stepNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignReceipt_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignReceipt_8 ↦ basketRef}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendreportReceipt_9
+    WHEN
+        grd1: reportReceipt_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignReceipt_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportReceipt_9}
+        act2: sender := sender ∪ {reportReceipt_9 ↦ SelfCheckout}
+        act3: receiver := receiver ∪ {reportReceipt_9 ↦ ScaleUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportReceipt_9 ↦ itemCode}
+        act6: currentMessage := {reportReceipt_9}
+    END
+
+    receivereportReceipt_9
+    WHEN
+        grd1: reportReceipt_9 ∈ sentMessages
+        grd2: reportReceipt_9 ↦ SelfCheckout ∈ sender
+        grd3: reportReceipt_9 ↦ ScaleUnit ∈ receiver
+        grd4: reportReceipt_9 ∉ receivedMessages
+        grd5: currentMessage = {reportReceipt_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportReceipt_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportReceipt_9 ↦ itemCode}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_issueReceipt_7_loop1
+    WHEN
+        grd1: stepNo < 3
+    THEN
+        act1: stepNo := stepNo + 1
+    END
+
+END

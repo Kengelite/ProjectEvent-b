@@ -1,0 +1,207 @@
+CONTEXT WarehousePickingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    HandScanner, Picker
+    reportTote_1, sendOrder_2, logTote_3, logBin_4, assignBin_5, reserveTote_6
+    binInfo, binValue
+AXIOMS
+    axm1: partition(Objects, {HandScanner}, {Picker})
+    axm2: partition(Messages, {reportTote_1}, {sendOrder_2}, {logTote_3}, {logBin_4}, {assignBin_5}, {reserveTote_6})
+    axm3: partition(DataMessages, {binInfo}, {binValue})
+END
+
+MACHINE WarehousePickingInteractionMachine_1
+SEES WarehousePickingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..60
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..1
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+    END
+
+
+    sendreportTote_1
+    WHEN
+        grd1: reportTote_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportTote_1}
+        act2: sender := sender ∪ {reportTote_1 ↦ HandScanner}
+        act3: receiver := receiver ∪ {reportTote_1 ↦ Picker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportTote_1 ↦ binInfo}
+        act6: currentMessage := {reportTote_1}
+    END
+
+    receivereportTote_1
+    WHEN
+        grd1: reportTote_1 ∈ sentMessages
+        grd2: reportTote_1 ↦ HandScanner ∈ sender
+        grd3: reportTote_1 ↦ Picker ∈ receiver
+        grd4: reportTote_1 ∉ receivedMessages
+        grd5: currentMessage = {reportTote_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportTote_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportTote_1 ↦ binInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendsendOrder_2
+    WHEN
+        grd1: sendOrder_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportTote_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendOrder_2}
+        act2: sender := sender ∪ {sendOrder_2 ↦ Picker}
+        act3: receiver := receiver ∪ {sendOrder_2 ↦ HandScanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendOrder_2}
+    END
+
+    receivesendOrder_2
+    WHEN
+        grd1: sendOrder_2 ∈ sentMessages
+        grd2: sendOrder_2 ↦ Picker ∈ sender
+        grd3: sendOrder_2 ↦ HandScanner ∈ receiver
+        grd4: sendOrder_2 ∉ receivedMessages
+        grd5: currentMessage = {sendOrder_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendOrder_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendlogTote_3
+    WHEN
+        grd1: logTote_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendOrder_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logTote_3}
+        act2: sender := sender ∪ {logTote_3 ↦ HandScanner}
+        act3: receiver := receiver ∪ {logTote_3 ↦ Picker}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logTote_3}
+    END
+
+    receivelogTote_3
+    WHEN
+        grd1: logTote_3 ∈ sentMessages
+        grd2: logTote_3 ↦ HandScanner ∈ sender
+        grd3: logTote_3 ↦ Picker ∈ receiver
+        grd4: logTote_3 ∉ receivedMessages
+        grd5: currentMessage = {logTote_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logTote_3}
+        act2: currentMessage := ∅
+    END
+
+    sendlogBin_4
+    WHEN
+        grd1: logBin_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logTote_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logBin_4}
+        act2: sender := sender ∪ {logBin_4 ↦ HandScanner}
+        act3: receiver := receiver ∪ {logBin_4 ↦ Picker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logBin_4 ↦ binValue}
+        act6: currentMessage := {logBin_4}
+    END
+
+    receivelogBin_4
+    WHEN
+        grd1: logBin_4 ∈ sentMessages
+        grd2: logBin_4 ↦ HandScanner ∈ sender
+        grd3: logBin_4 ↦ Picker ∈ receiver
+        grd4: logBin_4 ∉ receivedMessages
+        grd5: currentMessage = {logBin_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logBin_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logBin_4 ↦ binValue}
+        act3: currentMessage := ∅
+    END
+
+    sendassignBin_5
+    WHEN
+        grd1: assignBin_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logBin_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignBin_5}
+        act2: sender := sender ∪ {assignBin_5 ↦ Picker}
+        act3: receiver := receiver ∪ {assignBin_5 ↦ HandScanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignBin_5}
+    END
+
+    receiveassignBin_5
+    WHEN
+        grd1: assignBin_5 ∈ sentMessages
+        grd2: assignBin_5 ↦ Picker ∈ sender
+        grd3: assignBin_5 ↦ HandScanner ∈ receiver
+        grd4: assignBin_5 ∉ receivedMessages
+        grd5: currentMessage = {assignBin_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignBin_5}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveTote_6
+    WHEN
+        grd1: reserveTote_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignBin_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTote_6}
+        act2: sender := sender ∪ {reserveTote_6 ↦ Picker}
+        act3: receiver := receiver ∪ {reserveTote_6 ↦ HandScanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveTote_6}
+    END
+
+    receivereserveTote_6
+    WHEN
+        grd1: reserveTote_6 ∈ sentMessages
+        grd2: reserveTote_6 ↦ Picker ∈ sender
+        grd3: reserveTote_6 ↦ HandScanner ∈ receiver
+        grd4: reserveTote_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveTote_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTote_6}
+        act2: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,401 @@
+CONTEXT PetDoorControllerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    HomeHub, PetDoor, PetTag
+    requestLog_1, scheduleEntry_2, checkLog_3, cancelCurfew_4, reportCurfew_5, queryEntry_6, requestCurfew_7, approveLog_8, sendCurfew_9, updateEntry_10, syncCurfew_11, sendEntry_12
+    curfewCode, curfewID, curfewRef, entryInfo, entryValue
+AXIOMS
+    axm1: partition(Objects, {HomeHub}, {PetDoor}, {PetTag})
+    axm2: partition(Messages, {requestLog_1}, {scheduleEntry_2}, {checkLog_3}, {cancelCurfew_4}, {reportCurfew_5}, {queryEntry_6}, {requestCurfew_7}, {approveLog_8}, {sendCurfew_9}, {updateEntry_10}, {syncCurfew_11}, {sendEntry_12})
+    axm3: partition(DataMessages, {curfewCode}, {curfewID}, {curfewRef}, {entryInfo}, {entryValue})
+END
+
+MACHINE PetDoorControllerInteractionMachine_1
+SEES PetDoorControllerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+    inv22: t_time_8 ∈ ℤ
+    inv23: t_delay_8 ∈ ℤ
+    inv24: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..1
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..15
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 0..15
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+        act19: t_time_7 :∈ 0..60
+        act20: t_delay_7 := 0
+        act21: t_success_7 := 0
+        act22: t_time_8 :∈ 0..20
+        act23: t_delay_8 := 0
+        act24: t_success_8 := 0
+    END
+
+
+    sendrequestLog_1
+    WHEN
+        grd1: requestLog_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestLog_1}
+        act2: sender := sender ∪ {requestLog_1 ↦ PetTag}
+        act3: receiver := receiver ∪ {requestLog_1 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestLog_1 ↦ entryValue}
+        act6: currentMessage := {requestLog_1}
+    END
+
+    receiverequestLog_1
+    WHEN
+        grd1: requestLog_1 ∈ sentMessages
+        grd2: requestLog_1 ↦ PetTag ∈ sender
+        grd3: requestLog_1 ↦ HomeHub ∈ receiver
+        grd4: requestLog_1 ∉ receivedMessages
+        grd5: currentMessage = {requestLog_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestLog_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestLog_1 ↦ entryValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendscheduleEntry_2
+    WHEN
+        grd1: scheduleEntry_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestLog_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleEntry_2}
+        act2: sender := sender ∪ {scheduleEntry_2 ↦ PetDoor}
+        act3: receiver := receiver ∪ {scheduleEntry_2 ↦ PetTag}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleEntry_2 ↦ curfewID}
+        act6: currentMessage := {scheduleEntry_2}
+    END
+
+    receivescheduleEntry_2
+    WHEN
+        grd1: scheduleEntry_2 ∈ sentMessages
+        grd2: scheduleEntry_2 ↦ PetDoor ∈ sender
+        grd3: scheduleEntry_2 ↦ PetTag ∈ receiver
+        grd4: scheduleEntry_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleEntry_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleEntry_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleEntry_2 ↦ curfewID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcheckLog_3
+    WHEN
+        grd1: checkLog_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleEntry_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkLog_3}
+        act2: sender := sender ∪ {checkLog_3 ↦ PetTag}
+        act3: receiver := receiver ∪ {checkLog_3 ↦ PetDoor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkLog_3}
+    END
+
+    receivecheckLog_3
+    WHEN
+        grd1: checkLog_3 ∈ sentMessages
+        grd2: checkLog_3 ↦ PetTag ∈ sender
+        grd3: checkLog_3 ↦ PetDoor ∈ receiver
+        grd4: checkLog_3 ∉ receivedMessages
+        grd5: currentMessage = {checkLog_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkLog_3}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelCurfew_4
+    WHEN
+        grd1: cancelCurfew_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkLog_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCurfew_4}
+        act2: sender := sender ∪ {cancelCurfew_4 ↦ PetTag}
+        act3: receiver := receiver ∪ {cancelCurfew_4 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelCurfew_4 ↦ curfewRef}
+        act6: currentMessage := {cancelCurfew_4}
+    END
+
+    receivecancelCurfew_4
+    WHEN
+        grd1: cancelCurfew_4 ∈ sentMessages
+        grd2: cancelCurfew_4 ↦ PetTag ∈ sender
+        grd3: cancelCurfew_4 ↦ HomeHub ∈ receiver
+        grd4: cancelCurfew_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelCurfew_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCurfew_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelCurfew_4 ↦ curfewRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreportCurfew_5
+    WHEN
+        grd1: reportCurfew_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelCurfew_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportCurfew_5}
+        act2: sender := sender ∪ {reportCurfew_5 ↦ PetTag}
+        act3: receiver := receiver ∪ {reportCurfew_5 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportCurfew_5 ↦ entryInfo}
+        act6: currentMessage := {reportCurfew_5}
+    END
+
+    receivereportCurfew_5
+    WHEN
+        grd1: reportCurfew_5 ∈ sentMessages
+        grd2: reportCurfew_5 ↦ PetTag ∈ sender
+        grd3: reportCurfew_5 ↦ HomeHub ∈ receiver
+        grd4: reportCurfew_5 ∉ receivedMessages
+        grd5: currentMessage = {reportCurfew_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportCurfew_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportCurfew_5 ↦ entryInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryEntry_6
+    WHEN
+        grd1: queryEntry_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCurfew_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryEntry_6}
+        act2: sender := sender ∪ {queryEntry_6 ↦ HomeHub}
+        act3: receiver := receiver ∪ {queryEntry_6 ↦ PetDoor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryEntry_6}
+    END
+
+    receivequeryEntry_6
+    WHEN
+        grd1: queryEntry_6 ∈ sentMessages
+        grd2: queryEntry_6 ↦ HomeHub ∈ sender
+        grd3: queryEntry_6 ↦ PetDoor ∈ receiver
+        grd4: queryEntry_6 ∉ receivedMessages
+        grd5: currentMessage = {queryEntry_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryEntry_6}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestCurfew_7
+    WHEN
+        grd1: requestCurfew_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryEntry_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestCurfew_7}
+        act2: sender := sender ∪ {requestCurfew_7 ↦ PetTag}
+        act3: receiver := receiver ∪ {requestCurfew_7 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestCurfew_7 ↦ curfewID}
+        act6: currentMessage := {requestCurfew_7}
+    END
+
+    receiverequestCurfew_7
+    WHEN
+        grd1: requestCurfew_7 ∈ sentMessages
+        grd2: requestCurfew_7 ↦ PetTag ∈ sender
+        grd3: requestCurfew_7 ↦ HomeHub ∈ receiver
+        grd4: requestCurfew_7 ∉ receivedMessages
+        grd5: currentMessage = {requestCurfew_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestCurfew_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestCurfew_7 ↦ curfewID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+        act5: t_obs := t_time_7 + t_delay_7
+    END
+
+    sendapproveLog_8
+    WHEN
+        grd1: approveLog_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestCurfew_7 ∈ receivedMessages
+        grd4: t_obs ≤ 58
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveLog_8}
+        act2: sender := sender ∪ {approveLog_8 ↦ HomeHub}
+        act3: receiver := receiver ∪ {approveLog_8 ↦ PetTag}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveLog_8 ↦ curfewCode}
+        act6: currentMessage := {approveLog_8}
+    END
+
+    receiveapproveLog_8
+    WHEN
+        grd1: approveLog_8 ∈ sentMessages
+        grd2: approveLog_8 ↦ HomeHub ∈ sender
+        grd3: approveLog_8 ↦ PetTag ∈ receiver
+        grd4: approveLog_8 ∉ receivedMessages
+        grd5: currentMessage = {approveLog_8}
+        grd6: t_obs ≤ 58
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveLog_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveLog_8 ↦ curfewCode}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendsendCurfew_9
+    WHEN
+        grd1: sendCurfew_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveLog_8 ∈ receivedMessages
+        grd4: t_obs ≤ 58
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendCurfew_9}
+        act2: sender := sender ∪ {sendCurfew_9 ↦ PetDoor}
+        act3: receiver := receiver ∪ {sendCurfew_9 ↦ PetTag}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendCurfew_9 ↦ curfewID}
+        act6: currentMessage := {sendCurfew_9}
+    END
+
+    receivesendCurfew_9
+    WHEN
+        grd1: sendCurfew_9 ∈ sentMessages
+        grd2: sendCurfew_9 ↦ PetDoor ∈ sender
+        grd3: sendCurfew_9 ↦ PetTag ∈ receiver
+        grd4: sendCurfew_9 ∉ receivedMessages
+        grd5: currentMessage = {sendCurfew_9}
+        grd6: t_obs ≤ 58
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendCurfew_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendCurfew_9 ↦ curfewID}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateEntry_10
+    WHEN
+        grd1: updateEntry_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestCurfew_7 ∈ receivedMessages
+        grd4: t_obs > 58
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateEntry_10}
+        act2: sender := sender ∪ {updateEntry_10 ↦ HomeHub}
+        act3: receiver := receiver ∪ {updateEntry_10 ↦ PetDoor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateEntry_10}
+    END
+
+    receiveupdateEntry_10
+    WHEN
+        grd1: updateEntry_10 ∈ sentMessages
+        grd2: updateEntry_10 ↦ HomeHub ∈ sender
+        grd3: updateEntry_10 ↦ PetDoor ∈ receiver
+        grd4: updateEntry_10 ∉ receivedMessages
+        grd5: currentMessage = {updateEntry_10}
+        grd6: t_obs > 58
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateEntry_10}
+        act2: currentMessage := ∅
+    END
+
+    sendsyncCurfew_11
+    WHEN
+        grd1: syncCurfew_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateEntry_10 ∈ receivedMessages
+        grd4: t_obs > 58
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncCurfew_11}
+        act2: sender := sender ∪ {syncCurfew_11 ↦ PetTag}
+        act3: receiver := receiver ∪ {syncCurfew_11 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncCurfew_11 ↦ entryValue}
+        act6: currentMessage := {syncCurfew_11}
+    END
+
+    receivesyncCurfew_11
+    WHEN
+        grd1: syncCurfew_11 ∈ sentMessages
+        grd2: syncCurfew_11 ↦ PetTag ∈ sender
+        grd3: syncCurfew_11 ↦ HomeHub ∈ receiver
+        grd4: syncCurfew_11 ∉ receivedMessages
+        grd5: currentMessage = {syncCurfew_11}
+        grd6: t_obs > 58
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncCurfew_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncCurfew_11 ↦ entryValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsendEntry_12
+    WHEN
+        grd1: sendEntry_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendCurfew_9 ∈ receivedMessages ∨ syncCurfew_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendEntry_12}
+        act2: sender := sender ∪ {sendEntry_12 ↦ HomeHub}
+        act3: receiver := receiver ∪ {sendEntry_12 ↦ PetTag}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendEntry_12}
+    END
+
+    receivesendEntry_12
+    WHEN
+        grd1: sendEntry_12 ∈ sentMessages
+        grd2: sendEntry_12 ↦ HomeHub ∈ sender
+        grd3: sendEntry_12 ↦ PetTag ∈ receiver
+        grd4: sendEntry_12 ∉ receivedMessages
+        grd5: currentMessage = {sendEntry_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendEntry_12}
+        act2: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,341 @@
+CONTEXT CafeLoyaltyPointsContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, LoyaltyAPI, PosTerminal
+    approveVisit_1, fetchPoint_2, checkPoint_3, issueVisit_4, updateVisit_5, releaseVisit_6, sendPoint_7, syncReward_8, fetchReward_9
+    rewardID, rewardInfo, rewardValue, visitInfo
+AXIOMS
+    axm1: partition(Objects, {Customer}, {LoyaltyAPI}, {PosTerminal})
+    axm2: partition(Messages, {approveVisit_1}, {fetchPoint_2}, {checkPoint_3}, {issueVisit_4}, {updateVisit_5}, {releaseVisit_6}, {sendPoint_7}, {syncReward_8}, {fetchReward_9})
+    axm3: partition(DataMessages, {rewardID}, {rewardInfo}, {rewardValue}, {visitInfo})
+END
+
+MACHINE CafeLoyaltyPointsInteractionMachine_1
+SEES CafeLoyaltyPointsContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, needAck, t_time_1, t_delay_1, t_success_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: needAck ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_6 ∈ ℤ
+    inv20: t_delay_6 ∈ ℤ
+    inv21: t_success_6 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+    inv25: t_time_8 ∈ ℤ
+    inv26: t_delay_8 ∈ ℤ
+    inv27: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: needAck := 1
+        act10: t_time_1 :∈ 0..10
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_4 :∈ 0..2
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..60
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_6 :∈ 0..3
+        act20: t_delay_6 := 0
+        act21: t_success_6 := 0
+        act22: t_time_7 :∈ 0..8
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+        act25: t_time_8 :∈ 0..1
+        act26: t_delay_8 := 0
+        act27: t_success_8 := 0
+    END
+
+
+    sendapproveVisit_1
+    WHEN
+        grd1: approveVisit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveVisit_1}
+        act2: sender := sender ∪ {approveVisit_1 ↦ LoyaltyAPI}
+        act3: receiver := receiver ∪ {approveVisit_1 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveVisit_1 ↦ rewardID}
+        act6: currentMessage := {approveVisit_1}
+    END
+
+    receiveapproveVisit_1
+    WHEN
+        grd1: approveVisit_1 ∈ sentMessages
+        grd2: approveVisit_1 ↦ LoyaltyAPI ∈ sender
+        grd3: approveVisit_1 ↦ Customer ∈ receiver
+        grd4: approveVisit_1 ∉ receivedMessages
+        grd5: currentMessage = {approveVisit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveVisit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveVisit_1 ↦ rewardID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendfetchPoint_2
+    WHEN
+        grd1: fetchPoint_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveVisit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPoint_2}
+        act2: sender := sender ∪ {fetchPoint_2 ↦ LoyaltyAPI}
+        act3: receiver := receiver ∪ {fetchPoint_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchPoint_2}
+    END
+
+    receivefetchPoint_2
+    WHEN
+        grd1: fetchPoint_2 ∈ sentMessages
+        grd2: fetchPoint_2 ↦ LoyaltyAPI ∈ sender
+        grd3: fetchPoint_2 ↦ Customer ∈ receiver
+        grd4: fetchPoint_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchPoint_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPoint_2}
+        act2: currentMessage := ∅
+    END
+
+    sendcheckPoint_3
+    WHEN
+        grd1: checkPoint_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPoint_2 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPoint_3}
+        act2: sender := sender ∪ {checkPoint_3 ↦ PosTerminal}
+        act3: receiver := receiver ∪ {checkPoint_3 ↦ LoyaltyAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkPoint_3}
+    END
+
+    receivecheckPoint_3
+    WHEN
+        grd1: checkPoint_3 ∈ sentMessages
+        grd2: checkPoint_3 ↦ PosTerminal ∈ sender
+        grd3: checkPoint_3 ↦ LoyaltyAPI ∈ receiver
+        grd4: checkPoint_3 ∉ receivedMessages
+        grd5: currentMessage = {checkPoint_3}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPoint_3}
+        act2: currentMessage := ∅
+    END
+
+    sendissueVisit_4_opt1
+    WHEN
+        grd1: issueVisit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkPoint_3 ∈ receivedMessages
+        grd4: roundNo < 12
+        grd5: roundNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueVisit_4}
+        act2: sender := sender ∪ {issueVisit_4 ↦ PosTerminal}
+        act3: receiver := receiver ∪ {issueVisit_4 ↦ LoyaltyAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueVisit_4}
+    END
+
+    receiveissueVisit_4_opt1
+    WHEN
+        grd1: issueVisit_4 ∈ sentMessages
+        grd2: issueVisit_4 ↦ PosTerminal ∈ sender
+        grd3: issueVisit_4 ↦ LoyaltyAPI ∈ receiver
+        grd4: issueVisit_4 ∉ receivedMessages
+        grd5: currentMessage = {issueVisit_4}
+        grd6: roundNo < 12
+        grd7: roundNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueVisit_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendupdateVisit_5
+    WHEN
+        grd1: updateVisit_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueVisit_4 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateVisit_5}
+        act2: sender := sender ∪ {updateVisit_5 ↦ LoyaltyAPI}
+        act3: receiver := receiver ∪ {updateVisit_5 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateVisit_5 ↦ rewardInfo}
+        act6: currentMessage := {updateVisit_5}
+    END
+
+    receiveupdateVisit_5
+    WHEN
+        grd1: updateVisit_5 ∈ sentMessages
+        grd2: updateVisit_5 ↦ LoyaltyAPI ∈ sender
+        grd3: updateVisit_5 ↦ Customer ∈ receiver
+        grd4: updateVisit_5 ∉ receivedMessages
+        grd5: currentMessage = {updateVisit_5}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateVisit_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateVisit_5 ↦ rewardInfo}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseVisit_6_opt2
+    WHEN
+        grd1: releaseVisit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateVisit_5 ∈ receivedMessages
+        grd4: roundNo < 12
+        grd5: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseVisit_6}
+        act2: sender := sender ∪ {releaseVisit_6 ↦ Customer}
+        act3: receiver := receiver ∪ {releaseVisit_6 ↦ PosTerminal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseVisit_6 ↦ rewardID, releaseVisit_6 ↦ rewardValue}
+        act6: currentMessage := {releaseVisit_6}
+    END
+
+    receivereleaseVisit_6_opt2
+    WHEN
+        grd1: releaseVisit_6 ∈ sentMessages
+        grd2: releaseVisit_6 ↦ Customer ∈ sender
+        grd3: releaseVisit_6 ↦ PosTerminal ∈ receiver
+        grd4: releaseVisit_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseVisit_6}
+        grd6: roundNo < 12
+        grd7: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseVisit_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseVisit_6 ↦ rewardID, releaseVisit_6 ↦ rewardValue}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendsendPoint_7
+    WHEN
+        grd1: sendPoint_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseVisit_6 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendPoint_7}
+        act2: sender := sender ∪ {sendPoint_7 ↦ Customer}
+        act3: receiver := receiver ∪ {sendPoint_7 ↦ PosTerminal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendPoint_7 ↦ visitInfo}
+        act6: currentMessage := {sendPoint_7}
+    END
+
+    receivesendPoint_7
+    WHEN
+        grd1: sendPoint_7 ∈ sentMessages
+        grd2: sendPoint_7 ↦ Customer ∈ sender
+        grd3: sendPoint_7 ↦ PosTerminal ∈ receiver
+        grd4: sendPoint_7 ∉ receivedMessages
+        grd5: currentMessage = {sendPoint_7}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendPoint_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendPoint_7 ↦ visitInfo}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendsyncReward_8
+    WHEN
+        grd1: syncReward_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendPoint_7 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncReward_8}
+        act2: sender := sender ∪ {syncReward_8 ↦ LoyaltyAPI}
+        act3: receiver := receiver ∪ {syncReward_8 ↦ PosTerminal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncReward_8 ↦ rewardValue}
+        act6: currentMessage := {syncReward_8}
+    END
+
+    receivesyncReward_8
+    WHEN
+        grd1: syncReward_8 ∈ sentMessages
+        grd2: syncReward_8 ↦ LoyaltyAPI ∈ sender
+        grd3: syncReward_8 ↦ PosTerminal ∈ receiver
+        grd4: syncReward_8 ∉ receivedMessages
+        grd5: currentMessage = {syncReward_8}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncReward_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncReward_8 ↦ rewardValue}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendfetchReward_9
+    WHEN
+        grd1: fetchReward_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncReward_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchReward_9}
+        act2: sender := sender ∪ {fetchReward_9 ↦ PosTerminal}
+        act3: receiver := receiver ∪ {fetchReward_9 ↦ LoyaltyAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchReward_9}
+    END
+
+    receivefetchReward_9
+    WHEN
+        grd1: fetchReward_9 ∈ sentMessages
+        grd2: fetchReward_9 ↦ PosTerminal ∈ sender
+        grd3: fetchReward_9 ↦ LoyaltyAPI ∈ receiver
+        grd4: fetchReward_9 ∉ receivedMessages
+        grd5: currentMessage = {fetchReward_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchReward_9}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_checkPoint_3_loop1
+    WHEN
+        grd1: roundNo < 12
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

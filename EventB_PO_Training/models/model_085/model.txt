@@ -1,0 +1,225 @@
+CONTEXT DisasterAlertBroadcastContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AlertServer, CellBroadcast, SensorNet
+    assignQuake_1, fetchQuake_2, reportShelter_3, fetchShelter_4, queryAlert_5, issueAlert_6
+    alertCode, alertID, quakeData, quakeInfo, shelterValue
+AXIOMS
+    axm1: partition(Objects, {AlertServer}, {CellBroadcast}, {SensorNet})
+    axm2: partition(Messages, {assignQuake_1}, {fetchQuake_2}, {reportShelter_3}, {fetchShelter_4}, {queryAlert_5}, {issueAlert_6})
+    axm3: partition(DataMessages, {alertCode}, {alertID}, {quakeData}, {quakeInfo}, {shelterValue})
+END
+
+MACHINE DisasterAlertBroadcastInteractionMachine_1
+SEES DisasterAlertBroadcastContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..15
+        act9: t_delay_2 := 0
+        act10: t_success_2 := 0
+        act11: t_time_3 :∈ 0..1
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_5 :∈ 0..0
+        act15: t_delay_5 := 10
+        act16: t_success_5 := 0
+        act17: t_time_6 :∈ 0..1
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+    END
+
+
+    sendassignQuake_1
+    WHEN
+        grd1: assignQuake_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignQuake_1}
+        act2: sender := sender ∪ {assignQuake_1 ↦ SensorNet}
+        act3: receiver := receiver ∪ {assignQuake_1 ↦ AlertServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignQuake_1 ↦ quakeInfo}
+        act6: currentMessage := {assignQuake_1}
+    END
+
+    receiveassignQuake_1
+    WHEN
+        grd1: assignQuake_1 ∈ sentMessages
+        grd2: assignQuake_1 ↦ SensorNet ∈ sender
+        grd3: assignQuake_1 ↦ AlertServer ∈ receiver
+        grd4: assignQuake_1 ∉ receivedMessages
+        grd5: currentMessage = {assignQuake_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignQuake_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignQuake_1 ↦ quakeInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchQuake_2
+    WHEN
+        grd1: fetchQuake_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignQuake_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchQuake_2}
+        act2: sender := sender ∪ {fetchQuake_2 ↦ SensorNet}
+        act3: receiver := receiver ∪ {fetchQuake_2 ↦ AlertServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchQuake_2 ↦ alertCode}
+        act6: currentMessage := {fetchQuake_2}
+    END
+
+    receivefetchQuake_2
+    WHEN
+        grd1: fetchQuake_2 ∈ sentMessages
+        grd2: fetchQuake_2 ↦ SensorNet ∈ sender
+        grd3: fetchQuake_2 ↦ AlertServer ∈ receiver
+        grd4: fetchQuake_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchQuake_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchQuake_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchQuake_2 ↦ alertCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreportShelter_3
+    WHEN
+        grd1: reportShelter_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchQuake_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportShelter_3}
+        act2: sender := sender ∪ {reportShelter_3 ↦ AlertServer}
+        act3: receiver := receiver ∪ {reportShelter_3 ↦ CellBroadcast}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportShelter_3}
+    END
+
+    receivereportShelter_3
+    WHEN
+        grd1: reportShelter_3 ∈ sentMessages
+        grd2: reportShelter_3 ↦ AlertServer ∈ sender
+        grd3: reportShelter_3 ↦ CellBroadcast ∈ receiver
+        grd4: reportShelter_3 ∉ receivedMessages
+        grd5: currentMessage = {reportShelter_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportShelter_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendfetchShelter_4
+    WHEN
+        grd1: fetchShelter_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportShelter_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchShelter_4}
+        act2: sender := sender ∪ {fetchShelter_4 ↦ CellBroadcast}
+        act3: receiver := receiver ∪ {fetchShelter_4 ↦ AlertServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchShelter_4 ↦ shelterValue}
+        act6: currentMessage := {fetchShelter_4}
+    END
+
+    receivefetchShelter_4
+    WHEN
+        grd1: fetchShelter_4 ∈ sentMessages
+        grd2: fetchShelter_4 ↦ CellBroadcast ∈ sender
+        grd3: fetchShelter_4 ↦ AlertServer ∈ receiver
+        grd4: fetchShelter_4 ∉ receivedMessages
+        grd5: currentMessage = {fetchShelter_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchShelter_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchShelter_4 ↦ shelterValue}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryAlert_5
+    WHEN
+        grd1: queryAlert_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchShelter_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryAlert_5}
+        act2: sender := sender ∪ {queryAlert_5 ↦ AlertServer}
+        act3: receiver := receiver ∪ {queryAlert_5 ↦ SensorNet}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryAlert_5 ↦ quakeData}
+        act6: currentMessage := {queryAlert_5}
+    END
+
+    receivequeryAlert_5
+    WHEN
+        grd1: queryAlert_5 ∈ sentMessages
+        grd2: queryAlert_5 ↦ AlertServer ∈ sender
+        grd3: queryAlert_5 ↦ SensorNet ∈ receiver
+        grd4: queryAlert_5 ∉ receivedMessages
+        grd5: currentMessage = {queryAlert_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryAlert_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryAlert_5 ↦ quakeData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueAlert_6
+    WHEN
+        grd1: issueAlert_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryAlert_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueAlert_6}
+        act2: sender := sender ∪ {issueAlert_6 ↦ AlertServer}
+        act3: receiver := receiver ∪ {issueAlert_6 ↦ SensorNet}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueAlert_6 ↦ alertID}
+        act6: currentMessage := {issueAlert_6}
+    END
+
+    receiveissueAlert_6
+    WHEN
+        grd1: issueAlert_6 ∈ sentMessages
+        grd2: issueAlert_6 ↦ AlertServer ∈ sender
+        grd3: issueAlert_6 ↦ SensorNet ∈ receiver
+        grd4: issueAlert_6 ∉ receivedMessages
+        grd5: currentMessage = {issueAlert_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueAlert_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueAlert_6 ↦ alertID}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

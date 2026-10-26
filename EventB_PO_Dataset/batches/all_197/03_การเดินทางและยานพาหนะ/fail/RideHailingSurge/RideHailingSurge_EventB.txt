@@ -1,0 +1,209 @@
+CONTEXT RideHailingSurgeContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DriverApp, Passenger, PricingEngine
+    notifyFare_1, cancelSurge_2, releaseTrip_3, requestTrip_4, logSurge_5, fetchFare_6
+    fareID, fareValue, tripCode, tripInfo
+AXIOMS
+    axm1: partition(Objects, {DriverApp}, {Passenger}, {PricingEngine})
+    axm2: partition(Messages, {notifyFare_1}, {cancelSurge_2}, {releaseTrip_3}, {requestTrip_4}, {logSurge_5}, {fetchFare_6})
+    axm3: partition(DataMessages, {fareID}, {fareValue}, {tripCode}, {tripInfo})
+END
+
+MACHINE RideHailingSurgeInteractionMachine_1
+SEES RideHailingSurgeContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 0..0
+        act9: t_delay_3 := 3
+        act10: t_success_3 := 0
+        act11: t_time_4 :∈ 2..1
+        act12: t_delay_4 := 3
+        act13: t_success_4 := 0
+    END
+
+
+    sendnotifyFare_1
+    WHEN
+        grd1: notifyFare_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyFare_1}
+        act2: sender := sender ∪ {notifyFare_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {notifyFare_1 ↦ PricingEngine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyFare_1 ↦ fareID, notifyFare_1 ↦ tripInfo}
+        act6: currentMessage := {notifyFare_1}
+    END
+
+    receivenotifyFare_1
+    WHEN
+        grd1: notifyFare_1 ∈ sentMessages
+        grd2: notifyFare_1 ↦ Passenger ∈ sender
+        grd3: notifyFare_1 ↦ PricingEngine ∈ receiver
+        grd4: notifyFare_1 ∉ receivedMessages
+        grd5: currentMessage = {notifyFare_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyFare_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyFare_1 ↦ fareID, notifyFare_1 ↦ tripInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelSurge_2
+    WHEN
+        grd1: cancelSurge_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyFare_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSurge_2}
+        act2: sender := sender ∪ {cancelSurge_2 ↦ PricingEngine}
+        act3: receiver := receiver ∪ {cancelSurge_2 ↦ DriverApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelSurge_2}
+    END
+
+    receivecancelSurge_2
+    WHEN
+        grd1: cancelSurge_2 ∈ sentMessages
+        grd2: cancelSurge_2 ↦ PricingEngine ∈ sender
+        grd3: cancelSurge_2 ↦ DriverApp ∈ receiver
+        grd4: cancelSurge_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelSurge_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSurge_2}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseTrip_3
+    WHEN
+        grd1: releaseTrip_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSurge_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseTrip_3}
+        act2: sender := sender ∪ {releaseTrip_3 ↦ PricingEngine}
+        act3: receiver := receiver ∪ {releaseTrip_3 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseTrip_3 ↦ tripCode}
+        act6: currentMessage := {releaseTrip_3}
+    END
+
+    receivereleaseTrip_3
+    WHEN
+        grd1: releaseTrip_3 ∈ sentMessages
+        grd2: releaseTrip_3 ↦ PricingEngine ∈ sender
+        grd3: releaseTrip_3 ↦ Passenger ∈ receiver
+        grd4: releaseTrip_3 ∉ receivedMessages
+        grd5: currentMessage = {releaseTrip_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseTrip_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseTrip_3 ↦ tripCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendrequestTrip_4
+    WHEN
+        grd1: requestTrip_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseTrip_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestTrip_4}
+        act2: sender := sender ∪ {requestTrip_4 ↦ Passenger}
+        act3: receiver := receiver ∪ {requestTrip_4 ↦ DriverApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestTrip_4}
+    END
+
+    receiverequestTrip_4
+    WHEN
+        grd1: requestTrip_4 ∈ sentMessages
+        grd2: requestTrip_4 ↦ Passenger ∈ sender
+        grd3: requestTrip_4 ↦ DriverApp ∈ receiver
+        grd4: requestTrip_4 ∉ receivedMessages
+        grd5: currentMessage = {requestTrip_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestTrip_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendlogSurge_5
+    WHEN
+        grd1: logSurge_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestTrip_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logSurge_5}
+        act2: sender := sender ∪ {logSurge_5 ↦ DriverApp}
+        act3: receiver := receiver ∪ {logSurge_5 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logSurge_5 ↦ fareValue}
+        act6: currentMessage := {logSurge_5}
+    END
+
+    receivelogSurge_5
+    WHEN
+        grd1: logSurge_5 ∈ sentMessages
+        grd2: logSurge_5 ↦ DriverApp ∈ sender
+        grd3: logSurge_5 ↦ Passenger ∈ receiver
+        grd4: logSurge_5 ∉ receivedMessages
+        grd5: currentMessage = {logSurge_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logSurge_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logSurge_5 ↦ fareValue}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchFare_6
+    WHEN
+        grd1: fetchFare_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logSurge_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchFare_6}
+        act2: sender := sender ∪ {fetchFare_6 ↦ Passenger}
+        act3: receiver := receiver ∪ {fetchFare_6 ↦ DriverApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchFare_6 ↦ tripInfo}
+        act6: currentMessage := {fetchFare_6}
+    END
+
+    receivefetchFare_6
+    WHEN
+        grd1: fetchFare_6 ∈ sentMessages
+        grd2: fetchFare_6 ↦ Passenger ∈ sender
+        grd3: fetchFare_6 ↦ DriverApp ∈ receiver
+        grd4: fetchFare_6 ∉ receivedMessages
+        grd5: currentMessage = {fetchFare_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchFare_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchFare_6 ↦ tripInfo}
+        act3: currentMessage := ∅
+    END
+
+END

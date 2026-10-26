@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="HomeApp" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="turnOff_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="energyReport_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="plugState_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="queryState_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="SmartPlug" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="turnOn_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="offAck_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="powerStatus" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="kwhUsed" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/SmartPlugControl_Project/SmartPlugControlContext.bpo|org.eventb.core.poFile#SmartPlugControlContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{HomeApp},{SmartPlug})" org.eventb.core.source="/SmartPlugControl_Project/SmartPlugControlContext.buc|org.eventb.core.contextFile#SmartPlugControlContext|org.eventb.core.axiom#internal_element14"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{queryState_1},{plugState_2},{turnOff_3},{offAck_4},{turnOn_5},{energyReport_6})" org.eventb.core.source="/SmartPlugControl_Project/SmartPlugControlContext.buc|org.eventb.core.contextFile#SmartPlugControlContext|org.eventb.core.axiom#internal_element15"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{kwhUsed},{powerStatus})" org.eventb.core.source="/SmartPlugControl_Project/SmartPlugControlContext.buc|org.eventb.core.contextFile#SmartPlugControlContext|org.eventb.core.axiom#internal_element16"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

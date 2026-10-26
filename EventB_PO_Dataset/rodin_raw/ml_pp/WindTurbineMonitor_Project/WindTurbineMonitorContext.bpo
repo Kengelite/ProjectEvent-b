@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="requestRpm_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="logRpm_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="reserveRpm_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="powerCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="powerID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Turbine" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="SCADA" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="GridOperator" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="faultID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="scheduleFault_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="updatePower_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="reservePower_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="notifyPower_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="syncPower_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Technician" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/WindTurbineMonitor_Project/WindTurbineMonitorContext.bpo|org.eventb.core.poFile#WindTurbineMonitorContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{GridOperator},{SCADA},{Technician},{Turbine})" org.eventb.core.source="/WindTurbineMonitor_Project/WindTurbineMonitorContext.buc|org.eventb.core.contextFile#WindTurbineMonitorContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{reserveRpm_1},{updatePower_2},{reservePower_3},{notifyPower_4},{syncPower_5},{requestRpm_6},{logRpm_7},{scheduleFault_8})" org.eventb.core.source="/WindTurbineMonitor_Project/WindTurbineMonitorContext.buc|org.eventb.core.contextFile#WindTurbineMonitorContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{faultID},{powerCode},{powerID})" org.eventb.core.source="/WindTurbineMonitor_Project/WindTurbineMonitorContext.buc|org.eventb.core.contextFile#WindTurbineMonitorContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

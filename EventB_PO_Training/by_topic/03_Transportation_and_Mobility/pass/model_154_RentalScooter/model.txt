@@ -1,0 +1,218 @@
+CONTEXT RentalScooterContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ParkingZone, Rider, Scooter, ScooterApp
+    fetchBattery_1, requestBattery_2, updateUnlock_3, issueTrip_4, scheduleTrip_5, fetchTrip_6
+    batteryInfo, tripInfo, unlockInfo, unlockRef
+AXIOMS
+    axm1: partition(Objects, {ParkingZone}, {Rider}, {Scooter}, {ScooterApp})
+    axm2: partition(Messages, {fetchBattery_1}, {requestBattery_2}, {updateUnlock_3}, {issueTrip_4}, {scheduleTrip_5}, {fetchTrip_6})
+    axm3: partition(DataMessages, {batteryInfo}, {tripInfo}, {unlockInfo}, {unlockRef})
+END
+
+MACHINE RentalScooterInteractionMachine_1
+SEES RentalScooterContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: t_time_4 ∈ ℤ
+    inv10: t_delay_4 ∈ ℤ
+    inv11: t_success_4 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: t_time_4 :∈ 0..3
+        act10: t_delay_4 := 0
+        act11: t_success_4 := 0
+        act12: t_time_5 :∈ 0..0
+        act13: t_delay_5 := 1
+        act14: t_success_5 := 0
+        act15: t_time_6 :∈ 0..0
+        act16: t_delay_6 := 10
+        act17: t_success_6 := 0
+    END
+
+
+    sendfetchBattery_1
+    WHEN
+        grd1: fetchBattery_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchBattery_1}
+        act2: sender := sender ∪ {fetchBattery_1 ↦ Rider}
+        act3: receiver := receiver ∪ {fetchBattery_1 ↦ Scooter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchBattery_1}
+    END
+
+    receivefetchBattery_1
+    WHEN
+        grd1: fetchBattery_1 ∈ sentMessages
+        grd2: fetchBattery_1 ↦ Rider ∈ sender
+        grd3: fetchBattery_1 ↦ Scooter ∈ receiver
+        grd4: fetchBattery_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchBattery_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchBattery_1}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestBattery_2
+    WHEN
+        grd1: requestBattery_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchBattery_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBattery_2}
+        act2: sender := sender ∪ {requestBattery_2 ↦ Rider}
+        act3: receiver := receiver ∪ {requestBattery_2 ↦ ScooterApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestBattery_2}
+    END
+
+    receiverequestBattery_2
+    WHEN
+        grd1: requestBattery_2 ∈ sentMessages
+        grd2: requestBattery_2 ↦ Rider ∈ sender
+        grd3: requestBattery_2 ↦ ScooterApp ∈ receiver
+        grd4: requestBattery_2 ∉ receivedMessages
+        grd5: currentMessage = {requestBattery_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBattery_2}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateUnlock_3_opt1
+    WHEN
+        grd1: updateUnlock_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBattery_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateUnlock_3}
+        act2: sender := sender ∪ {updateUnlock_3 ↦ Scooter}
+        act3: receiver := receiver ∪ {updateUnlock_3 ↦ ParkingZone}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateUnlock_3 ↦ unlockInfo}
+        act6: currentMessage := {updateUnlock_3}
+    END
+
+    receiveupdateUnlock_3_opt1
+    WHEN
+        grd1: updateUnlock_3 ∈ sentMessages
+        grd2: updateUnlock_3 ↦ Scooter ∈ sender
+        grd3: updateUnlock_3 ↦ ParkingZone ∈ receiver
+        grd4: updateUnlock_3 ∉ receivedMessages
+        grd5: currentMessage = {updateUnlock_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateUnlock_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateUnlock_3 ↦ unlockInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendissueTrip_4
+    WHEN
+        grd1: issueTrip_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateUnlock_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueTrip_4}
+        act2: sender := sender ∪ {issueTrip_4 ↦ Rider}
+        act3: receiver := receiver ∪ {issueTrip_4 ↦ ScooterApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueTrip_4 ↦ tripInfo}
+        act6: currentMessage := {issueTrip_4}
+    END
+
+    receiveissueTrip_4
+    WHEN
+        grd1: issueTrip_4 ∈ sentMessages
+        grd2: issueTrip_4 ↦ Rider ∈ sender
+        grd3: issueTrip_4 ↦ ScooterApp ∈ receiver
+        grd4: issueTrip_4 ∉ receivedMessages
+        grd5: currentMessage = {issueTrip_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueTrip_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueTrip_4 ↦ tripInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendscheduleTrip_5
+    WHEN
+        grd1: scheduleTrip_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueTrip_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleTrip_5}
+        act2: sender := sender ∪ {scheduleTrip_5 ↦ ScooterApp}
+        act3: receiver := receiver ∪ {scheduleTrip_5 ↦ ParkingZone}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleTrip_5}
+    END
+
+    receivescheduleTrip_5
+    WHEN
+        grd1: scheduleTrip_5 ∈ sentMessages
+        grd2: scheduleTrip_5 ↦ ScooterApp ∈ sender
+        grd3: scheduleTrip_5 ↦ ParkingZone ∈ receiver
+        grd4: scheduleTrip_5 ∉ receivedMessages
+        grd5: currentMessage = {scheduleTrip_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleTrip_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendfetchTrip_6
+    WHEN
+        grd1: fetchTrip_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleTrip_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchTrip_6}
+        act2: sender := sender ∪ {fetchTrip_6 ↦ Scooter}
+        act3: receiver := receiver ∪ {fetchTrip_6 ↦ ScooterApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchTrip_6 ↦ batteryInfo, fetchTrip_6 ↦ unlockRef}
+        act6: currentMessage := {fetchTrip_6}
+    END
+
+    receivefetchTrip_6
+    WHEN
+        grd1: fetchTrip_6 ∈ sentMessages
+        grd2: fetchTrip_6 ↦ Scooter ∈ sender
+        grd3: fetchTrip_6 ↦ ScooterApp ∈ receiver
+        grd4: fetchTrip_6 ∉ receivedMessages
+        grd5: currentMessage = {fetchTrip_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchTrip_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchTrip_6 ↦ batteryInfo, fetchTrip_6 ↦ unlockRef}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

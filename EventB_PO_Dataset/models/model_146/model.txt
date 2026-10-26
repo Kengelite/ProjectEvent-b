@@ -1,0 +1,229 @@
+CONTEXT PortCraneControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CraneCtrl, CraneOperator, TerminalOS
+    reportContainer_1, checkSlot_2, requestLift_3, ackContainer_4, assignLift_5, updateSlot_6
+    containerInfo, containerRef, liftInfo, slotCode
+AXIOMS
+    axm1: partition(Objects, {CraneCtrl}, {CraneOperator}, {TerminalOS})
+    axm2: partition(Messages, {reportContainer_1}, {checkSlot_2}, {requestLift_3}, {ackContainer_4}, {assignLift_5}, {updateSlot_6})
+    axm3: partition(DataMessages, {containerInfo}, {containerRef}, {liftInfo}, {slotCode})
+END
+
+MACHINE PortCraneControlInteractionMachine_1
+SEES PortCraneControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: t_time_1 :∈ 0..2
+        act10: t_delay_1 := 3
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..20
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..60
+        act16: t_delay_4 := 10
+        act17: t_success_4 := 0
+        act18: t_time_6 :∈ 0..5
+        act19: t_delay_6 := 10
+        act20: t_success_6 := 0
+    END
+
+
+    sendreportContainer_1
+    WHEN
+        grd1: reportContainer_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportContainer_1}
+        act2: sender := sender ∪ {reportContainer_1 ↦ CraneCtrl}
+        act3: receiver := receiver ∪ {reportContainer_1 ↦ CraneOperator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportContainer_1 ↦ liftInfo}
+        act6: currentMessage := {reportContainer_1}
+    END
+
+    receivereportContainer_1
+    WHEN
+        grd1: reportContainer_1 ∈ sentMessages
+        grd2: reportContainer_1 ↦ CraneCtrl ∈ sender
+        grd3: reportContainer_1 ↦ CraneOperator ∈ receiver
+        grd4: reportContainer_1 ∉ receivedMessages
+        grd5: currentMessage = {reportContainer_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportContainer_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportContainer_1 ↦ liftInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendcheckSlot_2
+    WHEN
+        grd1: checkSlot_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportContainer_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkSlot_2}
+        act2: sender := sender ∪ {checkSlot_2 ↦ TerminalOS}
+        act3: receiver := receiver ∪ {checkSlot_2 ↦ CraneCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkSlot_2 ↦ slotCode}
+        act6: currentMessage := {checkSlot_2}
+    END
+
+    receivecheckSlot_2
+    WHEN
+        grd1: checkSlot_2 ∈ sentMessages
+        grd2: checkSlot_2 ↦ TerminalOS ∈ sender
+        grd3: checkSlot_2 ↦ CraneCtrl ∈ receiver
+        grd4: checkSlot_2 ∉ receivedMessages
+        grd5: currentMessage = {checkSlot_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkSlot_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkSlot_2 ↦ slotCode}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestLift_3_opt1
+    WHEN
+        grd1: requestLift_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkSlot_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestLift_3}
+        act2: sender := sender ∪ {requestLift_3 ↦ TerminalOS}
+        act3: receiver := receiver ∪ {requestLift_3 ↦ CraneOperator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestLift_3}
+    END
+
+    receiverequestLift_3_opt1
+    WHEN
+        grd1: requestLift_3 ∈ sentMessages
+        grd2: requestLift_3 ↦ TerminalOS ∈ sender
+        grd3: requestLift_3 ↦ CraneOperator ∈ receiver
+        grd4: requestLift_3 ∉ receivedMessages
+        grd5: currentMessage = {requestLift_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestLift_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendackContainer_4_opt1
+    WHEN
+        grd1: ackContainer_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestLift_3 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackContainer_4}
+        act2: sender := sender ∪ {ackContainer_4 ↦ CraneOperator}
+        act3: receiver := receiver ∪ {ackContainer_4 ↦ TerminalOS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackContainer_4 ↦ containerRef}
+        act6: currentMessage := {ackContainer_4}
+    END
+
+    receiveackContainer_4_opt1
+    WHEN
+        grd1: ackContainer_4 ∈ sentMessages
+        grd2: ackContainer_4 ↦ CraneOperator ∈ sender
+        grd3: ackContainer_4 ↦ TerminalOS ∈ receiver
+        grd4: ackContainer_4 ∉ receivedMessages
+        grd5: currentMessage = {ackContainer_4}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackContainer_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackContainer_4 ↦ containerRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendassignLift_5
+    WHEN
+        grd1: assignLift_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackContainer_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignLift_5}
+        act2: sender := sender ∪ {assignLift_5 ↦ TerminalOS}
+        act3: receiver := receiver ∪ {assignLift_5 ↦ CraneOperator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignLift_5 ↦ containerInfo}
+        act6: currentMessage := {assignLift_5}
+    END
+
+    receiveassignLift_5
+    WHEN
+        grd1: assignLift_5 ∈ sentMessages
+        grd2: assignLift_5 ↦ TerminalOS ∈ sender
+        grd3: assignLift_5 ↦ CraneOperator ∈ receiver
+        grd4: assignLift_5 ∉ receivedMessages
+        grd5: currentMessage = {assignLift_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignLift_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignLift_5 ↦ containerInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateSlot_6
+    WHEN
+        grd1: updateSlot_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignLift_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateSlot_6}
+        act2: sender := sender ∪ {updateSlot_6 ↦ CraneCtrl}
+        act3: receiver := receiver ∪ {updateSlot_6 ↦ TerminalOS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateSlot_6}
+    END
+
+    receiveupdateSlot_6
+    WHEN
+        grd1: updateSlot_6 ∈ sentMessages
+        grd2: updateSlot_6 ↦ CraneCtrl ∈ sender
+        grd3: updateSlot_6 ↦ TerminalOS ∈ receiver
+        grd4: updateSlot_6 ∉ receivedMessages
+        grd5: currentMessage = {updateSlot_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateSlot_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

@@ -1,0 +1,31 @@
+{
+  "model_id": "model_029",
+  "case": "MedicationDispenser",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "MedicationDispenser_Project",
+  "category": "model_error",
+  "mutation": "currentMessage ⊆ sentMessages added; send of logDose_4 sets currentMessage to {logAck_5}",
+  "operations": {
+    "add_inv": [
+      "currentMessage ⊆ sentMessages"
+    ],
+    "replace_in_event": [
+      [
+        "sendlogDose_4",
+        "currentMessage := {logDose_4}",
+        "currentMessage := {logAck_5}"
+      ]
+    ]
+  },
+  "added_invariant_labels": [
+    "inv18"
+  ],
+  "expected_failed_pos": [
+    "sendlogDose_4/inv18/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_029",
+  "rodin_raw_dir": "rodin_raw/ml_pp/MedicationDispenser_Project"
+}

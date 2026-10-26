@@ -1,0 +1,259 @@
+CONTEXT MobileTopUpContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Subscriber, TelcoGW, TopUpApp
+    notifyCredit_1, confirmBundle_2, reportBundle_3, ackCredit_4, checkBundle_5, assignCredit_6, releaseTopup_7
+    bundleID, creditID, topupData, topupInfo
+AXIOMS
+    axm1: partition(Objects, {Subscriber}, {TelcoGW}, {TopUpApp})
+    axm2: partition(Messages, {notifyCredit_1}, {confirmBundle_2}, {reportBundle_3}, {ackCredit_4}, {checkBundle_5}, {assignCredit_6}, {releaseTopup_7})
+    axm3: partition(DataMessages, {bundleID}, {creditID}, {topupData}, {topupInfo})
+END
+
+MACHINE MobileTopUpInteractionMachine_1
+SEES MobileTopUpContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_5 ∈ ℤ
+    inv19: t_delay_5 ∈ ℤ
+    inv20: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: t_time_1 :∈ 10..3
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 30..24
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_4 :∈ 10..8
+        act16: t_delay_4 := 2
+        act17: t_success_4 := 0
+        act18: t_time_5 :∈ 0..0
+        act19: t_delay_5 := 5
+        act20: t_success_5 := 0
+    END
+
+
+    sendnotifyCredit_1
+    WHEN
+        grd1: notifyCredit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCredit_1}
+        act2: sender := sender ∪ {notifyCredit_1 ↦ TopUpApp}
+        act3: receiver := receiver ∪ {notifyCredit_1 ↦ TelcoGW}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyCredit_1}
+    END
+
+    receivenotifyCredit_1
+    WHEN
+        grd1: notifyCredit_1 ∈ sentMessages
+        grd2: notifyCredit_1 ↦ TopUpApp ∈ sender
+        grd3: notifyCredit_1 ↦ TelcoGW ∈ receiver
+        grd4: notifyCredit_1 ∉ receivedMessages
+        grd5: currentMessage = {notifyCredit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCredit_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendconfirmBundle_2
+    WHEN
+        grd1: confirmBundle_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyCredit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBundle_2}
+        act2: sender := sender ∪ {confirmBundle_2 ↦ Subscriber}
+        act3: receiver := receiver ∪ {confirmBundle_2 ↦ TelcoGW}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmBundle_2}
+    END
+
+    receiveconfirmBundle_2
+    WHEN
+        grd1: confirmBundle_2 ∈ sentMessages
+        grd2: confirmBundle_2 ↦ Subscriber ∈ sender
+        grd3: confirmBundle_2 ↦ TelcoGW ∈ receiver
+        grd4: confirmBundle_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmBundle_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBundle_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+        act4: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendreportBundle_3
+    WHEN
+        grd1: reportBundle_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmBundle_2 ∈ receivedMessages
+        grd4: t_obs ≤ 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportBundle_3}
+        act2: sender := sender ∪ {reportBundle_3 ↦ TopUpApp}
+        act3: receiver := receiver ∪ {reportBundle_3 ↦ TelcoGW}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportBundle_3 ↦ bundleID, reportBundle_3 ↦ creditID}
+        act6: currentMessage := {reportBundle_3}
+    END
+
+    receivereportBundle_3
+    WHEN
+        grd1: reportBundle_3 ∈ sentMessages
+        grd2: reportBundle_3 ↦ TopUpApp ∈ sender
+        grd3: reportBundle_3 ↦ TelcoGW ∈ receiver
+        grd4: reportBundle_3 ∉ receivedMessages
+        grd5: currentMessage = {reportBundle_3}
+        grd6: t_obs ≤ 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportBundle_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportBundle_3 ↦ bundleID, reportBundle_3 ↦ creditID}
+        act3: currentMessage := ∅
+    END
+
+    sendackCredit_4
+    WHEN
+        grd1: ackCredit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportBundle_3 ∈ receivedMessages
+        grd4: t_obs ≤ 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackCredit_4}
+        act2: sender := sender ∪ {ackCredit_4 ↦ Subscriber}
+        act3: receiver := receiver ∪ {ackCredit_4 ↦ TelcoGW}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackCredit_4}
+    END
+
+    receiveackCredit_4
+    WHEN
+        grd1: ackCredit_4 ∈ sentMessages
+        grd2: ackCredit_4 ↦ Subscriber ∈ sender
+        grd3: ackCredit_4 ↦ TelcoGW ∈ receiver
+        grd4: ackCredit_4 ∉ receivedMessages
+        grd5: currentMessage = {ackCredit_4}
+        grd6: t_obs ≤ 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackCredit_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcheckBundle_5
+    WHEN
+        grd1: checkBundle_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmBundle_2 ∈ receivedMessages
+        grd4: t_obs > 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkBundle_5}
+        act2: sender := sender ∪ {checkBundle_5 ↦ TelcoGW}
+        act3: receiver := receiver ∪ {checkBundle_5 ↦ Subscriber}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkBundle_5 ↦ topupInfo}
+        act6: currentMessage := {checkBundle_5}
+    END
+
+    receivecheckBundle_5
+    WHEN
+        grd1: checkBundle_5 ∈ sentMessages
+        grd2: checkBundle_5 ↦ TelcoGW ∈ sender
+        grd3: checkBundle_5 ↦ Subscriber ∈ receiver
+        grd4: checkBundle_5 ∉ receivedMessages
+        grd5: currentMessage = {checkBundle_5}
+        grd6: t_obs > 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkBundle_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkBundle_5 ↦ topupInfo}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendassignCredit_6
+    WHEN
+        grd1: assignCredit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkBundle_5 ∈ receivedMessages
+        grd4: t_obs > 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignCredit_6}
+        act2: sender := sender ∪ {assignCredit_6 ↦ TelcoGW}
+        act3: receiver := receiver ∪ {assignCredit_6 ↦ TopUpApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignCredit_6 ↦ topupData}
+        act6: currentMessage := {assignCredit_6}
+    END
+
+    receiveassignCredit_6
+    WHEN
+        grd1: assignCredit_6 ∈ sentMessages
+        grd2: assignCredit_6 ↦ TelcoGW ∈ sender
+        grd3: assignCredit_6 ↦ TopUpApp ∈ receiver
+        grd4: assignCredit_6 ∉ receivedMessages
+        grd5: currentMessage = {assignCredit_6}
+        grd6: t_obs > 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignCredit_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignCredit_6 ↦ topupData}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseTopup_7
+    WHEN
+        grd1: releaseTopup_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackCredit_4 ∈ receivedMessages ∨ assignCredit_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseTopup_7}
+        act2: sender := sender ∪ {releaseTopup_7 ↦ TopUpApp}
+        act3: receiver := receiver ∪ {releaseTopup_7 ↦ Subscriber}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseTopup_7 ↦ bundleID}
+        act6: currentMessage := {releaseTopup_7}
+    END
+
+    receivereleaseTopup_7
+    WHEN
+        grd1: releaseTopup_7 ∈ sentMessages
+        grd2: releaseTopup_7 ↦ TopUpApp ∈ sender
+        grd3: releaseTopup_7 ↦ Subscriber ∈ receiver
+        grd4: releaseTopup_7 ∉ receivedMessages
+        grd5: currentMessage = {releaseTopup_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseTopup_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseTopup_7 ↦ bundleID}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,426 @@
+CONTEXT LiftEmergencyCallContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CallCenter, LiftPhone, Passenger, Technician
+    releaseCall_1, queryCall_2, syncFault_3, logCall_4, notifyFault_5, reportFault_6, cancelFault_7, sendFault_8, syncCall_9, ackFault_10, notifyDispatch_11, confirmDispatch_12, validateFault_13
+    callCode, faultCode, faultData, faultRef, faultValue
+AXIOMS
+    axm1: partition(Objects, {CallCenter}, {LiftPhone}, {Passenger}, {Technician})
+    axm2: partition(Messages, {releaseCall_1}, {queryCall_2}, {syncFault_3}, {logCall_4}, {notifyFault_5}, {reportFault_6}, {cancelFault_7}, {sendFault_8}, {syncCall_9}, {ackFault_10}, {notifyDispatch_11}, {confirmDispatch_12}, {validateFault_13})
+    axm3: partition(DataMessages, {callCode}, {faultCode}, {faultData}, {faultRef}, {faultValue})
+END
+
+MACHINE LiftEmergencyCallInteractionMachine_1
+SEES LiftEmergencyCallContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, t_obs, par_1, t_time_1, t_delay_1, t_success_1, t_time_5, t_delay_5, t_success_5, t_time_8, t_delay_8, t_success_8, t_time_10, t_delay_10, t_success_10, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: t_obs ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+    inv17: t_time_8 ∈ ℤ
+    inv18: t_delay_8 ∈ ℤ
+    inv19: t_success_8 ∈ ℤ
+    inv20: t_time_10 ∈ ℤ
+    inv21: t_delay_10 ∈ ℤ
+    inv22: t_success_10 ∈ ℤ
+    inv23: t_time_11 ∈ ℤ
+    inv24: t_delay_11 ∈ ℤ
+    inv25: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: t_obs := 0
+        act10: par_1 := 0
+        act11: t_time_1 :∈ 8..2
+        act12: t_delay_1 := 0
+        act13: t_success_1 := 0
+        act14: t_time_5 :∈ 60..46
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+        act17: t_time_8 :∈ 3..2
+        act18: t_delay_8 := 0
+        act19: t_success_8 := 0
+        act20: t_time_10 :∈ 0..3
+        act21: t_delay_10 := 0
+        act22: t_success_10 := 0
+        act23: t_time_11 :∈ 0..10
+        act24: t_delay_11 := 0
+        act25: t_success_11 := 0
+    END
+
+
+    sendreleaseCall_1
+    WHEN
+        grd1: releaseCall_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseCall_1}
+        act2: sender := sender ∪ {releaseCall_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {releaseCall_1 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseCall_1 ↦ faultCode}
+        act6: currentMessage := {releaseCall_1}
+    END
+
+    receivereleaseCall_1
+    WHEN
+        grd1: releaseCall_1 ∈ sentMessages
+        grd2: releaseCall_1 ↦ Passenger ∈ sender
+        grd3: releaseCall_1 ↦ Technician ∈ receiver
+        grd4: releaseCall_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseCall_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseCall_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseCall_1 ↦ faultCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendqueryCall_2
+    WHEN
+        grd1: queryCall_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseCall_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCall_2}
+        act2: sender := sender ∪ {queryCall_2 ↦ CallCenter}
+        act3: receiver := receiver ∪ {queryCall_2 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryCall_2 ↦ callCode}
+        act6: currentMessage := {queryCall_2}
+    END
+
+    receivequeryCall_2
+    WHEN
+        grd1: queryCall_2 ∈ sentMessages
+        grd2: queryCall_2 ↦ CallCenter ∈ sender
+        grd3: queryCall_2 ↦ Passenger ∈ receiver
+        grd4: queryCall_2 ∉ receivedMessages
+        grd5: currentMessage = {queryCall_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCall_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryCall_2 ↦ callCode}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncFault_3_opt1
+    WHEN
+        grd1: syncFault_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryCall_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncFault_3}
+        act2: sender := sender ∪ {syncFault_3 ↦ LiftPhone}
+        act3: receiver := receiver ∪ {syncFault_3 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncFault_3}
+    END
+
+    receivesyncFault_3_opt1
+    WHEN
+        grd1: syncFault_3 ∈ sentMessages
+        grd2: syncFault_3 ↦ LiftPhone ∈ sender
+        grd3: syncFault_3 ↦ Passenger ∈ receiver
+        grd4: syncFault_3 ∉ receivedMessages
+        grd5: currentMessage = {syncFault_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncFault_3}
+        act2: currentMessage := ∅
+    END
+
+    sendlogCall_4
+    WHEN
+        grd1: logCall_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncFault_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCall_4}
+        act2: sender := sender ∪ {logCall_4 ↦ Passenger}
+        act3: receiver := receiver ∪ {logCall_4 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logCall_4}
+    END
+
+    receivelogCall_4
+    WHEN
+        grd1: logCall_4 ∈ sentMessages
+        grd2: logCall_4 ↦ Passenger ∈ sender
+        grd3: logCall_4 ↦ Technician ∈ receiver
+        grd4: logCall_4 ∉ receivedMessages
+        grd5: currentMessage = {logCall_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCall_4}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyFault_5
+    WHEN
+        grd1: notifyFault_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logCall_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyFault_5}
+        act2: sender := sender ∪ {notifyFault_5 ↦ Passenger}
+        act3: receiver := receiver ∪ {notifyFault_5 ↦ LiftPhone}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyFault_5}
+    END
+
+    receivenotifyFault_5
+    WHEN
+        grd1: notifyFault_5 ∈ sentMessages
+        grd2: notifyFault_5 ↦ Passenger ∈ sender
+        grd3: notifyFault_5 ↦ LiftPhone ∈ receiver
+        grd4: notifyFault_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyFault_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyFault_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+        act4: t_obs := t_time_5 + t_delay_5
+    END
+
+    sendreportFault_6
+    WHEN
+        grd1: reportFault_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyFault_5 ∈ receivedMessages
+        grd4: t_obs ≤ 23
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportFault_6}
+        act2: sender := sender ∪ {reportFault_6 ↦ Technician}
+        act3: receiver := receiver ∪ {reportFault_6 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportFault_6 ↦ faultValue}
+        act6: currentMessage := {reportFault_6}
+    END
+
+    receivereportFault_6
+    WHEN
+        grd1: reportFault_6 ∈ sentMessages
+        grd2: reportFault_6 ↦ Technician ∈ sender
+        grd3: reportFault_6 ↦ Passenger ∈ receiver
+        grd4: reportFault_6 ∉ receivedMessages
+        grd5: currentMessage = {reportFault_6}
+        grd6: t_obs ≤ 23
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportFault_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportFault_6 ↦ faultValue}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelFault_7
+    WHEN
+        grd1: cancelFault_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyFault_5 ∈ receivedMessages
+        grd4: t_obs > 23
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelFault_7}
+        act2: sender := sender ∪ {cancelFault_7 ↦ LiftPhone}
+        act3: receiver := receiver ∪ {cancelFault_7 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelFault_7 ↦ faultCode}
+        act6: currentMessage := {cancelFault_7}
+    END
+
+    receivecancelFault_7
+    WHEN
+        grd1: cancelFault_7 ∈ sentMessages
+        grd2: cancelFault_7 ↦ LiftPhone ∈ sender
+        grd3: cancelFault_7 ↦ Technician ∈ receiver
+        grd4: cancelFault_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelFault_7}
+        grd6: t_obs > 23
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelFault_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelFault_7 ↦ faultCode}
+        act3: currentMessage := ∅
+    END
+
+    sendsendFault_8
+    WHEN
+        grd1: sendFault_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportFault_6 ∈ receivedMessages ∨ cancelFault_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendFault_8}
+        act2: sender := sender ∪ {sendFault_8 ↦ Passenger}
+        act3: receiver := receiver ∪ {sendFault_8 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendFault_8 ↦ faultData}
+        act6: currentMessage := {sendFault_8}
+    END
+
+    receivesendFault_8
+    WHEN
+        grd1: sendFault_8 ∈ sentMessages
+        grd2: sendFault_8 ↦ Passenger ∈ sender
+        grd3: sendFault_8 ↦ Technician ∈ receiver
+        grd4: sendFault_8 ∉ receivedMessages
+        grd5: currentMessage = {sendFault_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendFault_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendFault_8 ↦ faultData}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendsyncCall_9
+    WHEN
+        grd1: syncCall_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendFault_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncCall_9}
+        act2: sender := sender ∪ {syncCall_9 ↦ Passenger}
+        act3: receiver := receiver ∪ {syncCall_9 ↦ LiftPhone}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncCall_9 ↦ faultRef}
+        act6: currentMessage := {syncCall_9}
+    END
+
+    receivesyncCall_9
+    WHEN
+        grd1: syncCall_9 ∈ sentMessages
+        grd2: syncCall_9 ↦ Passenger ∈ sender
+        grd3: syncCall_9 ↦ LiftPhone ∈ receiver
+        grd4: syncCall_9 ∉ receivedMessages
+        grd5: currentMessage = {syncCall_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncCall_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncCall_9 ↦ faultRef}
+        act3: currentMessage := ∅
+    END
+
+    sendackFault_10
+    WHEN
+        grd1: ackFault_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncCall_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackFault_10}
+        act2: sender := sender ∪ {ackFault_10 ↦ LiftPhone}
+        act3: receiver := receiver ∪ {ackFault_10 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackFault_10}
+    END
+
+    receiveackFault_10
+    WHEN
+        grd1: ackFault_10 ∈ sentMessages
+        grd2: ackFault_10 ↦ LiftPhone ∈ sender
+        grd3: ackFault_10 ↦ Technician ∈ receiver
+        grd4: ackFault_10 ∉ receivedMessages
+        grd5: currentMessage = {ackFault_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackFault_10}
+        act2: currentMessage := ∅
+        act3: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendnotifyDispatch_11
+    WHEN
+        grd1: notifyDispatch_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackFault_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyDispatch_11}
+        act2: sender := sender ∪ {notifyDispatch_11 ↦ Technician}
+        act3: receiver := receiver ∪ {notifyDispatch_11 ↦ CallCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyDispatch_11 ↦ faultData}
+        act6: currentMessage := {notifyDispatch_11}
+    END
+
+    receivenotifyDispatch_11
+    WHEN
+        grd1: notifyDispatch_11 ∈ sentMessages
+        grd2: notifyDispatch_11 ↦ Technician ∈ sender
+        grd3: notifyDispatch_11 ↦ CallCenter ∈ receiver
+        grd4: notifyDispatch_11 ∉ receivedMessages
+        grd5: currentMessage = {notifyDispatch_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyDispatch_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyDispatch_11 ↦ faultData}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendconfirmDispatch_12
+    WHEN
+        grd1: confirmDispatch_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyDispatch_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmDispatch_12}
+        act2: sender := sender ∪ {confirmDispatch_12 ↦ LiftPhone}
+        act3: receiver := receiver ∪ {confirmDispatch_12 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmDispatch_12}
+    END
+
+    receiveconfirmDispatch_12
+    WHEN
+        grd1: confirmDispatch_12 ∈ sentMessages
+        grd2: confirmDispatch_12 ↦ LiftPhone ∈ sender
+        grd3: confirmDispatch_12 ↦ Passenger ∈ receiver
+        grd4: confirmDispatch_12 ∉ receivedMessages
+        grd5: currentMessage = {confirmDispatch_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmDispatch_12}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateFault_13
+    WHEN
+        grd1: validateFault_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmDispatch_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateFault_13}
+        act2: sender := sender ∪ {validateFault_13 ↦ Passenger}
+        act3: receiver := receiver ∪ {validateFault_13 ↦ LiftPhone}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateFault_13 ↦ callCode}
+        act6: currentMessage := {validateFault_13}
+    END
+
+    receivevalidateFault_13
+    WHEN
+        grd1: validateFault_13 ∈ sentMessages
+        grd2: validateFault_13 ↦ Passenger ∈ sender
+        grd3: validateFault_13 ↦ LiftPhone ∈ receiver
+        grd4: validateFault_13 ∉ receivedMessages
+        grd5: currentMessage = {validateFault_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateFault_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateFault_13 ↦ callCode}
+        act3: currentMessage := ∅
+    END
+
+END

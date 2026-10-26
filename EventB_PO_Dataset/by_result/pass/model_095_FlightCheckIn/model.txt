@@ -1,0 +1,245 @@
+CONTEXT FlightCheckInContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AirlineDCS, CheckInKiosk, Traveler
+    approveSeat_1, cancelSeat_2, fetchBoarding_3, cancelBag_4, assignSeat_5, requestBoarding_6, ackBag_7
+    bagID, bagInfo, bagValue, seatRef, seatValue
+AXIOMS
+    axm1: partition(Objects, {AirlineDCS}, {CheckInKiosk}, {Traveler})
+    axm2: partition(Messages, {approveSeat_1}, {cancelSeat_2}, {fetchBoarding_3}, {cancelBag_4}, {assignSeat_5}, {requestBoarding_6}, {ackBag_7})
+    axm3: partition(DataMessages, {bagID}, {bagInfo}, {bagValue}, {seatRef}, {seatValue})
+END
+
+MACHINE FlightCheckInInteractionMachine_1
+SEES FlightCheckInContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_5 ∈ ℤ
+    inv10: t_delay_5 ∈ ℤ
+    inv11: t_success_5 ∈ ℤ
+    inv12: t_time_6 ∈ ℤ
+    inv13: t_delay_6 ∈ ℤ
+    inv14: t_success_6 ∈ ℤ
+    inv15: t_time_7 ∈ ℤ
+    inv16: t_delay_7 ∈ ℤ
+    inv17: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_5 :∈ 0..15
+        act10: t_delay_5 := 0
+        act11: t_success_5 := 0
+        act12: t_time_6 :∈ 0..8
+        act13: t_delay_6 := 0
+        act14: t_success_6 := 0
+        act15: t_time_7 :∈ 0..8
+        act16: t_delay_7 := 0
+        act17: t_success_7 := 0
+    END
+
+
+    sendapproveSeat_1
+    WHEN
+        grd1: approveSeat_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveSeat_1}
+        act2: sender := sender ∪ {approveSeat_1 ↦ Traveler}
+        act3: receiver := receiver ∪ {approveSeat_1 ↦ CheckInKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveSeat_1}
+    END
+
+    receiveapproveSeat_1
+    WHEN
+        grd1: approveSeat_1 ∈ sentMessages
+        grd2: approveSeat_1 ↦ Traveler ∈ sender
+        grd3: approveSeat_1 ↦ CheckInKiosk ∈ receiver
+        grd4: approveSeat_1 ∉ receivedMessages
+        grd5: currentMessage = {approveSeat_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveSeat_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelSeat_2
+    WHEN
+        grd1: cancelSeat_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveSeat_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSeat_2}
+        act2: sender := sender ∪ {cancelSeat_2 ↦ CheckInKiosk}
+        act3: receiver := receiver ∪ {cancelSeat_2 ↦ Traveler}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelSeat_2}
+    END
+
+    receivecancelSeat_2
+    WHEN
+        grd1: cancelSeat_2 ∈ sentMessages
+        grd2: cancelSeat_2 ↦ CheckInKiosk ∈ sender
+        grd3: cancelSeat_2 ↦ Traveler ∈ receiver
+        grd4: cancelSeat_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelSeat_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSeat_2}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchBoarding_3
+    WHEN
+        grd1: fetchBoarding_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSeat_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchBoarding_3}
+        act2: sender := sender ∪ {fetchBoarding_3 ↦ Traveler}
+        act3: receiver := receiver ∪ {fetchBoarding_3 ↦ AirlineDCS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchBoarding_3 ↦ bagInfo}
+        act6: currentMessage := {fetchBoarding_3}
+    END
+
+    receivefetchBoarding_3
+    WHEN
+        grd1: fetchBoarding_3 ∈ sentMessages
+        grd2: fetchBoarding_3 ↦ Traveler ∈ sender
+        grd3: fetchBoarding_3 ↦ AirlineDCS ∈ receiver
+        grd4: fetchBoarding_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchBoarding_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchBoarding_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchBoarding_3 ↦ bagInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelBag_4
+    WHEN
+        grd1: cancelBag_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchBoarding_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelBag_4}
+        act2: sender := sender ∪ {cancelBag_4 ↦ CheckInKiosk}
+        act3: receiver := receiver ∪ {cancelBag_4 ↦ Traveler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelBag_4 ↦ seatRef, cancelBag_4 ↦ seatValue}
+        act6: currentMessage := {cancelBag_4}
+    END
+
+    receivecancelBag_4
+    WHEN
+        grd1: cancelBag_4 ∈ sentMessages
+        grd2: cancelBag_4 ↦ CheckInKiosk ∈ sender
+        grd3: cancelBag_4 ↦ Traveler ∈ receiver
+        grd4: cancelBag_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelBag_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelBag_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelBag_4 ↦ seatRef, cancelBag_4 ↦ seatValue}
+        act3: currentMessage := ∅
+    END
+
+    sendassignSeat_5
+    WHEN
+        grd1: assignSeat_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelBag_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignSeat_5}
+        act2: sender := sender ∪ {assignSeat_5 ↦ CheckInKiosk}
+        act3: receiver := receiver ∪ {assignSeat_5 ↦ AirlineDCS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignSeat_5 ↦ bagID, assignSeat_5 ↦ seatValue}
+        act6: currentMessage := {assignSeat_5}
+    END
+
+    receiveassignSeat_5
+    WHEN
+        grd1: assignSeat_5 ∈ sentMessages
+        grd2: assignSeat_5 ↦ CheckInKiosk ∈ sender
+        grd3: assignSeat_5 ↦ AirlineDCS ∈ receiver
+        grd4: assignSeat_5 ∉ receivedMessages
+        grd5: currentMessage = {assignSeat_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignSeat_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignSeat_5 ↦ bagID, assignSeat_5 ↦ seatValue}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrequestBoarding_6
+    WHEN
+        grd1: requestBoarding_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignSeat_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBoarding_6}
+        act2: sender := sender ∪ {requestBoarding_6 ↦ Traveler}
+        act3: receiver := receiver ∪ {requestBoarding_6 ↦ AirlineDCS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBoarding_6 ↦ bagValue}
+        act6: currentMessage := {requestBoarding_6}
+    END
+
+    receiverequestBoarding_6
+    WHEN
+        grd1: requestBoarding_6 ∈ sentMessages
+        grd2: requestBoarding_6 ↦ Traveler ∈ sender
+        grd3: requestBoarding_6 ↦ AirlineDCS ∈ receiver
+        grd4: requestBoarding_6 ∉ receivedMessages
+        grd5: currentMessage = {requestBoarding_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBoarding_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBoarding_6 ↦ bagValue}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendackBag_7
+    WHEN
+        grd1: ackBag_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBoarding_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackBag_7}
+        act2: sender := sender ∪ {ackBag_7 ↦ Traveler}
+        act3: receiver := receiver ∪ {ackBag_7 ↦ CheckInKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackBag_7 ↦ seatRef}
+        act6: currentMessage := {ackBag_7}
+    END
+
+    receiveackBag_7
+    WHEN
+        grd1: ackBag_7 ∈ sentMessages
+        grd2: ackBag_7 ↦ Traveler ∈ sender
+        grd3: ackBag_7 ↦ CheckInKiosk ∈ receiver
+        grd4: ackBag_7 ∉ receivedMessages
+        grd5: currentMessage = {ackBag_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackBag_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackBag_7 ↦ seatRef}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+END

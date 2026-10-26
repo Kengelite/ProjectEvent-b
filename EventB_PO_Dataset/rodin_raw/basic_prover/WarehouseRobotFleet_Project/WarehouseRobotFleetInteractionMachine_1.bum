@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.machineFile org.eventb.core.configuration="org.eventb.core.fwd" version="5">
+<org.eventb.core.seesContext name="internal_element1" org.eventb.core.target="WarehouseRobotFleetContext"/>
+<org.eventb.core.variable name="internal_element2" org.eventb.core.identifier="sentMessages"/>
+<org.eventb.core.variable name="internal_element3" org.eventb.core.identifier="sender"/>
+<org.eventb.core.variable name="internal_element4" org.eventb.core.identifier="receiver"/>
+<org.eventb.core.variable name="internal_element5" org.eventb.core.identifier="receivedMessages"/>
+<org.eventb.core.variable name="internal_element6" org.eventb.core.identifier="senderdataMessages"/>
+<org.eventb.core.variable name="internal_element7" org.eventb.core.identifier="currentMessage"/>
+<org.eventb.core.variable name="internal_element8" org.eventb.core.identifier="receiverdataMessages"/>
+<org.eventb.core.variable name="internal_element9" org.eventb.core.identifier="shift"/>
+<org.eventb.core.variable name="internal_element10" org.eventb.core.identifier="lowBattery"/>
+<org.eventb.core.variable name="internal_element11" org.eventb.core.identifier="par_1"/>
+<org.eventb.core.variable name="internal_element12" org.eventb.core.identifier="t_time_2"/>
+<org.eventb.core.variable name="internal_element13" org.eventb.core.identifier="t_delay_2"/>
+<org.eventb.core.variable name="internal_element14" org.eventb.core.identifier="t_success_2"/>
+<org.eventb.core.variable name="internal_element15" org.eventb.core.identifier="t_time_3"/>
+<org.eventb.core.variable name="internal_element16" org.eventb.core.identifier="t_delay_3"/>
+<org.eventb.core.variable name="internal_element17" org.eventb.core.identifier="t_success_3"/>
+<org.eventb.core.variable name="internal_element18" org.eventb.core.identifier="t_time_5"/>
+<org.eventb.core.variable name="internal_element19" org.eventb.core.identifier="t_delay_5"/>
+<org.eventb.core.variable name="internal_element20" org.eventb.core.identifier="t_success_5"/>
+<org.eventb.core.invariant name="internal_element21" org.eventb.core.label="inv1" org.eventb.core.predicate="sentMessages ⊆ Messages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element22" org.eventb.core.label="inv2" org.eventb.core.predicate="currentMessage ⊆ Messages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element23" org.eventb.core.label="inv3" org.eventb.core.predicate="sender ⊆ Messages × Objects" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element24" org.eventb.core.label="inv4" org.eventb.core.predicate="receiver ⊆ Messages × Objects" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element25" org.eventb.core.label="inv5" org.eventb.core.predicate="receivedMessages ⊆ sentMessages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element26" org.eventb.core.label="inv6" org.eventb.core.predicate="senderdataMessages ⊆ Messages × DataMessages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element27" org.eventb.core.label="inv7" org.eventb.core.predicate="receiverdataMessages ⊆ Messages × DataMessages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element28" org.eventb.core.label="inv8" org.eventb.core.predicate="shift ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element29" org.eventb.core.label="inv9" org.eventb.core.predicate="lowBattery ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element30" org.eventb.core.label="inv10" org.eventb.core.predicate="par_1 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element31" org.eventb.core.label="inv11" org.eventb.core.predicate="t_time_2 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element32" org.eventb.core.label="inv12" org.eventb.core.predicate="t_delay_2 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element33" org.eventb.core.label="inv13" org.eventb.core.predicate="t_success_2 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element34" org.eventb.core.label="inv14" org.eventb.core.predicate="t_time_3 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element35" org.eventb.core.label="inv15" org.eventb.core.predicate="t_delay_3 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element36" org.eventb.core.label="inv16" org.eventb.core.predicate="t_success_3 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element37" org.eventb.core.label="inv17" org.eventb.core.predicate="t_time_5 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element38" org.eventb.core.label="inv18" org.eventb.core.predicate="t_delay_5 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element39" org.eventb.core.label="inv19" org.eventb.core.predicate="t_success_5 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.event name="internal_element40" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="INITIALISATION">
+  <org.eventb.core.action name="internal_element1" org.eventb.core.assignment="sentMessages ≔ ∅" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element2" org.eventb.core.assignment="sender ≔ ∅" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element3" org.eventb.core.assignment="receiver ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="senderdataMessages ≔ ∅" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiverdataMessages ≔ ∅" org.eventb.core.label="act6"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act7"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="shift ≔ 0" org.eventb.core.label="act8"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="lowBattery ≔ 1" org.eventb.core.label="act9"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="par_1 ≔ 0" org.eventb.core.label="act10"/>
+  <org.eventb.core.action name="internal_element11" org.eventb.core.assignment="t_time_2 :∈ 0 ‥ 5" org.eventb.core.label="act11"/>
+  <org.eventb.core.action name="internal_element12" org.eventb.core.assignment="t_delay_2 ≔ 0" org.eventb.core.label="act12"/>
+  <org.eventb.core.action name="internal_element13" org.eventb.core.assignment="t_success_2 ≔ 0" org.eventb.core.label="act13"/>
+  <org.eventb.core.action name="internal_element14" org.eventb.core.assignment="t_time_3 :∈ 0 ‥ 5" org.eventb.core.label="act14"/>
+  <org.eventb.core.action name="internal_element15" org.eventb.core.assignment="t_delay_3 ≔ 0" org.eventb.core.label="act15"/>
+  <org.eventb.core.action name="internal_element16" org.eventb.core.assignment="t_success_3 ≔ 0" org.eventb.core.label="act16"/>
+  <org.eventb.core.action name="internal_element17" org.eventb.core.assignment="t_time_5 :∈ 0 ‥ 10" org.eventb.core.label="act17"/>
+  <org.eventb.core.action name="internal_element18" org.eventb.core.assignment="t_delay_5 ≔ 0" org.eventb.core.label="act18"/>
+  <org.eventb.core.action name="internal_element19" org.eventb.core.assignment="t_success_5 ≔ 0" org.eventb.core.label="act19"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element41" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendstartShift_1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="startShift_1 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element3" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {startShift_1}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sender ≔ sender ∪ {startShift_1 ↦ FleetManager}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="receiver ≔ receiver ∪ {startShift_1 ↦ RobotA}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {startShift_1 ↦ shiftID}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ {startShift_1}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element42" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivestartShift_1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="startShift_1 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="startShift_1 ↦ FleetManager ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="startShift_1 ↦ RobotA ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="startShift_1 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {startShift_1}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {startShift_1}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {startShift_1 ↦ shiftID}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element43" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendassignTaskA_2">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="assignTaskA_2 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="startShift_1 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {assignTaskA_2}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {assignTaskA_2 ↦ FleetManager}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {assignTaskA_2 ↦ RobotA}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {assignTaskA_2 ↦ taskID}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {assignTaskA_2}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element44" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveassignTaskA_2">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="assignTaskA_2 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="assignTaskA_2 ↦ FleetManager ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="assignTaskA_2 ↦ RobotA ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="assignTaskA_2 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {assignTaskA_2}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {assignTaskA_2}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {assignTaskA_2 ↦ taskID}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="t_success_2 ≔ t_time_2 + t_delay_2" org.eventb.core.label="act4"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element45" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendassignTaskB_3">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="assignTaskB_3 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="assignTaskA_2 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {assignTaskB_3}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {assignTaskB_3 ↦ FleetManager}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {assignTaskB_3 ↦ RobotB}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {assignTaskB_3 ↦ taskID}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {assignTaskB_3}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element46" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveassignTaskB_3">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="assignTaskB_3 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="assignTaskB_3 ↦ FleetManager ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="assignTaskB_3 ↦ RobotB ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="assignTaskB_3 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {assignTaskB_3}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {assignTaskB_3}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {assignTaskB_3 ↦ taskID}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="t_success_3 ≔ t_time_3 + t_delay_3" org.eventb.core.label="act4"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element47" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendtaskDone_4">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="taskDone_4 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="assignTaskB_3 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {taskDone_4}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {taskDone_4 ↦ RobotA}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {taskDone_4 ↦ FleetManager}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {taskDone_4 ↦ taskID}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {taskDone_4}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element48" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivetaskDone_4">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="taskDone_4 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="taskDone_4 ↦ RobotA ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="taskDone_4 ↦ FleetManager ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="taskDone_4 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {taskDone_4}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {taskDone_4}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {taskDone_4 ↦ taskID}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element49" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendreserveDock_5_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="reserveDock_5 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="taskDone_4 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="lowBattery = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {reserveDock_5}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="sender ≔ sender ∪ {reserveDock_5 ↦ FleetManager}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiver ≔ receiver ∪ {reserveDock_5 ↦ ChargingDock}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {reserveDock_5 ↦ dockID}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element11" org.eventb.core.assignment="currentMessage ≔ {reserveDock_5}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element50" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivereserveDock_5_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="reserveDock_5 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="reserveDock_5 ↦ FleetManager ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="reserveDock_5 ↦ ChargingDock ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="reserveDock_5 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {reserveDock_5}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element7" org.eventb.core.label="grd7" org.eventb.core.predicate="lowBattery = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {reserveDock_5}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {reserveDock_5 ↦ dockID}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element11" org.eventb.core.assignment="t_success_5 ≔ t_time_5 + t_delay_5" org.eventb.core.label="act4"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element51" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="senddockReady_6_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="dockReady_6 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="reserveDock_5 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="lowBattery = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {dockReady_6}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="sender ≔ sender ∪ {dockReady_6 ↦ ChargingDock}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiver ≔ receiver ∪ {dockReady_6 ↦ FleetManager}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {dockReady_6}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element52" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivedockReady_6_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="dockReady_6 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="dockReady_6 ↦ ChargingDock ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="dockReady_6 ↦ FleetManager ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="dockReady_6 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {dockReady_6}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element7" org.eventb.core.label="grd7" org.eventb.core.predicate="lowBattery = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {dockReady_6}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element53" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendendShift_7">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="endShift_7 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="dockReady_6 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {endShift_7}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {endShift_7 ↦ FleetManager}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {endShift_7 ↦ RobotB}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {endShift_7 ↦ shiftID}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {endShift_7}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element54" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveendShift_7">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="endShift_7 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="endShift_7 ↦ FleetManager ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="endShift_7 ↦ RobotB ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="endShift_7 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {endShift_7}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {endShift_7}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {endShift_7 ↦ shiftID}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element55" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="checkloop_assignTaskA_2_loop1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="shift &lt; 8" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element2" org.eventb.core.assignment="shift ≔ shift + 1" org.eventb.core.label="act1"/>
+</org.eventb.core.event>
+</org.eventb.core.machineFile>

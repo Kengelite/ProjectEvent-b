@@ -1,0 +1,251 @@
+CONTEXT ColdChainMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CloudPlatform, QualityTeam, TempLogger, Truck
+    logTemperature_1, uploadLog_2, uploadAck_3, raiseAlert_4, alertAck_5, dailySummary_6, closeTrip_7
+    alertID, logBatch, summary, tempValue, tripID
+AXIOMS
+    axm1: partition(Objects, {CloudPlatform}, {QualityTeam}, {TempLogger}, {Truck})
+    axm2: partition(Messages, {logTemperature_1}, {uploadLog_2}, {uploadAck_3}, {raiseAlert_4}, {alertAck_5}, {dailySummary_6}, {closeTrip_7})
+    axm3: partition(DataMessages, {alertID}, {logBatch}, {summary}, {tempValue}, {tripID})
+END
+
+MACHINE ColdChainMonitorInteractionMachine_1
+SEES ColdChainMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, tempBreach, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: tempBreach ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: tempBreach := 0
+        act9: t_time_1 :∈ 0..5
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 30..14
+        act13: t_delay_2 := 10
+        act14: t_success_2 := 0
+        act15: t_time_4 :∈ 0..2
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendlogTemperature_1
+    WHEN
+        grd1: logTemperature_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {logTemperature_1}
+        act2: sender := sender ∪ {logTemperature_1 ↦ TempLogger}
+        act3: receiver := receiver ∪ {logTemperature_1 ↦ Truck}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logTemperature_1 ↦ tempValue}
+        act6: currentMessage := {logTemperature_1}
+    END
+
+    receivelogTemperature_1
+    WHEN
+        grd1: logTemperature_1 ∈ sentMessages
+        grd2: logTemperature_1 ↦ TempLogger ∈ sender
+        grd3: logTemperature_1 ↦ Truck ∈ receiver
+        grd4: logTemperature_1 ∉ receivedMessages
+        grd5: currentMessage = {logTemperature_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logTemperature_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logTemperature_1 ↦ tempValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    senduploadLog_2
+    WHEN
+        grd1: uploadLog_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logTemperature_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {uploadLog_2}
+        act2: sender := sender ∪ {uploadLog_2 ↦ Truck}
+        act3: receiver := receiver ∪ {uploadLog_2 ↦ CloudPlatform}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {uploadLog_2 ↦ logBatch}
+        act6: currentMessage := {uploadLog_2}
+    END
+
+    receiveuploadLog_2
+    WHEN
+        grd1: uploadLog_2 ∈ sentMessages
+        grd2: uploadLog_2 ↦ Truck ∈ sender
+        grd3: uploadLog_2 ↦ CloudPlatform ∈ receiver
+        grd4: uploadLog_2 ∉ receivedMessages
+        grd5: currentMessage = {uploadLog_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {uploadLog_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {uploadLog_2 ↦ logBatch}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    senduploadAck_3
+    WHEN
+        grd1: uploadAck_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: uploadLog_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {uploadAck_3}
+        act2: sender := sender ∪ {uploadAck_3 ↦ CloudPlatform}
+        act3: receiver := receiver ∪ {uploadAck_3 ↦ Truck}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {uploadAck_3}
+    END
+
+    receiveuploadAck_3
+    WHEN
+        grd1: uploadAck_3 ∈ sentMessages
+        grd2: uploadAck_3 ↦ CloudPlatform ∈ sender
+        grd3: uploadAck_3 ↦ Truck ∈ receiver
+        grd4: uploadAck_3 ∉ receivedMessages
+        grd5: currentMessage = {uploadAck_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {uploadAck_3}
+        act2: currentMessage := ∅
+    END
+
+    sendraiseAlert_4
+    WHEN
+        grd1: raiseAlert_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: uploadAck_3 ∈ receivedMessages
+        grd4: tempBreach = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {raiseAlert_4}
+        act2: sender := sender ∪ {raiseAlert_4 ↦ CloudPlatform}
+        act3: receiver := receiver ∪ {raiseAlert_4 ↦ QualityTeam}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {raiseAlert_4 ↦ alertID}
+        act6: currentMessage := {raiseAlert_4}
+    END
+
+    receiveraiseAlert_4
+    WHEN
+        grd1: raiseAlert_4 ∈ sentMessages
+        grd2: raiseAlert_4 ↦ CloudPlatform ∈ sender
+        grd3: raiseAlert_4 ↦ QualityTeam ∈ receiver
+        grd4: raiseAlert_4 ∉ receivedMessages
+        grd5: currentMessage = {raiseAlert_4}
+        grd6: tempBreach = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {raiseAlert_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {raiseAlert_4 ↦ alertID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendalertAck_5
+    WHEN
+        grd1: alertAck_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: raiseAlert_4 ∈ receivedMessages
+        grd4: tempBreach = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {alertAck_5}
+        act2: sender := sender ∪ {alertAck_5 ↦ QualityTeam}
+        act3: receiver := receiver ∪ {alertAck_5 ↦ CloudPlatform}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {alertAck_5}
+    END
+
+    receivealertAck_5
+    WHEN
+        grd1: alertAck_5 ∈ sentMessages
+        grd2: alertAck_5 ↦ QualityTeam ∈ sender
+        grd3: alertAck_5 ↦ CloudPlatform ∈ receiver
+        grd4: alertAck_5 ∉ receivedMessages
+        grd5: currentMessage = {alertAck_5}
+        grd6: tempBreach = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {alertAck_5}
+        act2: currentMessage := ∅
+    END
+
+    senddailySummary_6
+    WHEN
+        grd1: dailySummary_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: uploadAck_3 ∈ receivedMessages
+        grd4: tempBreach = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {dailySummary_6}
+        act2: sender := sender ∪ {dailySummary_6 ↦ CloudPlatform}
+        act3: receiver := receiver ∪ {dailySummary_6 ↦ QualityTeam}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {dailySummary_6 ↦ summary}
+        act6: currentMessage := {dailySummary_6}
+    END
+
+    receivedailySummary_6
+    WHEN
+        grd1: dailySummary_6 ∈ sentMessages
+        grd2: dailySummary_6 ↦ CloudPlatform ∈ sender
+        grd3: dailySummary_6 ↦ QualityTeam ∈ receiver
+        grd4: dailySummary_6 ∉ receivedMessages
+        grd5: currentMessage = {dailySummary_6}
+        grd6: tempBreach = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dailySummary_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {dailySummary_6 ↦ summary}
+        act3: currentMessage := ∅
+    END
+
+    sendcloseTrip_7
+    WHEN
+        grd1: closeTrip_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: alertAck_5 ∈ receivedMessages ∨ dailySummary_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {closeTrip_7}
+        act2: sender := sender ∪ {closeTrip_7 ↦ Truck}
+        act3: receiver := receiver ∪ {closeTrip_7 ↦ CloudPlatform}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {closeTrip_7 ↦ tripID}
+        act6: currentMessage := {closeTrip_7}
+    END
+
+    receivecloseTrip_7
+    WHEN
+        grd1: closeTrip_7 ∈ sentMessages
+        grd2: closeTrip_7 ↦ Truck ∈ sender
+        grd3: closeTrip_7 ↦ CloudPlatform ∈ receiver
+        grd4: closeTrip_7 ∉ receivedMessages
+        grd5: currentMessage = {closeTrip_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {closeTrip_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {closeTrip_7 ↦ tripID}
+        act3: currentMessage := ∅
+    END
+
+END

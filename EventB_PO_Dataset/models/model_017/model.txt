@@ -1,0 +1,339 @@
+CONTEXT EmergencyDispatchContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Ambulance, CallCenter, Caller, Hospital
+    reportEmergency_1, askDetails_2, provideDetails_3, dispatchAmbulance_4, sendLocation_5, rerouteRequest_6, notifyHospital_7, scheduleCallback_8, closeCase_9
+    callbackTime, caseID, gpsPos, location, route, severityCode
+    HIGH, LOW
+AXIOMS
+    axm1: partition(Objects, {Ambulance}, {CallCenter}, {Caller}, {Hospital})
+    axm2: partition(Messages, {reportEmergency_1}, {askDetails_2}, {provideDetails_3}, {dispatchAmbulance_4}, {sendLocation_5}, {rerouteRequest_6}, {notifyHospital_7}, {scheduleCallback_8}, {closeCase_9})
+    axm3: partition(DataMessages, {callbackTime}, {caseID}, {gpsPos}, {location}, {route}, {severityCode})
+    axm4: HIGH = 0
+    axm5: LOW = 1
+END
+
+MACHINE EmergencyDispatchInteractionMachine_1
+SEES EmergencyDispatchContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, priority, updateCount, trafficJam, t_time_1, t_delay_1, t_success_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: priority ∈ ℤ
+    inv9: updateCount ∈ ℤ
+    inv10: trafficJam ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: priority := LOW
+        act9: updateCount := 0
+        act10: trafficJam := 1
+        act11: t_time_1 :∈ 0..3
+        act12: t_delay_1 := 0
+        act13: t_success_1 := 0
+        act14: t_time_4 :∈ 0..2
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 0..2
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+        act20: t_time_7 :∈ 0..5
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+    END
+
+
+    sendreportEmergency_1
+    WHEN
+        grd1: reportEmergency_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportEmergency_1}
+        act2: sender := sender ∪ {reportEmergency_1 ↦ Caller}
+        act3: receiver := receiver ∪ {reportEmergency_1 ↦ CallCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportEmergency_1 ↦ location}
+        act6: currentMessage := {reportEmergency_1}
+    END
+
+    receivereportEmergency_1
+    WHEN
+        grd1: reportEmergency_1 ∈ sentMessages
+        grd2: reportEmergency_1 ↦ Caller ∈ sender
+        grd3: reportEmergency_1 ↦ CallCenter ∈ receiver
+        grd4: reportEmergency_1 ∉ receivedMessages
+        grd5: currentMessage = {reportEmergency_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportEmergency_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportEmergency_1 ↦ location}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendaskDetails_2
+    WHEN
+        grd1: askDetails_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportEmergency_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {askDetails_2}
+        act2: sender := sender ∪ {askDetails_2 ↦ CallCenter}
+        act3: receiver := receiver ∪ {askDetails_2 ↦ Caller}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {askDetails_2}
+    END
+
+    receiveaskDetails_2
+    WHEN
+        grd1: askDetails_2 ∈ sentMessages
+        grd2: askDetails_2 ↦ CallCenter ∈ sender
+        grd3: askDetails_2 ↦ Caller ∈ receiver
+        grd4: askDetails_2 ∉ receivedMessages
+        grd5: currentMessage = {askDetails_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {askDetails_2}
+        act2: currentMessage := ∅
+    END
+
+    sendprovideDetails_3
+    WHEN
+        grd1: provideDetails_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: askDetails_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {provideDetails_3}
+        act2: sender := sender ∪ {provideDetails_3 ↦ Caller}
+        act3: receiver := receiver ∪ {provideDetails_3 ↦ CallCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {provideDetails_3 ↦ severityCode}
+        act6: currentMessage := {provideDetails_3}
+    END
+
+    receiveprovideDetails_3
+    WHEN
+        grd1: provideDetails_3 ∈ sentMessages
+        grd2: provideDetails_3 ↦ Caller ∈ sender
+        grd3: provideDetails_3 ↦ CallCenter ∈ receiver
+        grd4: provideDetails_3 ∉ receivedMessages
+        grd5: currentMessage = {provideDetails_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {provideDetails_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {provideDetails_3 ↦ severityCode}
+        act3: currentMessage := ∅
+    END
+
+    senddispatchAmbulance_4
+    WHEN
+        grd1: dispatchAmbulance_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: provideDetails_3 ∈ receivedMessages
+        grd4: priority = HIGH
+    THEN
+        act1: sentMessages := sentMessages ∪ {dispatchAmbulance_4}
+        act2: sender := sender ∪ {dispatchAmbulance_4 ↦ CallCenter}
+        act3: receiver := receiver ∪ {dispatchAmbulance_4 ↦ Ambulance}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {dispatchAmbulance_4 ↦ caseID}
+        act6: currentMessage := {dispatchAmbulance_4}
+    END
+
+    receivedispatchAmbulance_4
+    WHEN
+        grd1: dispatchAmbulance_4 ∈ sentMessages
+        grd2: dispatchAmbulance_4 ↦ CallCenter ∈ sender
+        grd3: dispatchAmbulance_4 ↦ Ambulance ∈ receiver
+        grd4: dispatchAmbulance_4 ∉ receivedMessages
+        grd5: currentMessage = {dispatchAmbulance_4}
+        grd6: priority = HIGH
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dispatchAmbulance_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {dispatchAmbulance_4 ↦ caseID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsendLocation_5
+    WHEN
+        grd1: sendLocation_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: dispatchAmbulance_4 ∈ receivedMessages
+        grd4: priority = HIGH
+        grd5: updateCount < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendLocation_5}
+        act2: sender := sender ∪ {sendLocation_5 ↦ Ambulance}
+        act3: receiver := receiver ∪ {sendLocation_5 ↦ CallCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendLocation_5 ↦ gpsPos}
+        act6: currentMessage := {sendLocation_5}
+    END
+
+    receivesendLocation_5
+    WHEN
+        grd1: sendLocation_5 ∈ sentMessages
+        grd2: sendLocation_5 ↦ Ambulance ∈ sender
+        grd3: sendLocation_5 ↦ CallCenter ∈ receiver
+        grd4: sendLocation_5 ∉ receivedMessages
+        grd5: currentMessage = {sendLocation_5}
+        grd6: priority = HIGH
+        grd7: updateCount < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendLocation_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendLocation_5 ↦ gpsPos}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrerouteRequest_6_opt1
+    WHEN
+        grd1: rerouteRequest_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendLocation_5 ∈ receivedMessages
+        grd4: priority = HIGH
+        grd5: updateCount < 4
+        grd6: trafficJam = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {rerouteRequest_6}
+        act2: sender := sender ∪ {rerouteRequest_6 ↦ CallCenter}
+        act3: receiver := receiver ∪ {rerouteRequest_6 ↦ Ambulance}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {rerouteRequest_6 ↦ route}
+        act6: currentMessage := {rerouteRequest_6}
+    END
+
+    receivererouteRequest_6_opt1
+    WHEN
+        grd1: rerouteRequest_6 ∈ sentMessages
+        grd2: rerouteRequest_6 ↦ CallCenter ∈ sender
+        grd3: rerouteRequest_6 ↦ Ambulance ∈ receiver
+        grd4: rerouteRequest_6 ∉ receivedMessages
+        grd5: currentMessage = {rerouteRequest_6}
+        grd6: priority = HIGH
+        grd7: updateCount < 4
+        grd8: trafficJam = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {rerouteRequest_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {rerouteRequest_6 ↦ route}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyHospital_7
+    WHEN
+        grd1: notifyHospital_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: rerouteRequest_6 ∈ receivedMessages
+        grd4: priority = HIGH
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyHospital_7}
+        act2: sender := sender ∪ {notifyHospital_7 ↦ CallCenter}
+        act3: receiver := receiver ∪ {notifyHospital_7 ↦ Hospital}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyHospital_7 ↦ caseID}
+        act6: currentMessage := {notifyHospital_7}
+    END
+
+    receivenotifyHospital_7
+    WHEN
+        grd1: notifyHospital_7 ∈ sentMessages
+        grd2: notifyHospital_7 ↦ CallCenter ∈ sender
+        grd3: notifyHospital_7 ↦ Hospital ∈ receiver
+        grd4: notifyHospital_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyHospital_7}
+        grd6: priority = HIGH
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyHospital_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyHospital_7 ↦ caseID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendscheduleCallback_8
+    WHEN
+        grd1: scheduleCallback_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: provideDetails_3 ∈ receivedMessages
+        grd4: priority = LOW
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleCallback_8}
+        act2: sender := sender ∪ {scheduleCallback_8 ↦ CallCenter}
+        act3: receiver := receiver ∪ {scheduleCallback_8 ↦ Caller}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleCallback_8 ↦ callbackTime}
+        act6: currentMessage := {scheduleCallback_8}
+    END
+
+    receivescheduleCallback_8
+    WHEN
+        grd1: scheduleCallback_8 ∈ sentMessages
+        grd2: scheduleCallback_8 ↦ CallCenter ∈ sender
+        grd3: scheduleCallback_8 ↦ Caller ∈ receiver
+        grd4: scheduleCallback_8 ∉ receivedMessages
+        grd5: currentMessage = {scheduleCallback_8}
+        grd6: priority = LOW
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleCallback_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleCallback_8 ↦ callbackTime}
+        act3: currentMessage := ∅
+    END
+
+    sendcloseCase_9
+    WHEN
+        grd1: closeCase_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyHospital_7 ∈ receivedMessages ∨ scheduleCallback_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {closeCase_9}
+        act2: sender := sender ∪ {closeCase_9 ↦ CallCenter}
+        act3: receiver := receiver ∪ {closeCase_9 ↦ Caller}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {closeCase_9 ↦ caseID}
+        act6: currentMessage := {closeCase_9}
+    END
+
+    receivecloseCase_9
+    WHEN
+        grd1: closeCase_9 ∈ sentMessages
+        grd2: closeCase_9 ↦ CallCenter ∈ sender
+        grd3: closeCase_9 ↦ Caller ∈ receiver
+        grd4: closeCase_9 ∉ receivedMessages
+        grd5: currentMessage = {closeCase_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {closeCase_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {closeCase_9 ↦ caseID}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_sendLocation_5_loop1
+    WHEN
+        grd1: priority = HIGH
+        grd2: updateCount < 4
+    THEN
+        act1: updateCount := updateCount + 1
+    END
+
+END

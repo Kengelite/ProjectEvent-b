@@ -1,0 +1,33 @@
+{
+  "model_id": "model_005",
+  "case": "BatteryChargeCycle",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "BatteryChargeCycle_Project",
+  "category": "model_error",
+  "mutation": "pulseNo ≥ 0 and pulseNo ≤ 8 added; checkloop decrements the counter instead of incrementing",
+  "operations": {
+    "add_inv": [
+      "pulseNo ≥ 0",
+      "pulseNo ≤ 8"
+    ],
+    "replace_in_event": [
+      [
+        "checkloop_chargePulse_3_loop1",
+        "pulseNo := pulseNo + 1",
+        "pulseNo := pulseNo − 1"
+      ]
+    ]
+  },
+  "added_invariant_labels": [
+    "inv15",
+    "inv16"
+  ],
+  "expected_failed_pos": [
+    "checkloop_chargePulse_3_loop1/inv15/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_005",
+  "rodin_raw_dir": "rodin_raw/ml_pp/BatteryChargeCycle_Project"
+}

@@ -1,0 +1,218 @@
+CONTEXT PipelineLeakSCADAContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FlowMeter, RTU, SCADAServer
+    scheduleWork_1, cancelWork_2, validatePressure_3, approvePressure_4, fetchWork_5, approveWork_6
+    pressureValue, workCode, workInfo, workValue
+AXIOMS
+    axm1: partition(Objects, {FlowMeter}, {RTU}, {SCADAServer})
+    axm2: partition(Messages, {scheduleWork_1}, {cancelWork_2}, {validatePressure_3}, {approvePressure_4}, {fetchWork_5}, {approveWork_6})
+    axm3: partition(DataMessages, {pressureValue}, {workCode}, {workInfo}, {workValue})
+END
+
+MACHINE PipelineLeakSCADAInteractionMachine_1
+SEES PipelineLeakSCADAContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..60
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..1
+        act13: t_delay_3 := 10
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..10
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendscheduleWork_1
+    WHEN
+        grd1: scheduleWork_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleWork_1}
+        act2: sender := sender ∪ {scheduleWork_1 ↦ SCADAServer}
+        act3: receiver := receiver ∪ {scheduleWork_1 ↦ RTU}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleWork_1 ↦ workValue}
+        act6: currentMessage := {scheduleWork_1}
+    END
+
+    receivescheduleWork_1
+    WHEN
+        grd1: scheduleWork_1 ∈ sentMessages
+        grd2: scheduleWork_1 ↦ SCADAServer ∈ sender
+        grd3: scheduleWork_1 ↦ RTU ∈ receiver
+        grd4: scheduleWork_1 ∉ receivedMessages
+        grd5: currentMessage = {scheduleWork_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleWork_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleWork_1 ↦ workValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendcancelWork_2
+    WHEN
+        grd1: cancelWork_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleWork_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelWork_2}
+        act2: sender := sender ∪ {cancelWork_2 ↦ RTU}
+        act3: receiver := receiver ∪ {cancelWork_2 ↦ FlowMeter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelWork_2}
+    END
+
+    receivecancelWork_2
+    WHEN
+        grd1: cancelWork_2 ∈ sentMessages
+        grd2: cancelWork_2 ↦ RTU ∈ sender
+        grd3: cancelWork_2 ↦ FlowMeter ∈ receiver
+        grd4: cancelWork_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelWork_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelWork_2}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidatePressure_3
+    WHEN
+        grd1: validatePressure_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelWork_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePressure_3}
+        act2: sender := sender ∪ {validatePressure_3 ↦ RTU}
+        act3: receiver := receiver ∪ {validatePressure_3 ↦ SCADAServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePressure_3 ↦ pressureValue}
+        act6: currentMessage := {validatePressure_3}
+    END
+
+    receivevalidatePressure_3
+    WHEN
+        grd1: validatePressure_3 ∈ sentMessages
+        grd2: validatePressure_3 ↦ RTU ∈ sender
+        grd3: validatePressure_3 ↦ SCADAServer ∈ receiver
+        grd4: validatePressure_3 ∉ receivedMessages
+        grd5: currentMessage = {validatePressure_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePressure_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePressure_3 ↦ pressureValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapprovePressure_4
+    WHEN
+        grd1: approvePressure_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePressure_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvePressure_4}
+        act2: sender := sender ∪ {approvePressure_4 ↦ SCADAServer}
+        act3: receiver := receiver ∪ {approvePressure_4 ↦ RTU}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approvePressure_4 ↦ workInfo}
+        act6: currentMessage := {approvePressure_4}
+    END
+
+    receiveapprovePressure_4
+    WHEN
+        grd1: approvePressure_4 ∈ sentMessages
+        grd2: approvePressure_4 ↦ SCADAServer ∈ sender
+        grd3: approvePressure_4 ↦ RTU ∈ receiver
+        grd4: approvePressure_4 ∉ receivedMessages
+        grd5: currentMessage = {approvePressure_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvePressure_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approvePressure_4 ↦ workInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchWork_5
+    WHEN
+        grd1: fetchWork_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvePressure_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchWork_5}
+        act2: sender := sender ∪ {fetchWork_5 ↦ SCADAServer}
+        act3: receiver := receiver ∪ {fetchWork_5 ↦ FlowMeter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchWork_5 ↦ workCode}
+        act6: currentMessage := {fetchWork_5}
+    END
+
+    receivefetchWork_5
+    WHEN
+        grd1: fetchWork_5 ∈ sentMessages
+        grd2: fetchWork_5 ↦ SCADAServer ∈ sender
+        grd3: fetchWork_5 ↦ FlowMeter ∈ receiver
+        grd4: fetchWork_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchWork_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchWork_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchWork_5 ↦ workCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendapproveWork_6
+    WHEN
+        grd1: approveWork_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchWork_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveWork_6}
+        act2: sender := sender ∪ {approveWork_6 ↦ SCADAServer}
+        act3: receiver := receiver ∪ {approveWork_6 ↦ FlowMeter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveWork_6}
+    END
+
+    receiveapproveWork_6
+    WHEN
+        grd1: approveWork_6 ∈ sentMessages
+        grd2: approveWork_6 ↦ SCADAServer ∈ sender
+        grd3: approveWork_6 ↦ FlowMeter ∈ receiver
+        grd4: approveWork_6 ∉ receivedMessages
+        grd5: currentMessage = {approveWork_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveWork_6}
+        act2: currentMessage := ∅
+    END
+
+END

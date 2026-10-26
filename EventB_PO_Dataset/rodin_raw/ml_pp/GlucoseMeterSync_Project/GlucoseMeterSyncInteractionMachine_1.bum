@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.machineFile org.eventb.core.configuration="org.eventb.core.fwd" version="5">
+<org.eventb.core.seesContext name="internal_element1" org.eventb.core.target="GlucoseMeterSyncContext"/>
+<org.eventb.core.variable name="internal_element2" org.eventb.core.identifier="sentMessages"/>
+<org.eventb.core.variable name="internal_element3" org.eventb.core.identifier="sender"/>
+<org.eventb.core.variable name="internal_element4" org.eventb.core.identifier="receiver"/>
+<org.eventb.core.variable name="internal_element5" org.eventb.core.identifier="receivedMessages"/>
+<org.eventb.core.variable name="internal_element6" org.eventb.core.identifier="senderdataMessages"/>
+<org.eventb.core.variable name="internal_element7" org.eventb.core.identifier="currentMessage"/>
+<org.eventb.core.variable name="internal_element8" org.eventb.core.identifier="receiverdataMessages"/>
+<org.eventb.core.variable name="internal_element9" org.eventb.core.identifier="needAck"/>
+<org.eventb.core.variable name="internal_element10" org.eventb.core.identifier="par_1"/>
+<org.eventb.core.variable name="internal_element11" org.eventb.core.identifier="par_2"/>
+<org.eventb.core.variable name="internal_element12" org.eventb.core.identifier="t_time_3"/>
+<org.eventb.core.variable name="internal_element13" org.eventb.core.identifier="t_delay_3"/>
+<org.eventb.core.variable name="internal_element14" org.eventb.core.identifier="t_success_3"/>
+<org.eventb.core.variable name="internal_element15" org.eventb.core.identifier="t_time_5"/>
+<org.eventb.core.variable name="internal_element16" org.eventb.core.identifier="t_delay_5"/>
+<org.eventb.core.variable name="internal_element17" org.eventb.core.identifier="t_success_5"/>
+<org.eventb.core.variable name="internal_element18" org.eventb.core.identifier="t_time_7"/>
+<org.eventb.core.variable name="internal_element19" org.eventb.core.identifier="t_delay_7"/>
+<org.eventb.core.variable name="internal_element20" org.eventb.core.identifier="t_success_7"/>
+<org.eventb.core.variable name="internal_element21" org.eventb.core.identifier="t_time_10"/>
+<org.eventb.core.variable name="internal_element22" org.eventb.core.identifier="t_delay_10"/>
+<org.eventb.core.variable name="internal_element23" org.eventb.core.identifier="t_success_10"/>
+<org.eventb.core.variable name="internal_element24" org.eventb.core.identifier="t_time_12"/>
+<org.eventb.core.variable name="internal_element25" org.eventb.core.identifier="t_delay_12"/>
+<org.eventb.core.variable name="internal_element26" org.eventb.core.identifier="t_success_12"/>
+<org.eventb.core.invariant name="internal_element27" org.eventb.core.label="inv1" org.eventb.core.predicate="sentMessages ⊆ Messages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element28" org.eventb.core.label="inv2" org.eventb.core.predicate="currentMessage ⊆ Messages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element29" org.eventb.core.label="inv3" org.eventb.core.predicate="sender ⊆ Messages × Objects" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element30" org.eventb.core.label="inv4" org.eventb.core.predicate="receiver ⊆ Messages × Objects" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element31" org.eventb.core.label="inv5" org.eventb.core.predicate="receivedMessages ⊆ sentMessages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element32" org.eventb.core.label="inv6" org.eventb.core.predicate="senderdataMessages ⊆ Messages × DataMessages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element33" org.eventb.core.label="inv7" org.eventb.core.predicate="receiverdataMessages ⊆ Messages × DataMessages" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element34" org.eventb.core.label="inv8" org.eventb.core.predicate="needAck ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element35" org.eventb.core.label="inv9" org.eventb.core.predicate="par_1 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element36" org.eventb.core.label="inv10" org.eventb.core.predicate="par_2 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element37" org.eventb.core.label="inv11" org.eventb.core.predicate="t_time_3 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element38" org.eventb.core.label="inv12" org.eventb.core.predicate="t_delay_3 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element39" org.eventb.core.label="inv13" org.eventb.core.predicate="t_success_3 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element40" org.eventb.core.label="inv14" org.eventb.core.predicate="t_time_5 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element41" org.eventb.core.label="inv15" org.eventb.core.predicate="t_delay_5 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element42" org.eventb.core.label="inv16" org.eventb.core.predicate="t_success_5 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element43" org.eventb.core.label="inv17" org.eventb.core.predicate="t_time_7 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element44" org.eventb.core.label="inv18" org.eventb.core.predicate="t_delay_7 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element45" org.eventb.core.label="inv19" org.eventb.core.predicate="t_success_7 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element46" org.eventb.core.label="inv20" org.eventb.core.predicate="t_time_10 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element47" org.eventb.core.label="inv21" org.eventb.core.predicate="t_delay_10 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element48" org.eventb.core.label="inv22" org.eventb.core.predicate="t_success_10 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element49" org.eventb.core.label="inv23" org.eventb.core.predicate="t_time_12 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element50" org.eventb.core.label="inv24" org.eventb.core.predicate="t_delay_12 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.invariant name="internal_element51" org.eventb.core.label="inv25" org.eventb.core.predicate="t_success_12 ∈ ℤ" org.eventb.core.theorem="false"/>
+<org.eventb.core.event name="internal_element52" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="INITIALISATION">
+  <org.eventb.core.action name="internal_element1" org.eventb.core.assignment="sentMessages ≔ ∅" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element2" org.eventb.core.assignment="sender ≔ ∅" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element3" org.eventb.core.assignment="receiver ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="senderdataMessages ≔ ∅" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiverdataMessages ≔ ∅" org.eventb.core.label="act6"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act7"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="needAck ≔ 1" org.eventb.core.label="act8"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="par_1 ≔ 0" org.eventb.core.label="act9"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="par_2 ≔ 0" org.eventb.core.label="act10"/>
+  <org.eventb.core.action name="internal_element11" org.eventb.core.assignment="t_time_3 :∈ 0 ‥ 5" org.eventb.core.label="act11"/>
+  <org.eventb.core.action name="internal_element12" org.eventb.core.assignment="t_delay_3 ≔ 0" org.eventb.core.label="act12"/>
+  <org.eventb.core.action name="internal_element13" org.eventb.core.assignment="t_success_3 ≔ 0" org.eventb.core.label="act13"/>
+  <org.eventb.core.action name="internal_element14" org.eventb.core.assignment="t_time_5 :∈ 0 ‥ 2" org.eventb.core.label="act14"/>
+  <org.eventb.core.action name="internal_element15" org.eventb.core.assignment="t_delay_5 ≔ 0" org.eventb.core.label="act15"/>
+  <org.eventb.core.action name="internal_element16" org.eventb.core.assignment="t_success_5 ≔ 0" org.eventb.core.label="act16"/>
+  <org.eventb.core.action name="internal_element17" org.eventb.core.assignment="t_time_7 :∈ 0 ‥ 8" org.eventb.core.label="act17"/>
+  <org.eventb.core.action name="internal_element18" org.eventb.core.assignment="t_delay_7 ≔ 0" org.eventb.core.label="act18"/>
+  <org.eventb.core.action name="internal_element19" org.eventb.core.assignment="t_success_7 ≔ 0" org.eventb.core.label="act19"/>
+  <org.eventb.core.action name="internal_element20" org.eventb.core.assignment="t_time_10 :∈ 0 ‥ 20" org.eventb.core.label="act20"/>
+  <org.eventb.core.action name="internal_element21" org.eventb.core.assignment="t_delay_10 ≔ 0" org.eventb.core.label="act21"/>
+  <org.eventb.core.action name="internal_element22" org.eventb.core.assignment="t_success_10 ≔ 0" org.eventb.core.label="act22"/>
+  <org.eventb.core.action name="internal_element23" org.eventb.core.assignment="t_time_12 :∈ 0 ‥ 5" org.eventb.core.label="act23"/>
+  <org.eventb.core.action name="internal_element24" org.eventb.core.assignment="t_delay_12 ≔ 0" org.eventb.core.label="act24"/>
+  <org.eventb.core.action name="internal_element25" org.eventb.core.assignment="t_success_12 ≔ 0" org.eventb.core.label="act25"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element53" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendconfirmInsulin_1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="confirmInsulin_1 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element3" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {confirmInsulin_1}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sender ≔ sender ∪ {confirmInsulin_1 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="receiver ≔ receiver ∪ {confirmInsulin_1 ↦ PhoneApp}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ {confirmInsulin_1}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element54" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveconfirmInsulin_1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="confirmInsulin_1 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="confirmInsulin_1 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="confirmInsulin_1 ↦ PhoneApp ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="confirmInsulin_1 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {confirmInsulin_1}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {confirmInsulin_1}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element55" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendsyncReading_2">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="syncReading_2 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="confirmInsulin_1 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {syncReading_2}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {syncReading_2 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {syncReading_2 ↦ PhoneApp}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ {syncReading_2}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element56" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivesyncReading_2">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="syncReading_2 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="syncReading_2 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="syncReading_2 ↦ PhoneApp ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="syncReading_2 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {syncReading_2}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {syncReading_2}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element57" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendupdateAlert_3">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="updateAlert_3 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="syncReading_2 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {updateAlert_3}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {updateAlert_3 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {updateAlert_3 ↦ CloudLog}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ {updateAlert_3}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element58" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveupdateAlert_3">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="updateAlert_3 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="updateAlert_3 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="updateAlert_3 ↦ CloudLog ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="updateAlert_3 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {updateAlert_3}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {updateAlert_3}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="t_success_3 ≔ t_time_3 + t_delay_3" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element59" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendqueryReading_4">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="queryReading_4 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="updateAlert_3 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {queryReading_4}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {queryReading_4 ↦ CloudLog}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {queryReading_4 ↦ PhoneApp}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {queryReading_4 ↦ insulinCode, queryReading_4 ↦ readingValue}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {queryReading_4}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element60" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivequeryReading_4">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="queryReading_4 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="queryReading_4 ↦ CloudLog ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="queryReading_4 ↦ PhoneApp ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="queryReading_4 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {queryReading_4}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {queryReading_4}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {queryReading_4 ↦ insulinCode, queryReading_4 ↦ readingValue}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element61" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendnotifyAlert_5">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="notifyAlert_5 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="queryReading_4 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {notifyAlert_5}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {notifyAlert_5 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {notifyAlert_5 ↦ Doctor}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {notifyAlert_5 ↦ insulinData}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {notifyAlert_5}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element62" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivenotifyAlert_5">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="notifyAlert_5 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="notifyAlert_5 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="notifyAlert_5 ↦ Doctor ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="notifyAlert_5 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {notifyAlert_5}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {notifyAlert_5}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {notifyAlert_5 ↦ insulinData}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="t_success_5 ≔ t_time_5 + t_delay_5" org.eventb.core.label="act4"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element63" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendreleaseAlert_6">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="releaseAlert_6 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="notifyAlert_5 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {releaseAlert_6}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {releaseAlert_6 ↦ CloudLog}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {releaseAlert_6 ↦ Meter}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ {releaseAlert_6}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element64" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivereleaseAlert_6">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="releaseAlert_6 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="releaseAlert_6 ↦ CloudLog ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="releaseAlert_6 ↦ Meter ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="releaseAlert_6 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {releaseAlert_6}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {releaseAlert_6}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element65" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendqueryAlert_7">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="queryAlert_7 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="releaseAlert_6 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {queryAlert_7}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {queryAlert_7 ↦ CloudLog}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {queryAlert_7 ↦ Doctor}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {queryAlert_7 ↦ insulinCode}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {queryAlert_7}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element66" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivequeryAlert_7">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="queryAlert_7 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="queryAlert_7 ↦ CloudLog ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="queryAlert_7 ↦ Doctor ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="queryAlert_7 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {queryAlert_7}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {queryAlert_7}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {queryAlert_7 ↦ insulinCode}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="t_success_7 ≔ t_time_7 + t_delay_7" org.eventb.core.label="act4"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element67" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendreleaseInsulin_8_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="releaseInsulin_8 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="queryAlert_7 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {releaseInsulin_8}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {releaseInsulin_8 ↦ Doctor}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {releaseInsulin_8 ↦ CloudLog}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {releaseInsulin_8 ↦ insulinCode}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {releaseInsulin_8}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element68" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivereleaseInsulin_8_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="releaseInsulin_8 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="releaseInsulin_8 ↦ Doctor ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="releaseInsulin_8 ↦ CloudLog ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="releaseInsulin_8 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {releaseInsulin_8}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {releaseInsulin_8}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {releaseInsulin_8 ↦ insulinCode}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element69" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendrequestAlert_9_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="requestAlert_9 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="releaseInsulin_8 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {requestAlert_9}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {requestAlert_9 ↦ PhoneApp}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {requestAlert_9 ↦ Doctor}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {requestAlert_9 ↦ readingRef}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {requestAlert_9}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element70" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiverequestAlert_9_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="requestAlert_9 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="requestAlert_9 ↦ PhoneApp ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="requestAlert_9 ↦ Doctor ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="requestAlert_9 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {requestAlert_9}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {requestAlert_9}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {requestAlert_9 ↦ readingRef}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element71" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendreportInsulin_10_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="reportInsulin_10 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="requestAlert_9 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {reportInsulin_10}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {reportInsulin_10 ↦ PhoneApp}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {reportInsulin_10 ↦ CloudLog}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {reportInsulin_10 ↦ readingData}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {reportInsulin_10}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element72" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivereportInsulin_10_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="reportInsulin_10 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="reportInsulin_10 ↦ PhoneApp ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="reportInsulin_10 ↦ CloudLog ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="reportInsulin_10 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {reportInsulin_10}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {reportInsulin_10}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {reportInsulin_10 ↦ readingData}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="t_success_10 ≔ t_time_10 + t_delay_10" org.eventb.core.label="act4"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element73" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendupdateInsulin_11_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="updateInsulin_11 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="reportInsulin_10 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {updateInsulin_11}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {updateInsulin_11 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {updateInsulin_11 ↦ CloudLog}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {updateInsulin_11}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element74" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveupdateInsulin_11_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="updateInsulin_11 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="updateInsulin_11 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="updateInsulin_11 ↦ CloudLog ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="updateInsulin_11 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {updateInsulin_11}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {updateInsulin_11}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element75" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendsendAlert_12_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="sendAlert_12 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="updateInsulin_11 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {sendAlert_12}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {sendAlert_12 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {sendAlert_12 ↦ PhoneApp}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {sendAlert_12}" org.eventb.core.label="act5"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element76" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivesendAlert_12_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="sendAlert_12 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="sendAlert_12 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="sendAlert_12 ↦ PhoneApp ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="sendAlert_12 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {sendAlert_12}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {sendAlert_12}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="t_success_12 ≔ t_time_12 + t_delay_12" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element77" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendapproveAlert_13_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="approveAlert_13 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="sendAlert_12 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {approveAlert_13}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="sender ≔ sender ∪ {approveAlert_13 ↦ CloudLog}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiver ≔ receiver ∪ {approveAlert_13 ↦ PhoneApp}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {approveAlert_13 ↦ alertCode, approveAlert_13 ↦ insulinInfo}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element10" org.eventb.core.assignment="currentMessage ≔ {approveAlert_13}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element78" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receiveapproveAlert_13_opt1">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="approveAlert_13 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="approveAlert_13 ↦ CloudLog ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="approveAlert_13 ↦ PhoneApp ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="approveAlert_13 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {approveAlert_13}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element6" org.eventb.core.label="grd6" org.eventb.core.predicate="needAck = 1" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {approveAlert_13}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {approveAlert_13 ↦ alertCode, approveAlert_13 ↦ insulinInfo}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element79" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="sendreserveAlert_14">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="reserveAlert_14 ∉ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="currentMessage = ∅" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="approveAlert_13 ∈ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element4" org.eventb.core.assignment="sentMessages ≔ sentMessages ∪ {reserveAlert_14}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element5" org.eventb.core.assignment="sender ≔ sender ∪ {reserveAlert_14 ↦ Meter}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receiver ≔ receiver ∪ {reserveAlert_14 ↦ CloudLog}" org.eventb.core.label="act3"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receivedMessages ≔ ∅" org.eventb.core.label="act4"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="senderdataMessages ≔ senderdataMessages ∪ {reserveAlert_14 ↦ alertInfo}" org.eventb.core.label="act5"/>
+  <org.eventb.core.action name="internal_element9" org.eventb.core.assignment="currentMessage ≔ {reserveAlert_14}" org.eventb.core.label="act6"/>
+</org.eventb.core.event>
+<org.eventb.core.event name="internal_element80" org.eventb.core.convergence="0" org.eventb.core.extended="false" org.eventb.core.label="receivereserveAlert_14">
+  <org.eventb.core.guard name="internal_element1" org.eventb.core.label="grd1" org.eventb.core.predicate="reserveAlert_14 ∈ sentMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element2" org.eventb.core.label="grd2" org.eventb.core.predicate="reserveAlert_14 ↦ Meter ∈ sender" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element3" org.eventb.core.label="grd3" org.eventb.core.predicate="reserveAlert_14 ↦ CloudLog ∈ receiver" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element4" org.eventb.core.label="grd4" org.eventb.core.predicate="reserveAlert_14 ∉ receivedMessages" org.eventb.core.theorem="false"/>
+  <org.eventb.core.guard name="internal_element5" org.eventb.core.label="grd5" org.eventb.core.predicate="currentMessage = {reserveAlert_14}" org.eventb.core.theorem="false"/>
+  <org.eventb.core.action name="internal_element6" org.eventb.core.assignment="receivedMessages ≔ receivedMessages ∪ {reserveAlert_14}" org.eventb.core.label="act1"/>
+  <org.eventb.core.action name="internal_element7" org.eventb.core.assignment="receiverdataMessages ≔ receiverdataMessages ∪ {reserveAlert_14 ↦ alertInfo}" org.eventb.core.label="act2"/>
+  <org.eventb.core.action name="internal_element8" org.eventb.core.assignment="currentMessage ≔ ∅" org.eventb.core.label="act3"/>
+</org.eventb.core.event>
+</org.eventb.core.machineFile>

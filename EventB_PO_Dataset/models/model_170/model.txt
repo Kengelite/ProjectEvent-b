@@ -1,0 +1,222 @@
+CONTEXT SmartHelmetMiningContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    MineGateway, Miner, SafetyOfficer, SmartHelmet
+    syncAlarm_1, ackGas_2, scheduleGas_3, checkAlarm_4, reserveLocation_5, updateAlarm_6
+    alarmID, gasValue, locationCode
+AXIOMS
+    axm1: partition(Objects, {MineGateway}, {Miner}, {SafetyOfficer}, {SmartHelmet})
+    axm2: partition(Messages, {syncAlarm_1}, {ackGas_2}, {scheduleGas_3}, {checkAlarm_4}, {reserveLocation_5}, {updateAlarm_6})
+    axm3: partition(DataMessages, {alarmID}, {gasValue}, {locationCode})
+END
+
+MACHINE SmartHelmetMiningInteractionMachine_1
+SEES SmartHelmetMiningContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, temp, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: temp ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: temp :∈ ℤ
+        act9: t_time_2 :∈ 0..1
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..3
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..30
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendsyncAlarm_1
+    WHEN
+        grd1: syncAlarm_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncAlarm_1}
+        act2: sender := sender ∪ {syncAlarm_1 ↦ Miner}
+        act3: receiver := receiver ∪ {syncAlarm_1 ↦ MineGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncAlarm_1 ↦ gasValue}
+        act6: currentMessage := {syncAlarm_1}
+    END
+
+    receivesyncAlarm_1
+    WHEN
+        grd1: syncAlarm_1 ∈ sentMessages
+        grd2: syncAlarm_1 ↦ Miner ∈ sender
+        grd3: syncAlarm_1 ↦ MineGateway ∈ receiver
+        grd4: syncAlarm_1 ∉ receivedMessages
+        grd5: currentMessage = {syncAlarm_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncAlarm_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncAlarm_1 ↦ gasValue}
+        act3: currentMessage := ∅
+    END
+
+    sendackGas_2
+    WHEN
+        grd1: ackGas_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncAlarm_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackGas_2}
+        act2: sender := sender ∪ {ackGas_2 ↦ MineGateway}
+        act3: receiver := receiver ∪ {ackGas_2 ↦ SmartHelmet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackGas_2}
+    END
+
+    receiveackGas_2
+    WHEN
+        grd1: ackGas_2 ∈ sentMessages
+        grd2: ackGas_2 ↦ MineGateway ∈ sender
+        grd3: ackGas_2 ↦ SmartHelmet ∈ receiver
+        grd4: ackGas_2 ∉ receivedMessages
+        grd5: currentMessage = {ackGas_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackGas_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendscheduleGas_3
+    WHEN
+        grd1: scheduleGas_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackGas_2 ∈ receivedMessages
+        grd4: temp < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleGas_3}
+        act2: sender := sender ∪ {scheduleGas_3 ↦ Miner}
+        act3: receiver := receiver ∪ {scheduleGas_3 ↦ SmartHelmet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleGas_3}
+    END
+
+    receivescheduleGas_3
+    WHEN
+        grd1: scheduleGas_3 ∈ sentMessages
+        grd2: scheduleGas_3 ↦ Miner ∈ sender
+        grd3: scheduleGas_3 ↦ SmartHelmet ∈ receiver
+        grd4: scheduleGas_3 ∉ receivedMessages
+        grd5: currentMessage = {scheduleGas_3}
+        grd6: temp < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleGas_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckAlarm_4
+    WHEN
+        grd1: checkAlarm_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackGas_2 ∈ receivedMessages
+        grd4: temp ≥ 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkAlarm_4}
+        act2: sender := sender ∪ {checkAlarm_4 ↦ SafetyOfficer}
+        act3: receiver := receiver ∪ {checkAlarm_4 ↦ SmartHelmet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkAlarm_4}
+    END
+
+    receivecheckAlarm_4
+    WHEN
+        grd1: checkAlarm_4 ∈ sentMessages
+        grd2: checkAlarm_4 ↦ SafetyOfficer ∈ sender
+        grd3: checkAlarm_4 ↦ SmartHelmet ∈ receiver
+        grd4: checkAlarm_4 ∉ receivedMessages
+        grd5: currentMessage = {checkAlarm_4}
+        grd6: temp ≥ 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkAlarm_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreserveLocation_5
+    WHEN
+        grd1: reserveLocation_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkAlarm_4 ∈ receivedMessages
+        grd4: temp ≥ 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveLocation_5}
+        act2: sender := sender ∪ {reserveLocation_5 ↦ SafetyOfficer}
+        act3: receiver := receiver ∪ {reserveLocation_5 ↦ SmartHelmet}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveLocation_5 ↦ locationCode}
+        act6: currentMessage := {reserveLocation_5}
+    END
+
+    receivereserveLocation_5
+    WHEN
+        grd1: reserveLocation_5 ∈ sentMessages
+        grd2: reserveLocation_5 ↦ SafetyOfficer ∈ sender
+        grd3: reserveLocation_5 ↦ SmartHelmet ∈ receiver
+        grd4: reserveLocation_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveLocation_5}
+        grd6: temp ≥ 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveLocation_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveLocation_5 ↦ locationCode}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateAlarm_6
+    WHEN
+        grd1: updateAlarm_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleGas_3 ∈ receivedMessages ∨ reserveLocation_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateAlarm_6}
+        act2: sender := sender ∪ {updateAlarm_6 ↦ SmartHelmet}
+        act3: receiver := receiver ∪ {updateAlarm_6 ↦ SafetyOfficer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateAlarm_6 ↦ alarmID}
+        act6: currentMessage := {updateAlarm_6}
+    END
+
+    receiveupdateAlarm_6
+    WHEN
+        grd1: updateAlarm_6 ∈ sentMessages
+        grd2: updateAlarm_6 ↦ SmartHelmet ∈ sender
+        grd3: updateAlarm_6 ↦ SafetyOfficer ∈ receiver
+        grd4: updateAlarm_6 ∉ receivedMessages
+        grd5: currentMessage = {updateAlarm_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateAlarm_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateAlarm_6 ↦ alarmID}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,262 @@
+CONTEXT PrinterQueueContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    OfficePC, Printer
+    submitJob_1, jobQueued_2, pagePrinted_3, nextPage_4, reprint_5, reprintDone_6, jobComplete_7
+    jobID, pageCount, pageNo, queuePos
+AXIOMS
+    axm1: partition(Objects, {OfficePC}, {Printer})
+    axm2: partition(Messages, {submitJob_1}, {jobQueued_2}, {pagePrinted_3}, {nextPage_4}, {reprint_5}, {reprintDone_6}, {jobComplete_7})
+    axm3: partition(DataMessages, {jobID}, {pageCount}, {pageNo}, {queuePos})
+END
+
+MACHINE PrinterQueueInteractionMachine_1
+SEES PrinterQueueContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, jobCount, retryPrint, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: jobCount ∈ ℤ
+    inv9: retryPrint ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: jobCount := 0
+        act9: retryPrint := 0
+        act10: t_time_1 :∈ 0..2
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_3 :∈ 3..2
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+    END
+
+
+    sendsubmitJob_1
+    WHEN
+        grd1: submitJob_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {submitJob_1}
+        act2: sender := sender ∪ {submitJob_1 ↦ OfficePC}
+        act3: receiver := receiver ∪ {submitJob_1 ↦ Printer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {submitJob_1 ↦ jobID, submitJob_1 ↦ pageCount}
+        act6: currentMessage := {submitJob_1}
+    END
+
+    receivesubmitJob_1
+    WHEN
+        grd1: submitJob_1 ∈ sentMessages
+        grd2: submitJob_1 ↦ OfficePC ∈ sender
+        grd3: submitJob_1 ↦ Printer ∈ receiver
+        grd4: submitJob_1 ∉ receivedMessages
+        grd5: currentMessage = {submitJob_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {submitJob_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {submitJob_1 ↦ jobID, submitJob_1 ↦ pageCount}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendjobQueued_2
+    WHEN
+        grd1: jobQueued_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: submitJob_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {jobQueued_2}
+        act2: sender := sender ∪ {jobQueued_2 ↦ Printer}
+        act3: receiver := receiver ∪ {jobQueued_2 ↦ OfficePC}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {jobQueued_2 ↦ queuePos}
+        act6: currentMessage := {jobQueued_2}
+    END
+
+    receivejobQueued_2
+    WHEN
+        grd1: jobQueued_2 ∈ sentMessages
+        grd2: jobQueued_2 ↦ Printer ∈ sender
+        grd3: jobQueued_2 ↦ OfficePC ∈ receiver
+        grd4: jobQueued_2 ∉ receivedMessages
+        grd5: currentMessage = {jobQueued_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {jobQueued_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {jobQueued_2 ↦ queuePos}
+        act3: currentMessage := ∅
+    END
+
+    sendpagePrinted_3
+    WHEN
+        grd1: pagePrinted_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: jobQueued_2 ∈ receivedMessages
+        grd4: jobCount < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {pagePrinted_3}
+        act2: sender := sender ∪ {pagePrinted_3 ↦ Printer}
+        act3: receiver := receiver ∪ {pagePrinted_3 ↦ OfficePC}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {pagePrinted_3 ↦ pageNo}
+        act6: currentMessage := {pagePrinted_3}
+    END
+
+    receivepagePrinted_3
+    WHEN
+        grd1: pagePrinted_3 ∈ sentMessages
+        grd2: pagePrinted_3 ↦ Printer ∈ sender
+        grd3: pagePrinted_3 ↦ OfficePC ∈ receiver
+        grd4: pagePrinted_3 ∉ receivedMessages
+        grd5: currentMessage = {pagePrinted_3}
+        grd6: jobCount < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pagePrinted_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {pagePrinted_3 ↦ pageNo}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendnextPage_4
+    WHEN
+        grd1: nextPage_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pagePrinted_3 ∈ receivedMessages
+        grd4: jobCount < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {nextPage_4}
+        act2: sender := sender ∪ {nextPage_4 ↦ OfficePC}
+        act3: receiver := receiver ∪ {nextPage_4 ↦ Printer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {nextPage_4}
+    END
+
+    receivenextPage_4
+    WHEN
+        grd1: nextPage_4 ∈ sentMessages
+        grd2: nextPage_4 ↦ OfficePC ∈ sender
+        grd3: nextPage_4 ↦ Printer ∈ receiver
+        grd4: nextPage_4 ∉ receivedMessages
+        grd5: currentMessage = {nextPage_4}
+        grd6: jobCount < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {nextPage_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreprint_5
+    WHEN
+        grd1: reprint_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: nextPage_4 ∈ receivedMessages
+        grd4: retryPrint < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {reprint_5}
+        act2: sender := sender ∪ {reprint_5 ↦ OfficePC}
+        act3: receiver := receiver ∪ {reprint_5 ↦ Printer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reprint_5 ↦ jobID}
+        act6: currentMessage := {reprint_5}
+    END
+
+    receivereprint_5
+    WHEN
+        grd1: reprint_5 ∈ sentMessages
+        grd2: reprint_5 ↦ OfficePC ∈ sender
+        grd3: reprint_5 ↦ Printer ∈ receiver
+        grd4: reprint_5 ∉ receivedMessages
+        grd5: currentMessage = {reprint_5}
+        grd6: retryPrint < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reprint_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reprint_5 ↦ jobID}
+        act3: currentMessage := ∅
+    END
+
+    sendreprintDone_6
+    WHEN
+        grd1: reprintDone_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reprint_5 ∈ receivedMessages
+        grd4: retryPrint < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {reprintDone_6}
+        act2: sender := sender ∪ {reprintDone_6 ↦ Printer}
+        act3: receiver := receiver ∪ {reprintDone_6 ↦ OfficePC}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reprintDone_6}
+    END
+
+    receivereprintDone_6
+    WHEN
+        grd1: reprintDone_6 ∈ sentMessages
+        grd2: reprintDone_6 ↦ Printer ∈ sender
+        grd3: reprintDone_6 ↦ OfficePC ∈ receiver
+        grd4: reprintDone_6 ∉ receivedMessages
+        grd5: currentMessage = {reprintDone_6}
+        grd6: retryPrint < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reprintDone_6}
+        act2: currentMessage := ∅
+    END
+
+    sendjobComplete_7
+    WHEN
+        grd1: jobComplete_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reprintDone_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {jobComplete_7}
+        act2: sender := sender ∪ {jobComplete_7 ↦ Printer}
+        act3: receiver := receiver ∪ {jobComplete_7 ↦ OfficePC}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {jobComplete_7 ↦ jobID}
+        act6: currentMessage := {jobComplete_7}
+    END
+
+    receivejobComplete_7
+    WHEN
+        grd1: jobComplete_7 ∈ sentMessages
+        grd2: jobComplete_7 ↦ Printer ∈ sender
+        grd3: jobComplete_7 ↦ OfficePC ∈ receiver
+        grd4: jobComplete_7 ∉ receivedMessages
+        grd5: currentMessage = {jobComplete_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {jobComplete_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {jobComplete_7 ↦ jobID}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_pagePrinted_3_loop1
+    WHEN
+        grd1: jobCount < 5
+    THEN
+        act1: jobCount := jobCount + 1
+    END
+
+    checkloop_reprint_5_loop2
+    WHEN
+        grd1: retryPrint < 3
+    THEN
+        act1: retryPrint := retryPrint + 1
+    END
+
+END

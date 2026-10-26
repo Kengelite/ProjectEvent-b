@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="InsurerAPI" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="claimID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="ackRefill_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="refillID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="confirmPrescription_9" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="claimCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="checkClaim_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="schedulePrescription_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="PharmacyApp" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="cancelRefill_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="reservePrescription_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="claimData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="issuePrescription_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="queryRefill_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="refillRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="prescriptionCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Patient" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="refillData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Pharmacist" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="validateClaim_8" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/PharmacyRefill_Project/PharmacyRefillContext.bpo|org.eventb.core.poFile#PharmacyRefillContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{InsurerAPI},{Patient},{Pharmacist},{PharmacyApp})" org.eventb.core.source="/PharmacyRefill_Project/PharmacyRefillContext.buc|org.eventb.core.contextFile#PharmacyRefillContext|org.eventb.core.axiom#internal_element24"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{issuePrescription_1},{checkClaim_2},{schedulePrescription_3},{queryRefill_4},{ackRefill_5},{reservePrescription_6},{cancelRefill_7},{validateClaim_8},{confirmPrescription_9})" org.eventb.core.source="/PharmacyRefill_Project/PharmacyRefillContext.buc|org.eventb.core.contextFile#PharmacyRefillContext|org.eventb.core.axiom#internal_element25"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{claimCode},{claimData},{claimID},{prescriptionCode},{refillData},{refillID},{refillRef})" org.eventb.core.source="/PharmacyRefill_Project/PharmacyRefillContext.buc|org.eventb.core.contextFile#PharmacyRefillContext|org.eventb.core.axiom#internal_element26"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

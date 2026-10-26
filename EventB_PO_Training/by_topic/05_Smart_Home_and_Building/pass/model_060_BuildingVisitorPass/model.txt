@@ -1,0 +1,268 @@
+CONTEXT BuildingVisitorPassContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AccessServer, Host, LobbyKiosk, Visitor
+    sendBadge_1, checkBadge_2, queryVisit_3, releasePass_4, notifyPass_5, validateVisit_6, sendPass_7
+    passCode, passData, passRef, visitCode, visitValue
+AXIOMS
+    axm1: partition(Objects, {AccessServer}, {Host}, {LobbyKiosk}, {Visitor})
+    axm2: partition(Messages, {sendBadge_1}, {checkBadge_2}, {queryVisit_3}, {releasePass_4}, {notifyPass_5}, {validateVisit_6}, {sendPass_7})
+    axm3: partition(DataMessages, {passCode}, {passData}, {passRef}, {visitCode}, {visitValue})
+END
+
+MACHINE BuildingVisitorPassInteractionMachine_1
+SEES BuildingVisitorPassContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_5 ∈ ℤ
+    inv19: t_delay_5 ∈ ℤ
+    inv20: t_success_5 ∈ ℤ
+    inv21: t_time_6 ∈ ℤ
+    inv22: t_delay_6 ∈ ℤ
+    inv23: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: t_time_2 :∈ 0..10
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..8
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..15
+        act16: t_delay_4 := 2
+        act17: t_success_4 := 0
+        act18: t_time_5 :∈ 0..0
+        act19: t_delay_5 := 1
+        act20: t_success_5 := 0
+        act21: t_time_6 :∈ 0..0
+        act22: t_delay_6 := 10
+        act23: t_success_6 := 0
+    END
+
+
+    sendsendBadge_1
+    WHEN
+        grd1: sendBadge_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendBadge_1}
+        act2: sender := sender ∪ {sendBadge_1 ↦ Visitor}
+        act3: receiver := receiver ∪ {sendBadge_1 ↦ AccessServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendBadge_1 ↦ visitCode}
+        act6: currentMessage := {sendBadge_1}
+    END
+
+    receivesendBadge_1
+    WHEN
+        grd1: sendBadge_1 ∈ sentMessages
+        grd2: sendBadge_1 ↦ Visitor ∈ sender
+        grd3: sendBadge_1 ↦ AccessServer ∈ receiver
+        grd4: sendBadge_1 ∉ receivedMessages
+        grd5: currentMessage = {sendBadge_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendBadge_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendBadge_1 ↦ visitCode}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckBadge_2
+    WHEN
+        grd1: checkBadge_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendBadge_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkBadge_2}
+        act2: sender := sender ∪ {checkBadge_2 ↦ AccessServer}
+        act3: receiver := receiver ∪ {checkBadge_2 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkBadge_2 ↦ passRef}
+        act6: currentMessage := {checkBadge_2}
+    END
+
+    receivecheckBadge_2
+    WHEN
+        grd1: checkBadge_2 ∈ sentMessages
+        grd2: checkBadge_2 ↦ AccessServer ∈ sender
+        grd3: checkBadge_2 ↦ Visitor ∈ receiver
+        grd4: checkBadge_2 ∉ receivedMessages
+        grd5: currentMessage = {checkBadge_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkBadge_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkBadge_2 ↦ passRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+        act5: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendqueryVisit_3
+    WHEN
+        grd1: queryVisit_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkBadge_2 ∈ receivedMessages
+        grd4: t_obs ≤ 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryVisit_3}
+        act2: sender := sender ∪ {queryVisit_3 ↦ LobbyKiosk}
+        act3: receiver := receiver ∪ {queryVisit_3 ↦ Host}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryVisit_3}
+    END
+
+    receivequeryVisit_3
+    WHEN
+        grd1: queryVisit_3 ∈ sentMessages
+        grd2: queryVisit_3 ↦ LobbyKiosk ∈ sender
+        grd3: queryVisit_3 ↦ Host ∈ receiver
+        grd4: queryVisit_3 ∉ receivedMessages
+        grd5: currentMessage = {queryVisit_3}
+        grd6: t_obs ≤ 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryVisit_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreleasePass_4
+    WHEN
+        grd1: releasePass_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryVisit_3 ∈ receivedMessages
+        grd4: t_obs ≤ 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {releasePass_4}
+        act2: sender := sender ∪ {releasePass_4 ↦ Visitor}
+        act3: receiver := receiver ∪ {releasePass_4 ↦ Host}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releasePass_4 ↦ passData}
+        act6: currentMessage := {releasePass_4}
+    END
+
+    receivereleasePass_4
+    WHEN
+        grd1: releasePass_4 ∈ sentMessages
+        grd2: releasePass_4 ↦ Visitor ∈ sender
+        grd3: releasePass_4 ↦ Host ∈ receiver
+        grd4: releasePass_4 ∉ receivedMessages
+        grd5: currentMessage = {releasePass_4}
+        grd6: t_obs ≤ 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releasePass_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releasePass_4 ↦ passData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyPass_5
+    WHEN
+        grd1: notifyPass_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkBadge_2 ∈ receivedMessages
+        grd4: t_obs > 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPass_5}
+        act2: sender := sender ∪ {notifyPass_5 ↦ Visitor}
+        act3: receiver := receiver ∪ {notifyPass_5 ↦ AccessServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyPass_5}
+    END
+
+    receivenotifyPass_5
+    WHEN
+        grd1: notifyPass_5 ∈ sentMessages
+        grd2: notifyPass_5 ↦ Visitor ∈ sender
+        grd3: notifyPass_5 ↦ AccessServer ∈ receiver
+        grd4: notifyPass_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyPass_5}
+        grd6: t_obs > 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPass_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendvalidateVisit_6
+    WHEN
+        grd1: validateVisit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyPass_5 ∈ receivedMessages
+        grd4: t_obs > 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateVisit_6}
+        act2: sender := sender ∪ {validateVisit_6 ↦ LobbyKiosk}
+        act3: receiver := receiver ∪ {validateVisit_6 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateVisit_6 ↦ passCode}
+        act6: currentMessage := {validateVisit_6}
+    END
+
+    receivevalidateVisit_6
+    WHEN
+        grd1: validateVisit_6 ∈ sentMessages
+        grd2: validateVisit_6 ↦ LobbyKiosk ∈ sender
+        grd3: validateVisit_6 ↦ Visitor ∈ receiver
+        grd4: validateVisit_6 ∉ receivedMessages
+        grd5: currentMessage = {validateVisit_6}
+        grd6: t_obs > 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateVisit_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateVisit_6 ↦ passCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendsendPass_7
+    WHEN
+        grd1: sendPass_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releasePass_4 ∈ receivedMessages ∨ validateVisit_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendPass_7}
+        act2: sender := sender ∪ {sendPass_7 ↦ Host}
+        act3: receiver := receiver ∪ {sendPass_7 ↦ AccessServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendPass_7 ↦ visitValue}
+        act6: currentMessage := {sendPass_7}
+    END
+
+    receivesendPass_7
+    WHEN
+        grd1: sendPass_7 ∈ sentMessages
+        grd2: sendPass_7 ↦ Host ∈ sender
+        grd3: sendPass_7 ↦ AccessServer ∈ receiver
+        grd4: sendPass_7 ∉ receivedMessages
+        grd5: currentMessage = {sendPass_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendPass_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendPass_7 ↦ visitValue}
+        act3: currentMessage := ∅
+    END
+
+END

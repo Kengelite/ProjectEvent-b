@@ -1,0 +1,353 @@
+CONTEXT InsuranceTelematicsContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CarDongle, Driver, InsurerAPI, TelematicsHub
+    confirmRating_1, fetchPremium_2, syncRating_3, notifyRating_4, confirmTrip_5, confirmPremium_6, ackPremium_7, assignTrip_8, schedulePremium_9, queryRating_10
+    premiumInfo, premiumValue, ratingData, ratingID, ratingValue, tripID, tripRef
+AXIOMS
+    axm1: partition(Objects, {CarDongle}, {Driver}, {InsurerAPI}, {TelematicsHub})
+    axm2: partition(Messages, {confirmRating_1}, {fetchPremium_2}, {syncRating_3}, {notifyRating_4}, {confirmTrip_5}, {confirmPremium_6}, {ackPremium_7}, {assignTrip_8}, {schedulePremium_9}, {queryRating_10})
+    axm3: partition(DataMessages, {premiumInfo}, {premiumValue}, {ratingData}, {ratingID}, {ratingValue}, {tripID}, {tripRef})
+END
+
+MACHINE InsuranceTelematicsInteractionMachine_1
+SEES InsuranceTelematicsContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, roundNo, urgent, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: roundNo ∈ ℤ
+    inv10: urgent ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+    inv14: t_time_6 ∈ ℤ
+    inv15: t_delay_6 ∈ ℤ
+    inv16: t_success_6 ∈ ℤ
+    inv17: t_time_9 ∈ ℤ
+    inv18: t_delay_9 ∈ ℤ
+    inv19: t_success_9 ∈ ℤ
+    inv20: t_time_10 ∈ ℤ
+    inv21: t_delay_10 ∈ ℤ
+    inv22: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: roundNo := 0
+        act10: urgent := 0
+        act11: t_time_4 :∈ 0..1
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+        act14: t_time_6 :∈ 0..20
+        act15: t_delay_6 := 0
+        act16: t_success_6 := 0
+        act17: t_time_9 :∈ 0..60
+        act18: t_delay_9 := 0
+        act19: t_success_9 := 0
+        act20: t_time_10 :∈ 0..5
+        act21: t_delay_10 := 0
+        act22: t_success_10 := 0
+    END
+
+
+    sendconfirmRating_1
+    WHEN
+        grd1: confirmRating_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmRating_1}
+        act2: sender := sender ∪ {confirmRating_1 ↦ TelematicsHub}
+        act3: receiver := receiver ∪ {confirmRating_1 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmRating_1 ↦ ratingID}
+        act6: currentMessage := {confirmRating_1}
+    END
+
+    receiveconfirmRating_1
+    WHEN
+        grd1: confirmRating_1 ∈ sentMessages
+        grd2: confirmRating_1 ↦ TelematicsHub ∈ sender
+        grd3: confirmRating_1 ↦ Driver ∈ receiver
+        grd4: confirmRating_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmRating_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmRating_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmRating_1 ↦ ratingID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchPremium_2
+    WHEN
+        grd1: fetchPremium_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmRating_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPremium_2}
+        act2: sender := sender ∪ {fetchPremium_2 ↦ TelematicsHub}
+        act3: receiver := receiver ∪ {fetchPremium_2 ↦ CarDongle}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchPremium_2 ↦ premiumValue}
+        act6: currentMessage := {fetchPremium_2}
+    END
+
+    receivefetchPremium_2
+    WHEN
+        grd1: fetchPremium_2 ∈ sentMessages
+        grd2: fetchPremium_2 ↦ TelematicsHub ∈ sender
+        grd3: fetchPremium_2 ↦ CarDongle ∈ receiver
+        grd4: fetchPremium_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchPremium_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPremium_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchPremium_2 ↦ premiumValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncRating_3_opt1
+    WHEN
+        grd1: syncRating_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPremium_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncRating_3}
+        act2: sender := sender ∪ {syncRating_3 ↦ CarDongle}
+        act3: receiver := receiver ∪ {syncRating_3 ↦ InsurerAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncRating_3 ↦ tripRef}
+        act6: currentMessage := {syncRating_3}
+    END
+
+    receivesyncRating_3_opt1
+    WHEN
+        grd1: syncRating_3 ∈ sentMessages
+        grd2: syncRating_3 ↦ CarDongle ∈ sender
+        grd3: syncRating_3 ↦ InsurerAPI ∈ receiver
+        grd4: syncRating_3 ∉ receivedMessages
+        grd5: currentMessage = {syncRating_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncRating_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncRating_3 ↦ tripRef}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyRating_4_opt1
+    WHEN
+        grd1: notifyRating_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncRating_3 ∈ receivedMessages
+        grd4: express = 1
+        grd5: roundNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyRating_4}
+        act2: sender := sender ∪ {notifyRating_4 ↦ TelematicsHub}
+        act3: receiver := receiver ∪ {notifyRating_4 ↦ InsurerAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyRating_4 ↦ ratingValue, notifyRating_4 ↦ tripID}
+        act6: currentMessage := {notifyRating_4}
+    END
+
+    receivenotifyRating_4_opt1
+    WHEN
+        grd1: notifyRating_4 ∈ sentMessages
+        grd2: notifyRating_4 ↦ TelematicsHub ∈ sender
+        grd3: notifyRating_4 ↦ InsurerAPI ∈ receiver
+        grd4: notifyRating_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyRating_4}
+        grd6: express = 1
+        grd7: roundNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyRating_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyRating_4 ↦ ratingValue, notifyRating_4 ↦ tripID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendconfirmTrip_5_opt1
+    WHEN
+        grd1: confirmTrip_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyRating_4 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmTrip_5}
+        act2: sender := sender ∪ {confirmTrip_5 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {confirmTrip_5 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmTrip_5}
+    END
+
+    receiveconfirmTrip_5_opt1
+    WHEN
+        grd1: confirmTrip_5 ∈ sentMessages
+        grd2: confirmTrip_5 ↦ InsurerAPI ∈ sender
+        grd3: confirmTrip_5 ↦ Driver ∈ receiver
+        grd4: confirmTrip_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmTrip_5}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmTrip_5}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmPremium_6
+    WHEN
+        grd1: confirmPremium_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmTrip_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPremium_6}
+        act2: sender := sender ∪ {confirmPremium_6 ↦ Driver}
+        act3: receiver := receiver ∪ {confirmPremium_6 ↦ TelematicsHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmPremium_6 ↦ ratingData}
+        act6: currentMessage := {confirmPremium_6}
+    END
+
+    receiveconfirmPremium_6
+    WHEN
+        grd1: confirmPremium_6 ∈ sentMessages
+        grd2: confirmPremium_6 ↦ Driver ∈ sender
+        grd3: confirmPremium_6 ↦ TelematicsHub ∈ receiver
+        grd4: confirmPremium_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmPremium_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPremium_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmPremium_6 ↦ ratingData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendackPremium_7
+    WHEN
+        grd1: ackPremium_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPremium_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackPremium_7}
+        act2: sender := sender ∪ {ackPremium_7 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {ackPremium_7 ↦ CarDongle}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackPremium_7}
+    END
+
+    receiveackPremium_7
+    WHEN
+        grd1: ackPremium_7 ∈ sentMessages
+        grd2: ackPremium_7 ↦ InsurerAPI ∈ sender
+        grd3: ackPremium_7 ↦ CarDongle ∈ receiver
+        grd4: ackPremium_7 ∉ receivedMessages
+        grd5: currentMessage = {ackPremium_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackPremium_7}
+        act2: currentMessage := ∅
+    END
+
+    sendassignTrip_8
+    WHEN
+        grd1: assignTrip_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackPremium_7 ∈ receivedMessages
+        grd4: urgent = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignTrip_8}
+        act2: sender := sender ∪ {assignTrip_8 ↦ Driver}
+        act3: receiver := receiver ∪ {assignTrip_8 ↦ TelematicsHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignTrip_8}
+    END
+
+    receiveassignTrip_8
+    WHEN
+        grd1: assignTrip_8 ∈ sentMessages
+        grd2: assignTrip_8 ↦ Driver ∈ sender
+        grd3: assignTrip_8 ↦ TelematicsHub ∈ receiver
+        grd4: assignTrip_8 ∉ receivedMessages
+        grd5: currentMessage = {assignTrip_8}
+        grd6: urgent = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignTrip_8}
+        act2: currentMessage := ∅
+    END
+
+    sendschedulePremium_9
+    WHEN
+        grd1: schedulePremium_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackPremium_7 ∈ receivedMessages
+        grd4: urgent = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePremium_9}
+        act2: sender := sender ∪ {schedulePremium_9 ↦ CarDongle}
+        act3: receiver := receiver ∪ {schedulePremium_9 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {schedulePremium_9}
+    END
+
+    receiveschedulePremium_9
+    WHEN
+        grd1: schedulePremium_9 ∈ sentMessages
+        grd2: schedulePremium_9 ↦ CarDongle ∈ sender
+        grd3: schedulePremium_9 ↦ Driver ∈ receiver
+        grd4: schedulePremium_9 ∉ receivedMessages
+        grd5: currentMessage = {schedulePremium_9}
+        grd6: urgent = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePremium_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendqueryRating_10
+    WHEN
+        grd1: queryRating_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignTrip_8 ∈ receivedMessages ∨ schedulePremium_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryRating_10}
+        act2: sender := sender ∪ {queryRating_10 ↦ TelematicsHub}
+        act3: receiver := receiver ∪ {queryRating_10 ↦ CarDongle}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryRating_10 ↦ premiumInfo}
+        act6: currentMessage := {queryRating_10}
+    END
+
+    receivequeryRating_10
+    WHEN
+        grd1: queryRating_10 ∈ sentMessages
+        grd2: queryRating_10 ↦ TelematicsHub ∈ sender
+        grd3: queryRating_10 ↦ CarDongle ∈ receiver
+        grd4: queryRating_10 ∉ receivedMessages
+        grd5: currentMessage = {queryRating_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryRating_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryRating_10 ↦ premiumInfo}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    checkloop_notifyRating_4_loop1
+    WHEN
+        grd1: express = 1
+        grd2: roundNo < 6
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

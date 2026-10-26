@@ -1,0 +1,287 @@
+CONTEXT CarRentalBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, PaymentGateway, RentalApp
+    openApp_1, searchCar_2, carList_3, addInsurance_4, requestPayment_5, paymentResult_6, confirmBooking_7, cancelBooking_8
+    bookingFee, bookingID, cars, location, planID, txnStatus
+AXIOMS
+    axm1: partition(Objects, {Customer}, {PaymentGateway}, {RentalApp})
+    axm2: partition(Messages, {openApp_1}, {searchCar_2}, {carList_3}, {addInsurance_4}, {requestPayment_5}, {paymentResult_6}, {confirmBooking_7}, {cancelBooking_8})
+    axm3: partition(DataMessages, {bookingFee}, {bookingID}, {cars}, {location}, {planID}, {txnStatus})
+END
+
+MACHINE CarRentalBookingInteractionMachine_1
+SEES CarRentalBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, searchCount, insurance, t_pay, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: searchCount ∈ ℤ
+    inv9: insurance ∈ ℤ
+    inv10: t_pay ∈ ℤ
+    inv11: t_time_5 ∈ ℤ
+    inv12: t_delay_5 ∈ ℤ
+    inv13: t_success_5 ∈ ℤ
+    inv14: t_time_6 ∈ ℤ
+    inv15: t_delay_6 ∈ ℤ
+    inv16: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: searchCount := 0
+        act9: insurance := 1
+        act10: t_pay := 0
+        act11: t_time_5 :∈ 0..10
+        act12: t_delay_5 := 0
+        act13: t_success_5 := 0
+        act14: t_time_6 :∈ 0..5
+        act15: t_delay_6 := 0
+        act16: t_success_6 := 0
+    END
+
+
+    sendopenApp_1
+    WHEN
+        grd1: openApp_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {openApp_1}
+        act2: sender := sender ∪ {openApp_1 ↦ Customer}
+        act3: receiver := receiver ∪ {openApp_1 ↦ RentalApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {openApp_1}
+    END
+
+    receiveopenApp_1
+    WHEN
+        grd1: openApp_1 ∈ sentMessages
+        grd2: openApp_1 ↦ Customer ∈ sender
+        grd3: openApp_1 ↦ RentalApp ∈ receiver
+        grd4: openApp_1 ∉ receivedMessages
+        grd5: currentMessage = {openApp_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {openApp_1}
+        act2: currentMessage := ∅
+    END
+
+    sendsearchCar_2
+    WHEN
+        grd1: searchCar_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: openApp_1 ∈ receivedMessages
+        grd4: searchCount < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {searchCar_2}
+        act2: sender := sender ∪ {searchCar_2 ↦ Customer}
+        act3: receiver := receiver ∪ {searchCar_2 ↦ RentalApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {searchCar_2 ↦ location}
+        act6: currentMessage := {searchCar_2}
+    END
+
+    receivesearchCar_2
+    WHEN
+        grd1: searchCar_2 ∈ sentMessages
+        grd2: searchCar_2 ↦ Customer ∈ sender
+        grd3: searchCar_2 ↦ RentalApp ∈ receiver
+        grd4: searchCar_2 ∉ receivedMessages
+        grd5: currentMessage = {searchCar_2}
+        grd6: searchCount < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {searchCar_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {searchCar_2 ↦ location}
+        act3: currentMessage := ∅
+    END
+
+    sendcarList_3
+    WHEN
+        grd1: carList_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: searchCar_2 ∈ receivedMessages
+        grd4: searchCount < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {carList_3}
+        act2: sender := sender ∪ {carList_3 ↦ RentalApp}
+        act3: receiver := receiver ∪ {carList_3 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {carList_3 ↦ cars}
+        act6: currentMessage := {carList_3}
+    END
+
+    receivecarList_3
+    WHEN
+        grd1: carList_3 ∈ sentMessages
+        grd2: carList_3 ↦ RentalApp ∈ sender
+        grd3: carList_3 ↦ Customer ∈ receiver
+        grd4: carList_3 ∉ receivedMessages
+        grd5: currentMessage = {carList_3}
+        grd6: searchCount < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {carList_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {carList_3 ↦ cars}
+        act3: currentMessage := ∅
+    END
+
+    sendaddInsurance_4_opt1
+    WHEN
+        grd1: addInsurance_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: carList_3 ∈ receivedMessages
+        grd4: insurance = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {addInsurance_4}
+        act2: sender := sender ∪ {addInsurance_4 ↦ Customer}
+        act3: receiver := receiver ∪ {addInsurance_4 ↦ RentalApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {addInsurance_4 ↦ planID}
+        act6: currentMessage := {addInsurance_4}
+    END
+
+    receiveaddInsurance_4_opt1
+    WHEN
+        grd1: addInsurance_4 ∈ sentMessages
+        grd2: addInsurance_4 ↦ Customer ∈ sender
+        grd3: addInsurance_4 ↦ RentalApp ∈ receiver
+        grd4: addInsurance_4 ∉ receivedMessages
+        grd5: currentMessage = {addInsurance_4}
+        grd6: insurance = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {addInsurance_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {addInsurance_4 ↦ planID}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestPayment_5
+    WHEN
+        grd1: requestPayment_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: addInsurance_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestPayment_5}
+        act2: sender := sender ∪ {requestPayment_5 ↦ RentalApp}
+        act3: receiver := receiver ∪ {requestPayment_5 ↦ PaymentGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestPayment_5 ↦ bookingFee}
+        act6: currentMessage := {requestPayment_5}
+    END
+
+    receiverequestPayment_5
+    WHEN
+        grd1: requestPayment_5 ∈ sentMessages
+        grd2: requestPayment_5 ↦ RentalApp ∈ sender
+        grd3: requestPayment_5 ↦ PaymentGateway ∈ receiver
+        grd4: requestPayment_5 ∉ receivedMessages
+        grd5: currentMessage = {requestPayment_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestPayment_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestPayment_5 ↦ bookingFee}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendpaymentResult_6
+    WHEN
+        grd1: paymentResult_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestPayment_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {paymentResult_6}
+        act2: sender := sender ∪ {paymentResult_6 ↦ PaymentGateway}
+        act3: receiver := receiver ∪ {paymentResult_6 ↦ RentalApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {paymentResult_6 ↦ txnStatus}
+        act6: currentMessage := {paymentResult_6}
+    END
+
+    receivepaymentResult_6
+    WHEN
+        grd1: paymentResult_6 ∈ sentMessages
+        grd2: paymentResult_6 ↦ PaymentGateway ∈ sender
+        grd3: paymentResult_6 ↦ RentalApp ∈ receiver
+        grd4: paymentResult_6 ∉ receivedMessages
+        grd5: currentMessage = {paymentResult_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {paymentResult_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {paymentResult_6 ↦ txnStatus}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+        act5: t_pay := t_time_6 + t_delay_6
+    END
+
+    sendconfirmBooking_7
+    WHEN
+        grd1: confirmBooking_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: paymentResult_6 ∈ receivedMessages
+        grd4: t_pay ≤ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBooking_7}
+        act2: sender := sender ∪ {confirmBooking_7 ↦ RentalApp}
+        act3: receiver := receiver ∪ {confirmBooking_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmBooking_7 ↦ bookingID}
+        act6: currentMessage := {confirmBooking_7}
+    END
+
+    receiveconfirmBooking_7
+    WHEN
+        grd1: confirmBooking_7 ∈ sentMessages
+        grd2: confirmBooking_7 ↦ RentalApp ∈ sender
+        grd3: confirmBooking_7 ↦ Customer ∈ receiver
+        grd4: confirmBooking_7 ∉ receivedMessages
+        grd5: currentMessage = {confirmBooking_7}
+        grd6: t_pay ≤ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBooking_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmBooking_7 ↦ bookingID}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelBooking_8
+    WHEN
+        grd1: cancelBooking_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: paymentResult_6 ∈ receivedMessages
+        grd4: t_pay > 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelBooking_8}
+        act2: sender := sender ∪ {cancelBooking_8 ↦ RentalApp}
+        act3: receiver := receiver ∪ {cancelBooking_8 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelBooking_8}
+    END
+
+    receivecancelBooking_8
+    WHEN
+        grd1: cancelBooking_8 ∈ sentMessages
+        grd2: cancelBooking_8 ↦ RentalApp ∈ sender
+        grd3: cancelBooking_8 ↦ Customer ∈ receiver
+        grd4: cancelBooking_8 ∉ receivedMessages
+        grd5: currentMessage = {cancelBooking_8}
+        grd6: t_pay > 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelBooking_8}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_searchCar_2_loop1
+    WHEN
+        grd1: searchCount < 3
+    THEN
+        act1: searchCount := searchCount + 1
+    END
+
+END

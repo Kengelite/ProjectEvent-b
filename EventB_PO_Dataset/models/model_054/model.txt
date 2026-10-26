@@ -1,0 +1,209 @@
+CONTEXT ArchiveDocumentScanContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Clerk, ScanStation
+    reserveBatch_1, releaseBatch_2, sendBatch_3, checkBatch_4, sendDocument_5, issueDocument_6
+    batchInfo, documentRef, indexRef
+AXIOMS
+    axm1: partition(Objects, {Clerk}, {ScanStation})
+    axm2: partition(Messages, {reserveBatch_1}, {releaseBatch_2}, {sendBatch_3}, {checkBatch_4}, {sendDocument_5}, {issueDocument_6})
+    axm3: partition(DataMessages, {batchInfo}, {documentRef}, {indexRef})
+END
+
+MACHINE ArchiveDocumentScanInteractionMachine_1
+SEES ArchiveDocumentScanContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 0..15
+        act9: t_delay_3 := 0
+        act10: t_success_3 := 0
+        act11: t_time_4 :∈ 0..1
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+    END
+
+
+    sendreserveBatch_1
+    WHEN
+        grd1: reserveBatch_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveBatch_1}
+        act2: sender := sender ∪ {reserveBatch_1 ↦ ScanStation}
+        act3: receiver := receiver ∪ {reserveBatch_1 ↦ Clerk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveBatch_1}
+    END
+
+    receivereserveBatch_1
+    WHEN
+        grd1: reserveBatch_1 ∈ sentMessages
+        grd2: reserveBatch_1 ↦ ScanStation ∈ sender
+        grd3: reserveBatch_1 ↦ Clerk ∈ receiver
+        grd4: reserveBatch_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveBatch_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveBatch_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseBatch_2
+    WHEN
+        grd1: releaseBatch_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveBatch_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseBatch_2}
+        act2: sender := sender ∪ {releaseBatch_2 ↦ ScanStation}
+        act3: receiver := receiver ∪ {releaseBatch_2 ↦ Clerk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseBatch_2 ↦ batchInfo}
+        act6: currentMessage := {releaseBatch_2}
+    END
+
+    receivereleaseBatch_2
+    WHEN
+        grd1: releaseBatch_2 ∈ sentMessages
+        grd2: releaseBatch_2 ↦ ScanStation ∈ sender
+        grd3: releaseBatch_2 ↦ Clerk ∈ receiver
+        grd4: releaseBatch_2 ∉ receivedMessages
+        grd5: currentMessage = {releaseBatch_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseBatch_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseBatch_2 ↦ batchInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsendBatch_3
+    WHEN
+        grd1: sendBatch_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseBatch_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendBatch_3}
+        act2: sender := sender ∪ {sendBatch_3 ↦ Clerk}
+        act3: receiver := receiver ∪ {sendBatch_3 ↦ ScanStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendBatch_3 ↦ documentRef}
+        act6: currentMessage := {sendBatch_3}
+    END
+
+    receivesendBatch_3
+    WHEN
+        grd1: sendBatch_3 ∈ sentMessages
+        grd2: sendBatch_3 ↦ Clerk ∈ sender
+        grd3: sendBatch_3 ↦ ScanStation ∈ receiver
+        grd4: sendBatch_3 ∉ receivedMessages
+        grd5: currentMessage = {sendBatch_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendBatch_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendBatch_3 ↦ documentRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckBatch_4
+    WHEN
+        grd1: checkBatch_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendBatch_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkBatch_4}
+        act2: sender := sender ∪ {checkBatch_4 ↦ ScanStation}
+        act3: receiver := receiver ∪ {checkBatch_4 ↦ Clerk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkBatch_4}
+    END
+
+    receivecheckBatch_4
+    WHEN
+        grd1: checkBatch_4 ∈ sentMessages
+        grd2: checkBatch_4 ↦ ScanStation ∈ sender
+        grd3: checkBatch_4 ↦ Clerk ∈ receiver
+        grd4: checkBatch_4 ∉ receivedMessages
+        grd5: currentMessage = {checkBatch_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkBatch_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsendDocument_5
+    WHEN
+        grd1: sendDocument_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkBatch_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendDocument_5}
+        act2: sender := sender ∪ {sendDocument_5 ↦ Clerk}
+        act3: receiver := receiver ∪ {sendDocument_5 ↦ ScanStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendDocument_5 ↦ documentRef}
+        act6: currentMessage := {sendDocument_5}
+    END
+
+    receivesendDocument_5
+    WHEN
+        grd1: sendDocument_5 ∈ sentMessages
+        grd2: sendDocument_5 ↦ Clerk ∈ sender
+        grd3: sendDocument_5 ↦ ScanStation ∈ receiver
+        grd4: sendDocument_5 ∉ receivedMessages
+        grd5: currentMessage = {sendDocument_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendDocument_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendDocument_5 ↦ documentRef}
+        act3: currentMessage := ∅
+    END
+
+    sendissueDocument_6
+    WHEN
+        grd1: issueDocument_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendDocument_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueDocument_6}
+        act2: sender := sender ∪ {issueDocument_6 ↦ ScanStation}
+        act3: receiver := receiver ∪ {issueDocument_6 ↦ Clerk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueDocument_6 ↦ batchInfo, issueDocument_6 ↦ indexRef}
+        act6: currentMessage := {issueDocument_6}
+    END
+
+    receiveissueDocument_6
+    WHEN
+        grd1: issueDocument_6 ∈ sentMessages
+        grd2: issueDocument_6 ↦ ScanStation ∈ sender
+        grd3: issueDocument_6 ↦ Clerk ∈ receiver
+        grd4: issueDocument_6 ∉ receivedMessages
+        grd5: currentMessage = {issueDocument_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueDocument_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueDocument_6 ↦ batchInfo, issueDocument_6 ↦ indexRef}
+        act3: currentMessage := ∅
+    END
+
+END

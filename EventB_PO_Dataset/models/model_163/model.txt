@@ -1,0 +1,223 @@
+CONTEXT ShipLockOperationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CanalAuthority, Captain, LockControl, LockGate
+    queryLock_1, scheduleLock_2, releaseLevel_3, approveLevel_4, confirmLock_5, assignLevel_6
+    levelCode, levelInfo, lockData, lockRef, passageInfo
+AXIOMS
+    axm1: partition(Objects, {CanalAuthority}, {Captain}, {LockControl}, {LockGate})
+    axm2: partition(Messages, {queryLock_1}, {scheduleLock_2}, {releaseLevel_3}, {approveLevel_4}, {confirmLock_5}, {assignLevel_6})
+    axm3: partition(DataMessages, {levelCode}, {levelInfo}, {lockData}, {lockRef}, {passageInfo})
+END
+
+MACHINE ShipLockOperationInteractionMachine_1
+SEES ShipLockOperationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..60
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_4 :∈ 0..0
+        act12: t_delay_4 := 1
+        act13: t_success_4 := 0
+        act14: t_time_5 :∈ 0..5
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+        act17: t_time_6 :∈ 0..8
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+    END
+
+
+    sendqueryLock_1
+    WHEN
+        grd1: queryLock_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryLock_1}
+        act2: sender := sender ∪ {queryLock_1 ↦ CanalAuthority}
+        act3: receiver := receiver ∪ {queryLock_1 ↦ LockGate}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryLock_1}
+    END
+
+    receivequeryLock_1
+    WHEN
+        grd1: queryLock_1 ∈ sentMessages
+        grd2: queryLock_1 ↦ CanalAuthority ∈ sender
+        grd3: queryLock_1 ↦ LockGate ∈ receiver
+        grd4: queryLock_1 ∉ receivedMessages
+        grd5: currentMessage = {queryLock_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryLock_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendscheduleLock_2
+    WHEN
+        grd1: scheduleLock_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryLock_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleLock_2}
+        act2: sender := sender ∪ {scheduleLock_2 ↦ CanalAuthority}
+        act3: receiver := receiver ∪ {scheduleLock_2 ↦ Captain}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleLock_2 ↦ lockRef}
+        act6: currentMessage := {scheduleLock_2}
+    END
+
+    receivescheduleLock_2
+    WHEN
+        grd1: scheduleLock_2 ∈ sentMessages
+        grd2: scheduleLock_2 ↦ CanalAuthority ∈ sender
+        grd3: scheduleLock_2 ↦ Captain ∈ receiver
+        grd4: scheduleLock_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleLock_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleLock_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleLock_2 ↦ lockRef}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseLevel_3
+    WHEN
+        grd1: releaseLevel_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleLock_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLevel_3}
+        act2: sender := sender ∪ {releaseLevel_3 ↦ Captain}
+        act3: receiver := receiver ∪ {releaseLevel_3 ↦ LockControl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseLevel_3 ↦ levelInfo}
+        act6: currentMessage := {releaseLevel_3}
+    END
+
+    receivereleaseLevel_3
+    WHEN
+        grd1: releaseLevel_3 ∈ sentMessages
+        grd2: releaseLevel_3 ↦ Captain ∈ sender
+        grd3: releaseLevel_3 ↦ LockControl ∈ receiver
+        grd4: releaseLevel_3 ∉ receivedMessages
+        grd5: currentMessage = {releaseLevel_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLevel_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseLevel_3 ↦ levelInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveLevel_4
+    WHEN
+        grd1: approveLevel_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLevel_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveLevel_4}
+        act2: sender := sender ∪ {approveLevel_4 ↦ CanalAuthority}
+        act3: receiver := receiver ∪ {approveLevel_4 ↦ LockControl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveLevel_4 ↦ lockData, approveLevel_4 ↦ passageInfo}
+        act6: currentMessage := {approveLevel_4}
+    END
+
+    receiveapproveLevel_4
+    WHEN
+        grd1: approveLevel_4 ∈ sentMessages
+        grd2: approveLevel_4 ↦ CanalAuthority ∈ sender
+        grd3: approveLevel_4 ↦ LockControl ∈ receiver
+        grd4: approveLevel_4 ∉ receivedMessages
+        grd5: currentMessage = {approveLevel_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveLevel_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveLevel_4 ↦ lockData, approveLevel_4 ↦ passageInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendconfirmLock_5
+    WHEN
+        grd1: confirmLock_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveLevel_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmLock_5}
+        act2: sender := sender ∪ {confirmLock_5 ↦ LockGate}
+        act3: receiver := receiver ∪ {confirmLock_5 ↦ Captain}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmLock_5 ↦ levelCode}
+        act6: currentMessage := {confirmLock_5}
+    END
+
+    receiveconfirmLock_5
+    WHEN
+        grd1: confirmLock_5 ∈ sentMessages
+        grd2: confirmLock_5 ↦ LockGate ∈ sender
+        grd3: confirmLock_5 ↦ Captain ∈ receiver
+        grd4: confirmLock_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmLock_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmLock_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmLock_5 ↦ levelCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendassignLevel_6
+    WHEN
+        grd1: assignLevel_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmLock_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignLevel_6}
+        act2: sender := sender ∪ {assignLevel_6 ↦ LockControl}
+        act3: receiver := receiver ∪ {assignLevel_6 ↦ CanalAuthority}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignLevel_6}
+    END
+
+    receiveassignLevel_6
+    WHEN
+        grd1: assignLevel_6 ∈ sentMessages
+        grd2: assignLevel_6 ↦ LockControl ∈ sender
+        grd3: assignLevel_6 ↦ CanalAuthority ∈ receiver
+        grd4: assignLevel_6 ∉ receivedMessages
+        grd5: currentMessage = {assignLevel_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignLevel_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

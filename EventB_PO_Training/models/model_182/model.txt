@@ -1,0 +1,218 @@
+CONTEXT StadiumEntryGateContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Fan, StadiumGate
+    reserveSeat_1, logSeat_2, confirmEntry_3, logEntry_4, syncTicket_5, scheduleEntry_6
+    entryCode, entryID, entryInfo, entryRef, ticketData, ticketRef
+AXIOMS
+    axm1: partition(Objects, {Fan}, {StadiumGate})
+    axm2: partition(Messages, {reserveSeat_1}, {logSeat_2}, {confirmEntry_3}, {logEntry_4}, {syncTicket_5}, {scheduleEntry_6})
+    axm3: partition(DataMessages, {entryCode}, {entryID}, {entryInfo}, {entryRef}, {ticketData}, {ticketRef})
+END
+
+MACHINE StadiumEntryGateInteractionMachine_1
+SEES StadiumEntryGateContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..2
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..15
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_5 :∈ 0..2
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+    END
+
+
+    sendreserveSeat_1
+    WHEN
+        grd1: reserveSeat_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSeat_1}
+        act2: sender := sender ∪ {reserveSeat_1 ↦ StadiumGate}
+        act3: receiver := receiver ∪ {reserveSeat_1 ↦ Fan}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveSeat_1 ↦ ticketData}
+        act6: currentMessage := {reserveSeat_1}
+    END
+
+    receivereserveSeat_1
+    WHEN
+        grd1: reserveSeat_1 ∈ sentMessages
+        grd2: reserveSeat_1 ↦ StadiumGate ∈ sender
+        grd3: reserveSeat_1 ↦ Fan ∈ receiver
+        grd4: reserveSeat_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveSeat_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSeat_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveSeat_1 ↦ ticketData}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendlogSeat_2
+    WHEN
+        grd1: logSeat_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSeat_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logSeat_2}
+        act2: sender := sender ∪ {logSeat_2 ↦ Fan}
+        act3: receiver := receiver ∪ {logSeat_2 ↦ StadiumGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logSeat_2 ↦ entryInfo}
+        act6: currentMessage := {logSeat_2}
+    END
+
+    receivelogSeat_2
+    WHEN
+        grd1: logSeat_2 ∈ sentMessages
+        grd2: logSeat_2 ↦ Fan ∈ sender
+        grd3: logSeat_2 ↦ StadiumGate ∈ receiver
+        grd4: logSeat_2 ∉ receivedMessages
+        grd5: currentMessage = {logSeat_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logSeat_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logSeat_2 ↦ entryInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmEntry_3
+    WHEN
+        grd1: confirmEntry_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logSeat_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmEntry_3}
+        act2: sender := sender ∪ {confirmEntry_3 ↦ Fan}
+        act3: receiver := receiver ∪ {confirmEntry_3 ↦ StadiumGate}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmEntry_3}
+    END
+
+    receiveconfirmEntry_3
+    WHEN
+        grd1: confirmEntry_3 ∈ sentMessages
+        grd2: confirmEntry_3 ↦ Fan ∈ sender
+        grd3: confirmEntry_3 ↦ StadiumGate ∈ receiver
+        grd4: confirmEntry_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmEntry_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmEntry_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendlogEntry_4
+    WHEN
+        grd1: logEntry_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmEntry_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logEntry_4}
+        act2: sender := sender ∪ {logEntry_4 ↦ StadiumGate}
+        act3: receiver := receiver ∪ {logEntry_4 ↦ Fan}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logEntry_4 ↦ entryCode, logEntry_4 ↦ entryID}
+        act6: currentMessage := {logEntry_4}
+    END
+
+    receivelogEntry_4
+    WHEN
+        grd1: logEntry_4 ∈ sentMessages
+        grd2: logEntry_4 ↦ StadiumGate ∈ sender
+        grd3: logEntry_4 ↦ Fan ∈ receiver
+        grd4: logEntry_4 ∉ receivedMessages
+        grd5: currentMessage = {logEntry_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logEntry_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logEntry_4 ↦ entryCode, logEntry_4 ↦ entryID}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncTicket_5
+    WHEN
+        grd1: syncTicket_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logEntry_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncTicket_5}
+        act2: sender := sender ∪ {syncTicket_5 ↦ StadiumGate}
+        act3: receiver := receiver ∪ {syncTicket_5 ↦ Fan}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncTicket_5 ↦ entryRef}
+        act6: currentMessage := {syncTicket_5}
+    END
+
+    receivesyncTicket_5
+    WHEN
+        grd1: syncTicket_5 ∈ sentMessages
+        grd2: syncTicket_5 ↦ StadiumGate ∈ sender
+        grd3: syncTicket_5 ↦ Fan ∈ receiver
+        grd4: syncTicket_5 ∉ receivedMessages
+        grd5: currentMessage = {syncTicket_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncTicket_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncTicket_5 ↦ entryRef}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendscheduleEntry_6
+    WHEN
+        grd1: scheduleEntry_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncTicket_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleEntry_6}
+        act2: sender := sender ∪ {scheduleEntry_6 ↦ Fan}
+        act3: receiver := receiver ∪ {scheduleEntry_6 ↦ StadiumGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleEntry_6 ↦ ticketRef}
+        act6: currentMessage := {scheduleEntry_6}
+    END
+
+    receivescheduleEntry_6
+    WHEN
+        grd1: scheduleEntry_6 ∈ sentMessages
+        grd2: scheduleEntry_6 ↦ Fan ∈ sender
+        grd3: scheduleEntry_6 ↦ StadiumGate ∈ receiver
+        grd4: scheduleEntry_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleEntry_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleEntry_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleEntry_6 ↦ ticketRef}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,221 @@
+CONTEXT ParentalControlRouterContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ChildDevice, FilterCloud, HomeRouter, Parent
+    releaseRule_1, reserveReport_2, cancelRule_3, updateRule_4, notifyRule_5, confirmBlock_6
+    blockRef, reportInfo, ruleCode
+AXIOMS
+    axm1: partition(Objects, {ChildDevice}, {FilterCloud}, {HomeRouter}, {Parent})
+    axm2: partition(Messages, {releaseRule_1}, {reserveReport_2}, {cancelRule_3}, {updateRule_4}, {notifyRule_5}, {confirmBlock_6})
+    axm3: partition(DataMessages, {blockRef}, {reportInfo}, {ruleCode})
+END
+
+MACHINE ParentalControlRouterInteractionMachine_1
+SEES ParentalControlRouterContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..10
+        act9: t_delay_2 := 0
+        act10: t_success_2 := 0
+        act11: t_time_3 :∈ 0..30
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..15
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_6 :∈ 0..2
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+    END
+
+
+    sendreleaseRule_1
+    WHEN
+        grd1: releaseRule_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseRule_1}
+        act2: sender := sender ∪ {releaseRule_1 ↦ Parent}
+        act3: receiver := receiver ∪ {releaseRule_1 ↦ FilterCloud}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseRule_1}
+    END
+
+    receivereleaseRule_1
+    WHEN
+        grd1: releaseRule_1 ∈ sentMessages
+        grd2: releaseRule_1 ↦ Parent ∈ sender
+        grd3: releaseRule_1 ↦ FilterCloud ∈ receiver
+        grd4: releaseRule_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseRule_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseRule_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveReport_2
+    WHEN
+        grd1: reserveReport_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseRule_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveReport_2}
+        act2: sender := sender ∪ {reserveReport_2 ↦ Parent}
+        act3: receiver := receiver ∪ {reserveReport_2 ↦ ChildDevice}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveReport_2 ↦ blockRef}
+        act6: currentMessage := {reserveReport_2}
+    END
+
+    receivereserveReport_2
+    WHEN
+        grd1: reserveReport_2 ∈ sentMessages
+        grd2: reserveReport_2 ↦ Parent ∈ sender
+        grd3: reserveReport_2 ↦ ChildDevice ∈ receiver
+        grd4: reserveReport_2 ∉ receivedMessages
+        grd5: currentMessage = {reserveReport_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveReport_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveReport_2 ↦ blockRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcancelRule_3
+    WHEN
+        grd1: cancelRule_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveReport_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelRule_3}
+        act2: sender := sender ∪ {cancelRule_3 ↦ HomeRouter}
+        act3: receiver := receiver ∪ {cancelRule_3 ↦ ChildDevice}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelRule_3}
+    END
+
+    receivecancelRule_3
+    WHEN
+        grd1: cancelRule_3 ∈ sentMessages
+        grd2: cancelRule_3 ↦ HomeRouter ∈ sender
+        grd3: cancelRule_3 ↦ ChildDevice ∈ receiver
+        grd4: cancelRule_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelRule_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelRule_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendupdateRule_4
+    WHEN
+        grd1: updateRule_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelRule_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateRule_4}
+        act2: sender := sender ∪ {updateRule_4 ↦ FilterCloud}
+        act3: receiver := receiver ∪ {updateRule_4 ↦ Parent}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateRule_4 ↦ reportInfo}
+        act6: currentMessage := {updateRule_4}
+    END
+
+    receiveupdateRule_4
+    WHEN
+        grd1: updateRule_4 ∈ sentMessages
+        grd2: updateRule_4 ↦ FilterCloud ∈ sender
+        grd3: updateRule_4 ↦ Parent ∈ receiver
+        grd4: updateRule_4 ∉ receivedMessages
+        grd5: currentMessage = {updateRule_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateRule_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateRule_4 ↦ reportInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyRule_5
+    WHEN
+        grd1: notifyRule_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateRule_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyRule_5}
+        act2: sender := sender ∪ {notifyRule_5 ↦ HomeRouter}
+        act3: receiver := receiver ∪ {notifyRule_5 ↦ Parent}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyRule_5}
+    END
+
+    receivenotifyRule_5
+    WHEN
+        grd1: notifyRule_5 ∈ sentMessages
+        grd2: notifyRule_5 ↦ HomeRouter ∈ sender
+        grd3: notifyRule_5 ↦ Parent ∈ receiver
+        grd4: notifyRule_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyRule_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyRule_5}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmBlock_6
+    WHEN
+        grd1: confirmBlock_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyRule_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBlock_6}
+        act2: sender := sender ∪ {confirmBlock_6 ↦ HomeRouter}
+        act3: receiver := receiver ∪ {confirmBlock_6 ↦ ChildDevice}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmBlock_6 ↦ ruleCode}
+        act6: currentMessage := {confirmBlock_6}
+    END
+
+    receiveconfirmBlock_6
+    WHEN
+        grd1: confirmBlock_6 ∈ sentMessages
+        grd2: confirmBlock_6 ↦ HomeRouter ∈ sender
+        grd3: confirmBlock_6 ↦ ChildDevice ∈ receiver
+        grd4: confirmBlock_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmBlock_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBlock_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmBlock_6 ↦ ruleCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

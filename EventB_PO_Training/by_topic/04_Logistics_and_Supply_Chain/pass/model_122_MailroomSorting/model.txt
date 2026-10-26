@@ -1,0 +1,422 @@
+CONTEXT MailroomSortingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Courier, Sorter
+    assignSlot_1, ackNotice_2, cancelNotice_3, issueNotice_4, fetchSlot_5, checkParcel_6, approveNotice_7, logParcel_8, cancelParcel_9, reserveParcel_10, reportParcel_11, validateSlot_12
+    noticeData, noticeID, noticeValue, parcelCode, parcelInfo, parcelValue, slotCode, slotRef
+AXIOMS
+    axm1: partition(Objects, {Courier}, {Sorter})
+    axm2: partition(Messages, {assignSlot_1}, {ackNotice_2}, {cancelNotice_3}, {issueNotice_4}, {fetchSlot_5}, {checkParcel_6}, {approveNotice_7}, {logParcel_8}, {cancelParcel_9}, {reserveParcel_10}, {reportParcel_11}, {validateSlot_12})
+    axm3: partition(DataMessages, {noticeData}, {noticeID}, {noticeValue}, {parcelCode}, {parcelInfo}, {parcelValue}, {slotCode}, {slotRef})
+END
+
+MACHINE MailroomSortingInteractionMachine_1
+SEES MailroomSortingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, withExtra, pollNo, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: withExtra ∈ ℤ
+    inv9: pollNo ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+    inv23: t_time_9 ∈ ℤ
+    inv24: t_delay_9 ∈ ℤ
+    inv25: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: withExtra := 1
+        act9: pollNo := 0
+        act10: par_1 := 0
+        act11: t_time_2 :∈ 0..20
+        act12: t_delay_2 := 2
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..10
+        act15: t_delay_3 := 0
+        act16: t_success_3 := 0
+        act17: t_time_5 :∈ 0..10
+        act18: t_delay_5 := 1
+        act19: t_success_5 := 0
+        act20: t_time_7 :∈ 0..5
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+        act23: t_time_9 :∈ 0..15
+        act24: t_delay_9 := 0
+        act25: t_success_9 := 0
+    END
+
+
+    sendassignSlot_1
+    WHEN
+        grd1: assignSlot_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignSlot_1}
+        act2: sender := sender ∪ {assignSlot_1 ↦ Courier}
+        act3: receiver := receiver ∪ {assignSlot_1 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignSlot_1 ↦ parcelValue}
+        act6: currentMessage := {assignSlot_1}
+    END
+
+    receiveassignSlot_1
+    WHEN
+        grd1: assignSlot_1 ∈ sentMessages
+        grd2: assignSlot_1 ↦ Courier ∈ sender
+        grd3: assignSlot_1 ↦ Sorter ∈ receiver
+        grd4: assignSlot_1 ∉ receivedMessages
+        grd5: currentMessage = {assignSlot_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignSlot_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignSlot_1 ↦ parcelValue}
+        act3: currentMessage := ∅
+    END
+
+    sendackNotice_2
+    WHEN
+        grd1: ackNotice_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignSlot_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackNotice_2}
+        act2: sender := sender ∪ {ackNotice_2 ↦ Courier}
+        act3: receiver := receiver ∪ {ackNotice_2 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackNotice_2}
+    END
+
+    receiveackNotice_2
+    WHEN
+        grd1: ackNotice_2 ∈ sentMessages
+        grd2: ackNotice_2 ↦ Courier ∈ sender
+        grd3: ackNotice_2 ↦ Sorter ∈ receiver
+        grd4: ackNotice_2 ∉ receivedMessages
+        grd5: currentMessage = {ackNotice_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackNotice_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcancelNotice_3
+    WHEN
+        grd1: cancelNotice_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackNotice_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelNotice_3}
+        act2: sender := sender ∪ {cancelNotice_3 ↦ Sorter}
+        act3: receiver := receiver ∪ {cancelNotice_3 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelNotice_3 ↦ noticeValue}
+        act6: currentMessage := {cancelNotice_3}
+    END
+
+    receivecancelNotice_3
+    WHEN
+        grd1: cancelNotice_3 ∈ sentMessages
+        grd2: cancelNotice_3 ↦ Sorter ∈ sender
+        grd3: cancelNotice_3 ↦ Courier ∈ receiver
+        grd4: cancelNotice_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelNotice_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelNotice_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelNotice_3 ↦ noticeValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendissueNotice_4
+    WHEN
+        grd1: issueNotice_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelNotice_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueNotice_4}
+        act2: sender := sender ∪ {issueNotice_4 ↦ Courier}
+        act3: receiver := receiver ∪ {issueNotice_4 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueNotice_4 ↦ noticeID}
+        act6: currentMessage := {issueNotice_4}
+    END
+
+    receiveissueNotice_4
+    WHEN
+        grd1: issueNotice_4 ∈ sentMessages
+        grd2: issueNotice_4 ↦ Courier ∈ sender
+        grd3: issueNotice_4 ↦ Sorter ∈ receiver
+        grd4: issueNotice_4 ∉ receivedMessages
+        grd5: currentMessage = {issueNotice_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueNotice_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueNotice_4 ↦ noticeID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchSlot_5
+    WHEN
+        grd1: fetchSlot_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueNotice_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchSlot_5}
+        act2: sender := sender ∪ {fetchSlot_5 ↦ Courier}
+        act3: receiver := receiver ∪ {fetchSlot_5 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchSlot_5 ↦ noticeData, fetchSlot_5 ↦ parcelCode}
+        act6: currentMessage := {fetchSlot_5}
+    END
+
+    receivefetchSlot_5
+    WHEN
+        grd1: fetchSlot_5 ∈ sentMessages
+        grd2: fetchSlot_5 ↦ Courier ∈ sender
+        grd3: fetchSlot_5 ↦ Sorter ∈ receiver
+        grd4: fetchSlot_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchSlot_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchSlot_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchSlot_5 ↦ noticeData, fetchSlot_5 ↦ parcelCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcheckParcel_6
+    WHEN
+        grd1: checkParcel_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchSlot_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkParcel_6}
+        act2: sender := sender ∪ {checkParcel_6 ↦ Sorter}
+        act3: receiver := receiver ∪ {checkParcel_6 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkParcel_6 ↦ parcelCode}
+        act6: currentMessage := {checkParcel_6}
+    END
+
+    receivecheckParcel_6
+    WHEN
+        grd1: checkParcel_6 ∈ sentMessages
+        grd2: checkParcel_6 ↦ Sorter ∈ sender
+        grd3: checkParcel_6 ↦ Courier ∈ receiver
+        grd4: checkParcel_6 ∉ receivedMessages
+        grd5: currentMessage = {checkParcel_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkParcel_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkParcel_6 ↦ parcelCode}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveNotice_7_opt1
+    WHEN
+        grd1: approveNotice_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkParcel_6 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveNotice_7}
+        act2: sender := sender ∪ {approveNotice_7 ↦ Sorter}
+        act3: receiver := receiver ∪ {approveNotice_7 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveNotice_7 ↦ parcelInfo}
+        act6: currentMessage := {approveNotice_7}
+    END
+
+    receiveapproveNotice_7_opt1
+    WHEN
+        grd1: approveNotice_7 ∈ sentMessages
+        grd2: approveNotice_7 ↦ Sorter ∈ sender
+        grd3: approveNotice_7 ↦ Courier ∈ receiver
+        grd4: approveNotice_7 ∉ receivedMessages
+        grd5: currentMessage = {approveNotice_7}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveNotice_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveNotice_7 ↦ parcelInfo}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendlogParcel_8_opt1
+    WHEN
+        grd1: logParcel_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveNotice_7 ∈ receivedMessages
+        grd4: withExtra = 1
+        grd5: pollNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {logParcel_8}
+        act2: sender := sender ∪ {logParcel_8 ↦ Courier}
+        act3: receiver := receiver ∪ {logParcel_8 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logParcel_8 ↦ slotRef}
+        act6: currentMessage := {logParcel_8}
+    END
+
+    receivelogParcel_8_opt1
+    WHEN
+        grd1: logParcel_8 ∈ sentMessages
+        grd2: logParcel_8 ↦ Courier ∈ sender
+        grd3: logParcel_8 ↦ Sorter ∈ receiver
+        grd4: logParcel_8 ∉ receivedMessages
+        grd5: currentMessage = {logParcel_8}
+        grd6: withExtra = 1
+        grd7: pollNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logParcel_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logParcel_8 ↦ slotRef}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelParcel_9_opt1
+    WHEN
+        grd1: cancelParcel_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logParcel_8 ∈ receivedMessages
+        grd4: withExtra = 1
+        grd5: pollNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelParcel_9}
+        act2: sender := sender ∪ {cancelParcel_9 ↦ Courier}
+        act3: receiver := receiver ∪ {cancelParcel_9 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelParcel_9 ↦ slotCode}
+        act6: currentMessage := {cancelParcel_9}
+    END
+
+    receivecancelParcel_9_opt1
+    WHEN
+        grd1: cancelParcel_9 ∈ sentMessages
+        grd2: cancelParcel_9 ↦ Courier ∈ sender
+        grd3: cancelParcel_9 ↦ Sorter ∈ receiver
+        grd4: cancelParcel_9 ∉ receivedMessages
+        grd5: currentMessage = {cancelParcel_9}
+        grd6: withExtra = 1
+        grd7: pollNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelParcel_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelParcel_9 ↦ slotCode}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendreserveParcel_10_opt1
+    WHEN
+        grd1: reserveParcel_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelParcel_9 ∈ receivedMessages
+        grd4: withExtra = 1
+        grd5: pollNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveParcel_10}
+        act2: sender := sender ∪ {reserveParcel_10 ↦ Sorter}
+        act3: receiver := receiver ∪ {reserveParcel_10 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveParcel_10 ↦ parcelValue}
+        act6: currentMessage := {reserveParcel_10}
+    END
+
+    receivereserveParcel_10_opt1
+    WHEN
+        grd1: reserveParcel_10 ∈ sentMessages
+        grd2: reserveParcel_10 ↦ Sorter ∈ sender
+        grd3: reserveParcel_10 ↦ Courier ∈ receiver
+        grd4: reserveParcel_10 ∉ receivedMessages
+        grd5: currentMessage = {reserveParcel_10}
+        grd6: withExtra = 1
+        grd7: pollNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveParcel_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveParcel_10 ↦ parcelValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreportParcel_11_opt1
+    WHEN
+        grd1: reportParcel_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveParcel_10 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportParcel_11}
+        act2: sender := sender ∪ {reportParcel_11 ↦ Sorter}
+        act3: receiver := receiver ∪ {reportParcel_11 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportParcel_11 ↦ parcelCode}
+        act6: currentMessage := {reportParcel_11}
+    END
+
+    receivereportParcel_11_opt1
+    WHEN
+        grd1: reportParcel_11 ∈ sentMessages
+        grd2: reportParcel_11 ↦ Sorter ∈ sender
+        grd3: reportParcel_11 ↦ Courier ∈ receiver
+        grd4: reportParcel_11 ∉ receivedMessages
+        grd5: currentMessage = {reportParcel_11}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportParcel_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportParcel_11 ↦ parcelCode}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateSlot_12
+    WHEN
+        grd1: validateSlot_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportParcel_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSlot_12}
+        act2: sender := sender ∪ {validateSlot_12 ↦ Courier}
+        act3: receiver := receiver ∪ {validateSlot_12 ↦ Sorter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateSlot_12}
+    END
+
+    receivevalidateSlot_12
+    WHEN
+        grd1: validateSlot_12 ∈ sentMessages
+        grd2: validateSlot_12 ↦ Courier ∈ sender
+        grd3: validateSlot_12 ↦ Sorter ∈ receiver
+        grd4: validateSlot_12 ∉ receivedMessages
+        grd5: currentMessage = {validateSlot_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSlot_12}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_logParcel_8_loop1
+    WHEN
+        grd1: withExtra = 1
+        grd2: pollNo < 5
+    THEN
+        act1: pollNo := pollNo + 1
+    END
+
+END

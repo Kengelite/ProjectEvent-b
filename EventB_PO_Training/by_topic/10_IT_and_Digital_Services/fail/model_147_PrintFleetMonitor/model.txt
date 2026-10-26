@@ -1,0 +1,229 @@
+CONTEXT PrintFleetMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ITDesk, PrintServer, PrinterNode, TonerVendor
+    validateJob_1, reserveAlert_2, queryToner_3, confirmJob_4, fetchToner_5, scheduleToner_6
+    alertInfo, alertValue, tonerCode, tonerInfo, tonerValue
+AXIOMS
+    axm1: partition(Objects, {ITDesk}, {PrintServer}, {PrinterNode}, {TonerVendor})
+    axm2: partition(Messages, {validateJob_1}, {reserveAlert_2}, {queryToner_3}, {confirmJob_4}, {fetchToner_5}, {scheduleToner_6})
+    axm3: partition(DataMessages, {alertInfo}, {alertValue}, {tonerCode}, {tonerInfo}, {tonerValue})
+END
+
+MACHINE PrintFleetMonitorInteractionMachine_1
+SEES PrintFleetMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, isVip, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: isVip ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: isVip := 0
+        act9: t_time_2 :∈ 0..3
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..0
+        act13: t_delay_3 := 10
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 5..3
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+        act18: t_time_6 :∈ 0..10
+        act19: t_delay_6 := 0
+        act20: t_success_6 := 0
+    END
+
+
+    sendvalidateJob_1
+    WHEN
+        grd1: validateJob_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateJob_1}
+        act2: sender := sender ∪ {validateJob_1 ↦ PrinterNode}
+        act3: receiver := receiver ∪ {validateJob_1 ↦ PrintServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateJob_1 ↦ tonerValue}
+        act6: currentMessage := {validateJob_1}
+    END
+
+    receivevalidateJob_1
+    WHEN
+        grd1: validateJob_1 ∈ sentMessages
+        grd2: validateJob_1 ↦ PrinterNode ∈ sender
+        grd3: validateJob_1 ↦ PrintServer ∈ receiver
+        grd4: validateJob_1 ∉ receivedMessages
+        grd5: currentMessage = {validateJob_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateJob_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateJob_1 ↦ tonerValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveAlert_2
+    WHEN
+        grd1: reserveAlert_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateJob_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveAlert_2}
+        act2: sender := sender ∪ {reserveAlert_2 ↦ PrinterNode}
+        act3: receiver := receiver ∪ {reserveAlert_2 ↦ PrintServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveAlert_2 ↦ alertValue}
+        act6: currentMessage := {reserveAlert_2}
+    END
+
+    receivereserveAlert_2
+    WHEN
+        grd1: reserveAlert_2 ∈ sentMessages
+        grd2: reserveAlert_2 ↦ PrinterNode ∈ sender
+        grd3: reserveAlert_2 ↦ PrintServer ∈ receiver
+        grd4: reserveAlert_2 ∉ receivedMessages
+        grd5: currentMessage = {reserveAlert_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveAlert_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveAlert_2 ↦ alertValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendqueryToner_3
+    WHEN
+        grd1: queryToner_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveAlert_2 ∈ receivedMessages
+        grd4: isVip = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryToner_3}
+        act2: sender := sender ∪ {queryToner_3 ↦ ITDesk}
+        act3: receiver := receiver ∪ {queryToner_3 ↦ TonerVendor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryToner_3}
+    END
+
+    receivequeryToner_3
+    WHEN
+        grd1: queryToner_3 ∈ sentMessages
+        grd2: queryToner_3 ↦ ITDesk ∈ sender
+        grd3: queryToner_3 ↦ TonerVendor ∈ receiver
+        grd4: queryToner_3 ∉ receivedMessages
+        grd5: currentMessage = {queryToner_3}
+        grd6: isVip = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryToner_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendconfirmJob_4
+    WHEN
+        grd1: confirmJob_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveAlert_2 ∈ receivedMessages
+        grd4: isVip = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmJob_4}
+        act2: sender := sender ∪ {confirmJob_4 ↦ PrintServer}
+        act3: receiver := receiver ∪ {confirmJob_4 ↦ PrinterNode}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmJob_4}
+    END
+
+    receiveconfirmJob_4
+    WHEN
+        grd1: confirmJob_4 ∈ sentMessages
+        grd2: confirmJob_4 ↦ PrintServer ∈ sender
+        grd3: confirmJob_4 ↦ PrinterNode ∈ receiver
+        grd4: confirmJob_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmJob_4}
+        grd6: isVip = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmJob_4}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchToner_5
+    WHEN
+        grd1: fetchToner_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryToner_3 ∈ receivedMessages ∨ confirmJob_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchToner_5}
+        act2: sender := sender ∪ {fetchToner_5 ↦ PrinterNode}
+        act3: receiver := receiver ∪ {fetchToner_5 ↦ ITDesk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchToner_5 ↦ tonerInfo}
+        act6: currentMessage := {fetchToner_5}
+    END
+
+    receivefetchToner_5
+    WHEN
+        grd1: fetchToner_5 ∈ sentMessages
+        grd2: fetchToner_5 ↦ PrinterNode ∈ sender
+        grd3: fetchToner_5 ↦ ITDesk ∈ receiver
+        grd4: fetchToner_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchToner_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchToner_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchToner_5 ↦ tonerInfo}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendscheduleToner_6
+    WHEN
+        grd1: scheduleToner_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchToner_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleToner_6}
+        act2: sender := sender ∪ {scheduleToner_6 ↦ TonerVendor}
+        act3: receiver := receiver ∪ {scheduleToner_6 ↦ PrintServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleToner_6 ↦ alertInfo, scheduleToner_6 ↦ tonerCode}
+        act6: currentMessage := {scheduleToner_6}
+    END
+
+    receivescheduleToner_6
+    WHEN
+        grd1: scheduleToner_6 ∈ sentMessages
+        grd2: scheduleToner_6 ↦ TonerVendor ∈ sender
+        grd3: scheduleToner_6 ↦ PrintServer ∈ receiver
+        grd4: scheduleToner_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleToner_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleToner_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleToner_6 ↦ alertInfo, scheduleToner_6 ↦ tonerCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

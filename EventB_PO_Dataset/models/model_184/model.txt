@@ -1,0 +1,220 @@
+CONTEXT StudentAttendanceContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AttendanceDB, ClassScanner, Student, Teacher
+    syncReport_1, cancelAbsence_2, approveAbsence_3, queryCheckin_4, updateAbsence_5, issueAbsence_6
+    absenceCode, absenceValue, checkinCode, checkinRef
+AXIOMS
+    axm1: partition(Objects, {AttendanceDB}, {ClassScanner}, {Student}, {Teacher})
+    axm2: partition(Messages, {syncReport_1}, {cancelAbsence_2}, {approveAbsence_3}, {queryCheckin_4}, {updateAbsence_5}, {issueAbsence_6})
+    axm3: partition(DataMessages, {absenceCode}, {absenceValue}, {checkinCode}, {checkinRef})
+END
+
+MACHINE StudentAttendanceInteractionMachine_1
+SEES StudentAttendanceContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: t_time_2 :∈ 0..20
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_5 :∈ 0..0
+        act13: t_delay_5 := 3
+        act14: t_success_5 := 0
+        act15: t_time_6 :∈ 0..30
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendsyncReport_1
+    WHEN
+        grd1: syncReport_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncReport_1}
+        act2: sender := sender ∪ {syncReport_1 ↦ Student}
+        act3: receiver := receiver ∪ {syncReport_1 ↦ ClassScanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncReport_1}
+    END
+
+    receivesyncReport_1
+    WHEN
+        grd1: syncReport_1 ∈ sentMessages
+        grd2: syncReport_1 ↦ Student ∈ sender
+        grd3: syncReport_1 ↦ ClassScanner ∈ receiver
+        grd4: syncReport_1 ∉ receivedMessages
+        grd5: currentMessage = {syncReport_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncReport_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelAbsence_2
+    WHEN
+        grd1: cancelAbsence_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncReport_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelAbsence_2}
+        act2: sender := sender ∪ {cancelAbsence_2 ↦ ClassScanner}
+        act3: receiver := receiver ∪ {cancelAbsence_2 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelAbsence_2 ↦ absenceValue}
+        act6: currentMessage := {cancelAbsence_2}
+    END
+
+    receivecancelAbsence_2
+    WHEN
+        grd1: cancelAbsence_2 ∈ sentMessages
+        grd2: cancelAbsence_2 ↦ ClassScanner ∈ sender
+        grd3: cancelAbsence_2 ↦ Student ∈ receiver
+        grd4: cancelAbsence_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelAbsence_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelAbsence_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelAbsence_2 ↦ absenceValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendapproveAbsence_3_opt1
+    WHEN
+        grd1: approveAbsence_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelAbsence_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveAbsence_3}
+        act2: sender := sender ∪ {approveAbsence_3 ↦ Student}
+        act3: receiver := receiver ∪ {approveAbsence_3 ↦ Teacher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveAbsence_3 ↦ absenceValue, approveAbsence_3 ↦ checkinRef}
+        act6: currentMessage := {approveAbsence_3}
+    END
+
+    receiveapproveAbsence_3_opt1
+    WHEN
+        grd1: approveAbsence_3 ∈ sentMessages
+        grd2: approveAbsence_3 ↦ Student ∈ sender
+        grd3: approveAbsence_3 ↦ Teacher ∈ receiver
+        grd4: approveAbsence_3 ∉ receivedMessages
+        grd5: currentMessage = {approveAbsence_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveAbsence_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveAbsence_3 ↦ absenceValue, approveAbsence_3 ↦ checkinRef}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryCheckin_4
+    WHEN
+        grd1: queryCheckin_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveAbsence_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCheckin_4}
+        act2: sender := sender ∪ {queryCheckin_4 ↦ AttendanceDB}
+        act3: receiver := receiver ∪ {queryCheckin_4 ↦ ClassScanner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryCheckin_4 ↦ checkinCode}
+        act6: currentMessage := {queryCheckin_4}
+    END
+
+    receivequeryCheckin_4
+    WHEN
+        grd1: queryCheckin_4 ∈ sentMessages
+        grd2: queryCheckin_4 ↦ AttendanceDB ∈ sender
+        grd3: queryCheckin_4 ↦ ClassScanner ∈ receiver
+        grd4: queryCheckin_4 ∉ receivedMessages
+        grd5: currentMessage = {queryCheckin_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCheckin_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryCheckin_4 ↦ checkinCode}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateAbsence_5
+    WHEN
+        grd1: updateAbsence_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryCheckin_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateAbsence_5}
+        act2: sender := sender ∪ {updateAbsence_5 ↦ Teacher}
+        act3: receiver := receiver ∪ {updateAbsence_5 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateAbsence_5}
+    END
+
+    receiveupdateAbsence_5
+    WHEN
+        grd1: updateAbsence_5 ∈ sentMessages
+        grd2: updateAbsence_5 ↦ Teacher ∈ sender
+        grd3: updateAbsence_5 ↦ Student ∈ receiver
+        grd4: updateAbsence_5 ∉ receivedMessages
+        grd5: currentMessage = {updateAbsence_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateAbsence_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueAbsence_6
+    WHEN
+        grd1: issueAbsence_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateAbsence_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueAbsence_6}
+        act2: sender := sender ∪ {issueAbsence_6 ↦ Student}
+        act3: receiver := receiver ∪ {issueAbsence_6 ↦ Teacher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueAbsence_6 ↦ absenceCode}
+        act6: currentMessage := {issueAbsence_6}
+    END
+
+    receiveissueAbsence_6
+    WHEN
+        grd1: issueAbsence_6 ∈ sentMessages
+        grd2: issueAbsence_6 ↦ Student ∈ sender
+        grd3: issueAbsence_6 ↦ Teacher ∈ receiver
+        grd4: issueAbsence_6 ∉ receivedMessages
+        grd5: currentMessage = {issueAbsence_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueAbsence_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueAbsence_6 ↦ absenceCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

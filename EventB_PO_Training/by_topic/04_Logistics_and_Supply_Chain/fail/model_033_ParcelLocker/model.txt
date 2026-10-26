@@ -1,0 +1,251 @@
+CONTEXT ParcelLockerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Courier, Recipient, SmartLocker
+    depositParcel_1, lockerReceipt_2, sendPickupCode_3, enterCode_4, openSlot_5, slotClosed_6, notifyCourier_7
+    parcelID, pickupCode, slotNo
+AXIOMS
+    axm1: partition(Objects, {Courier}, {Recipient}, {SmartLocker})
+    axm2: partition(Messages, {depositParcel_1}, {lockerReceipt_2}, {sendPickupCode_3}, {enterCode_4}, {openSlot_5}, {slotClosed_6}, {notifyCourier_7})
+    axm3: partition(DataMessages, {parcelID}, {pickupCode}, {slotNo})
+END
+
+MACHINE ParcelLockerInteractionMachine_1
+SEES ParcelLockerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, codeValid, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: codeValid ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: codeValid := 1
+        act9: t_time_1 :∈ 0..5
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 10..3
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..2
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    senddepositParcel_1
+    WHEN
+        grd1: depositParcel_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {depositParcel_1}
+        act2: sender := sender ∪ {depositParcel_1 ↦ Courier}
+        act3: receiver := receiver ∪ {depositParcel_1 ↦ SmartLocker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {depositParcel_1 ↦ parcelID}
+        act6: currentMessage := {depositParcel_1}
+    END
+
+    receivedepositParcel_1
+    WHEN
+        grd1: depositParcel_1 ∈ sentMessages
+        grd2: depositParcel_1 ↦ Courier ∈ sender
+        grd3: depositParcel_1 ↦ SmartLocker ∈ receiver
+        grd4: depositParcel_1 ∉ receivedMessages
+        grd5: currentMessage = {depositParcel_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {depositParcel_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {depositParcel_1 ↦ parcelID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendlockerReceipt_2
+    WHEN
+        grd1: lockerReceipt_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: depositParcel_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {lockerReceipt_2}
+        act2: sender := sender ∪ {lockerReceipt_2 ↦ SmartLocker}
+        act3: receiver := receiver ∪ {lockerReceipt_2 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {lockerReceipt_2 ↦ slotNo}
+        act6: currentMessage := {lockerReceipt_2}
+    END
+
+    receivelockerReceipt_2
+    WHEN
+        grd1: lockerReceipt_2 ∈ sentMessages
+        grd2: lockerReceipt_2 ↦ SmartLocker ∈ sender
+        grd3: lockerReceipt_2 ↦ Courier ∈ receiver
+        grd4: lockerReceipt_2 ∉ receivedMessages
+        grd5: currentMessage = {lockerReceipt_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {lockerReceipt_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {lockerReceipt_2 ↦ slotNo}
+        act3: currentMessage := ∅
+    END
+
+    sendsendPickupCode_3
+    WHEN
+        grd1: sendPickupCode_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: lockerReceipt_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendPickupCode_3}
+        act2: sender := sender ∪ {sendPickupCode_3 ↦ SmartLocker}
+        act3: receiver := receiver ∪ {sendPickupCode_3 ↦ Recipient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendPickupCode_3 ↦ pickupCode}
+        act6: currentMessage := {sendPickupCode_3}
+    END
+
+    receivesendPickupCode_3
+    WHEN
+        grd1: sendPickupCode_3 ∈ sentMessages
+        grd2: sendPickupCode_3 ↦ SmartLocker ∈ sender
+        grd3: sendPickupCode_3 ↦ Recipient ∈ receiver
+        grd4: sendPickupCode_3 ∉ receivedMessages
+        grd5: currentMessage = {sendPickupCode_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendPickupCode_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendPickupCode_3 ↦ pickupCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendenterCode_4
+    WHEN
+        grd1: enterCode_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendPickupCode_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {enterCode_4}
+        act2: sender := sender ∪ {enterCode_4 ↦ Recipient}
+        act3: receiver := receiver ∪ {enterCode_4 ↦ SmartLocker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {enterCode_4 ↦ pickupCode}
+        act6: currentMessage := {enterCode_4}
+    END
+
+    receiveenterCode_4
+    WHEN
+        grd1: enterCode_4 ∈ sentMessages
+        grd2: enterCode_4 ↦ Recipient ∈ sender
+        grd3: enterCode_4 ↦ SmartLocker ∈ receiver
+        grd4: enterCode_4 ∉ receivedMessages
+        grd5: currentMessage = {enterCode_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {enterCode_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {enterCode_4 ↦ pickupCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendopenSlot_5_opt1
+    WHEN
+        grd1: openSlot_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: enterCode_4 ∈ receivedMessages
+        grd4: codeValid = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {openSlot_5}
+        act2: sender := sender ∪ {openSlot_5 ↦ SmartLocker}
+        act3: receiver := receiver ∪ {openSlot_5 ↦ Recipient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {openSlot_5 ↦ slotNo}
+        act6: currentMessage := {openSlot_5}
+    END
+
+    receiveopenSlot_5_opt1
+    WHEN
+        grd1: openSlot_5 ∈ sentMessages
+        grd2: openSlot_5 ↦ SmartLocker ∈ sender
+        grd3: openSlot_5 ↦ Recipient ∈ receiver
+        grd4: openSlot_5 ∉ receivedMessages
+        grd5: currentMessage = {openSlot_5}
+        grd6: codeValid = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {openSlot_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {openSlot_5 ↦ slotNo}
+        act3: currentMessage := ∅
+    END
+
+    sendslotClosed_6_opt1
+    WHEN
+        grd1: slotClosed_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: openSlot_5 ∈ receivedMessages
+        grd4: codeValid = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {slotClosed_6}
+        act2: sender := sender ∪ {slotClosed_6 ↦ Recipient}
+        act3: receiver := receiver ∪ {slotClosed_6 ↦ SmartLocker}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {slotClosed_6}
+    END
+
+    receiveslotClosed_6_opt1
+    WHEN
+        grd1: slotClosed_6 ∈ sentMessages
+        grd2: slotClosed_6 ↦ Recipient ∈ sender
+        grd3: slotClosed_6 ↦ SmartLocker ∈ receiver
+        grd4: slotClosed_6 ∉ receivedMessages
+        grd5: currentMessage = {slotClosed_6}
+        grd6: codeValid = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {slotClosed_6}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyCourier_7
+    WHEN
+        grd1: notifyCourier_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: slotClosed_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCourier_7}
+        act2: sender := sender ∪ {notifyCourier_7 ↦ SmartLocker}
+        act3: receiver := receiver ∪ {notifyCourier_7 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyCourier_7 ↦ parcelID}
+        act6: currentMessage := {notifyCourier_7}
+    END
+
+    receivenotifyCourier_7
+    WHEN
+        grd1: notifyCourier_7 ∈ sentMessages
+        grd2: notifyCourier_7 ↦ SmartLocker ∈ sender
+        grd3: notifyCourier_7 ↦ Courier ∈ receiver
+        grd4: notifyCourier_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyCourier_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCourier_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyCourier_7 ↦ parcelID}
+        act3: currentMessage := ∅
+    END
+
+END

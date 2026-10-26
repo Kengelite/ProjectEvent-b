@@ -1,0 +1,228 @@
+CONTEXT TrafficSignalPriorityContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Bus, Intersection, TrafficCenter, TransitSignal
+    queryPriority_1, assignGreen_2, updateGreen_3, queryLane_4, confirmPriority_5, reserveLane_6
+    greenRef, laneData, laneRef, priorityValue
+AXIOMS
+    axm1: partition(Objects, {Bus}, {Intersection}, {TrafficCenter}, {TransitSignal})
+    axm2: partition(Messages, {queryPriority_1}, {assignGreen_2}, {updateGreen_3}, {queryLane_4}, {confirmPriority_5}, {reserveLane_6})
+    axm3: partition(DataMessages, {greenRef}, {laneData}, {laneRef}, {priorityValue})
+END
+
+MACHINE TrafficSignalPriorityInteractionMachine_1
+SEES TrafficSignalPriorityContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_6 ∈ ℤ
+    inv21: t_delay_6 ∈ ℤ
+    inv22: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..2
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..30
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..60
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 0..5
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+        act20: t_time_6 :∈ 0..3
+        act21: t_delay_6 := 0
+        act22: t_success_6 := 0
+    END
+
+
+    sendqueryPriority_1
+    WHEN
+        grd1: queryPriority_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryPriority_1}
+        act2: sender := sender ∪ {queryPriority_1 ↦ Bus}
+        act3: receiver := receiver ∪ {queryPriority_1 ↦ Intersection}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryPriority_1}
+    END
+
+    receivequeryPriority_1
+    WHEN
+        grd1: queryPriority_1 ∈ sentMessages
+        grd2: queryPriority_1 ↦ Bus ∈ sender
+        grd3: queryPriority_1 ↦ Intersection ∈ receiver
+        grd4: queryPriority_1 ∉ receivedMessages
+        grd5: currentMessage = {queryPriority_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryPriority_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignGreen_2
+    WHEN
+        grd1: assignGreen_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryPriority_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignGreen_2}
+        act2: sender := sender ∪ {assignGreen_2 ↦ Bus}
+        act3: receiver := receiver ∪ {assignGreen_2 ↦ TransitSignal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignGreen_2 ↦ greenRef, assignGreen_2 ↦ laneData}
+        act6: currentMessage := {assignGreen_2}
+    END
+
+    receiveassignGreen_2
+    WHEN
+        grd1: assignGreen_2 ∈ sentMessages
+        grd2: assignGreen_2 ↦ Bus ∈ sender
+        grd3: assignGreen_2 ↦ TransitSignal ∈ receiver
+        grd4: assignGreen_2 ∉ receivedMessages
+        grd5: currentMessage = {assignGreen_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignGreen_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignGreen_2 ↦ greenRef, assignGreen_2 ↦ laneData}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateGreen_3
+    WHEN
+        grd1: updateGreen_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignGreen_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateGreen_3}
+        act2: sender := sender ∪ {updateGreen_3 ↦ Bus}
+        act3: receiver := receiver ∪ {updateGreen_3 ↦ TransitSignal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateGreen_3 ↦ priorityValue}
+        act6: currentMessage := {updateGreen_3}
+    END
+
+    receiveupdateGreen_3
+    WHEN
+        grd1: updateGreen_3 ∈ sentMessages
+        grd2: updateGreen_3 ↦ Bus ∈ sender
+        grd3: updateGreen_3 ↦ TransitSignal ∈ receiver
+        grd4: updateGreen_3 ∉ receivedMessages
+        grd5: currentMessage = {updateGreen_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateGreen_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateGreen_3 ↦ priorityValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendqueryLane_4
+    WHEN
+        grd1: queryLane_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateGreen_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryLane_4}
+        act2: sender := sender ∪ {queryLane_4 ↦ Intersection}
+        act3: receiver := receiver ∪ {queryLane_4 ↦ TrafficCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryLane_4 ↦ laneRef}
+        act6: currentMessage := {queryLane_4}
+    END
+
+    receivequeryLane_4
+    WHEN
+        grd1: queryLane_4 ∈ sentMessages
+        grd2: queryLane_4 ↦ Intersection ∈ sender
+        grd3: queryLane_4 ↦ TrafficCenter ∈ receiver
+        grd4: queryLane_4 ∉ receivedMessages
+        grd5: currentMessage = {queryLane_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryLane_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryLane_4 ↦ laneRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendconfirmPriority_5
+    WHEN
+        grd1: confirmPriority_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryLane_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPriority_5}
+        act2: sender := sender ∪ {confirmPriority_5 ↦ Bus}
+        act3: receiver := receiver ∪ {confirmPriority_5 ↦ TrafficCenter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmPriority_5}
+    END
+
+    receiveconfirmPriority_5
+    WHEN
+        grd1: confirmPriority_5 ∈ sentMessages
+        grd2: confirmPriority_5 ↦ Bus ∈ sender
+        grd3: confirmPriority_5 ↦ TrafficCenter ∈ receiver
+        grd4: confirmPriority_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmPriority_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPriority_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreserveLane_6
+    WHEN
+        grd1: reserveLane_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPriority_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveLane_6}
+        act2: sender := sender ∪ {reserveLane_6 ↦ TransitSignal}
+        act3: receiver := receiver ∪ {reserveLane_6 ↦ Bus}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveLane_6}
+    END
+
+    receivereserveLane_6
+    WHEN
+        grd1: reserveLane_6 ∈ sentMessages
+        grd2: reserveLane_6 ↦ TransitSignal ∈ sender
+        grd3: reserveLane_6 ↦ Bus ∈ receiver
+        grd4: reserveLane_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveLane_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveLane_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

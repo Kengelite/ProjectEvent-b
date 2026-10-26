@@ -1,0 +1,250 @@
+CONTEXT ConferenceRoomBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BookingPortal, CalendarSvc, Employee, RoomPanel
+    searchRoom_1, availability_2, bookRoom_3, createEvent_4, eventCreated_5, updatePanel_6, bookingDone_7
+    eventID, roomID, roomList, timeSlot
+AXIOMS
+    axm1: partition(Objects, {BookingPortal}, {CalendarSvc}, {Employee}, {RoomPanel})
+    axm2: partition(Messages, {searchRoom_1}, {availability_2}, {bookRoom_3}, {createEvent_4}, {eventCreated_5}, {updatePanel_6}, {bookingDone_7})
+    axm3: partition(DataMessages, {eventID}, {roomID}, {roomList}, {timeSlot})
+END
+
+MACHINE ConferenceRoomBookingInteractionMachine_1
+SEES ConferenceRoomBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needDisplay, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needDisplay ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_4 ∈ ℤ
+    inv13: t_delay_4 ∈ ℤ
+    inv14: t_success_4 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+    inv18: dom(receiverdataMessages) ⊆ receivedMessages
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needDisplay := 1
+        act9: t_time_2 :∈ 0..3
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_4 :∈ 0..5
+        act13: t_delay_4 := 0
+        act14: t_success_4 := 0
+        act15: t_time_6 :∈ 0..2
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendsearchRoom_1
+    WHEN
+        grd1: searchRoom_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {searchRoom_1}
+        act2: sender := sender ∪ {searchRoom_1 ↦ Employee}
+        act3: receiver := receiver ∪ {searchRoom_1 ↦ BookingPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {searchRoom_1 ↦ timeSlot}
+        act6: currentMessage := {searchRoom_1}
+    END
+
+    receivesearchRoom_1
+    WHEN
+        grd1: searchRoom_1 ∈ sentMessages
+        grd2: searchRoom_1 ↦ Employee ∈ sender
+        grd3: searchRoom_1 ↦ BookingPortal ∈ receiver
+        grd4: searchRoom_1 ∉ receivedMessages
+        grd5: currentMessage = {searchRoom_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {searchRoom_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {searchRoom_1 ↦ timeSlot}
+        act3: currentMessage := ∅
+    END
+
+    sendavailability_2
+    WHEN
+        grd1: availability_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: searchRoom_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {availability_2}
+        act2: sender := sender ∪ {availability_2 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {availability_2 ↦ Employee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {availability_2 ↦ roomList}
+        act6: currentMessage := {availability_2}
+    END
+
+    receiveavailability_2
+    WHEN
+        grd1: availability_2 ∈ sentMessages
+        grd2: availability_2 ↦ BookingPortal ∈ sender
+        grd3: availability_2 ↦ Employee ∈ receiver
+        grd4: availability_2 ∉ receivedMessages
+        grd5: currentMessage = {availability_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {availability_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {availability_2 ↦ roomList}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendbookRoom_3
+    WHEN
+        grd1: bookRoom_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: availability_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {bookRoom_3}
+        act2: sender := sender ∪ {bookRoom_3 ↦ Employee}
+        act3: receiver := receiver ∪ {bookRoom_3 ↦ BookingPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {bookRoom_3 ↦ roomID, bookRoom_3 ↦ timeSlot}
+        act6: currentMessage := {bookRoom_3}
+    END
+
+    receivebookRoom_3
+    WHEN
+        grd1: bookRoom_3 ∈ sentMessages
+        grd2: bookRoom_3 ↦ Employee ∈ sender
+        grd3: bookRoom_3 ↦ BookingPortal ∈ receiver
+        grd4: bookRoom_3 ∉ receivedMessages
+        grd5: currentMessage = {bookRoom_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {bookRoom_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {bookRoom_3 ↦ roomID, bookRoom_3 ↦ timeSlot}
+        act3: currentMessage := ∅
+    END
+
+    sendcreateEvent_4
+    WHEN
+        grd1: createEvent_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: bookRoom_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {createEvent_4}
+        act2: sender := sender ∪ {createEvent_4 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {createEvent_4 ↦ CalendarSvc}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {createEvent_4 ↦ eventID}
+        act6: currentMessage := {createEvent_4}
+    END
+
+    receivecreateEvent_4
+    WHEN
+        grd1: createEvent_4 ∈ sentMessages
+        grd2: createEvent_4 ↦ BookingPortal ∈ sender
+        grd3: createEvent_4 ↦ CalendarSvc ∈ receiver
+        grd4: createEvent_4 ∉ receivedMessages
+        grd5: currentMessage = {createEvent_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {createEvent_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {createEvent_4 ↦ eventID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendeventCreated_5
+    WHEN
+        grd1: eventCreated_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: createEvent_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {eventCreated_5}
+        act2: sender := sender ∪ {eventCreated_5 ↦ CalendarSvc}
+        act3: receiver := receiver ∪ {eventCreated_5 ↦ BookingPortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {eventCreated_5}
+    END
+
+    receiveeventCreated_5
+    WHEN
+        grd1: eventCreated_5 ∈ sentMessages
+        grd2: eventCreated_5 ↦ CalendarSvc ∈ sender
+        grd3: eventCreated_5 ↦ BookingPortal ∈ receiver
+        grd4: eventCreated_5 ∉ receivedMessages
+        grd5: currentMessage = {eventCreated_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {eventCreated_5}
+        act2: currentMessage := ∅
+    END
+
+    sendupdatePanel_6_opt1
+    WHEN
+        grd1: updatePanel_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: eventCreated_5 ∈ receivedMessages
+        grd4: needDisplay = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updatePanel_6}
+        act2: sender := sender ∪ {updatePanel_6 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {updatePanel_6 ↦ RoomPanel}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updatePanel_6 ↦ eventID}
+        act6: currentMessage := {updatePanel_6}
+    END
+
+    receiveupdatePanel_6_opt1
+    WHEN
+        grd1: updatePanel_6 ∈ sentMessages
+        grd2: updatePanel_6 ↦ BookingPortal ∈ sender
+        grd3: updatePanel_6 ↦ RoomPanel ∈ receiver
+        grd4: updatePanel_6 ∉ receivedMessages
+        grd5: currentMessage = {updatePanel_6}
+        grd6: needDisplay = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updatePanel_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updatePanel_6 ↦ eventID}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendbookingDone_7
+    WHEN
+        grd1: bookingDone_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updatePanel_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {bookingDone_7}
+        act2: sender := sender ∪ {bookingDone_7 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {bookingDone_7 ↦ Employee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {bookingDone_7 ↦ eventID}
+        act6: currentMessage := {bookingDone_7}
+    END
+
+    receivebookingDone_7
+    WHEN
+        grd1: bookingDone_7 ∈ sentMessages
+        grd2: bookingDone_7 ↦ BookingPortal ∈ sender
+        grd3: bookingDone_7 ↦ Employee ∈ receiver
+        grd4: bookingDone_7 ∉ receivedMessages
+        grd5: currentMessage = {bookingDone_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {bookingDone_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {bookingDone_7 ↦ eventID}
+        act3: currentMessage := ∅
+    END
+
+END

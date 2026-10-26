@@ -1,0 +1,220 @@
+CONTEXT AirportShuttleContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Dispatcher, Passenger, ShuttleApp
+    sendRoute_1, notifyPickup_2, updateSeat_3, confirmPickup_4, scheduleRoute_5, fetchSeat_6
+    pickupCode, pickupData, pickupID, routeInfo, seatData
+AXIOMS
+    axm1: partition(Objects, {Dispatcher}, {Passenger}, {ShuttleApp})
+    axm2: partition(Messages, {sendRoute_1}, {notifyPickup_2}, {updateSeat_3}, {confirmPickup_4}, {scheduleRoute_5}, {fetchSeat_6})
+    axm3: partition(DataMessages, {pickupCode}, {pickupData}, {pickupID}, {routeInfo}, {seatData})
+END
+
+MACHINE AirportShuttleInteractionMachine_1
+SEES AirportShuttleContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_4 ∈ ℤ
+    inv13: t_delay_4 ∈ ℤ
+    inv14: t_success_4 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_3 :∈ 0..0
+        act10: t_delay_3 := 2
+        act11: t_success_3 := 0
+        act12: t_time_4 :∈ 0..3
+        act13: t_delay_4 := 0
+        act14: t_success_4 := 0
+        act15: t_time_6 :∈ 0..60
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendsendRoute_1
+    WHEN
+        grd1: sendRoute_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendRoute_1}
+        act2: sender := sender ∪ {sendRoute_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {sendRoute_1 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendRoute_1 ↦ pickupID}
+        act6: currentMessage := {sendRoute_1}
+    END
+
+    receivesendRoute_1
+    WHEN
+        grd1: sendRoute_1 ∈ sentMessages
+        grd2: sendRoute_1 ↦ Passenger ∈ sender
+        grd3: sendRoute_1 ↦ ShuttleApp ∈ receiver
+        grd4: sendRoute_1 ∉ receivedMessages
+        grd5: currentMessage = {sendRoute_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendRoute_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendRoute_1 ↦ pickupID}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyPickup_2
+    WHEN
+        grd1: notifyPickup_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendRoute_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPickup_2}
+        act2: sender := sender ∪ {notifyPickup_2 ↦ Dispatcher}
+        act3: receiver := receiver ∪ {notifyPickup_2 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyPickup_2 ↦ routeInfo}
+        act6: currentMessage := {notifyPickup_2}
+    END
+
+    receivenotifyPickup_2
+    WHEN
+        grd1: notifyPickup_2 ∈ sentMessages
+        grd2: notifyPickup_2 ↦ Dispatcher ∈ sender
+        grd3: notifyPickup_2 ↦ Passenger ∈ receiver
+        grd4: notifyPickup_2 ∉ receivedMessages
+        grd5: currentMessage = {notifyPickup_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPickup_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyPickup_2 ↦ routeInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateSeat_3
+    WHEN
+        grd1: updateSeat_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyPickup_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateSeat_3}
+        act2: sender := sender ∪ {updateSeat_3 ↦ Dispatcher}
+        act3: receiver := receiver ∪ {updateSeat_3 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateSeat_3 ↦ pickupData}
+        act6: currentMessage := {updateSeat_3}
+    END
+
+    receiveupdateSeat_3
+    WHEN
+        grd1: updateSeat_3 ∈ sentMessages
+        grd2: updateSeat_3 ↦ Dispatcher ∈ sender
+        grd3: updateSeat_3 ↦ ShuttleApp ∈ receiver
+        grd4: updateSeat_3 ∉ receivedMessages
+        grd5: currentMessage = {updateSeat_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateSeat_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateSeat_3 ↦ pickupData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendconfirmPickup_4
+    WHEN
+        grd1: confirmPickup_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateSeat_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPickup_4}
+        act2: sender := sender ∪ {confirmPickup_4 ↦ Dispatcher}
+        act3: receiver := receiver ∪ {confirmPickup_4 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmPickup_4 ↦ pickupCode, confirmPickup_4 ↦ pickupID}
+        act6: currentMessage := {confirmPickup_4}
+    END
+
+    receiveconfirmPickup_4
+    WHEN
+        grd1: confirmPickup_4 ∈ sentMessages
+        grd2: confirmPickup_4 ↦ Dispatcher ∈ sender
+        grd3: confirmPickup_4 ↦ Passenger ∈ receiver
+        grd4: confirmPickup_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmPickup_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPickup_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmPickup_4 ↦ pickupCode, confirmPickup_4 ↦ pickupID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendscheduleRoute_5
+    WHEN
+        grd1: scheduleRoute_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPickup_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleRoute_5}
+        act2: sender := sender ∪ {scheduleRoute_5 ↦ Dispatcher}
+        act3: receiver := receiver ∪ {scheduleRoute_5 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleRoute_5}
+    END
+
+    receivescheduleRoute_5
+    WHEN
+        grd1: scheduleRoute_5 ∈ sentMessages
+        grd2: scheduleRoute_5 ↦ Dispatcher ∈ sender
+        grd3: scheduleRoute_5 ↦ Passenger ∈ receiver
+        grd4: scheduleRoute_5 ∉ receivedMessages
+        grd5: currentMessage = {scheduleRoute_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleRoute_5}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchSeat_6
+    WHEN
+        grd1: fetchSeat_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleRoute_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchSeat_6}
+        act2: sender := sender ∪ {fetchSeat_6 ↦ Passenger}
+        act3: receiver := receiver ∪ {fetchSeat_6 ↦ Dispatcher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchSeat_6 ↦ seatData}
+        act6: currentMessage := {fetchSeat_6}
+    END
+
+    receivefetchSeat_6
+    WHEN
+        grd1: fetchSeat_6 ∈ sentMessages
+        grd2: fetchSeat_6 ↦ Passenger ∈ sender
+        grd3: fetchSeat_6 ↦ Dispatcher ∈ receiver
+        grd4: fetchSeat_6 ∉ receivedMessages
+        grd5: currentMessage = {fetchSeat_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchSeat_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchSeat_6 ↦ seatData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

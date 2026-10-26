@@ -1,0 +1,306 @@
+CONTEXT HomeSecurityAlarmContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AlarmPanel, Sensor
+    logCode_1, reportAlert_2, checkAlert_3, notifyZone_4, syncZone_5, queryCode_6, assignAlert_7, queryZone_8, scheduleZone_9
+    alertData, alertInfo, codeRef, zoneRef
+AXIOMS
+    axm1: partition(Objects, {AlarmPanel}, {Sensor})
+    axm2: partition(Messages, {logCode_1}, {reportAlert_2}, {checkAlert_3}, {notifyZone_4}, {syncZone_5}, {queryCode_6}, {assignAlert_7}, {queryZone_8}, {scheduleZone_9})
+    axm3: partition(DataMessages, {alertData}, {alertInfo}, {codeRef}, {zoneRef})
+END
+
+MACHINE HomeSecurityAlarmInteractionMachine_1
+SEES HomeSecurityAlarmContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_9 ∈ ℤ
+    inv20: t_delay_9 ∈ ℤ
+    inv21: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..5
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..20
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 20..14
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+        act19: t_time_9 :∈ 0..3
+        act20: t_delay_9 := 0
+        act21: t_success_9 := 0
+    END
+
+
+    sendlogCode_1
+    WHEN
+        grd1: logCode_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCode_1}
+        act2: sender := sender ∪ {logCode_1 ↦ AlarmPanel}
+        act3: receiver := receiver ∪ {logCode_1 ↦ Sensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logCode_1 ↦ alertData}
+        act6: currentMessage := {logCode_1}
+    END
+
+    receivelogCode_1
+    WHEN
+        grd1: logCode_1 ∈ sentMessages
+        grd2: logCode_1 ↦ AlarmPanel ∈ sender
+        grd3: logCode_1 ↦ Sensor ∈ receiver
+        grd4: logCode_1 ∉ receivedMessages
+        grd5: currentMessage = {logCode_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCode_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logCode_1 ↦ alertData}
+        act3: currentMessage := ∅
+    END
+
+    sendreportAlert_2
+    WHEN
+        grd1: reportAlert_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logCode_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportAlert_2}
+        act2: sender := sender ∪ {reportAlert_2 ↦ Sensor}
+        act3: receiver := receiver ∪ {reportAlert_2 ↦ AlarmPanel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportAlert_2}
+    END
+
+    receivereportAlert_2
+    WHEN
+        grd1: reportAlert_2 ∈ sentMessages
+        grd2: reportAlert_2 ↦ Sensor ∈ sender
+        grd3: reportAlert_2 ↦ AlarmPanel ∈ receiver
+        grd4: reportAlert_2 ∉ receivedMessages
+        grd5: currentMessage = {reportAlert_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportAlert_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcheckAlert_3_opt1
+    WHEN
+        grd1: checkAlert_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportAlert_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkAlert_3}
+        act2: sender := sender ∪ {checkAlert_3 ↦ AlarmPanel}
+        act3: receiver := receiver ∪ {checkAlert_3 ↦ Sensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkAlert_3 ↦ codeRef}
+        act6: currentMessage := {checkAlert_3}
+    END
+
+    receivecheckAlert_3_opt1
+    WHEN
+        grd1: checkAlert_3 ∈ sentMessages
+        grd2: checkAlert_3 ↦ AlarmPanel ∈ sender
+        grd3: checkAlert_3 ↦ Sensor ∈ receiver
+        grd4: checkAlert_3 ∉ receivedMessages
+        grd5: currentMessage = {checkAlert_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkAlert_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkAlert_3 ↦ codeRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendnotifyZone_4_opt1
+    WHEN
+        grd1: notifyZone_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkAlert_3 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyZone_4}
+        act2: sender := sender ∪ {notifyZone_4 ↦ AlarmPanel}
+        act3: receiver := receiver ∪ {notifyZone_4 ↦ Sensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyZone_4 ↦ alertInfo}
+        act6: currentMessage := {notifyZone_4}
+    END
+
+    receivenotifyZone_4_opt1
+    WHEN
+        grd1: notifyZone_4 ∈ sentMessages
+        grd2: notifyZone_4 ↦ AlarmPanel ∈ sender
+        grd3: notifyZone_4 ↦ Sensor ∈ receiver
+        grd4: notifyZone_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyZone_4}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyZone_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyZone_4 ↦ alertInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncZone_5
+    WHEN
+        grd1: syncZone_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyZone_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncZone_5}
+        act2: sender := sender ∪ {syncZone_5 ↦ Sensor}
+        act3: receiver := receiver ∪ {syncZone_5 ↦ AlarmPanel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncZone_5}
+    END
+
+    receivesyncZone_5
+    WHEN
+        grd1: syncZone_5 ∈ sentMessages
+        grd2: syncZone_5 ↦ Sensor ∈ sender
+        grd3: syncZone_5 ↦ AlarmPanel ∈ receiver
+        grd4: syncZone_5 ∉ receivedMessages
+        grd5: currentMessage = {syncZone_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncZone_5}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryCode_6
+    WHEN
+        grd1: queryCode_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncZone_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCode_6}
+        act2: sender := sender ∪ {queryCode_6 ↦ AlarmPanel}
+        act3: receiver := receiver ∪ {queryCode_6 ↦ Sensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryCode_6}
+    END
+
+    receivequeryCode_6
+    WHEN
+        grd1: queryCode_6 ∈ sentMessages
+        grd2: queryCode_6 ↦ AlarmPanel ∈ sender
+        grd3: queryCode_6 ↦ Sensor ∈ receiver
+        grd4: queryCode_6 ∉ receivedMessages
+        grd5: currentMessage = {queryCode_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCode_6}
+        act2: currentMessage := ∅
+    END
+
+    sendassignAlert_7
+    WHEN
+        grd1: assignAlert_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryCode_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignAlert_7}
+        act2: sender := sender ∪ {assignAlert_7 ↦ Sensor}
+        act3: receiver := receiver ∪ {assignAlert_7 ↦ AlarmPanel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignAlert_7}
+    END
+
+    receiveassignAlert_7
+    WHEN
+        grd1: assignAlert_7 ∈ sentMessages
+        grd2: assignAlert_7 ↦ Sensor ∈ sender
+        grd3: assignAlert_7 ↦ AlarmPanel ∈ receiver
+        grd4: assignAlert_7 ∉ receivedMessages
+        grd5: currentMessage = {assignAlert_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignAlert_7}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryZone_8
+    WHEN
+        grd1: queryZone_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignAlert_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryZone_8}
+        act2: sender := sender ∪ {queryZone_8 ↦ AlarmPanel}
+        act3: receiver := receiver ∪ {queryZone_8 ↦ Sensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryZone_8 ↦ zoneRef}
+        act6: currentMessage := {queryZone_8}
+    END
+
+    receivequeryZone_8
+    WHEN
+        grd1: queryZone_8 ∈ sentMessages
+        grd2: queryZone_8 ↦ AlarmPanel ∈ sender
+        grd3: queryZone_8 ↦ Sensor ∈ receiver
+        grd4: queryZone_8 ∉ receivedMessages
+        grd5: currentMessage = {queryZone_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryZone_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryZone_8 ↦ zoneRef}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleZone_9
+    WHEN
+        grd1: scheduleZone_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryZone_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleZone_9}
+        act2: sender := sender ∪ {scheduleZone_9 ↦ Sensor}
+        act3: receiver := receiver ∪ {scheduleZone_9 ↦ AlarmPanel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleZone_9}
+    END
+
+    receivescheduleZone_9
+    WHEN
+        grd1: scheduleZone_9 ∈ sentMessages
+        grd2: scheduleZone_9 ↦ Sensor ∈ sender
+        grd3: scheduleZone_9 ↦ AlarmPanel ∈ receiver
+        grd4: scheduleZone_9 ∉ receivedMessages
+        grd5: currentMessage = {scheduleZone_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleZone_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+END

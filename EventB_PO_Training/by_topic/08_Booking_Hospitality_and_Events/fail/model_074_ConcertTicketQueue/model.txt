@@ -1,0 +1,216 @@
+CONTEXT ConcertTicketQueueContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Fan, PaymentGW, QueueServer, TicketSite
+    syncSeat_1, assignSeat_2, fetchTicket_3, validateQueue_4, querySeat_5, reserveQueue_6
+    queueCode, queueRef, ticketInfo, ticketRef
+AXIOMS
+    axm1: partition(Objects, {Fan}, {PaymentGW}, {QueueServer}, {TicketSite})
+    axm2: partition(Messages, {syncSeat_1}, {assignSeat_2}, {fetchTicket_3}, {validateQueue_4}, {querySeat_5}, {reserveQueue_6})
+    axm3: partition(DataMessages, {queueCode}, {queueRef}, {ticketInfo}, {ticketRef})
+END
+
+MACHINE ConcertTicketQueueInteractionMachine_1
+SEES ConcertTicketQueueContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 10..6
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_4 :∈ 0..2
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+        act14: t_time_5 :∈ 0..1
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+    END
+
+
+    sendsyncSeat_1
+    WHEN
+        grd1: syncSeat_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncSeat_1}
+        act2: sender := sender ∪ {syncSeat_1 ↦ Fan}
+        act3: receiver := receiver ∪ {syncSeat_1 ↦ QueueServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncSeat_1}
+    END
+
+    receivesyncSeat_1
+    WHEN
+        grd1: syncSeat_1 ∈ sentMessages
+        grd2: syncSeat_1 ↦ Fan ∈ sender
+        grd3: syncSeat_1 ↦ QueueServer ∈ receiver
+        grd4: syncSeat_1 ∉ receivedMessages
+        grd5: currentMessage = {syncSeat_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncSeat_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignSeat_2
+    WHEN
+        grd1: assignSeat_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncSeat_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignSeat_2}
+        act2: sender := sender ∪ {assignSeat_2 ↦ Fan}
+        act3: receiver := receiver ∪ {assignSeat_2 ↦ PaymentGW}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignSeat_2 ↦ queueRef}
+        act6: currentMessage := {assignSeat_2}
+    END
+
+    receiveassignSeat_2
+    WHEN
+        grd1: assignSeat_2 ∈ sentMessages
+        grd2: assignSeat_2 ↦ Fan ∈ sender
+        grd3: assignSeat_2 ↦ PaymentGW ∈ receiver
+        grd4: assignSeat_2 ∉ receivedMessages
+        grd5: currentMessage = {assignSeat_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignSeat_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignSeat_2 ↦ queueRef}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchTicket_3
+    WHEN
+        grd1: fetchTicket_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignSeat_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchTicket_3}
+        act2: sender := sender ∪ {fetchTicket_3 ↦ PaymentGW}
+        act3: receiver := receiver ∪ {fetchTicket_3 ↦ TicketSite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchTicket_3 ↦ queueCode}
+        act6: currentMessage := {fetchTicket_3}
+    END
+
+    receivefetchTicket_3
+    WHEN
+        grd1: fetchTicket_3 ∈ sentMessages
+        grd2: fetchTicket_3 ↦ PaymentGW ∈ sender
+        grd3: fetchTicket_3 ↦ TicketSite ∈ receiver
+        grd4: fetchTicket_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchTicket_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchTicket_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchTicket_3 ↦ queueCode}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateQueue_4
+    WHEN
+        grd1: validateQueue_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchTicket_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateQueue_4}
+        act2: sender := sender ∪ {validateQueue_4 ↦ TicketSite}
+        act3: receiver := receiver ∪ {validateQueue_4 ↦ QueueServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateQueue_4 ↦ ticketInfo}
+        act6: currentMessage := {validateQueue_4}
+    END
+
+    receivevalidateQueue_4
+    WHEN
+        grd1: validateQueue_4 ∈ sentMessages
+        grd2: validateQueue_4 ↦ TicketSite ∈ sender
+        grd3: validateQueue_4 ↦ QueueServer ∈ receiver
+        grd4: validateQueue_4 ∉ receivedMessages
+        grd5: currentMessage = {validateQueue_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateQueue_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateQueue_4 ↦ ticketInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendquerySeat_5
+    WHEN
+        grd1: querySeat_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateQueue_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {querySeat_5}
+        act2: sender := sender ∪ {querySeat_5 ↦ Fan}
+        act3: receiver := receiver ∪ {querySeat_5 ↦ TicketSite}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {querySeat_5}
+    END
+
+    receivequerySeat_5
+    WHEN
+        grd1: querySeat_5 ∈ sentMessages
+        grd2: querySeat_5 ↦ Fan ∈ sender
+        grd3: querySeat_5 ↦ TicketSite ∈ receiver
+        grd4: querySeat_5 ∉ receivedMessages
+        grd5: currentMessage = {querySeat_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {querySeat_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreserveQueue_6
+    WHEN
+        grd1: reserveQueue_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: querySeat_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveQueue_6}
+        act2: sender := sender ∪ {reserveQueue_6 ↦ PaymentGW}
+        act3: receiver := receiver ∪ {reserveQueue_6 ↦ Fan}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveQueue_6 ↦ ticketRef}
+        act6: currentMessage := {reserveQueue_6}
+    END
+
+    receivereserveQueue_6
+    WHEN
+        grd1: reserveQueue_6 ∈ sentMessages
+        grd2: reserveQueue_6 ↦ PaymentGW ∈ sender
+        grd3: reserveQueue_6 ↦ Fan ∈ receiver
+        grd4: reserveQueue_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveQueue_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveQueue_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveQueue_6 ↦ ticketRef}
+        act3: currentMessage := ∅
+    END
+
+END

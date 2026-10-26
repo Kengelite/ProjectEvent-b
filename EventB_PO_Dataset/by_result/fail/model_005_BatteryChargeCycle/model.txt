@@ -1,0 +1,222 @@
+CONTEXT BatteryChargeCycleContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BatteryPack, ChargeController
+    startCharge_1, chargeAck_2, chargePulse_3, cellVoltage_4, stopCharge_5, fullReport_6
+    currentA, finalSoC, targetSoC, voltage
+AXIOMS
+    axm1: partition(Objects, {BatteryPack}, {ChargeController})
+    axm2: partition(Messages, {startCharge_1}, {chargeAck_2}, {chargePulse_3}, {cellVoltage_4}, {stopCharge_5}, {fullReport_6})
+    axm3: partition(DataMessages, {currentA}, {finalSoC}, {targetSoC}, {voltage})
+END
+
+MACHINE BatteryChargeCycleInteractionMachine_1
+SEES BatteryChargeCycleContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, pulseNo, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: pulseNo ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: pulseNo := 0
+        act9: t_time_1 :∈ 0..5
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 2..1
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+    END
+
+
+    sendstartCharge_1
+    WHEN
+        grd1: startCharge_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {startCharge_1}
+        act2: sender := sender ∪ {startCharge_1 ↦ ChargeController}
+        act3: receiver := receiver ∪ {startCharge_1 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startCharge_1 ↦ targetSoC}
+        act6: currentMessage := {startCharge_1}
+    END
+
+    receivestartCharge_1
+    WHEN
+        grd1: startCharge_1 ∈ sentMessages
+        grd2: startCharge_1 ↦ ChargeController ∈ sender
+        grd3: startCharge_1 ↦ BatteryPack ∈ receiver
+        grd4: startCharge_1 ∉ receivedMessages
+        grd5: currentMessage = {startCharge_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startCharge_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startCharge_1 ↦ targetSoC}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendchargeAck_2
+    WHEN
+        grd1: chargeAck_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startCharge_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {chargeAck_2}
+        act2: sender := sender ∪ {chargeAck_2 ↦ BatteryPack}
+        act3: receiver := receiver ∪ {chargeAck_2 ↦ ChargeController}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {chargeAck_2}
+    END
+
+    receivechargeAck_2
+    WHEN
+        grd1: chargeAck_2 ∈ sentMessages
+        grd2: chargeAck_2 ↦ BatteryPack ∈ sender
+        grd3: chargeAck_2 ↦ ChargeController ∈ receiver
+        grd4: chargeAck_2 ∉ receivedMessages
+        grd5: currentMessage = {chargeAck_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {chargeAck_2}
+        act2: currentMessage := ∅
+    END
+
+    sendchargePulse_3
+    WHEN
+        grd1: chargePulse_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: chargeAck_2 ∈ receivedMessages
+        grd4: pulseNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {chargePulse_3}
+        act2: sender := sender ∪ {chargePulse_3 ↦ ChargeController}
+        act3: receiver := receiver ∪ {chargePulse_3 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {chargePulse_3 ↦ currentA}
+        act6: currentMessage := {chargePulse_3}
+    END
+
+    receivechargePulse_3
+    WHEN
+        grd1: chargePulse_3 ∈ sentMessages
+        grd2: chargePulse_3 ↦ ChargeController ∈ sender
+        grd3: chargePulse_3 ↦ BatteryPack ∈ receiver
+        grd4: chargePulse_3 ∉ receivedMessages
+        grd5: currentMessage = {chargePulse_3}
+        grd6: pulseNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {chargePulse_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {chargePulse_3 ↦ currentA}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcellVoltage_4
+    WHEN
+        grd1: cellVoltage_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: chargePulse_3 ∈ receivedMessages
+        grd4: pulseNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {cellVoltage_4}
+        act2: sender := sender ∪ {cellVoltage_4 ↦ BatteryPack}
+        act3: receiver := receiver ∪ {cellVoltage_4 ↦ ChargeController}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cellVoltage_4 ↦ voltage}
+        act6: currentMessage := {cellVoltage_4}
+    END
+
+    receivecellVoltage_4
+    WHEN
+        grd1: cellVoltage_4 ∈ sentMessages
+        grd2: cellVoltage_4 ↦ BatteryPack ∈ sender
+        grd3: cellVoltage_4 ↦ ChargeController ∈ receiver
+        grd4: cellVoltage_4 ∉ receivedMessages
+        grd5: currentMessage = {cellVoltage_4}
+        grd6: pulseNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cellVoltage_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cellVoltage_4 ↦ voltage}
+        act3: currentMessage := ∅
+    END
+
+    sendstopCharge_5
+    WHEN
+        grd1: stopCharge_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cellVoltage_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {stopCharge_5}
+        act2: sender := sender ∪ {stopCharge_5 ↦ ChargeController}
+        act3: receiver := receiver ∪ {stopCharge_5 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {stopCharge_5}
+    END
+
+    receivestopCharge_5
+    WHEN
+        grd1: stopCharge_5 ∈ sentMessages
+        grd2: stopCharge_5 ↦ ChargeController ∈ sender
+        grd3: stopCharge_5 ↦ BatteryPack ∈ receiver
+        grd4: stopCharge_5 ∉ receivedMessages
+        grd5: currentMessage = {stopCharge_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {stopCharge_5}
+        act2: currentMessage := ∅
+    END
+
+    sendfullReport_6
+    WHEN
+        grd1: fullReport_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: stopCharge_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fullReport_6}
+        act2: sender := sender ∪ {fullReport_6 ↦ BatteryPack}
+        act3: receiver := receiver ∪ {fullReport_6 ↦ ChargeController}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fullReport_6 ↦ finalSoC}
+        act6: currentMessage := {fullReport_6}
+    END
+
+    receivefullReport_6
+    WHEN
+        grd1: fullReport_6 ∈ sentMessages
+        grd2: fullReport_6 ↦ BatteryPack ∈ sender
+        grd3: fullReport_6 ↦ ChargeController ∈ receiver
+        grd4: fullReport_6 ∉ receivedMessages
+        grd5: currentMessage = {fullReport_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fullReport_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fullReport_6 ↦ finalSoC}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_chargePulse_3_loop1
+    WHEN
+        grd1: pulseNo < 8
+    THEN
+        act1: pulseNo := pulseNo + 1
+    END
+
+END

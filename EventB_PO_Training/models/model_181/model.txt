@@ -1,0 +1,300 @@
+CONTEXT SolarPanelMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    GridMeter, Inverter, SolarHub
+    ackPower_1, approveExport_2, issuePower_3, confirmFault_4, reportFault_5, checkPower_6, reportExport_7, reserveExport_8
+    exportInfo, faultInfo, powerData, powerInfo
+AXIOMS
+    axm1: partition(Objects, {GridMeter}, {Inverter}, {SolarHub})
+    axm2: partition(Messages, {ackPower_1}, {approveExport_2}, {issuePower_3}, {confirmFault_4}, {reportFault_5}, {checkPower_6}, {reportExport_7}, {reserveExport_8})
+    axm3: partition(DataMessages, {exportInfo}, {faultInfo}, {powerData}, {powerInfo})
+END
+
+MACHINE SolarPanelMonitorInteractionMachine_1
+SEES SolarPanelMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, attemptNo, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: attemptNo ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_7 ∈ ℤ
+    inv19: t_delay_7 ∈ ℤ
+    inv20: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: attemptNo := 0
+        act9: t_time_2 :∈ 0..2
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..15
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..10
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+        act18: t_time_7 :∈ 3..0
+        act19: t_delay_7 := 0
+        act20: t_success_7 := 0
+    END
+
+
+    sendackPower_1
+    WHEN
+        grd1: ackPower_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackPower_1}
+        act2: sender := sender ∪ {ackPower_1 ↦ Inverter}
+        act3: receiver := receiver ∪ {ackPower_1 ↦ GridMeter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackPower_1}
+    END
+
+    receiveackPower_1
+    WHEN
+        grd1: ackPower_1 ∈ sentMessages
+        grd2: ackPower_1 ↦ Inverter ∈ sender
+        grd3: ackPower_1 ↦ GridMeter ∈ receiver
+        grd4: ackPower_1 ∉ receivedMessages
+        grd5: currentMessage = {ackPower_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackPower_1}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveExport_2
+    WHEN
+        grd1: approveExport_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackPower_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveExport_2}
+        act2: sender := sender ∪ {approveExport_2 ↦ SolarHub}
+        act3: receiver := receiver ∪ {approveExport_2 ↦ Inverter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveExport_2 ↦ powerData}
+        act6: currentMessage := {approveExport_2}
+    END
+
+    receiveapproveExport_2
+    WHEN
+        grd1: approveExport_2 ∈ sentMessages
+        grd2: approveExport_2 ↦ SolarHub ∈ sender
+        grd3: approveExport_2 ↦ Inverter ∈ receiver
+        grd4: approveExport_2 ∉ receivedMessages
+        grd5: currentMessage = {approveExport_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveExport_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveExport_2 ↦ powerData}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendissuePower_3
+    WHEN
+        grd1: issuePower_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveExport_2 ∈ receivedMessages
+        grd4: attemptNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {issuePower_3}
+        act2: sender := sender ∪ {issuePower_3 ↦ GridMeter}
+        act3: receiver := receiver ∪ {issuePower_3 ↦ SolarHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issuePower_3}
+    END
+
+    receiveissuePower_3
+    WHEN
+        grd1: issuePower_3 ∈ sentMessages
+        grd2: issuePower_3 ↦ GridMeter ∈ sender
+        grd3: issuePower_3 ↦ SolarHub ∈ receiver
+        grd4: issuePower_3 ∉ receivedMessages
+        grd5: currentMessage = {issuePower_3}
+        grd6: attemptNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issuePower_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendconfirmFault_4
+    WHEN
+        grd1: confirmFault_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePower_3 ∈ receivedMessages
+        grd4: attemptNo < 8
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmFault_4}
+        act2: sender := sender ∪ {confirmFault_4 ↦ Inverter}
+        act3: receiver := receiver ∪ {confirmFault_4 ↦ SolarHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmFault_4 ↦ powerInfo}
+        act6: currentMessage := {confirmFault_4}
+    END
+
+    receiveconfirmFault_4
+    WHEN
+        grd1: confirmFault_4 ∈ sentMessages
+        grd2: confirmFault_4 ↦ Inverter ∈ sender
+        grd3: confirmFault_4 ↦ SolarHub ∈ receiver
+        grd4: confirmFault_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmFault_4}
+        grd6: attemptNo < 8
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmFault_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmFault_4 ↦ powerInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreportFault_5
+    WHEN
+        grd1: reportFault_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmFault_4 ∈ receivedMessages
+        grd4: attemptNo < 8
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportFault_5}
+        act2: sender := sender ∪ {reportFault_5 ↦ SolarHub}
+        act3: receiver := receiver ∪ {reportFault_5 ↦ Inverter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportFault_5 ↦ faultInfo}
+        act6: currentMessage := {reportFault_5}
+    END
+
+    receivereportFault_5
+    WHEN
+        grd1: reportFault_5 ∈ sentMessages
+        grd2: reportFault_5 ↦ SolarHub ∈ sender
+        grd3: reportFault_5 ↦ Inverter ∈ receiver
+        grd4: reportFault_5 ∉ receivedMessages
+        grd5: currentMessage = {reportFault_5}
+        grd6: attemptNo < 8
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportFault_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportFault_5 ↦ faultInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckPower_6
+    WHEN
+        grd1: checkPower_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePower_3 ∈ receivedMessages
+        grd4: attemptNo < 8
+        grd5: attemptNo mod 2 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPower_6}
+        act2: sender := sender ∪ {checkPower_6 ↦ GridMeter}
+        act3: receiver := receiver ∪ {checkPower_6 ↦ Inverter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkPower_6}
+    END
+
+    receivecheckPower_6
+    WHEN
+        grd1: checkPower_6 ∈ sentMessages
+        grd2: checkPower_6 ↦ GridMeter ∈ sender
+        grd3: checkPower_6 ↦ Inverter ∈ receiver
+        grd4: checkPower_6 ∉ receivedMessages
+        grd5: currentMessage = {checkPower_6}
+        grd6: attemptNo < 8
+        grd7: attemptNo mod 2 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPower_6}
+        act2: currentMessage := ∅
+    END
+
+    sendreportExport_7
+    WHEN
+        grd1: reportExport_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportFault_5 ∈ receivedMessages ∨ checkPower_6 ∈ receivedMessages
+        grd4: attemptNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportExport_7}
+        act2: sender := sender ∪ {reportExport_7 ↦ Inverter}
+        act3: receiver := receiver ∪ {reportExport_7 ↦ GridMeter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportExport_7 ↦ powerData}
+        act6: currentMessage := {reportExport_7}
+    END
+
+    receivereportExport_7
+    WHEN
+        grd1: reportExport_7 ∈ sentMessages
+        grd2: reportExport_7 ↦ Inverter ∈ sender
+        grd3: reportExport_7 ↦ GridMeter ∈ receiver
+        grd4: reportExport_7 ∉ receivedMessages
+        grd5: currentMessage = {reportExport_7}
+        grd6: attemptNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportExport_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportExport_7 ↦ powerData}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreserveExport_8
+    WHEN
+        grd1: reserveExport_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportExport_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveExport_8}
+        act2: sender := sender ∪ {reserveExport_8 ↦ GridMeter}
+        act3: receiver := receiver ∪ {reserveExport_8 ↦ Inverter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveExport_8 ↦ exportInfo}
+        act6: currentMessage := {reserveExport_8}
+    END
+
+    receivereserveExport_8
+    WHEN
+        grd1: reserveExport_8 ∈ sentMessages
+        grd2: reserveExport_8 ↦ GridMeter ∈ sender
+        grd3: reserveExport_8 ↦ Inverter ∈ receiver
+        grd4: reserveExport_8 ∉ receivedMessages
+        grd5: currentMessage = {reserveExport_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveExport_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveExport_8 ↦ exportInfo}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_issuePower_3_loop1
+    WHEN
+        grd1: attemptNo < 8
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

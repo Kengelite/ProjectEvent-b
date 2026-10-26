@@ -1,0 +1,401 @@
+CONTEXT CampusShuttleBusContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BusDriver, ShuttleApp, Student
+    scheduleArrival_1, scheduleSeat_2, validateArrival_3, updateStop_4, validateStop_5, reserveSeat_6, updateArrival_7, approveArrival_8, querySeat_9, sendStop_10, issueStop_11, issueArrival_12
+    arrivalCode, arrivalData, arrivalID, arrivalValue, seatRef, stopCode, stopID
+AXIOMS
+    axm1: partition(Objects, {BusDriver}, {ShuttleApp}, {Student})
+    axm2: partition(Messages, {scheduleArrival_1}, {scheduleSeat_2}, {validateArrival_3}, {updateStop_4}, {validateStop_5}, {reserveSeat_6}, {updateArrival_7}, {approveArrival_8}, {querySeat_9}, {sendStop_10}, {issueStop_11}, {issueArrival_12})
+    axm3: partition(DataMessages, {arrivalCode}, {arrivalData}, {arrivalID}, {arrivalValue}, {seatRef}, {stopCode}, {stopID})
+END
+
+MACHINE CampusShuttleBusInteractionMachine_1
+SEES CampusShuttleBusContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, optIn, load, par_1, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: optIn ∈ ℤ
+    inv9: load ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_5 ∈ ℤ
+    inv12: t_delay_5 ∈ ℤ
+    inv13: t_success_5 ∈ ℤ
+    inv14: t_time_6 ∈ ℤ
+    inv15: t_delay_6 ∈ ℤ
+    inv16: t_success_6 ∈ ℤ
+    inv17: t_time_11 ∈ ℤ
+    inv18: t_delay_11 ∈ ℤ
+    inv19: t_success_11 ∈ ℤ
+    inv20: t_time_12 ∈ ℤ
+    inv21: t_delay_12 ∈ ℤ
+    inv22: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: optIn := 1
+        act9: load :∈ ℤ
+        act10: par_1 := 0
+        act11: t_time_5 :∈ 0..3
+        act12: t_delay_5 := 0
+        act13: t_success_5 := 0
+        act14: t_time_6 :∈ 0..20
+        act15: t_delay_6 := 1
+        act16: t_success_6 := 0
+        act17: t_time_11 :∈ 0..15
+        act18: t_delay_11 := 0
+        act19: t_success_11 := 0
+        act20: t_time_12 :∈ 0..20
+        act21: t_delay_12 := 0
+        act22: t_success_12 := 0
+    END
+
+
+    sendscheduleArrival_1
+    WHEN
+        grd1: scheduleArrival_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleArrival_1}
+        act2: sender := sender ∪ {scheduleArrival_1 ↦ Student}
+        act3: receiver := receiver ∪ {scheduleArrival_1 ↦ BusDriver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleArrival_1 ↦ stopCode}
+        act6: currentMessage := {scheduleArrival_1}
+    END
+
+    receivescheduleArrival_1
+    WHEN
+        grd1: scheduleArrival_1 ∈ sentMessages
+        grd2: scheduleArrival_1 ↦ Student ∈ sender
+        grd3: scheduleArrival_1 ↦ BusDriver ∈ receiver
+        grd4: scheduleArrival_1 ∉ receivedMessages
+        grd5: currentMessage = {scheduleArrival_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleArrival_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleArrival_1 ↦ stopCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleSeat_2
+    WHEN
+        grd1: scheduleSeat_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleArrival_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSeat_2}
+        act2: sender := sender ∪ {scheduleSeat_2 ↦ ShuttleApp}
+        act3: receiver := receiver ∪ {scheduleSeat_2 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSeat_2 ↦ seatRef}
+        act6: currentMessage := {scheduleSeat_2}
+    END
+
+    receivescheduleSeat_2
+    WHEN
+        grd1: scheduleSeat_2 ∈ sentMessages
+        grd2: scheduleSeat_2 ↦ ShuttleApp ∈ sender
+        grd3: scheduleSeat_2 ↦ Student ∈ receiver
+        grd4: scheduleSeat_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSeat_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSeat_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSeat_2 ↦ seatRef}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateArrival_3
+    WHEN
+        grd1: validateArrival_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSeat_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateArrival_3}
+        act2: sender := sender ∪ {validateArrival_3 ↦ Student}
+        act3: receiver := receiver ∪ {validateArrival_3 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateArrival_3}
+    END
+
+    receivevalidateArrival_3
+    WHEN
+        grd1: validateArrival_3 ∈ sentMessages
+        grd2: validateArrival_3 ↦ Student ∈ sender
+        grd3: validateArrival_3 ↦ ShuttleApp ∈ receiver
+        grd4: validateArrival_3 ∉ receivedMessages
+        grd5: currentMessage = {validateArrival_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateArrival_3}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateStop_4
+    WHEN
+        grd1: updateStop_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateArrival_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateStop_4}
+        act2: sender := sender ∪ {updateStop_4 ↦ BusDriver}
+        act3: receiver := receiver ∪ {updateStop_4 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateStop_4 ↦ arrivalValue}
+        act6: currentMessage := {updateStop_4}
+    END
+
+    receiveupdateStop_4
+    WHEN
+        grd1: updateStop_4 ∈ sentMessages
+        grd2: updateStop_4 ↦ BusDriver ∈ sender
+        grd3: updateStop_4 ↦ Student ∈ receiver
+        grd4: updateStop_4 ∉ receivedMessages
+        grd5: currentMessage = {updateStop_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateStop_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateStop_4 ↦ arrivalValue}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateStop_5
+    WHEN
+        grd1: validateStop_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateStop_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateStop_5}
+        act2: sender := sender ∪ {validateStop_5 ↦ Student}
+        act3: receiver := receiver ∪ {validateStop_5 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateStop_5}
+    END
+
+    receivevalidateStop_5
+    WHEN
+        grd1: validateStop_5 ∈ sentMessages
+        grd2: validateStop_5 ↦ Student ∈ sender
+        grd3: validateStop_5 ↦ ShuttleApp ∈ receiver
+        grd4: validateStop_5 ∉ receivedMessages
+        grd5: currentMessage = {validateStop_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateStop_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreserveSeat_6
+    WHEN
+        grd1: reserveSeat_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateStop_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSeat_6}
+        act2: sender := sender ∪ {reserveSeat_6 ↦ ShuttleApp}
+        act3: receiver := receiver ∪ {reserveSeat_6 ↦ BusDriver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveSeat_6 ↦ arrivalData}
+        act6: currentMessage := {reserveSeat_6}
+    END
+
+    receivereserveSeat_6
+    WHEN
+        grd1: reserveSeat_6 ∈ sentMessages
+        grd2: reserveSeat_6 ↦ ShuttleApp ∈ sender
+        grd3: reserveSeat_6 ↦ BusDriver ∈ receiver
+        grd4: reserveSeat_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveSeat_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSeat_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveSeat_6 ↦ arrivalData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendupdateArrival_7_opt1
+    WHEN
+        grd1: updateArrival_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSeat_6 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateArrival_7}
+        act2: sender := sender ∪ {updateArrival_7 ↦ Student}
+        act3: receiver := receiver ∪ {updateArrival_7 ↦ BusDriver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateArrival_7 ↦ arrivalValue}
+        act6: currentMessage := {updateArrival_7}
+    END
+
+    receiveupdateArrival_7_opt1
+    WHEN
+        grd1: updateArrival_7 ∈ sentMessages
+        grd2: updateArrival_7 ↦ Student ∈ sender
+        grd3: updateArrival_7 ↦ BusDriver ∈ receiver
+        grd4: updateArrival_7 ∉ receivedMessages
+        grd5: currentMessage = {updateArrival_7}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateArrival_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateArrival_7 ↦ arrivalValue}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveArrival_8_opt1
+    WHEN
+        grd1: approveArrival_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateArrival_7 ∈ receivedMessages
+        grd4: optIn = 1
+        grd5: load < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveArrival_8}
+        act2: sender := sender ∪ {approveArrival_8 ↦ BusDriver}
+        act3: receiver := receiver ∪ {approveArrival_8 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveArrival_8}
+    END
+
+    receiveapproveArrival_8_opt1
+    WHEN
+        grd1: approveArrival_8 ∈ sentMessages
+        grd2: approveArrival_8 ↦ BusDriver ∈ sender
+        grd3: approveArrival_8 ↦ ShuttleApp ∈ receiver
+        grd4: approveArrival_8 ∉ receivedMessages
+        grd5: currentMessage = {approveArrival_8}
+        grd6: optIn = 1
+        grd7: load < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveArrival_8}
+        act2: currentMessage := ∅
+    END
+
+    sendquerySeat_9_opt1
+    WHEN
+        grd1: querySeat_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveArrival_8 ∈ receivedMessages
+        grd4: optIn = 1
+        grd5: load < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {querySeat_9}
+        act2: sender := sender ∪ {querySeat_9 ↦ BusDriver}
+        act3: receiver := receiver ∪ {querySeat_9 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {querySeat_9 ↦ stopID}
+        act6: currentMessage := {querySeat_9}
+    END
+
+    receivequerySeat_9_opt1
+    WHEN
+        grd1: querySeat_9 ∈ sentMessages
+        grd2: querySeat_9 ↦ BusDriver ∈ sender
+        grd3: querySeat_9 ↦ ShuttleApp ∈ receiver
+        grd4: querySeat_9 ∉ receivedMessages
+        grd5: currentMessage = {querySeat_9}
+        grd6: optIn = 1
+        grd7: load < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {querySeat_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {querySeat_9 ↦ stopID}
+        act3: currentMessage := ∅
+    END
+
+    sendsendStop_10_opt1
+    WHEN
+        grd1: sendStop_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateArrival_7 ∈ receivedMessages
+        grd4: optIn = 1
+        grd5: load ≥ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendStop_10}
+        act2: sender := sender ∪ {sendStop_10 ↦ BusDriver}
+        act3: receiver := receiver ∪ {sendStop_10 ↦ ShuttleApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendStop_10}
+    END
+
+    receivesendStop_10_opt1
+    WHEN
+        grd1: sendStop_10 ∈ sentMessages
+        grd2: sendStop_10 ↦ BusDriver ∈ sender
+        grd3: sendStop_10 ↦ ShuttleApp ∈ receiver
+        grd4: sendStop_10 ∉ receivedMessages
+        grd5: currentMessage = {sendStop_10}
+        grd6: optIn = 1
+        grd7: load ≥ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendStop_10}
+        act2: currentMessage := ∅
+    END
+
+    sendissueStop_11_opt1
+    WHEN
+        grd1: issueStop_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: querySeat_9 ∈ receivedMessages ∨ sendStop_10 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueStop_11}
+        act2: sender := sender ∪ {issueStop_11 ↦ Student}
+        act3: receiver := receiver ∪ {issueStop_11 ↦ BusDriver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueStop_11}
+    END
+
+    receiveissueStop_11_opt1
+    WHEN
+        grd1: issueStop_11 ∈ sentMessages
+        grd2: issueStop_11 ↦ Student ∈ sender
+        grd3: issueStop_11 ↦ BusDriver ∈ receiver
+        grd4: issueStop_11 ∉ receivedMessages
+        grd5: currentMessage = {issueStop_11}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueStop_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendissueArrival_12
+    WHEN
+        grd1: issueArrival_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueStop_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueArrival_12}
+        act2: sender := sender ∪ {issueArrival_12 ↦ ShuttleApp}
+        act3: receiver := receiver ∪ {issueArrival_12 ↦ BusDriver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueArrival_12 ↦ arrivalCode, issueArrival_12 ↦ arrivalID}
+        act6: currentMessage := {issueArrival_12}
+    END
+
+    receiveissueArrival_12
+    WHEN
+        grd1: issueArrival_12 ∈ sentMessages
+        grd2: issueArrival_12 ↦ ShuttleApp ∈ sender
+        grd3: issueArrival_12 ↦ BusDriver ∈ receiver
+        grd4: issueArrival_12 ∉ receivedMessages
+        grd5: currentMessage = {issueArrival_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueArrival_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueArrival_12 ↦ arrivalCode, issueArrival_12 ↦ arrivalID}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+END

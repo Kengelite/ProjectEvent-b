@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="VoiceAssistant" id="voiceassistant">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="270" width="640" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="342" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="512" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[intent == MUSIC]" vertex="1">
+          <mxGeometry x="105" y="275" width="153" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[intent == WEATHER]" vertex="1">
+          <mxGeometry x="105" y="355" width="171" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[intent == UNKNOWN]" vertex="1">
+          <mxGeometry x="105" y="525" width="171" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="User" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="ll8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="SmartSpeaker" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="ll9" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="CloudNLU" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="wakeWord()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="340.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="streamAudio(audioClip) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="180" as="sourcePoint" />
+            <mxPoint x="590.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="intentResult(intentTag) {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="230" as="sourcePoint" />
+            <mxPoint x="590.0" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="playSong(songID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="320" as="sourcePoint" />
+            <mxPoint x="90.0" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="fetchWeather(city) {0..4}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="400" as="sourcePoint" />
+            <mxPoint x="590.0" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="weatherInfo(forecast)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="445" as="sourcePoint" />
+            <mxPoint x="590.0" y="445" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="speakWeather(forecast)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="490" as="sourcePoint" />
+            <mxPoint x="90.0" y="490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="askRepeat()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="570" as="sourcePoint" />
+            <mxPoint x="90.0" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sleepMode()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="650" as="sourcePoint" />
+            <mxPoint x="90.0" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,443 @@
+CONTEXT SmartLibraryShelfContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CatalogDB, Librarian, LibraryHub, ShelfReader
+    syncShelf_1, reserveShelf_2, notifyHold_3, requestBook_4, updateHold_5, approveBook_6, reportBook_7, syncBook_8, requestHold_9, cancelShelf_10, logBook_11, cancelHold_12, reserveBook_13
+    bookCode, holdData, holdInfo, shelfCode, shelfData, shelfInfo, shelfRef, shelfValue
+    ACTIVE, IDLE
+AXIOMS
+    axm1: partition(Objects, {CatalogDB}, {Librarian}, {LibraryHub}, {ShelfReader})
+    axm2: partition(Messages, {syncShelf_1}, {reserveShelf_2}, {notifyHold_3}, {requestBook_4}, {updateHold_5}, {approveBook_6}, {reportBook_7}, {syncBook_8}, {requestHold_9}, {cancelShelf_10}, {logBook_11}, {cancelHold_12}, {reserveBook_13})
+    axm3: partition(DataMessages, {bookCode}, {holdData}, {holdInfo}, {shelfCode}, {shelfData}, {shelfInfo}, {shelfRef}, {shelfValue})
+    axm4: ACTIVE = 0
+    axm5: IDLE = 1
+END
+
+MACHINE SmartLibraryShelfInteractionMachine_1
+SEES SmartLibraryShelfContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, grade, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_9, t_delay_9, t_success_9, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: grade ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_9 ∈ ℤ
+    inv20: t_delay_9 ∈ ℤ
+    inv21: t_success_9 ∈ ℤ
+    inv22: t_time_11 ∈ ℤ
+    inv23: t_delay_11 ∈ ℤ
+    inv24: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: grade := IDLE
+        act10: t_time_2 :∈ 0..1
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_4 :∈ 0..0
+        act14: t_delay_4 := 1
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..60
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_9 :∈ 10..0
+        act20: t_delay_9 := 0
+        act21: t_success_9 := 0
+        act22: t_time_11 :∈ 0..8
+        act23: t_delay_11 := 0
+        act24: t_success_11 := 0
+    END
+
+
+    sendsyncShelf_1
+    WHEN
+        grd1: syncShelf_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncShelf_1}
+        act2: sender := sender ∪ {syncShelf_1 ↦ CatalogDB}
+        act3: receiver := receiver ∪ {syncShelf_1 ↦ LibraryHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncShelf_1}
+    END
+
+    receivesyncShelf_1
+    WHEN
+        grd1: syncShelf_1 ∈ sentMessages
+        grd2: syncShelf_1 ↦ CatalogDB ∈ sender
+        grd3: syncShelf_1 ↦ LibraryHub ∈ receiver
+        grd4: syncShelf_1 ∉ receivedMessages
+        grd5: currentMessage = {syncShelf_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncShelf_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveShelf_2
+    WHEN
+        grd1: reserveShelf_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncShelf_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveShelf_2}
+        act2: sender := sender ∪ {reserveShelf_2 ↦ ShelfReader}
+        act3: receiver := receiver ∪ {reserveShelf_2 ↦ Librarian}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveShelf_2}
+    END
+
+    receivereserveShelf_2
+    WHEN
+        grd1: reserveShelf_2 ∈ sentMessages
+        grd2: reserveShelf_2 ↦ ShelfReader ∈ sender
+        grd3: reserveShelf_2 ↦ Librarian ∈ receiver
+        grd4: reserveShelf_2 ∉ receivedMessages
+        grd5: currentMessage = {reserveShelf_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveShelf_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendnotifyHold_3
+    WHEN
+        grd1: notifyHold_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveShelf_2 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyHold_3}
+        act2: sender := sender ∪ {notifyHold_3 ↦ CatalogDB}
+        act3: receiver := receiver ∪ {notifyHold_3 ↦ ShelfReader}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyHold_3 ↦ bookCode}
+        act6: currentMessage := {notifyHold_3}
+    END
+
+    receivenotifyHold_3
+    WHEN
+        grd1: notifyHold_3 ∈ sentMessages
+        grd2: notifyHold_3 ↦ CatalogDB ∈ sender
+        grd3: notifyHold_3 ↦ ShelfReader ∈ receiver
+        grd4: notifyHold_3 ∉ receivedMessages
+        grd5: currentMessage = {notifyHold_3}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyHold_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyHold_3 ↦ bookCode}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestBook_4_opt1
+    WHEN
+        grd1: requestBook_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyHold_3 ∈ receivedMessages
+        grd4: roundNo < 12
+        grd5: roundNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBook_4}
+        act2: sender := sender ∪ {requestBook_4 ↦ Librarian}
+        act3: receiver := receiver ∪ {requestBook_4 ↦ LibraryHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBook_4 ↦ shelfValue}
+        act6: currentMessage := {requestBook_4}
+    END
+
+    receiverequestBook_4_opt1
+    WHEN
+        grd1: requestBook_4 ∈ sentMessages
+        grd2: requestBook_4 ↦ Librarian ∈ sender
+        grd3: requestBook_4 ↦ LibraryHub ∈ receiver
+        grd4: requestBook_4 ∉ receivedMessages
+        grd5: currentMessage = {requestBook_4}
+        grd6: roundNo < 12
+        grd7: roundNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBook_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBook_4 ↦ shelfValue}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendupdateHold_5_opt1
+    WHEN
+        grd1: updateHold_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBook_4 ∈ receivedMessages
+        grd4: roundNo < 12
+        grd5: roundNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateHold_5}
+        act2: sender := sender ∪ {updateHold_5 ↦ Librarian}
+        act3: receiver := receiver ∪ {updateHold_5 ↦ CatalogDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateHold_5}
+    END
+
+    receiveupdateHold_5_opt1
+    WHEN
+        grd1: updateHold_5 ∈ sentMessages
+        grd2: updateHold_5 ↦ Librarian ∈ sender
+        grd3: updateHold_5 ↦ CatalogDB ∈ receiver
+        grd4: updateHold_5 ∉ receivedMessages
+        grd5: currentMessage = {updateHold_5}
+        grd6: roundNo < 12
+        grd7: roundNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateHold_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendapproveBook_6
+    WHEN
+        grd1: approveBook_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateHold_5 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveBook_6}
+        act2: sender := sender ∪ {approveBook_6 ↦ CatalogDB}
+        act3: receiver := receiver ∪ {approveBook_6 ↦ ShelfReader}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveBook_6}
+    END
+
+    receiveapproveBook_6
+    WHEN
+        grd1: approveBook_6 ∈ sentMessages
+        grd2: approveBook_6 ↦ CatalogDB ∈ sender
+        grd3: approveBook_6 ↦ ShelfReader ∈ receiver
+        grd4: approveBook_6 ∉ receivedMessages
+        grd5: currentMessage = {approveBook_6}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveBook_6}
+        act2: currentMessage := ∅
+    END
+
+    sendreportBook_7
+    WHEN
+        grd1: reportBook_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveBook_6 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportBook_7}
+        act2: sender := sender ∪ {reportBook_7 ↦ CatalogDB}
+        act3: receiver := receiver ∪ {reportBook_7 ↦ LibraryHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportBook_7}
+    END
+
+    receivereportBook_7
+    WHEN
+        grd1: reportBook_7 ∈ sentMessages
+        grd2: reportBook_7 ↦ CatalogDB ∈ sender
+        grd3: reportBook_7 ↦ LibraryHub ∈ receiver
+        grd4: reportBook_7 ∉ receivedMessages
+        grd5: currentMessage = {reportBook_7}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportBook_7}
+        act2: currentMessage := ∅
+    END
+
+    sendsyncBook_8
+    WHEN
+        grd1: syncBook_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportBook_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncBook_8}
+        act2: sender := sender ∪ {syncBook_8 ↦ ShelfReader}
+        act3: receiver := receiver ∪ {syncBook_8 ↦ CatalogDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncBook_8 ↦ holdData, syncBook_8 ↦ shelfInfo}
+        act6: currentMessage := {syncBook_8}
+    END
+
+    receivesyncBook_8
+    WHEN
+        grd1: syncBook_8 ∈ sentMessages
+        grd2: syncBook_8 ↦ ShelfReader ∈ sender
+        grd3: syncBook_8 ↦ CatalogDB ∈ receiver
+        grd4: syncBook_8 ∉ receivedMessages
+        grd5: currentMessage = {syncBook_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncBook_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncBook_8 ↦ holdData, syncBook_8 ↦ shelfInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestHold_9
+    WHEN
+        grd1: requestHold_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncBook_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestHold_9}
+        act2: sender := sender ∪ {requestHold_9 ↦ LibraryHub}
+        act3: receiver := receiver ∪ {requestHold_9 ↦ ShelfReader}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestHold_9 ↦ bookCode, requestHold_9 ↦ holdInfo}
+        act6: currentMessage := {requestHold_9}
+    END
+
+    receiverequestHold_9
+    WHEN
+        grd1: requestHold_9 ∈ sentMessages
+        grd2: requestHold_9 ↦ LibraryHub ∈ sender
+        grd3: requestHold_9 ↦ ShelfReader ∈ receiver
+        grd4: requestHold_9 ∉ receivedMessages
+        grd5: currentMessage = {requestHold_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestHold_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestHold_9 ↦ bookCode, requestHold_9 ↦ holdInfo}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendcancelShelf_10
+    WHEN
+        grd1: cancelShelf_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestHold_9 ∈ receivedMessages
+        grd4: grade = ACTIVE
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelShelf_10}
+        act2: sender := sender ∪ {cancelShelf_10 ↦ LibraryHub}
+        act3: receiver := receiver ∪ {cancelShelf_10 ↦ CatalogDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelShelf_10}
+    END
+
+    receivecancelShelf_10
+    WHEN
+        grd1: cancelShelf_10 ∈ sentMessages
+        grd2: cancelShelf_10 ↦ LibraryHub ∈ sender
+        grd3: cancelShelf_10 ↦ CatalogDB ∈ receiver
+        grd4: cancelShelf_10 ∉ receivedMessages
+        grd5: currentMessage = {cancelShelf_10}
+        grd6: grade = ACTIVE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelShelf_10}
+        act2: currentMessage := ∅
+    END
+
+    sendlogBook_11
+    WHEN
+        grd1: logBook_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelShelf_10 ∈ receivedMessages
+        grd4: grade = ACTIVE
+    THEN
+        act1: sentMessages := sentMessages ∪ {logBook_11}
+        act2: sender := sender ∪ {logBook_11 ↦ LibraryHub}
+        act3: receiver := receiver ∪ {logBook_11 ↦ Librarian}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logBook_11}
+    END
+
+    receivelogBook_11
+    WHEN
+        grd1: logBook_11 ∈ sentMessages
+        grd2: logBook_11 ↦ LibraryHub ∈ sender
+        grd3: logBook_11 ↦ Librarian ∈ receiver
+        grd4: logBook_11 ∉ receivedMessages
+        grd5: currentMessage = {logBook_11}
+        grd6: grade = ACTIVE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logBook_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendcancelHold_12
+    WHEN
+        grd1: cancelHold_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestHold_9 ∈ receivedMessages
+        grd4: grade = IDLE
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelHold_12}
+        act2: sender := sender ∪ {cancelHold_12 ↦ CatalogDB}
+        act3: receiver := receiver ∪ {cancelHold_12 ↦ LibraryHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelHold_12 ↦ shelfCode, cancelHold_12 ↦ shelfData}
+        act6: currentMessage := {cancelHold_12}
+    END
+
+    receivecancelHold_12
+    WHEN
+        grd1: cancelHold_12 ∈ sentMessages
+        grd2: cancelHold_12 ↦ CatalogDB ∈ sender
+        grd3: cancelHold_12 ↦ LibraryHub ∈ receiver
+        grd4: cancelHold_12 ∉ receivedMessages
+        grd5: currentMessage = {cancelHold_12}
+        grd6: grade = IDLE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelHold_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelHold_12 ↦ shelfCode, cancelHold_12 ↦ shelfData}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveBook_13
+    WHEN
+        grd1: reserveBook_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logBook_11 ∈ receivedMessages ∨ cancelHold_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveBook_13}
+        act2: sender := sender ∪ {reserveBook_13 ↦ Librarian}
+        act3: receiver := receiver ∪ {reserveBook_13 ↦ ShelfReader}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveBook_13 ↦ shelfRef}
+        act6: currentMessage := {reserveBook_13}
+    END
+
+    receivereserveBook_13
+    WHEN
+        grd1: reserveBook_13 ∈ sentMessages
+        grd2: reserveBook_13 ↦ Librarian ∈ sender
+        grd3: reserveBook_13 ↦ ShelfReader ∈ receiver
+        grd4: reserveBook_13 ∉ receivedMessages
+        grd5: currentMessage = {reserveBook_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveBook_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveBook_13 ↦ shelfRef}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_notifyHold_3_loop1
+    WHEN
+        grd1: roundNo < 12
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

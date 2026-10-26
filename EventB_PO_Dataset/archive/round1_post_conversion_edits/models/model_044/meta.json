@@ -1,0 +1,30 @@
+{
+  "model_id": "model_044",
+  "case": "ToolRentalLocker",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "ToolRentalLocker_Project",
+  "category": "model_error",
+  "mutation": "INITIALISATION marks codeValid_5 received; receive of verifyCode_4 records releaseTool_6",
+  "operations": {
+    "set_init": {
+      "receivedMessages": "{codeValid_5}"
+    },
+    "replace_in_event": [
+      [
+        "receiveverifyCode_4",
+        "receivedMessages ∪ {verifyCode_4}",
+        "receivedMessages ∪ {releaseTool_6}"
+      ]
+    ]
+  },
+  "added_invariant_labels": [],
+  "expected_failed_pos": [
+    "INITIALISATION/inv5/INV",
+    "receiveverifyCode_4/inv5/INV"
+  ],
+  "expected_failed_count": 2,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_044",
+  "rodin_raw_dir": "rodin_raw/ml_pp/ToolRentalLocker_Project"
+}

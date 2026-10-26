@@ -1,0 +1,228 @@
+CONTEXT DentalAppointmentContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ClinicApp, Dentist, InsurerAPI, Patient
+    queryAppointment_1, assignTreatment_2, updateTreatment_3, queryClaim_4, confirmAppointment_5, reserveClaim_6
+    appointmentValue, claimData, claimRef, treatmentRef
+AXIOMS
+    axm1: partition(Objects, {ClinicApp}, {Dentist}, {InsurerAPI}, {Patient})
+    axm2: partition(Messages, {queryAppointment_1}, {assignTreatment_2}, {updateTreatment_3}, {queryClaim_4}, {confirmAppointment_5}, {reserveClaim_6})
+    axm3: partition(DataMessages, {appointmentValue}, {claimData}, {claimRef}, {treatmentRef})
+END
+
+MACHINE DentalAppointmentInteractionMachine_1
+SEES DentalAppointmentContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_6 ∈ ℤ
+    inv21: t_delay_6 ∈ ℤ
+    inv22: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..2
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..30
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..60
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 5..3
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+        act20: t_time_6 :∈ 0..3
+        act21: t_delay_6 := 0
+        act22: t_success_6 := 0
+    END
+
+
+    sendqueryAppointment_1
+    WHEN
+        grd1: queryAppointment_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryAppointment_1}
+        act2: sender := sender ∪ {queryAppointment_1 ↦ Patient}
+        act3: receiver := receiver ∪ {queryAppointment_1 ↦ InsurerAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryAppointment_1}
+    END
+
+    receivequeryAppointment_1
+    WHEN
+        grd1: queryAppointment_1 ∈ sentMessages
+        grd2: queryAppointment_1 ↦ Patient ∈ sender
+        grd3: queryAppointment_1 ↦ InsurerAPI ∈ receiver
+        grd4: queryAppointment_1 ∉ receivedMessages
+        grd5: currentMessage = {queryAppointment_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryAppointment_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignTreatment_2
+    WHEN
+        grd1: assignTreatment_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryAppointment_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignTreatment_2}
+        act2: sender := sender ∪ {assignTreatment_2 ↦ Patient}
+        act3: receiver := receiver ∪ {assignTreatment_2 ↦ ClinicApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignTreatment_2 ↦ claimData, assignTreatment_2 ↦ treatmentRef}
+        act6: currentMessage := {assignTreatment_2}
+    END
+
+    receiveassignTreatment_2
+    WHEN
+        grd1: assignTreatment_2 ∈ sentMessages
+        grd2: assignTreatment_2 ↦ Patient ∈ sender
+        grd3: assignTreatment_2 ↦ ClinicApp ∈ receiver
+        grd4: assignTreatment_2 ∉ receivedMessages
+        grd5: currentMessage = {assignTreatment_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignTreatment_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignTreatment_2 ↦ claimData, assignTreatment_2 ↦ treatmentRef}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateTreatment_3
+    WHEN
+        grd1: updateTreatment_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignTreatment_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateTreatment_3}
+        act2: sender := sender ∪ {updateTreatment_3 ↦ Patient}
+        act3: receiver := receiver ∪ {updateTreatment_3 ↦ ClinicApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateTreatment_3 ↦ appointmentValue}
+        act6: currentMessage := {updateTreatment_3}
+    END
+
+    receiveupdateTreatment_3
+    WHEN
+        grd1: updateTreatment_3 ∈ sentMessages
+        grd2: updateTreatment_3 ↦ Patient ∈ sender
+        grd3: updateTreatment_3 ↦ ClinicApp ∈ receiver
+        grd4: updateTreatment_3 ∉ receivedMessages
+        grd5: currentMessage = {updateTreatment_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateTreatment_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateTreatment_3 ↦ appointmentValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendqueryClaim_4
+    WHEN
+        grd1: queryClaim_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateTreatment_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryClaim_4}
+        act2: sender := sender ∪ {queryClaim_4 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {queryClaim_4 ↦ Dentist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryClaim_4 ↦ claimRef}
+        act6: currentMessage := {queryClaim_4}
+    END
+
+    receivequeryClaim_4
+    WHEN
+        grd1: queryClaim_4 ∈ sentMessages
+        grd2: queryClaim_4 ↦ InsurerAPI ∈ sender
+        grd3: queryClaim_4 ↦ Dentist ∈ receiver
+        grd4: queryClaim_4 ∉ receivedMessages
+        grd5: currentMessage = {queryClaim_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryClaim_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryClaim_4 ↦ claimRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendconfirmAppointment_5
+    WHEN
+        grd1: confirmAppointment_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryClaim_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmAppointment_5}
+        act2: sender := sender ∪ {confirmAppointment_5 ↦ Patient}
+        act3: receiver := receiver ∪ {confirmAppointment_5 ↦ Dentist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmAppointment_5}
+    END
+
+    receiveconfirmAppointment_5
+    WHEN
+        grd1: confirmAppointment_5 ∈ sentMessages
+        grd2: confirmAppointment_5 ↦ Patient ∈ sender
+        grd3: confirmAppointment_5 ↦ Dentist ∈ receiver
+        grd4: confirmAppointment_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmAppointment_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmAppointment_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreserveClaim_6
+    WHEN
+        grd1: reserveClaim_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmAppointment_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveClaim_6}
+        act2: sender := sender ∪ {reserveClaim_6 ↦ ClinicApp}
+        act3: receiver := receiver ∪ {reserveClaim_6 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveClaim_6}
+    END
+
+    receivereserveClaim_6
+    WHEN
+        grd1: reserveClaim_6 ∈ sentMessages
+        grd2: reserveClaim_6 ↦ ClinicApp ∈ sender
+        grd3: reserveClaim_6 ↦ Patient ∈ receiver
+        grd4: reserveClaim_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveClaim_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveClaim_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

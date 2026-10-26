@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="GOLD" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="refillID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="queryDose_9" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="doseCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="queryReminder_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cancelRefill_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="fetchReminder_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmDose_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Caregiver" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="approveReminder_12" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmReminder_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="BRONZE" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="PillBox" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="CareApp" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="doseValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="refillCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="issueDose_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ackRefill_10" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="SILVER" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="doseRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="scheduleRefill_11" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="refillData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="validateRefill_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="syncRefill_1" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/SmartPillBox_Project/SmartPillBoxContext.bpo|org.eventb.core.poFile#SmartPillBoxContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CareApp},{Caregiver},{PillBox})" org.eventb.core.source="/SmartPillBox_Project/SmartPillBoxContext.buc|org.eventb.core.contextFile#SmartPillBoxContext|org.eventb.core.axiom#internal_element28"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{syncRefill_1},{validateRefill_2},{fetchReminder_3},{queryReminder_4},{confirmReminder_5},{issueDose_6},{cancelRefill_7},{confirmDose_8},{queryDose_9},{ackRefill_10},{scheduleRefill_11},{approveReminder_12})" org.eventb.core.source="/SmartPillBox_Project/SmartPillBoxContext.buc|org.eventb.core.contextFile#SmartPillBoxContext|org.eventb.core.axiom#internal_element29"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{doseCode},{doseRef},{doseValue},{refillCode},{refillData},{refillID})" org.eventb.core.source="/SmartPillBox_Project/SmartPillBoxContext.buc|org.eventb.core.contextFile#SmartPillBoxContext|org.eventb.core.axiom#internal_element30"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="BRONZE=0" org.eventb.core.source="/SmartPillBox_Project/SmartPillBoxContext.buc|org.eventb.core.contextFile#SmartPillBoxContext|org.eventb.core.axiom#internal_element31"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="GOLD=1" org.eventb.core.source="/SmartPillBox_Project/SmartPillBoxContext.buc|org.eventb.core.contextFile#SmartPillBoxContext|org.eventb.core.axiom#internal_element32"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="SILVER=2" org.eventb.core.source="/SmartPillBox_Project/SmartPillBoxContext.buc|org.eventb.core.contextFile#SmartPillBoxContext|org.eventb.core.axiom#internal_element33"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

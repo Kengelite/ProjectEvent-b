@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="RuralTelehealthKiosk" id="ruraltelehealthkiosk">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="loop" vertex="1">
+          <mxGeometry x="20" y="215" width="640" height="645" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="45" y="300" width="590" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="par" vertex="1">
+          <mxGeometry x="70" y="385" width="540" height="275" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="70" y="507" width="540" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="70" y="557" width="540" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="45" y="717" width="590" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[passNo &lt; 6]" vertex="1">
+          <mxGeometry x="105" y="220" width="108" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t8" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[passNo mod 4 == 0]" vertex="1">
+          <mxGeometry x="130" y="305" width="171" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t9" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[passNo mod 4 != 0]" vertex="1">
+          <mxGeometry x="130" y="730" width="171" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll10" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Villager" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="ll11" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="TeleKiosk" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="ll12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="RemoteDoctor" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="reportVital(consultValue)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="130" as="sourcePoint" />
+            <mxPoint x="340.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="validateVital(prescriptionRef)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="180" as="sourcePoint" />
+            <mxPoint x="340.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="fetchPrescription(consultData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="265" as="sourcePoint" />
+            <mxPoint x="90.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="schedulePrescription() {0..60}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="350" as="sourcePoint" />
+            <mxPoint x="590.0" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="cancelPrescription() {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="435" as="sourcePoint" />
+            <mxPoint x="90.0" y="435" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="notifyConsult()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="485" as="sourcePoint" />
+            <mxPoint x="340.0" y="485" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendVital(prescriptionValue)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="535" as="sourcePoint" />
+            <mxPoint x="340.0" y="535" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="fetchVital(vitalInfo) {0..1}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="585" as="sourcePoint" />
+            <mxPoint x="590.0" y="585" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="ackConsult(consultData, vitalID) {0..1}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="635" as="sourcePoint" />
+            <mxPoint x="90.0" y="635" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="updateConsult(consultInfo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="695" as="sourcePoint" />
+            <mxPoint x="340.0" y="695" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reportPrescription(vitalData) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="775" as="sourcePoint" />
+            <mxPoint x="590.0" y="775" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="confirmVital(vitalData, vitalRef) {0..1}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="835" as="sourcePoint" />
+            <mxPoint x="590.0" y="835" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="releaseVital(prescriptionCode, prescriptionID) {0..10}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="895" as="sourcePoint" />
+            <mxPoint x="590.0" y="895" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

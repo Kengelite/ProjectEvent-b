@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="userID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="sendCode_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="resendRequest_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="verifyResult_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="AuthServer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="accountActivated_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="register_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="verifyStatus" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="email" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="submitCode_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="resendCode_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="otp" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="User" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/EmailVerification_Project/EmailVerificationContext.bpo|org.eventb.core.poFile#EmailVerificationContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{AuthServer},{User})" org.eventb.core.source="/EmailVerification_Project/EmailVerificationContext.buc|org.eventb.core.contextFile#EmailVerificationContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{register_1},{sendCode_2},{resendRequest_3},{resendCode_4},{submitCode_5},{verifyResult_6},{accountActivated_7})" org.eventb.core.source="/EmailVerification_Project/EmailVerificationContext.buc|org.eventb.core.contextFile#EmailVerificationContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{email},{otp},{userID},{verifyStatus})" org.eventb.core.source="/EmailVerification_Project/EmailVerificationContext.buc|org.eventb.core.contextFile#EmailVerificationContext|org.eventb.core.axiom#internal_element19"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

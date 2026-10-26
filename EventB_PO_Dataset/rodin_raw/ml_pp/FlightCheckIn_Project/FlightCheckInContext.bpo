@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="cancelSeat_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ackBag_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="approveSeat_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Traveler" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="seatValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="bagInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="cancelBag_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="CheckInKiosk" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="seatRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="AirlineDCS" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="fetchBoarding_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="assignSeat_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="bagValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="bagID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="requestBoarding_6" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/FlightCheckIn_Project/FlightCheckInContext.bpo|org.eventb.core.poFile#FlightCheckInContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{AirlineDCS},{CheckInKiosk},{Traveler})" org.eventb.core.source="/FlightCheckIn_Project/FlightCheckInContext.buc|org.eventb.core.contextFile#FlightCheckInContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{approveSeat_1},{cancelSeat_2},{fetchBoarding_3},{cancelBag_4},{assignSeat_5},{requestBoarding_6},{ackBag_7})" org.eventb.core.source="/FlightCheckIn_Project/FlightCheckInContext.buc|org.eventb.core.contextFile#FlightCheckInContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{bagID},{bagInfo},{bagValue},{seatRef},{seatValue})" org.eventb.core.source="/FlightCheckIn_Project/FlightCheckInContext.buc|org.eventb.core.contextFile#FlightCheckInContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

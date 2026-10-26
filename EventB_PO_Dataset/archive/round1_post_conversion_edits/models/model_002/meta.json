@@ -1,0 +1,31 @@
+{
+  "model_id": "model_002",
+  "case": "AirportBaggage",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "AirportBaggage_Project",
+  "category": "model_error",
+  "mutation": "t_time_2 ≥ 0, t_delay_2 ≥ 0, t_success_2 ≥ 0 added; t_delay_2 initialised to −2",
+  "operations": {
+    "add_inv": [
+      "t_time_2 ≥ 0",
+      "t_delay_2 ≥ 0",
+      "t_success_2 ≥ 0"
+    ],
+    "set_init": {
+      "t_delay_2": "−2"
+    }
+  },
+  "added_invariant_labels": [
+    "inv18",
+    "inv19",
+    "inv20"
+  ],
+  "expected_failed_pos": [
+    "INITIALISATION/inv19/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_002",
+  "rodin_raw_dir": "rodin_raw/ml_pp/AirportBaggage_Project"
+}

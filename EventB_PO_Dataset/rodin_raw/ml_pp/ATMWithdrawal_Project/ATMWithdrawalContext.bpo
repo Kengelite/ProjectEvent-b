@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="retainCard_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="pin" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="insertCard_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="requestPIN_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cash" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="reenterPIN_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="selectAmount_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Customer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="enterPIN_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ATM" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="cardNo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="invalidPIN_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="dispenseCash_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="amountReq" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/ATMWithdrawal_Project/ATMWithdrawalContext.bpo|org.eventb.core.poFile#ATMWithdrawalContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{ATM},{Customer})" org.eventb.core.source="/ATMWithdrawal_Project/ATMWithdrawalContext.buc|org.eventb.core.contextFile#ATMWithdrawalContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{insertCard_1},{requestPIN_2},{enterPIN_3},{invalidPIN_4},{reenterPIN_5},{selectAmount_6},{dispenseCash_7},{retainCard_8})" org.eventb.core.source="/ATMWithdrawal_Project/ATMWithdrawalContext.buc|org.eventb.core.contextFile#ATMWithdrawalContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{amountReq},{cardNo},{cash},{pin})" org.eventb.core.source="/ATMWithdrawal_Project/ATMWithdrawalContext.buc|org.eventb.core.contextFile#ATMWithdrawalContext|org.eventb.core.axiom#internal_element20"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

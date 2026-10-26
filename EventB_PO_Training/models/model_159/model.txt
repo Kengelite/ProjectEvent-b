@@ -1,0 +1,426 @@
+CONTEXT SatelliteGroundStationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    GroundStation, Operator, Satellite
+    updateTelemetry_1, logCommand_2, requestCommand_3, assignTelemetry_4, checkCommand_5, releasePass_6, reportPass_7, updateCommand_8, schedulePass_9, sendTelemetry_10, scheduleTelemetry_11, validatePass_12, confirmCommand_13
+    commandID, passCode, passData, passID, passRef, passValue, telemetryRef, telemetryValue
+AXIOMS
+    axm1: partition(Objects, {GroundStation}, {Operator}, {Satellite})
+    axm2: partition(Messages, {updateTelemetry_1}, {logCommand_2}, {requestCommand_3}, {assignTelemetry_4}, {checkCommand_5}, {releasePass_6}, {reportPass_7}, {updateCommand_8}, {schedulePass_9}, {sendTelemetry_10}, {scheduleTelemetry_11}, {validatePass_12}, {confirmCommand_13})
+    axm3: partition(DataMessages, {commandID}, {passCode}, {passData}, {passID}, {passRef}, {passValue}, {telemetryRef}, {telemetryValue})
+END
+
+MACHINE SatelliteGroundStationInteractionMachine_1
+SEES SatelliteGroundStationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, par_2, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: par_2 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+    inv19: t_time_4 ∈ ℤ
+    inv20: t_delay_4 ∈ ℤ
+    inv21: t_success_4 ∈ ℤ
+    inv22: t_time_5 ∈ ℤ
+    inv23: t_delay_5 ∈ ℤ
+    inv24: t_success_5 ∈ ℤ
+    inv25: t_time_9 ∈ ℤ
+    inv26: t_delay_9 ∈ ℤ
+    inv27: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: par_2 := 0
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..20
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 0..20
+        act17: t_delay_3 := 0
+        act18: t_success_3 := 0
+        act19: t_time_4 :∈ 30..21
+        act20: t_delay_4 := 5
+        act21: t_success_4 := 0
+        act22: t_time_5 :∈ 0..0
+        act23: t_delay_5 := 5
+        act24: t_success_5 := 0
+        act25: t_time_9 :∈ 0..30
+        act26: t_delay_9 := 0
+        act27: t_success_9 := 0
+    END
+
+
+    sendupdateTelemetry_1
+    WHEN
+        grd1: updateTelemetry_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateTelemetry_1}
+        act2: sender := sender ∪ {updateTelemetry_1 ↦ GroundStation}
+        act3: receiver := receiver ∪ {updateTelemetry_1 ↦ Operator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateTelemetry_1}
+    END
+
+    receiveupdateTelemetry_1
+    WHEN
+        grd1: updateTelemetry_1 ∈ sentMessages
+        grd2: updateTelemetry_1 ↦ GroundStation ∈ sender
+        grd3: updateTelemetry_1 ↦ Operator ∈ receiver
+        grd4: updateTelemetry_1 ∉ receivedMessages
+        grd5: currentMessage = {updateTelemetry_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateTelemetry_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendlogCommand_2
+    WHEN
+        grd1: logCommand_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateTelemetry_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCommand_2}
+        act2: sender := sender ∪ {logCommand_2 ↦ GroundStation}
+        act3: receiver := receiver ∪ {logCommand_2 ↦ Operator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logCommand_2 ↦ commandID}
+        act6: currentMessage := {logCommand_2}
+    END
+
+    receivelogCommand_2
+    WHEN
+        grd1: logCommand_2 ∈ sentMessages
+        grd2: logCommand_2 ↦ GroundStation ∈ sender
+        grd3: logCommand_2 ↦ Operator ∈ receiver
+        grd4: logCommand_2 ∉ receivedMessages
+        grd5: currentMessage = {logCommand_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCommand_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logCommand_2 ↦ commandID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendrequestCommand_3
+    WHEN
+        grd1: requestCommand_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logCommand_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestCommand_3}
+        act2: sender := sender ∪ {requestCommand_3 ↦ Satellite}
+        act3: receiver := receiver ∪ {requestCommand_3 ↦ GroundStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestCommand_3 ↦ passValue}
+        act6: currentMessage := {requestCommand_3}
+    END
+
+    receiverequestCommand_3
+    WHEN
+        grd1: requestCommand_3 ∈ sentMessages
+        grd2: requestCommand_3 ↦ Satellite ∈ sender
+        grd3: requestCommand_3 ↦ GroundStation ∈ receiver
+        grd4: requestCommand_3 ∉ receivedMessages
+        grd5: currentMessage = {requestCommand_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestCommand_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestCommand_3 ↦ passValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendassignTelemetry_4
+    WHEN
+        grd1: assignTelemetry_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestCommand_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignTelemetry_4}
+        act2: sender := sender ∪ {assignTelemetry_4 ↦ Operator}
+        act3: receiver := receiver ∪ {assignTelemetry_4 ↦ Satellite}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignTelemetry_4}
+    END
+
+    receiveassignTelemetry_4
+    WHEN
+        grd1: assignTelemetry_4 ∈ sentMessages
+        grd2: assignTelemetry_4 ↦ Operator ∈ sender
+        grd3: assignTelemetry_4 ↦ Satellite ∈ receiver
+        grd4: assignTelemetry_4 ∉ receivedMessages
+        grd5: currentMessage = {assignTelemetry_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignTelemetry_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcheckCommand_5
+    WHEN
+        grd1: checkCommand_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignTelemetry_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkCommand_5}
+        act2: sender := sender ∪ {checkCommand_5 ↦ Satellite}
+        act3: receiver := receiver ∪ {checkCommand_5 ↦ GroundStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkCommand_5 ↦ passID}
+        act6: currentMessage := {checkCommand_5}
+    END
+
+    receivecheckCommand_5
+    WHEN
+        grd1: checkCommand_5 ∈ sentMessages
+        grd2: checkCommand_5 ↦ Satellite ∈ sender
+        grd3: checkCommand_5 ↦ GroundStation ∈ receiver
+        grd4: checkCommand_5 ∉ receivedMessages
+        grd5: currentMessage = {checkCommand_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkCommand_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkCommand_5 ↦ passID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleasePass_6
+    WHEN
+        grd1: releasePass_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkCommand_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releasePass_6}
+        act2: sender := sender ∪ {releasePass_6 ↦ Operator}
+        act3: receiver := receiver ∪ {releasePass_6 ↦ Satellite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releasePass_6 ↦ passID}
+        act6: currentMessage := {releasePass_6}
+    END
+
+    receivereleasePass_6
+    WHEN
+        grd1: releasePass_6 ∈ sentMessages
+        grd2: releasePass_6 ↦ Operator ∈ sender
+        grd3: releasePass_6 ↦ Satellite ∈ receiver
+        grd4: releasePass_6 ∉ receivedMessages
+        grd5: currentMessage = {releasePass_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releasePass_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releasePass_6 ↦ passID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportPass_7
+    WHEN
+        grd1: reportPass_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releasePass_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportPass_7}
+        act2: sender := sender ∪ {reportPass_7 ↦ Operator}
+        act3: receiver := receiver ∪ {reportPass_7 ↦ GroundStation}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportPass_7}
+    END
+
+    receivereportPass_7
+    WHEN
+        grd1: reportPass_7 ∈ sentMessages
+        grd2: reportPass_7 ↦ Operator ∈ sender
+        grd3: reportPass_7 ↦ GroundStation ∈ receiver
+        grd4: reportPass_7 ∉ receivedMessages
+        grd5: currentMessage = {reportPass_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportPass_7}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateCommand_8
+    WHEN
+        grd1: updateCommand_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportPass_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateCommand_8}
+        act2: sender := sender ∪ {updateCommand_8 ↦ GroundStation}
+        act3: receiver := receiver ∪ {updateCommand_8 ↦ Satellite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateCommand_8 ↦ passCode}
+        act6: currentMessage := {updateCommand_8}
+    END
+
+    receiveupdateCommand_8
+    WHEN
+        grd1: updateCommand_8 ∈ sentMessages
+        grd2: updateCommand_8 ↦ GroundStation ∈ sender
+        grd3: updateCommand_8 ↦ Satellite ∈ receiver
+        grd4: updateCommand_8 ∉ receivedMessages
+        grd5: currentMessage = {updateCommand_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateCommand_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateCommand_8 ↦ passCode}
+        act3: currentMessage := ∅
+    END
+
+    sendschedulePass_9
+    WHEN
+        grd1: schedulePass_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateCommand_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePass_9}
+        act2: sender := sender ∪ {schedulePass_9 ↦ Satellite}
+        act3: receiver := receiver ∪ {schedulePass_9 ↦ Operator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {schedulePass_9 ↦ passRef}
+        act6: currentMessage := {schedulePass_9}
+    END
+
+    receiveschedulePass_9
+    WHEN
+        grd1: schedulePass_9 ∈ sentMessages
+        grd2: schedulePass_9 ↦ Satellite ∈ sender
+        grd3: schedulePass_9 ↦ Operator ∈ receiver
+        grd4: schedulePass_9 ∉ receivedMessages
+        grd5: currentMessage = {schedulePass_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePass_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {schedulePass_9 ↦ passRef}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendsendTelemetry_10
+    WHEN
+        grd1: sendTelemetry_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePass_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendTelemetry_10}
+        act2: sender := sender ∪ {sendTelemetry_10 ↦ Operator}
+        act3: receiver := receiver ∪ {sendTelemetry_10 ↦ GroundStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendTelemetry_10 ↦ telemetryValue}
+        act6: currentMessage := {sendTelemetry_10}
+    END
+
+    receivesendTelemetry_10
+    WHEN
+        grd1: sendTelemetry_10 ∈ sentMessages
+        grd2: sendTelemetry_10 ↦ Operator ∈ sender
+        grd3: sendTelemetry_10 ↦ GroundStation ∈ receiver
+        grd4: sendTelemetry_10 ∉ receivedMessages
+        grd5: currentMessage = {sendTelemetry_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendTelemetry_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendTelemetry_10 ↦ telemetryValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleTelemetry_11
+    WHEN
+        grd1: scheduleTelemetry_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendTelemetry_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleTelemetry_11}
+        act2: sender := sender ∪ {scheduleTelemetry_11 ↦ GroundStation}
+        act3: receiver := receiver ∪ {scheduleTelemetry_11 ↦ Operator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleTelemetry_11}
+    END
+
+    receivescheduleTelemetry_11
+    WHEN
+        grd1: scheduleTelemetry_11 ∈ sentMessages
+        grd2: scheduleTelemetry_11 ↦ GroundStation ∈ sender
+        grd3: scheduleTelemetry_11 ↦ Operator ∈ receiver
+        grd4: scheduleTelemetry_11 ∉ receivedMessages
+        grd5: currentMessage = {scheduleTelemetry_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleTelemetry_11}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidatePass_12
+    WHEN
+        grd1: validatePass_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleTelemetry_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePass_12}
+        act2: sender := sender ∪ {validatePass_12 ↦ GroundStation}
+        act3: receiver := receiver ∪ {validatePass_12 ↦ Satellite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePass_12 ↦ telemetryRef}
+        act6: currentMessage := {validatePass_12}
+    END
+
+    receivevalidatePass_12
+    WHEN
+        grd1: validatePass_12 ∈ sentMessages
+        grd2: validatePass_12 ↦ GroundStation ∈ sender
+        grd3: validatePass_12 ↦ Satellite ∈ receiver
+        grd4: validatePass_12 ∉ receivedMessages
+        grd5: currentMessage = {validatePass_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePass_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePass_12 ↦ telemetryRef}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmCommand_13
+    WHEN
+        grd1: confirmCommand_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePass_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCommand_13}
+        act2: sender := sender ∪ {confirmCommand_13 ↦ Operator}
+        act3: receiver := receiver ∪ {confirmCommand_13 ↦ GroundStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmCommand_13 ↦ passData}
+        act6: currentMessage := {confirmCommand_13}
+    END
+
+    receiveconfirmCommand_13
+    WHEN
+        grd1: confirmCommand_13 ∈ sentMessages
+        grd2: confirmCommand_13 ↦ Operator ∈ sender
+        grd3: confirmCommand_13 ↦ GroundStation ∈ receiver
+        grd4: confirmCommand_13 ∉ receivedMessages
+        grd5: currentMessage = {confirmCommand_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCommand_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmCommand_13 ↦ passData}
+        act3: currentMessage := ∅
+    END
+
+END

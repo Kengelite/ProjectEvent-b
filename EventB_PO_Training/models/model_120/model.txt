@@ -1,0 +1,222 @@
+CONTEXT LiftMaintenanceContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    LiftCtrl, Technician
+    logJob_1, validateJob_2, requestJob_3, checkJob_4, syncLock_5, cancelFault_6
+    jobCode, jobInfo, jobValue
+AXIOMS
+    axm1: partition(Objects, {LiftCtrl}, {Technician})
+    axm2: partition(Messages, {logJob_1}, {validateJob_2}, {requestJob_3}, {checkJob_4}, {syncLock_5}, {cancelFault_6})
+    axm3: partition(DataMessages, {jobCode}, {jobInfo}, {jobValue})
+END
+
+MACHINE LiftMaintenanceInteractionMachine_1
+SEES LiftMaintenanceContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, attemptNo, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: attemptNo ∈ ℤ
+    inv9: t_time_4 ∈ ℤ
+    inv10: t_delay_4 ∈ ℤ
+    inv11: t_success_4 ∈ ℤ
+    inv12: t_time_6 ∈ ℤ
+    inv13: t_delay_6 ∈ ℤ
+    inv14: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: attemptNo := 0
+        act9: t_time_4 :∈ 8..0
+        act10: t_delay_4 := 0
+        act11: t_success_4 := 0
+        act12: t_time_6 :∈ 3..1
+        act13: t_delay_6 := 0
+        act14: t_success_6 := 0
+    END
+
+
+    sendlogJob_1
+    WHEN
+        grd1: logJob_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {logJob_1}
+        act2: sender := sender ∪ {logJob_1 ↦ Technician}
+        act3: receiver := receiver ∪ {logJob_1 ↦ LiftCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logJob_1 ↦ jobValue}
+        act6: currentMessage := {logJob_1}
+    END
+
+    receivelogJob_1
+    WHEN
+        grd1: logJob_1 ∈ sentMessages
+        grd2: logJob_1 ↦ Technician ∈ sender
+        grd3: logJob_1 ↦ LiftCtrl ∈ receiver
+        grd4: logJob_1 ∉ receivedMessages
+        grd5: currentMessage = {logJob_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logJob_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logJob_1 ↦ jobValue}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateJob_2
+    WHEN
+        grd1: validateJob_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logJob_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateJob_2}
+        act2: sender := sender ∪ {validateJob_2 ↦ Technician}
+        act3: receiver := receiver ∪ {validateJob_2 ↦ LiftCtrl}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateJob_2}
+    END
+
+    receivevalidateJob_2
+    WHEN
+        grd1: validateJob_2 ∈ sentMessages
+        grd2: validateJob_2 ↦ Technician ∈ sender
+        grd3: validateJob_2 ↦ LiftCtrl ∈ receiver
+        grd4: validateJob_2 ∉ receivedMessages
+        grd5: currentMessage = {validateJob_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateJob_2}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestJob_3
+    WHEN
+        grd1: requestJob_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateJob_2 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestJob_3}
+        act2: sender := sender ∪ {requestJob_3 ↦ Technician}
+        act3: receiver := receiver ∪ {requestJob_3 ↦ LiftCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestJob_3 ↦ jobInfo}
+        act6: currentMessage := {requestJob_3}
+    END
+
+    receiverequestJob_3
+    WHEN
+        grd1: requestJob_3 ∈ sentMessages
+        grd2: requestJob_3 ↦ Technician ∈ sender
+        grd3: requestJob_3 ↦ LiftCtrl ∈ receiver
+        grd4: requestJob_3 ∉ receivedMessages
+        grd5: currentMessage = {requestJob_3}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestJob_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestJob_3 ↦ jobInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckJob_4
+    WHEN
+        grd1: checkJob_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestJob_3 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkJob_4}
+        act2: sender := sender ∪ {checkJob_4 ↦ Technician}
+        act3: receiver := receiver ∪ {checkJob_4 ↦ LiftCtrl}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkJob_4}
+    END
+
+    receivecheckJob_4
+    WHEN
+        grd1: checkJob_4 ∈ sentMessages
+        grd2: checkJob_4 ↦ Technician ∈ sender
+        grd3: checkJob_4 ↦ LiftCtrl ∈ receiver
+        grd4: checkJob_4 ∉ receivedMessages
+        grd5: currentMessage = {checkJob_4}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkJob_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncLock_5
+    WHEN
+        grd1: syncLock_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkJob_4 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncLock_5}
+        act2: sender := sender ∪ {syncLock_5 ↦ Technician}
+        act3: receiver := receiver ∪ {syncLock_5 ↦ LiftCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncLock_5 ↦ jobCode}
+        act6: currentMessage := {syncLock_5}
+    END
+
+    receivesyncLock_5
+    WHEN
+        grd1: syncLock_5 ∈ sentMessages
+        grd2: syncLock_5 ↦ Technician ∈ sender
+        grd3: syncLock_5 ↦ LiftCtrl ∈ receiver
+        grd4: syncLock_5 ∉ receivedMessages
+        grd5: currentMessage = {syncLock_5}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncLock_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncLock_5 ↦ jobCode}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelFault_6
+    WHEN
+        grd1: cancelFault_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncLock_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelFault_6}
+        act2: sender := sender ∪ {cancelFault_6 ↦ LiftCtrl}
+        act3: receiver := receiver ∪ {cancelFault_6 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelFault_6}
+    END
+
+    receivecancelFault_6
+    WHEN
+        grd1: cancelFault_6 ∈ sentMessages
+        grd2: cancelFault_6 ↦ LiftCtrl ∈ sender
+        grd3: cancelFault_6 ↦ Technician ∈ receiver
+        grd4: cancelFault_6 ∉ receivedMessages
+        grd5: currentMessage = {cancelFault_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelFault_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    checkloop_requestJob_3_loop1
+    WHEN
+        grd1: attemptNo < 5
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

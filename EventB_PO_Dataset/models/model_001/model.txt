@@ -1,0 +1,57 @@
+CONTEXT PaymentContext
+SETS
+    Messages; Objects; Data
+CONSTANTS
+    User, PaymentService, NotiService
+    submitPayment_1, paymentDetails_2, processLargePayment_3, approvalRequired_4, ProcessStandarddPayment_5, paymentConfirmation_6, validatePayment_7, validationResult_8, sendSMSNotification_9, sendEmailNotification_10, paymentStatus_11
+    data_amount, success, transactionID
+AXIOMS
+    axm1: partition(Objects, {User}, {PaymentService}, {NotiService})
+    axm2: partition(Messages, {submitPayment_1}, {paymentDetails_2}, {processLargePayment_3}, {approvalRequired_4}, {ProcessStandarddPayment_5}, {paymentConfirmation_6}, {validatePayment_7}, {validationResult_8}, {sendSMSNotification_9}, {sendEmailNotification_10}, {paymentStatus_11})
+    axm3: partition(Data, {data_amount}, {success}, {transactionID})
+END
+
+MACHINE PaymentInteractionMachine
+SEES PaymentContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, amount_1, Login, retry, par_1, t_delay_1, t_time_1, t_success_1
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: amount_1 ∈ ℤ
+    inv9: Login ∈ ℤ
+    inv10: retry ∈ ℤ
+    inv11: par_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_time_1 ∈ ℤ
+    inv14: t_success_1 ∈ ℤ
+EVENTS
+    INITIALISATION  (7 base := ∅, frag/time counters := 0)
+    receivePaymentDetails_2_opt1
+    receiveProcessStandarddPayment_5_alt2
+    receivedsendEmailNotification_10_par4
+    receivedsendSMSNotification_9_par4
+    receivepaymentStatus_11
+    receiveprocessLargePayment_3_alt2
+    receivesubmitPayment_1_opt1
+    receivevalidatePayment_7_loop3
+    reciveapprovalRequired_4_alt2
+    recivepaymentConfirmation_6_alt2
+    recivevalidationResult_8_loop3
+    sendProcessStandarddPayment_5_alt2
+    sendapprovalRequired_4_alt2
+    sendpaymentConfirmation_6_alt2
+    sendpaymentDetails_2_opt1
+    sendpaymentStatus_11
+    sendprocessLargePayment_3_alt2
+    sendsendEmailNotification_10_par4
+    sendsendSMSNotification_9_par4
+    sendsubmitPayment_1_opt1
+    sendvalidatePayment_7_loop3
+    sendvalidationResult_8_loop3
+END

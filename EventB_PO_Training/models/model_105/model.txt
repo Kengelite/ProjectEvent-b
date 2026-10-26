@@ -1,0 +1,301 @@
+CONTEXT HomeEnergyBatteryContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BatteryPack, EnergyHub
+    notifyExport_1, validateExport_2, logCharge_3, reserveTariff_4, assignCharge_5, releaseTariff_6, fetchCharge_7, requestCharge_8
+    chargeValue, exportCode, exportID, tariffCode, tariffID, tariffRef
+AXIOMS
+    axm1: partition(Objects, {BatteryPack}, {EnergyHub})
+    axm2: partition(Messages, {notifyExport_1}, {validateExport_2}, {logCharge_3}, {reserveTariff_4}, {assignCharge_5}, {releaseTariff_6}, {fetchCharge_7}, {requestCharge_8})
+    axm3: partition(DataMessages, {chargeValue}, {exportCode}, {exportID}, {tariffCode}, {tariffID}, {tariffRef})
+END
+
+MACHINE HomeEnergyBatteryInteractionMachine_1
+SEES HomeEnergyBatteryContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, attemptNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: attemptNo ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+    inv22: t_time_6 ∈ ℤ
+    inv23: t_delay_6 ∈ ℤ
+    inv24: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: attemptNo := 0
+        act10: t_time_1 :∈ 0..0
+        act11: t_delay_1 := 1
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..10
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 0..0
+        act17: t_delay_3 := 3
+        act18: t_success_3 := 0
+        act19: t_time_5 :∈ 0..10
+        act20: t_delay_5 := 5
+        act21: t_success_5 := 0
+        act22: t_time_6 :∈ 0..20
+        act23: t_delay_6 := 0
+        act24: t_success_6 := 0
+    END
+
+
+    sendnotifyExport_1
+    WHEN
+        grd1: notifyExport_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyExport_1}
+        act2: sender := sender ∪ {notifyExport_1 ↦ EnergyHub}
+        act3: receiver := receiver ∪ {notifyExport_1 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyExport_1 ↦ tariffID}
+        act6: currentMessage := {notifyExport_1}
+    END
+
+    receivenotifyExport_1
+    WHEN
+        grd1: notifyExport_1 ∈ sentMessages
+        grd2: notifyExport_1 ↦ EnergyHub ∈ sender
+        grd3: notifyExport_1 ↦ BatteryPack ∈ receiver
+        grd4: notifyExport_1 ∉ receivedMessages
+        grd5: currentMessage = {notifyExport_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyExport_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyExport_1 ↦ tariffID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidateExport_2
+    WHEN
+        grd1: validateExport_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyExport_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateExport_2}
+        act2: sender := sender ∪ {validateExport_2 ↦ EnergyHub}
+        act3: receiver := receiver ∪ {validateExport_2 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateExport_2 ↦ exportCode}
+        act6: currentMessage := {validateExport_2}
+    END
+
+    receivevalidateExport_2
+    WHEN
+        grd1: validateExport_2 ∈ sentMessages
+        grd2: validateExport_2 ↦ EnergyHub ∈ sender
+        grd3: validateExport_2 ↦ BatteryPack ∈ receiver
+        grd4: validateExport_2 ∉ receivedMessages
+        grd5: currentMessage = {validateExport_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateExport_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateExport_2 ↦ exportCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendlogCharge_3_opt1
+    WHEN
+        grd1: logCharge_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateExport_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCharge_3}
+        act2: sender := sender ∪ {logCharge_3 ↦ BatteryPack}
+        act3: receiver := receiver ∪ {logCharge_3 ↦ EnergyHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logCharge_3 ↦ tariffCode}
+        act6: currentMessage := {logCharge_3}
+    END
+
+    receivelogCharge_3_opt1
+    WHEN
+        grd1: logCharge_3 ∈ sentMessages
+        grd2: logCharge_3 ↦ BatteryPack ∈ sender
+        grd3: logCharge_3 ↦ EnergyHub ∈ receiver
+        grd4: logCharge_3 ∉ receivedMessages
+        grd5: currentMessage = {logCharge_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCharge_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logCharge_3 ↦ tariffCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreserveTariff_4
+    WHEN
+        grd1: reserveTariff_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logCharge_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTariff_4}
+        act2: sender := sender ∪ {reserveTariff_4 ↦ EnergyHub}
+        act3: receiver := receiver ∪ {reserveTariff_4 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveTariff_4 ↦ exportID}
+        act6: currentMessage := {reserveTariff_4}
+    END
+
+    receivereserveTariff_4
+    WHEN
+        grd1: reserveTariff_4 ∈ sentMessages
+        grd2: reserveTariff_4 ↦ EnergyHub ∈ sender
+        grd3: reserveTariff_4 ↦ BatteryPack ∈ receiver
+        grd4: reserveTariff_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveTariff_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTariff_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveTariff_4 ↦ exportID}
+        act3: currentMessage := ∅
+    END
+
+    sendassignCharge_5
+    WHEN
+        grd1: assignCharge_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveTariff_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignCharge_5}
+        act2: sender := sender ∪ {assignCharge_5 ↦ EnergyHub}
+        act3: receiver := receiver ∪ {assignCharge_5 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignCharge_5 ↦ chargeValue, assignCharge_5 ↦ exportID}
+        act6: currentMessage := {assignCharge_5}
+    END
+
+    receiveassignCharge_5
+    WHEN
+        grd1: assignCharge_5 ∈ sentMessages
+        grd2: assignCharge_5 ↦ EnergyHub ∈ sender
+        grd3: assignCharge_5 ↦ BatteryPack ∈ receiver
+        grd4: assignCharge_5 ∉ receivedMessages
+        grd5: currentMessage = {assignCharge_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignCharge_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignCharge_5 ↦ chargeValue, assignCharge_5 ↦ exportID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseTariff_6
+    WHEN
+        grd1: releaseTariff_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignCharge_5 ∈ receivedMessages
+        grd4: attemptNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseTariff_6}
+        act2: sender := sender ∪ {releaseTariff_6 ↦ EnergyHub}
+        act3: receiver := receiver ∪ {releaseTariff_6 ↦ BatteryPack}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseTariff_6}
+    END
+
+    receivereleaseTariff_6
+    WHEN
+        grd1: releaseTariff_6 ∈ sentMessages
+        grd2: releaseTariff_6 ↦ EnergyHub ∈ sender
+        grd3: releaseTariff_6 ↦ BatteryPack ∈ receiver
+        grd4: releaseTariff_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseTariff_6}
+        grd6: attemptNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseTariff_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendfetchCharge_7
+    WHEN
+        grd1: fetchCharge_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseTariff_6 ∈ receivedMessages
+        grd4: attemptNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchCharge_7}
+        act2: sender := sender ∪ {fetchCharge_7 ↦ BatteryPack}
+        act3: receiver := receiver ∪ {fetchCharge_7 ↦ EnergyHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchCharge_7 ↦ tariffRef}
+        act6: currentMessage := {fetchCharge_7}
+    END
+
+    receivefetchCharge_7
+    WHEN
+        grd1: fetchCharge_7 ∈ sentMessages
+        grd2: fetchCharge_7 ↦ BatteryPack ∈ sender
+        grd3: fetchCharge_7 ↦ EnergyHub ∈ receiver
+        grd4: fetchCharge_7 ∉ receivedMessages
+        grd5: currentMessage = {fetchCharge_7}
+        grd6: attemptNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchCharge_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchCharge_7 ↦ tariffRef}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestCharge_8
+    WHEN
+        grd1: requestCharge_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchCharge_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestCharge_8}
+        act2: sender := sender ∪ {requestCharge_8 ↦ BatteryPack}
+        act3: receiver := receiver ∪ {requestCharge_8 ↦ EnergyHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestCharge_8}
+    END
+
+    receiverequestCharge_8
+    WHEN
+        grd1: requestCharge_8 ∈ sentMessages
+        grd2: requestCharge_8 ↦ BatteryPack ∈ sender
+        grd3: requestCharge_8 ↦ EnergyHub ∈ receiver
+        grd4: requestCharge_8 ∉ receivedMessages
+        grd5: currentMessage = {requestCharge_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestCharge_8}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_releaseTariff_6_loop1
+    WHEN
+        grd1: attemptNo < 4
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

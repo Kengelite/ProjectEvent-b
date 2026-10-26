@@ -1,0 +1,155 @@
+CONTEXT FerryTicketGateContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Gate, Passenger
+    tapTicket_1, validate_2, openBarrier_3, passThrough_4
+    ticketID, validFlag
+AXIOMS
+    axm1: partition(Objects, {Gate}, {Passenger})
+    axm2: partition(Messages, {tapTicket_1}, {validate_2}, {openBarrier_3}, {passThrough_4})
+    axm3: partition(DataMessages, {ticketID}, {validFlag})
+END
+
+MACHINE FerryTicketGateInteractionMachine_1
+SEES FerryTicketGateContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..1
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..0
+        act12: t_delay_3 := 4
+        act13: t_success_3 := 0
+    END
+
+
+    sendtapTicket_1
+    WHEN
+        grd1: tapTicket_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {tapTicket_1}
+        act2: sender := sender ∪ {tapTicket_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {tapTicket_1 ↦ Gate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {tapTicket_1 ↦ ticketID}
+        act6: currentMessage := {tapTicket_1}
+    END
+
+    receivetapTicket_1
+    WHEN
+        grd1: tapTicket_1 ∈ sentMessages
+        grd2: tapTicket_1 ↦ Passenger ∈ sender
+        grd3: tapTicket_1 ↦ Gate ∈ receiver
+        grd4: tapTicket_1 ∉ receivedMessages
+        grd5: currentMessage = {tapTicket_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {tapTicket_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {tapTicket_1 ↦ ticketID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidate_2
+    WHEN
+        grd1: validate_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: tapTicket_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validate_2}
+        act2: sender := sender ∪ {validate_2 ↦ Gate}
+        act3: receiver := receiver ∪ {validate_2 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validate_2 ↦ validFlag}
+        act6: currentMessage := {validate_2}
+    END
+
+    receivevalidate_2
+    WHEN
+        grd1: validate_2 ∈ sentMessages
+        grd2: validate_2 ↦ Gate ∈ sender
+        grd3: validate_2 ↦ Passenger ∈ receiver
+        grd4: validate_2 ∉ receivedMessages
+        grd5: currentMessage = {validate_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validate_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validate_2 ↦ validFlag}
+        act3: currentMessage := ∅
+    END
+
+    sendopenBarrier_3
+    WHEN
+        grd1: openBarrier_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validate_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {openBarrier_3}
+        act2: sender := sender ∪ {openBarrier_3 ↦ Gate}
+        act3: receiver := receiver ∪ {openBarrier_3 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {openBarrier_3}
+    END
+
+    receiveopenBarrier_3
+    WHEN
+        grd1: openBarrier_3 ∈ sentMessages
+        grd2: openBarrier_3 ↦ Gate ∈ sender
+        grd3: openBarrier_3 ↦ Passenger ∈ receiver
+        grd4: openBarrier_3 ∉ receivedMessages
+        grd5: currentMessage = {openBarrier_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {openBarrier_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendpassThrough_4
+    WHEN
+        grd1: passThrough_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: openBarrier_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {passThrough_4}
+        act2: sender := sender ∪ {passThrough_4 ↦ Passenger}
+        act3: receiver := receiver ∪ {passThrough_4 ↦ Gate}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {passThrough_4}
+    END
+
+    receivepassThrough_4
+    WHEN
+        grd1: passThrough_4 ∈ sentMessages
+        grd2: passThrough_4 ↦ Passenger ∈ sender
+        grd3: passThrough_4 ↦ Gate ∈ receiver
+        grd4: passThrough_4 ∉ receivedMessages
+        grd5: currentMessage = {passThrough_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {passThrough_4}
+        act2: currentMessage := ∅
+    END
+
+END

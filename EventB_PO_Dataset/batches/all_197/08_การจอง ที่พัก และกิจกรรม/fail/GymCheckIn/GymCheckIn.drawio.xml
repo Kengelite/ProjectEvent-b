@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="GymCheckIn" id="gymcheckin">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="220" width="390" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="302" width="390" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[membership == ACTIVE]" vertex="1">
+          <mxGeometry x="105" y="225" width="198" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+3}" vertex="1">
+          <mxGeometry x="160" y="260" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[membership == EXPIRED]" vertex="1">
+          <mxGeometry x="105" y="315" width="207" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Member" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="ll7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Turnstile" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="470" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="scanQR(memberCode) {2..0}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="340.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="accessResult(accessFlag)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="180" as="sourcePoint" />
+            <mxPoint x="340.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="openGate()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="270" as="sourcePoint" />
+            <mxPoint x="90.0" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="renewPrompt(renewURL)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="360" as="sourcePoint" />
+            <mxPoint x="90.0" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="exitScan(memberCode) {0..1}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="450" as="sourcePoint" />
+            <mxPoint x="340.0" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

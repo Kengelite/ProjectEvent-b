@@ -1,0 +1,474 @@
+CONTEXT GroceryDeliverySlotContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, Driver, GroceryApp, SlotEngine
+    approveOrder_1, fetchSlot_2, releaseOrder_3, queryOrder_4, reportSlot_5, syncSlot_6, notifyOrder_7, reportDelivery_8, reserveOrder_9, assignDelivery_10, fetchDelivery_11, notifySlot_12, cancelSlot_13
+    deliveryCode, deliveryData, deliveryID, orderValue, slotCode, slotID, slotInfo
+AXIOMS
+    axm1: partition(Objects, {Customer}, {Driver}, {GroceryApp}, {SlotEngine})
+    axm2: partition(Messages, {approveOrder_1}, {fetchSlot_2}, {releaseOrder_3}, {queryOrder_4}, {reportSlot_5}, {syncSlot_6}, {notifyOrder_7}, {reportDelivery_8}, {reserveOrder_9}, {assignDelivery_10}, {fetchDelivery_11}, {notifySlot_12}, {cancelSlot_13})
+    axm3: partition(DataMessages, {deliveryCode}, {deliveryData}, {deliveryID}, {orderValue}, {slotCode}, {slotID}, {slotInfo})
+END
+
+MACHINE GroceryDeliverySlotInteractionMachine_1
+SEES GroceryDeliverySlotContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, par_1, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_10, t_delay_10, t_success_10, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12, t_time_13, t_delay_13, t_success_13
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+    inv19: t_time_10 ∈ ℤ
+    inv20: t_delay_10 ∈ ℤ
+    inv21: t_success_10 ∈ ℤ
+    inv22: t_time_11 ∈ ℤ
+    inv23: t_delay_11 ∈ ℤ
+    inv24: t_success_11 ∈ ℤ
+    inv25: t_time_12 ∈ ℤ
+    inv26: t_delay_12 ∈ ℤ
+    inv27: t_success_12 ∈ ℤ
+    inv28: t_time_13 ∈ ℤ
+    inv29: t_delay_13 ∈ ℤ
+    inv30: t_success_13 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..15
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_3 :∈ 0..1
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_6 :∈ 2..0
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+        act19: t_time_10 :∈ 0..30
+        act20: t_delay_10 := 0
+        act21: t_success_10 := 0
+        act22: t_time_11 :∈ 0..5
+        act23: t_delay_11 := 0
+        act24: t_success_11 := 0
+        act25: t_time_12 :∈ 0..20
+        act26: t_delay_12 := 0
+        act27: t_success_12 := 0
+        act28: t_time_13 :∈ 0..3
+        act29: t_delay_13 := 0
+        act30: t_success_13 := 0
+    END
+
+
+    sendapproveOrder_1
+    WHEN
+        grd1: approveOrder_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveOrder_1}
+        act2: sender := sender ∪ {approveOrder_1 ↦ GroceryApp}
+        act3: receiver := receiver ∪ {approveOrder_1 ↦ SlotEngine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveOrder_1 ↦ slotID}
+        act6: currentMessage := {approveOrder_1}
+    END
+
+    receiveapproveOrder_1
+    WHEN
+        grd1: approveOrder_1 ∈ sentMessages
+        grd2: approveOrder_1 ↦ GroceryApp ∈ sender
+        grd3: approveOrder_1 ↦ SlotEngine ∈ receiver
+        grd4: approveOrder_1 ∉ receivedMessages
+        grd5: currentMessage = {approveOrder_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveOrder_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveOrder_1 ↦ slotID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendfetchSlot_2
+    WHEN
+        grd1: fetchSlot_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveOrder_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchSlot_2}
+        act2: sender := sender ∪ {fetchSlot_2 ↦ GroceryApp}
+        act3: receiver := receiver ∪ {fetchSlot_2 ↦ SlotEngine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchSlot_2 ↦ orderValue}
+        act6: currentMessage := {fetchSlot_2}
+    END
+
+    receivefetchSlot_2
+    WHEN
+        grd1: fetchSlot_2 ∈ sentMessages
+        grd2: fetchSlot_2 ↦ GroceryApp ∈ sender
+        grd3: fetchSlot_2 ↦ SlotEngine ∈ receiver
+        grd4: fetchSlot_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchSlot_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchSlot_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchSlot_2 ↦ orderValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseOrder_3
+    WHEN
+        grd1: releaseOrder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchSlot_2 ∈ receivedMessages
+        grd4: retryNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseOrder_3}
+        act2: sender := sender ∪ {releaseOrder_3 ↦ GroceryApp}
+        act3: receiver := receiver ∪ {releaseOrder_3 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseOrder_3 ↦ orderValue}
+        act6: currentMessage := {releaseOrder_3}
+    END
+
+    receivereleaseOrder_3
+    WHEN
+        grd1: releaseOrder_3 ∈ sentMessages
+        grd2: releaseOrder_3 ↦ GroceryApp ∈ sender
+        grd3: releaseOrder_3 ↦ Driver ∈ receiver
+        grd4: releaseOrder_3 ∉ receivedMessages
+        grd5: currentMessage = {releaseOrder_3}
+        grd6: retryNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseOrder_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseOrder_3 ↦ orderValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendqueryOrder_4
+    WHEN
+        grd1: queryOrder_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseOrder_3 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryOrder_4}
+        act2: sender := sender ∪ {queryOrder_4 ↦ GroceryApp}
+        act3: receiver := receiver ∪ {queryOrder_4 ↦ SlotEngine}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryOrder_4}
+    END
+
+    receivequeryOrder_4
+    WHEN
+        grd1: queryOrder_4 ∈ sentMessages
+        grd2: queryOrder_4 ↦ GroceryApp ∈ sender
+        grd3: queryOrder_4 ↦ SlotEngine ∈ receiver
+        grd4: queryOrder_4 ∉ receivedMessages
+        grd5: currentMessage = {queryOrder_4}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryOrder_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreportSlot_5
+    WHEN
+        grd1: reportSlot_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseOrder_3 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportSlot_5}
+        act2: sender := sender ∪ {reportSlot_5 ↦ SlotEngine}
+        act3: receiver := receiver ∪ {reportSlot_5 ↦ GroceryApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportSlot_5}
+    END
+
+    receivereportSlot_5
+    WHEN
+        grd1: reportSlot_5 ∈ sentMessages
+        grd2: reportSlot_5 ↦ SlotEngine ∈ sender
+        grd3: reportSlot_5 ↦ GroceryApp ∈ receiver
+        grd4: reportSlot_5 ∉ receivedMessages
+        grd5: currentMessage = {reportSlot_5}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportSlot_5}
+        act2: currentMessage := ∅
+    END
+
+    sendsyncSlot_6
+    WHEN
+        grd1: syncSlot_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportSlot_5 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncSlot_6}
+        act2: sender := sender ∪ {syncSlot_6 ↦ Customer}
+        act3: receiver := receiver ∪ {syncSlot_6 ↦ SlotEngine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncSlot_6 ↦ slotCode}
+        act6: currentMessage := {syncSlot_6}
+    END
+
+    receivesyncSlot_6
+    WHEN
+        grd1: syncSlot_6 ∈ sentMessages
+        grd2: syncSlot_6 ↦ Customer ∈ sender
+        grd3: syncSlot_6 ↦ SlotEngine ∈ receiver
+        grd4: syncSlot_6 ∉ receivedMessages
+        grd5: currentMessage = {syncSlot_6}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncSlot_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncSlot_6 ↦ slotCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendnotifyOrder_7
+    WHEN
+        grd1: notifyOrder_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncSlot_6 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyOrder_7}
+        act2: sender := sender ∪ {notifyOrder_7 ↦ Driver}
+        act3: receiver := receiver ∪ {notifyOrder_7 ↦ GroceryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyOrder_7 ↦ deliveryCode}
+        act6: currentMessage := {notifyOrder_7}
+    END
+
+    receivenotifyOrder_7
+    WHEN
+        grd1: notifyOrder_7 ∈ sentMessages
+        grd2: notifyOrder_7 ↦ Driver ∈ sender
+        grd3: notifyOrder_7 ↦ GroceryApp ∈ receiver
+        grd4: notifyOrder_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyOrder_7}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyOrder_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyOrder_7 ↦ deliveryCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreportDelivery_8
+    WHEN
+        grd1: reportDelivery_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyOrder_7 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportDelivery_8}
+        act2: sender := sender ∪ {reportDelivery_8 ↦ Driver}
+        act3: receiver := receiver ∪ {reportDelivery_8 ↦ GroceryApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportDelivery_8}
+    END
+
+    receivereportDelivery_8
+    WHEN
+        grd1: reportDelivery_8 ∈ sentMessages
+        grd2: reportDelivery_8 ↦ Driver ∈ sender
+        grd3: reportDelivery_8 ↦ GroceryApp ∈ receiver
+        grd4: reportDelivery_8 ∉ receivedMessages
+        grd5: currentMessage = {reportDelivery_8}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportDelivery_8}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveOrder_9
+    WHEN
+        grd1: reserveOrder_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportDelivery_8 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveOrder_9}
+        act2: sender := sender ∪ {reserveOrder_9 ↦ GroceryApp}
+        act3: receiver := receiver ∪ {reserveOrder_9 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveOrder_9}
+    END
+
+    receivereserveOrder_9
+    WHEN
+        grd1: reserveOrder_9 ∈ sentMessages
+        grd2: reserveOrder_9 ↦ GroceryApp ∈ sender
+        grd3: reserveOrder_9 ↦ Driver ∈ receiver
+        grd4: reserveOrder_9 ∉ receivedMessages
+        grd5: currentMessage = {reserveOrder_9}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveOrder_9}
+        act2: currentMessage := ∅
+    END
+
+    sendassignDelivery_10
+    WHEN
+        grd1: assignDelivery_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveOrder_9 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignDelivery_10}
+        act2: sender := sender ∪ {assignDelivery_10 ↦ SlotEngine}
+        act3: receiver := receiver ∪ {assignDelivery_10 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignDelivery_10 ↦ deliveryData, assignDelivery_10 ↦ slotInfo}
+        act6: currentMessage := {assignDelivery_10}
+    END
+
+    receiveassignDelivery_10
+    WHEN
+        grd1: assignDelivery_10 ∈ sentMessages
+        grd2: assignDelivery_10 ↦ SlotEngine ∈ sender
+        grd3: assignDelivery_10 ↦ Driver ∈ receiver
+        grd4: assignDelivery_10 ∉ receivedMessages
+        grd5: currentMessage = {assignDelivery_10}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignDelivery_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignDelivery_10 ↦ deliveryData, assignDelivery_10 ↦ slotInfo}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendfetchDelivery_11
+    WHEN
+        grd1: fetchDelivery_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignDelivery_10 ∈ receivedMessages
+        grd4: retryNo < 8
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchDelivery_11}
+        act2: sender := sender ∪ {fetchDelivery_11 ↦ GroceryApp}
+        act3: receiver := receiver ∪ {fetchDelivery_11 ↦ SlotEngine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchDelivery_11 ↦ deliveryID}
+        act6: currentMessage := {fetchDelivery_11}
+    END
+
+    receivefetchDelivery_11
+    WHEN
+        grd1: fetchDelivery_11 ∈ sentMessages
+        grd2: fetchDelivery_11 ↦ GroceryApp ∈ sender
+        grd3: fetchDelivery_11 ↦ SlotEngine ∈ receiver
+        grd4: fetchDelivery_11 ∉ receivedMessages
+        grd5: currentMessage = {fetchDelivery_11}
+        grd6: retryNo < 8
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchDelivery_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchDelivery_11 ↦ deliveryID}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendnotifySlot_12
+    WHEN
+        grd1: notifySlot_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryOrder_4 ∈ receivedMessages ∨ fetchDelivery_11 ∈ receivedMessages
+        grd4: retryNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifySlot_12}
+        act2: sender := sender ∪ {notifySlot_12 ↦ SlotEngine}
+        act3: receiver := receiver ∪ {notifySlot_12 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifySlot_12}
+    END
+
+    receivenotifySlot_12
+    WHEN
+        grd1: notifySlot_12 ∈ sentMessages
+        grd2: notifySlot_12 ↦ SlotEngine ∈ sender
+        grd3: notifySlot_12 ↦ Driver ∈ receiver
+        grd4: notifySlot_12 ∉ receivedMessages
+        grd5: currentMessage = {notifySlot_12}
+        grd6: retryNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifySlot_12}
+        act2: currentMessage := ∅
+        act3: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    sendcancelSlot_13
+    WHEN
+        grd1: cancelSlot_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifySlot_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSlot_13}
+        act2: sender := sender ∪ {cancelSlot_13 ↦ Driver}
+        act3: receiver := receiver ∪ {cancelSlot_13 ↦ GroceryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelSlot_13 ↦ slotCode}
+        act6: currentMessage := {cancelSlot_13}
+    END
+
+    receivecancelSlot_13
+    WHEN
+        grd1: cancelSlot_13 ∈ sentMessages
+        grd2: cancelSlot_13 ↦ Driver ∈ sender
+        grd3: cancelSlot_13 ↦ GroceryApp ∈ receiver
+        grd4: cancelSlot_13 ∉ receivedMessages
+        grd5: currentMessage = {cancelSlot_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSlot_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelSlot_13 ↦ slotCode}
+        act3: currentMessage := ∅
+        act4: t_success_13 := t_time_13 + t_delay_13
+    END
+
+    checkloop_releaseOrder_3_loop1
+    WHEN
+        grd1: retryNo < 8
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

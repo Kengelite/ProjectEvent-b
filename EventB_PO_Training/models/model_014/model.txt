@@ -1,0 +1,295 @@
+CONTEXT DroneDeliveryContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, DispatchServer, Drone, Warehouse
+    placeOrder_1, prepareParcel_2, assignDrone_3, pickupParcel_4, deliverParcel_5, confirmDelivery_6, lateCompensation_7, returnToBase_8
+    address, orderID, parcelID, receipt, voucher
+AXIOMS
+    axm1: partition(Objects, {Customer}, {DispatchServer}, {Drone}, {Warehouse})
+    axm2: partition(Messages, {placeOrder_1}, {prepareParcel_2}, {assignDrone_3}, {pickupParcel_4}, {deliverParcel_5}, {confirmDelivery_6}, {lateCompensation_7}, {returnToBase_8})
+    axm3: partition(DataMessages, {address}, {orderID}, {parcelID}, {receipt}, {voucher})
+END
+
+MACHINE DroneDeliveryInteractionMachine_1
+SEES DroneDeliveryContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_deliver, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_deliver ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_deliver := 0
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..8
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..5
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 0..4
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+        act19: t_time_5 :∈ 0..30
+        act20: t_delay_5 := 0
+        act21: t_success_5 := 0
+        act22: t_time_7 :∈ 0..2
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+    END
+
+
+    sendplaceOrder_1
+    WHEN
+        grd1: placeOrder_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {placeOrder_1}
+        act2: sender := sender ∪ {placeOrder_1 ↦ Customer}
+        act3: receiver := receiver ∪ {placeOrder_1 ↦ DispatchServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {placeOrder_1 ↦ orderID, placeOrder_1 ↦ address}
+        act6: currentMessage := {placeOrder_1}
+    END
+
+    receiveplaceOrder_1
+    WHEN
+        grd1: placeOrder_1 ∈ sentMessages
+        grd2: placeOrder_1 ↦ Customer ∈ sender
+        grd3: placeOrder_1 ↦ DispatchServer ∈ receiver
+        grd4: placeOrder_1 ∉ receivedMessages
+        grd5: currentMessage = {placeOrder_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {placeOrder_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {placeOrder_1 ↦ orderID, placeOrder_1 ↦ address}
+        act3: currentMessage := ∅
+    END
+
+    sendprepareParcel_2
+    WHEN
+        grd1: prepareParcel_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: placeOrder_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {prepareParcel_2}
+        act2: sender := sender ∪ {prepareParcel_2 ↦ DispatchServer}
+        act3: receiver := receiver ∪ {prepareParcel_2 ↦ Warehouse}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {prepareParcel_2 ↦ orderID}
+        act6: currentMessage := {prepareParcel_2}
+    END
+
+    receiveprepareParcel_2
+    WHEN
+        grd1: prepareParcel_2 ∈ sentMessages
+        grd2: prepareParcel_2 ↦ DispatchServer ∈ sender
+        grd3: prepareParcel_2 ↦ Warehouse ∈ receiver
+        grd4: prepareParcel_2 ∉ receivedMessages
+        grd5: currentMessage = {prepareParcel_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {prepareParcel_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {prepareParcel_2 ↦ orderID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendassignDrone_3
+    WHEN
+        grd1: assignDrone_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: prepareParcel_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignDrone_3}
+        act2: sender := sender ∪ {assignDrone_3 ↦ DispatchServer}
+        act3: receiver := receiver ∪ {assignDrone_3 ↦ Drone}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignDrone_3 ↦ orderID}
+        act6: currentMessage := {assignDrone_3}
+    END
+
+    receiveassignDrone_3
+    WHEN
+        grd1: assignDrone_3 ∈ sentMessages
+        grd2: assignDrone_3 ↦ DispatchServer ∈ sender
+        grd3: assignDrone_3 ↦ Drone ∈ receiver
+        grd4: assignDrone_3 ∉ receivedMessages
+        grd5: currentMessage = {assignDrone_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignDrone_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignDrone_3 ↦ orderID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendpickupParcel_4
+    WHEN
+        grd1: pickupParcel_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignDrone_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {pickupParcel_4}
+        act2: sender := sender ∪ {pickupParcel_4 ↦ Drone}
+        act3: receiver := receiver ∪ {pickupParcel_4 ↦ Warehouse}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {pickupParcel_4 ↦ parcelID}
+        act6: currentMessage := {pickupParcel_4}
+    END
+
+    receivepickupParcel_4
+    WHEN
+        grd1: pickupParcel_4 ∈ sentMessages
+        grd2: pickupParcel_4 ↦ Drone ∈ sender
+        grd3: pickupParcel_4 ↦ Warehouse ∈ receiver
+        grd4: pickupParcel_4 ∉ receivedMessages
+        grd5: currentMessage = {pickupParcel_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pickupParcel_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {pickupParcel_4 ↦ parcelID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    senddeliverParcel_5
+    WHEN
+        grd1: deliverParcel_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pickupParcel_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {deliverParcel_5}
+        act2: sender := sender ∪ {deliverParcel_5 ↦ Drone}
+        act3: receiver := receiver ∪ {deliverParcel_5 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {deliverParcel_5 ↦ parcelID}
+        act6: currentMessage := {deliverParcel_5}
+    END
+
+    receivedeliverParcel_5
+    WHEN
+        grd1: deliverParcel_5 ∈ sentMessages
+        grd2: deliverParcel_5 ↦ Drone ∈ sender
+        grd3: deliverParcel_5 ↦ Customer ∈ receiver
+        grd4: deliverParcel_5 ∉ receivedMessages
+        grd5: currentMessage = {deliverParcel_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {deliverParcel_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {deliverParcel_5 ↦ parcelID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+        act5: t_deliver := t_time_5 + t_delay_5
+    END
+
+    sendconfirmDelivery_6
+    WHEN
+        grd1: confirmDelivery_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: deliverParcel_5 ∈ receivedMessages
+        grd4: t_deliver ≤ 20
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmDelivery_6}
+        act2: sender := sender ∪ {confirmDelivery_6 ↦ Customer}
+        act3: receiver := receiver ∪ {confirmDelivery_6 ↦ DispatchServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmDelivery_6 ↦ receipt}
+        act6: currentMessage := {confirmDelivery_6}
+    END
+
+    receiveconfirmDelivery_6
+    WHEN
+        grd1: confirmDelivery_6 ∈ sentMessages
+        grd2: confirmDelivery_6 ↦ Customer ∈ sender
+        grd3: confirmDelivery_6 ↦ DispatchServer ∈ receiver
+        grd4: confirmDelivery_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmDelivery_6}
+        grd6: t_deliver ≤ 20
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmDelivery_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmDelivery_6 ↦ receipt}
+        act3: currentMessage := ∅
+    END
+
+    sendlateCompensation_7
+    WHEN
+        grd1: lateCompensation_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: deliverParcel_5 ∈ receivedMessages
+        grd4: t_deliver > 20
+    THEN
+        act1: sentMessages := sentMessages ∪ {lateCompensation_7}
+        act2: sender := sender ∪ {lateCompensation_7 ↦ DispatchServer}
+        act3: receiver := receiver ∪ {lateCompensation_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {lateCompensation_7 ↦ voucher}
+        act6: currentMessage := {lateCompensation_7}
+    END
+
+    receivelateCompensation_7
+    WHEN
+        grd1: lateCompensation_7 ∈ sentMessages
+        grd2: lateCompensation_7 ↦ DispatchServer ∈ sender
+        grd3: lateCompensation_7 ↦ Customer ∈ receiver
+        grd4: lateCompensation_7 ∉ receivedMessages
+        grd5: currentMessage = {lateCompensation_7}
+        grd6: t_deliver > 20
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {lateCompensation_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {lateCompensation_7 ↦ voucher}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreturnToBase_8
+    WHEN
+        grd1: returnToBase_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmDelivery_6 ∈ receivedMessages ∨ lateCompensation_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {returnToBase_8}
+        act2: sender := sender ∪ {returnToBase_8 ↦ DispatchServer}
+        act3: receiver := receiver ∪ {returnToBase_8 ↦ Drone}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {returnToBase_8}
+    END
+
+    receivereturnToBase_8
+    WHEN
+        grd1: returnToBase_8 ∈ sentMessages
+        grd2: returnToBase_8 ↦ DispatchServer ∈ sender
+        grd3: returnToBase_8 ↦ Drone ∈ receiver
+        grd4: returnToBase_8 ∉ receivedMessages
+        grd5: currentMessage = {returnToBase_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {returnToBase_8}
+        act2: currentMessage := ∅
+    END
+
+END

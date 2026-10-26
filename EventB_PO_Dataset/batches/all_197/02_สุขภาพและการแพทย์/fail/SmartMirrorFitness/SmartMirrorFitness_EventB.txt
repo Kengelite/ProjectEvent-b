@@ -1,0 +1,443 @@
+CONTEXT SmartMirrorFitnessContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CoachAI, SmartMirror, User
+    releaseWorkout_1, reportRep_2, approvePlan_3, confirmWorkout_4, logWorkout_5, issueWorkout_6, cancelRep_7, ackRep_8, reservePlan_9, sendWorkout_10, scheduleWorkout_11, syncPlan_12
+    planValue, repData, repInfo, repRef, workoutID, workoutInfo, workoutRef
+AXIOMS
+    axm1: partition(Objects, {CoachAI}, {SmartMirror}, {User})
+    axm2: partition(Messages, {releaseWorkout_1}, {reportRep_2}, {approvePlan_3}, {confirmWorkout_4}, {logWorkout_5}, {issueWorkout_6}, {cancelRep_7}, {ackRep_8}, {reservePlan_9}, {sendWorkout_10}, {scheduleWorkout_11}, {syncPlan_12})
+    axm3: partition(DataMessages, {planValue}, {repData}, {repInfo}, {repRef}, {workoutID}, {workoutInfo}, {workoutRef})
+END
+
+MACHINE SmartMirrorFitnessInteractionMachine_1
+SEES SmartMirrorFitnessContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, attemptNo, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: attemptNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+    inv25: t_time_11 ∈ ℤ
+    inv26: t_delay_11 ∈ ℤ
+    inv27: t_success_11 ∈ ℤ
+    inv28: t_time_12 ∈ ℤ
+    inv29: t_delay_12 ∈ ℤ
+    inv30: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: attemptNo := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..0
+        act14: t_delay_2 := 10
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 0..0
+        act17: t_delay_4 := 3
+        act18: t_success_4 := 0
+        act19: t_time_5 :∈ 0..3
+        act20: t_delay_5 := 0
+        act21: t_success_5 := 0
+        act22: t_time_7 :∈ 0..20
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+        act25: t_time_11 :∈ 0..15
+        act26: t_delay_11 := 0
+        act27: t_success_11 := 0
+        act28: t_time_12 :∈ 0..1
+        act29: t_delay_12 := 0
+        act30: t_success_12 := 0
+    END
+
+
+    sendreleaseWorkout_1
+    WHEN
+        grd1: releaseWorkout_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseWorkout_1}
+        act2: sender := sender ∪ {releaseWorkout_1 ↦ User}
+        act3: receiver := receiver ∪ {releaseWorkout_1 ↦ SmartMirror}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseWorkout_1 ↦ workoutID}
+        act6: currentMessage := {releaseWorkout_1}
+    END
+
+    receivereleaseWorkout_1
+    WHEN
+        grd1: releaseWorkout_1 ∈ sentMessages
+        grd2: releaseWorkout_1 ↦ User ∈ sender
+        grd3: releaseWorkout_1 ↦ SmartMirror ∈ receiver
+        grd4: releaseWorkout_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseWorkout_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseWorkout_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseWorkout_1 ↦ workoutID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendreportRep_2
+    WHEN
+        grd1: reportRep_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseWorkout_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportRep_2}
+        act2: sender := sender ∪ {reportRep_2 ↦ SmartMirror}
+        act3: receiver := receiver ∪ {reportRep_2 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportRep_2 ↦ repData, reportRep_2 ↦ workoutRef}
+        act6: currentMessage := {reportRep_2}
+    END
+
+    receivereportRep_2
+    WHEN
+        grd1: reportRep_2 ∈ sentMessages
+        grd2: reportRep_2 ↦ SmartMirror ∈ sender
+        grd3: reportRep_2 ↦ User ∈ receiver
+        grd4: reportRep_2 ∉ receivedMessages
+        grd5: currentMessage = {reportRep_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportRep_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportRep_2 ↦ repData, reportRep_2 ↦ workoutRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendapprovePlan_3
+    WHEN
+        grd1: approvePlan_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportRep_2 ∈ receivedMessages
+        grd4: attemptNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvePlan_3}
+        act2: sender := sender ∪ {approvePlan_3 ↦ SmartMirror}
+        act3: receiver := receiver ∪ {approvePlan_3 ↦ CoachAI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approvePlan_3}
+    END
+
+    receiveapprovePlan_3
+    WHEN
+        grd1: approvePlan_3 ∈ sentMessages
+        grd2: approvePlan_3 ↦ SmartMirror ∈ sender
+        grd3: approvePlan_3 ↦ CoachAI ∈ receiver
+        grd4: approvePlan_3 ∉ receivedMessages
+        grd5: currentMessage = {approvePlan_3}
+        grd6: attemptNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvePlan_3}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmWorkout_4_opt1
+    WHEN
+        grd1: confirmWorkout_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvePlan_3 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmWorkout_4}
+        act2: sender := sender ∪ {confirmWorkout_4 ↦ User}
+        act3: receiver := receiver ∪ {confirmWorkout_4 ↦ CoachAI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmWorkout_4}
+    END
+
+    receiveconfirmWorkout_4_opt1
+    WHEN
+        grd1: confirmWorkout_4 ∈ sentMessages
+        grd2: confirmWorkout_4 ↦ User ∈ sender
+        grd3: confirmWorkout_4 ↦ CoachAI ∈ receiver
+        grd4: confirmWorkout_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmWorkout_4}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmWorkout_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendlogWorkout_5_opt1
+    WHEN
+        grd1: logWorkout_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmWorkout_4 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {logWorkout_5}
+        act2: sender := sender ∪ {logWorkout_5 ↦ SmartMirror}
+        act3: receiver := receiver ∪ {logWorkout_5 ↦ User}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logWorkout_5}
+    END
+
+    receivelogWorkout_5_opt1
+    WHEN
+        grd1: logWorkout_5 ∈ sentMessages
+        grd2: logWorkout_5 ↦ SmartMirror ∈ sender
+        grd3: logWorkout_5 ↦ User ∈ receiver
+        grd4: logWorkout_5 ∉ receivedMessages
+        grd5: currentMessage = {logWorkout_5}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logWorkout_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueWorkout_6_opt1
+    WHEN
+        grd1: issueWorkout_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logWorkout_5 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueWorkout_6}
+        act2: sender := sender ∪ {issueWorkout_6 ↦ User}
+        act3: receiver := receiver ∪ {issueWorkout_6 ↦ SmartMirror}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueWorkout_6 ↦ planValue, issueWorkout_6 ↦ workoutInfo}
+        act6: currentMessage := {issueWorkout_6}
+    END
+
+    receiveissueWorkout_6_opt1
+    WHEN
+        grd1: issueWorkout_6 ∈ sentMessages
+        grd2: issueWorkout_6 ↦ User ∈ sender
+        grd3: issueWorkout_6 ↦ SmartMirror ∈ receiver
+        grd4: issueWorkout_6 ∉ receivedMessages
+        grd5: currentMessage = {issueWorkout_6}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueWorkout_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueWorkout_6 ↦ planValue, issueWorkout_6 ↦ workoutInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelRep_7_opt1
+    WHEN
+        grd1: cancelRep_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueWorkout_6 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelRep_7}
+        act2: sender := sender ∪ {cancelRep_7 ↦ CoachAI}
+        act3: receiver := receiver ∪ {cancelRep_7 ↦ SmartMirror}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelRep_7 ↦ workoutRef}
+        act6: currentMessage := {cancelRep_7}
+    END
+
+    receivecancelRep_7_opt1
+    WHEN
+        grd1: cancelRep_7 ∈ sentMessages
+        grd2: cancelRep_7 ↦ CoachAI ∈ sender
+        grd3: cancelRep_7 ↦ SmartMirror ∈ receiver
+        grd4: cancelRep_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelRep_7}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelRep_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelRep_7 ↦ workoutRef}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendackRep_8_opt1
+    WHEN
+        grd1: ackRep_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelRep_7 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackRep_8}
+        act2: sender := sender ∪ {ackRep_8 ↦ SmartMirror}
+        act3: receiver := receiver ∪ {ackRep_8 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackRep_8 ↦ repData}
+        act6: currentMessage := {ackRep_8}
+    END
+
+    receiveackRep_8_opt1
+    WHEN
+        grd1: ackRep_8 ∈ sentMessages
+        grd2: ackRep_8 ↦ SmartMirror ∈ sender
+        grd3: ackRep_8 ↦ User ∈ receiver
+        grd4: ackRep_8 ∉ receivedMessages
+        grd5: currentMessage = {ackRep_8}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackRep_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackRep_8 ↦ repData}
+        act3: currentMessage := ∅
+    END
+
+    sendreservePlan_9_opt1
+    WHEN
+        grd1: reservePlan_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackRep_8 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePlan_9}
+        act2: sender := sender ∪ {reservePlan_9 ↦ User}
+        act3: receiver := receiver ∪ {reservePlan_9 ↦ CoachAI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePlan_9 ↦ repInfo}
+        act6: currentMessage := {reservePlan_9}
+    END
+
+    receivereservePlan_9_opt1
+    WHEN
+        grd1: reservePlan_9 ∈ sentMessages
+        grd2: reservePlan_9 ↦ User ∈ sender
+        grd3: reservePlan_9 ↦ CoachAI ∈ receiver
+        grd4: reservePlan_9 ∉ receivedMessages
+        grd5: currentMessage = {reservePlan_9}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePlan_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePlan_9 ↦ repInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsendWorkout_10_opt1
+    WHEN
+        grd1: sendWorkout_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservePlan_9 ∈ receivedMessages
+        grd4: attemptNo < 6
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendWorkout_10}
+        act2: sender := sender ∪ {sendWorkout_10 ↦ CoachAI}
+        act3: receiver := receiver ∪ {sendWorkout_10 ↦ SmartMirror}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendWorkout_10 ↦ repRef}
+        act6: currentMessage := {sendWorkout_10}
+    END
+
+    receivesendWorkout_10_opt1
+    WHEN
+        grd1: sendWorkout_10 ∈ sentMessages
+        grd2: sendWorkout_10 ↦ CoachAI ∈ sender
+        grd3: sendWorkout_10 ↦ SmartMirror ∈ receiver
+        grd4: sendWorkout_10 ∉ receivedMessages
+        grd5: currentMessage = {sendWorkout_10}
+        grd6: attemptNo < 6
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendWorkout_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendWorkout_10 ↦ repRef}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleWorkout_11
+    WHEN
+        grd1: scheduleWorkout_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendWorkout_10 ∈ receivedMessages
+        grd4: attemptNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleWorkout_11}
+        act2: sender := sender ∪ {scheduleWorkout_11 ↦ User}
+        act3: receiver := receiver ∪ {scheduleWorkout_11 ↦ SmartMirror}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleWorkout_11}
+    END
+
+    receivescheduleWorkout_11
+    WHEN
+        grd1: scheduleWorkout_11 ∈ sentMessages
+        grd2: scheduleWorkout_11 ↦ User ∈ sender
+        grd3: scheduleWorkout_11 ↦ SmartMirror ∈ receiver
+        grd4: scheduleWorkout_11 ∉ receivedMessages
+        grd5: currentMessage = {scheduleWorkout_11}
+        grd6: attemptNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleWorkout_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendsyncPlan_12
+    WHEN
+        grd1: syncPlan_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleWorkout_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPlan_12}
+        act2: sender := sender ∪ {syncPlan_12 ↦ User}
+        act3: receiver := receiver ∪ {syncPlan_12 ↦ SmartMirror}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncPlan_12}
+    END
+
+    receivesyncPlan_12
+    WHEN
+        grd1: syncPlan_12 ∈ sentMessages
+        grd2: syncPlan_12 ↦ User ∈ sender
+        grd3: syncPlan_12 ↦ SmartMirror ∈ receiver
+        grd4: syncPlan_12 ∉ receivedMessages
+        grd5: currentMessage = {syncPlan_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPlan_12}
+        act2: currentMessage := ∅
+        act3: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    checkloop_approvePlan_3_loop1
+    WHEN
+        grd1: attemptNo < 6
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

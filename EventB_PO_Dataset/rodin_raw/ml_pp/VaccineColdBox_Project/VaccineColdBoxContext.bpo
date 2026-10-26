@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="syncAlarm_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Gateway" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="releaseAlarm_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="readingValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="syncReading_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendVaccine_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="approveAlarm_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="HealthHub" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="vaccineRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="ackVaccine_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="alarmValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="ColdBox" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/VaccineColdBox_Project/VaccineColdBoxContext.bpo|org.eventb.core.poFile#VaccineColdBoxContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{ColdBox},{Gateway},{HealthHub})" org.eventb.core.source="/VaccineColdBox_Project/VaccineColdBoxContext.buc|org.eventb.core.contextFile#VaccineColdBoxContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{releaseAlarm_1},{ackVaccine_2},{syncReading_3},{syncAlarm_4},{approveAlarm_5},{sendVaccine_6})" org.eventb.core.source="/VaccineColdBox_Project/VaccineColdBoxContext.buc|org.eventb.core.contextFile#VaccineColdBoxContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{alarmValue},{readingValue},{vaccineRef})" org.eventb.core.source="/VaccineColdBox_Project/VaccineColdBoxContext.buc|org.eventb.core.contextFile#VaccineColdBoxContext|org.eventb.core.axiom#internal_element18"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

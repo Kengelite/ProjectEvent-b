@@ -1,0 +1,236 @@
+CONTEXT FactoryQualityGateContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Conveyor, QCServer, RejectArm, VisionCam
+    cancelPart_1, fetchDefect_2, logDefect_3, notifyPart_4, reportPart_5, releaseBatch_6
+    batchCode, batchInfo, defectInfo, partInfo
+AXIOMS
+    axm1: partition(Objects, {Conveyor}, {QCServer}, {RejectArm}, {VisionCam})
+    axm2: partition(Messages, {cancelPart_1}, {fetchDefect_2}, {logDefect_3}, {notifyPart_4}, {reportPart_5}, {releaseBatch_6})
+    axm3: partition(DataMessages, {batchCode}, {batchInfo}, {defectInfo}, {partInfo})
+END
+
+MACHINE FactoryQualityGateInteractionMachine_1
+SEES FactoryQualityGateContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: t_time_1 :∈ 0..15
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..10
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..10
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+        act18: t_time_6 :∈ 0..3
+        act19: t_delay_6 := 0
+        act20: t_success_6 := 0
+    END
+
+
+    sendcancelPart_1
+    WHEN
+        grd1: cancelPart_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelPart_1}
+        act2: sender := sender ∪ {cancelPart_1 ↦ RejectArm}
+        act3: receiver := receiver ∪ {cancelPart_1 ↦ QCServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelPart_1}
+    END
+
+    receivecancelPart_1
+    WHEN
+        grd1: cancelPart_1 ∈ sentMessages
+        grd2: cancelPart_1 ↦ RejectArm ∈ sender
+        grd3: cancelPart_1 ↦ QCServer ∈ receiver
+        grd4: cancelPart_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelPart_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelPart_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendfetchDefect_2
+    WHEN
+        grd1: fetchDefect_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelPart_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchDefect_2}
+        act2: sender := sender ∪ {fetchDefect_2 ↦ QCServer}
+        act3: receiver := receiver ∪ {fetchDefect_2 ↦ RejectArm}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchDefect_2 ↦ defectInfo}
+        act6: currentMessage := {fetchDefect_2}
+    END
+
+    receivefetchDefect_2
+    WHEN
+        grd1: fetchDefect_2 ∈ sentMessages
+        grd2: fetchDefect_2 ↦ QCServer ∈ sender
+        grd3: fetchDefect_2 ↦ RejectArm ∈ receiver
+        grd4: fetchDefect_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchDefect_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchDefect_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchDefect_2 ↦ defectInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendlogDefect_3
+    WHEN
+        grd1: logDefect_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchDefect_2 ∈ receivedMessages
+        grd4: roundNo < 7
+    THEN
+        act1: sentMessages := sentMessages ∪ {logDefect_3}
+        act2: sender := sender ∪ {logDefect_3 ↦ Conveyor}
+        act3: receiver := receiver ∪ {logDefect_3 ↦ RejectArm}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logDefect_3 ↦ partInfo}
+        act6: currentMessage := {logDefect_3}
+    END
+
+    receivelogDefect_3
+    WHEN
+        grd1: logDefect_3 ∈ sentMessages
+        grd2: logDefect_3 ↦ Conveyor ∈ sender
+        grd3: logDefect_3 ↦ RejectArm ∈ receiver
+        grd4: logDefect_3 ∉ receivedMessages
+        grd5: currentMessage = {logDefect_3}
+        grd6: roundNo < 7
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logDefect_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logDefect_3 ↦ partInfo}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendnotifyPart_4
+    WHEN
+        grd1: notifyPart_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logDefect_3 ∈ receivedMessages
+        grd4: roundNo < 7
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPart_4}
+        act2: sender := sender ∪ {notifyPart_4 ↦ RejectArm}
+        act3: receiver := receiver ∪ {notifyPart_4 ↦ QCServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyPart_4}
+    END
+
+    receivenotifyPart_4
+    WHEN
+        grd1: notifyPart_4 ∈ sentMessages
+        grd2: notifyPart_4 ↦ RejectArm ∈ sender
+        grd3: notifyPart_4 ↦ QCServer ∈ receiver
+        grd4: notifyPart_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyPart_4}
+        grd6: roundNo < 7
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPart_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreportPart_5
+    WHEN
+        grd1: reportPart_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyPart_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportPart_5}
+        act2: sender := sender ∪ {reportPart_5 ↦ Conveyor}
+        act3: receiver := receiver ∪ {reportPart_5 ↦ QCServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportPart_5 ↦ batchInfo}
+        act6: currentMessage := {reportPart_5}
+    END
+
+    receivereportPart_5
+    WHEN
+        grd1: reportPart_5 ∈ sentMessages
+        grd2: reportPart_5 ↦ Conveyor ∈ sender
+        grd3: reportPart_5 ↦ QCServer ∈ receiver
+        grd4: reportPart_5 ∉ receivedMessages
+        grd5: currentMessage = {reportPart_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportPart_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportPart_5 ↦ batchInfo}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseBatch_6
+    WHEN
+        grd1: releaseBatch_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportPart_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseBatch_6}
+        act2: sender := sender ∪ {releaseBatch_6 ↦ Conveyor}
+        act3: receiver := receiver ∪ {releaseBatch_6 ↦ VisionCam}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseBatch_6 ↦ batchCode}
+        act6: currentMessage := {releaseBatch_6}
+    END
+
+    receivereleaseBatch_6
+    WHEN
+        grd1: releaseBatch_6 ∈ sentMessages
+        grd2: releaseBatch_6 ↦ Conveyor ∈ sender
+        grd3: releaseBatch_6 ↦ VisionCam ∈ receiver
+        grd4: releaseBatch_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseBatch_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseBatch_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseBatch_6 ↦ batchCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    checkloop_logDefect_3_loop1
+    WHEN
+        grd1: roundNo < 7
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

@@ -1,0 +1,220 @@
+CONTEXT MedicalTranscriptionContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DictationApp, Doctor, EHR, SpeechAI
+    checkTranscript_1, logTranscript_2, sendNote_3, updateDictation_4, notifyDictation_5, confirmDictation_6
+    noteCode, transcriptData, transcriptValue
+AXIOMS
+    axm1: partition(Objects, {DictationApp}, {Doctor}, {EHR}, {SpeechAI})
+    axm2: partition(Messages, {checkTranscript_1}, {logTranscript_2}, {sendNote_3}, {updateDictation_4}, {notifyDictation_5}, {confirmDictation_6})
+    axm3: partition(DataMessages, {noteCode}, {transcriptData}, {transcriptValue})
+END
+
+MACHINE MedicalTranscriptionInteractionMachine_1
+SEES MedicalTranscriptionContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, optIn, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: optIn ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: optIn := 1
+        act9: t_time_2 :∈ 0..2
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..5
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..0
+        act16: t_delay_4 := 3
+        act17: t_success_4 := 0
+    END
+
+
+    sendcheckTranscript_1
+    WHEN
+        grd1: checkTranscript_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkTranscript_1}
+        act2: sender := sender ∪ {checkTranscript_1 ↦ EHR}
+        act3: receiver := receiver ∪ {checkTranscript_1 ↦ Doctor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkTranscript_1}
+    END
+
+    receivecheckTranscript_1
+    WHEN
+        grd1: checkTranscript_1 ∈ sentMessages
+        grd2: checkTranscript_1 ↦ EHR ∈ sender
+        grd3: checkTranscript_1 ↦ Doctor ∈ receiver
+        grd4: checkTranscript_1 ∉ receivedMessages
+        grd5: currentMessage = {checkTranscript_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkTranscript_1}
+        act2: currentMessage := ∅
+    END
+
+    sendlogTranscript_2
+    WHEN
+        grd1: logTranscript_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkTranscript_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logTranscript_2}
+        act2: sender := sender ∪ {logTranscript_2 ↦ Doctor}
+        act3: receiver := receiver ∪ {logTranscript_2 ↦ DictationApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logTranscript_2 ↦ transcriptValue}
+        act6: currentMessage := {logTranscript_2}
+    END
+
+    receivelogTranscript_2
+    WHEN
+        grd1: logTranscript_2 ∈ sentMessages
+        grd2: logTranscript_2 ↦ Doctor ∈ sender
+        grd3: logTranscript_2 ↦ DictationApp ∈ receiver
+        grd4: logTranscript_2 ∉ receivedMessages
+        grd5: currentMessage = {logTranscript_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logTranscript_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logTranscript_2 ↦ transcriptValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendNote_3_opt1
+    WHEN
+        grd1: sendNote_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logTranscript_2 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendNote_3}
+        act2: sender := sender ∪ {sendNote_3 ↦ SpeechAI}
+        act3: receiver := receiver ∪ {sendNote_3 ↦ DictationApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendNote_3}
+    END
+
+    receivesendNote_3_opt1
+    WHEN
+        grd1: sendNote_3 ∈ sentMessages
+        grd2: sendNote_3 ↦ SpeechAI ∈ sender
+        grd3: sendNote_3 ↦ DictationApp ∈ receiver
+        grd4: sendNote_3 ∉ receivedMessages
+        grd5: currentMessage = {sendNote_3}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendNote_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendupdateDictation_4_opt1
+    WHEN
+        grd1: updateDictation_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendNote_3 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateDictation_4}
+        act2: sender := sender ∪ {updateDictation_4 ↦ DictationApp}
+        act3: receiver := receiver ∪ {updateDictation_4 ↦ SpeechAI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateDictation_4 ↦ noteCode}
+        act6: currentMessage := {updateDictation_4}
+    END
+
+    receiveupdateDictation_4_opt1
+    WHEN
+        grd1: updateDictation_4 ∈ sentMessages
+        grd2: updateDictation_4 ↦ DictationApp ∈ sender
+        grd3: updateDictation_4 ↦ SpeechAI ∈ receiver
+        grd4: updateDictation_4 ∉ receivedMessages
+        grd5: currentMessage = {updateDictation_4}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateDictation_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateDictation_4 ↦ noteCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyDictation_5
+    WHEN
+        grd1: notifyDictation_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateDictation_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyDictation_5}
+        act2: sender := sender ∪ {notifyDictation_5 ↦ DictationApp}
+        act3: receiver := receiver ∪ {notifyDictation_5 ↦ EHR}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyDictation_5}
+    END
+
+    receivenotifyDictation_5
+    WHEN
+        grd1: notifyDictation_5 ∈ sentMessages
+        grd2: notifyDictation_5 ↦ DictationApp ∈ sender
+        grd3: notifyDictation_5 ↦ EHR ∈ receiver
+        grd4: notifyDictation_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyDictation_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyDictation_5}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmDictation_6
+    WHEN
+        grd1: confirmDictation_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyDictation_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmDictation_6}
+        act2: sender := sender ∪ {confirmDictation_6 ↦ EHR}
+        act3: receiver := receiver ∪ {confirmDictation_6 ↦ DictationApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmDictation_6 ↦ transcriptData}
+        act6: currentMessage := {confirmDictation_6}
+    END
+
+    receiveconfirmDictation_6
+    WHEN
+        grd1: confirmDictation_6 ∈ sentMessages
+        grd2: confirmDictation_6 ↦ EHR ∈ sender
+        grd3: confirmDictation_6 ↦ DictationApp ∈ receiver
+        grd4: confirmDictation_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmDictation_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmDictation_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmDictation_6 ↦ transcriptData}
+        act3: currentMessage := ∅
+    END
+
+END

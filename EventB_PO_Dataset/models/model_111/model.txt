@@ -1,0 +1,200 @@
+CONTEXT HotelKeylessEntryContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DoorLock, Guest, PhoneKey
+    fetchAccess_1, scheduleRoom_2, fetchKey_3, confirmKey_4, approveKey_5, issueKey_6
+    accessData, roomID, roomValue
+AXIOMS
+    axm1: partition(Objects, {DoorLock}, {Guest}, {PhoneKey})
+    axm2: partition(Messages, {fetchAccess_1}, {scheduleRoom_2}, {fetchKey_3}, {confirmKey_4}, {approveKey_5}, {issueKey_6})
+    axm3: partition(DataMessages, {accessData}, {roomID}, {roomValue})
+END
+
+MACHINE HotelKeylessEntryInteractionMachine_1
+SEES HotelKeylessEntryContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_4 ∈ ℤ
+    inv9: t_delay_4 ∈ ℤ
+    inv10: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_4 :∈ 0..8
+        act9: t_delay_4 := 0
+        act10: t_success_4 := 0
+    END
+
+
+    sendfetchAccess_1
+    WHEN
+        grd1: fetchAccess_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchAccess_1}
+        act2: sender := sender ∪ {fetchAccess_1 ↦ Guest}
+        act3: receiver := receiver ∪ {fetchAccess_1 ↦ PhoneKey}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchAccess_1}
+    END
+
+    receivefetchAccess_1
+    WHEN
+        grd1: fetchAccess_1 ∈ sentMessages
+        grd2: fetchAccess_1 ↦ Guest ∈ sender
+        grd3: fetchAccess_1 ↦ PhoneKey ∈ receiver
+        grd4: fetchAccess_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchAccess_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchAccess_1}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleRoom_2
+    WHEN
+        grd1: scheduleRoom_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchAccess_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleRoom_2}
+        act2: sender := sender ∪ {scheduleRoom_2 ↦ Guest}
+        act3: receiver := receiver ∪ {scheduleRoom_2 ↦ DoorLock}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleRoom_2 ↦ roomValue}
+        act6: currentMessage := {scheduleRoom_2}
+    END
+
+    receivescheduleRoom_2
+    WHEN
+        grd1: scheduleRoom_2 ∈ sentMessages
+        grd2: scheduleRoom_2 ↦ Guest ∈ sender
+        grd3: scheduleRoom_2 ↦ DoorLock ∈ receiver
+        grd4: scheduleRoom_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleRoom_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleRoom_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleRoom_2 ↦ roomValue}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchKey_3
+    WHEN
+        grd1: fetchKey_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleRoom_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchKey_3}
+        act2: sender := sender ∪ {fetchKey_3 ↦ PhoneKey}
+        act3: receiver := receiver ∪ {fetchKey_3 ↦ Guest}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchKey_3}
+    END
+
+    receivefetchKey_3
+    WHEN
+        grd1: fetchKey_3 ∈ sentMessages
+        grd2: fetchKey_3 ↦ PhoneKey ∈ sender
+        grd3: fetchKey_3 ↦ Guest ∈ receiver
+        grd4: fetchKey_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchKey_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchKey_3}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmKey_4
+    WHEN
+        grd1: confirmKey_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchKey_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmKey_4}
+        act2: sender := sender ∪ {confirmKey_4 ↦ DoorLock}
+        act3: receiver := receiver ∪ {confirmKey_4 ↦ PhoneKey}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmKey_4 ↦ accessData}
+        act6: currentMessage := {confirmKey_4}
+    END
+
+    receiveconfirmKey_4
+    WHEN
+        grd1: confirmKey_4 ∈ sentMessages
+        grd2: confirmKey_4 ↦ DoorLock ∈ sender
+        grd3: confirmKey_4 ↦ PhoneKey ∈ receiver
+        grd4: confirmKey_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmKey_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmKey_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmKey_4 ↦ accessData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendapproveKey_5
+    WHEN
+        grd1: approveKey_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmKey_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveKey_5}
+        act2: sender := sender ∪ {approveKey_5 ↦ PhoneKey}
+        act3: receiver := receiver ∪ {approveKey_5 ↦ Guest}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveKey_5}
+    END
+
+    receiveapproveKey_5
+    WHEN
+        grd1: approveKey_5 ∈ sentMessages
+        grd2: approveKey_5 ↦ PhoneKey ∈ sender
+        grd3: approveKey_5 ↦ Guest ∈ receiver
+        grd4: approveKey_5 ∉ receivedMessages
+        grd5: currentMessage = {approveKey_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveKey_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueKey_6
+    WHEN
+        grd1: issueKey_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveKey_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueKey_6}
+        act2: sender := sender ∪ {issueKey_6 ↦ Guest}
+        act3: receiver := receiver ∪ {issueKey_6 ↦ DoorLock}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueKey_6 ↦ roomID}
+        act6: currentMessage := {issueKey_6}
+    END
+
+    receiveissueKey_6
+    WHEN
+        grd1: issueKey_6 ∈ sentMessages
+        grd2: issueKey_6 ↦ Guest ∈ sender
+        grd3: issueKey_6 ↦ DoorLock ∈ receiver
+        grd4: issueKey_6 ∉ receivedMessages
+        grd5: currentMessage = {issueKey_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueKey_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueKey_6 ↦ roomID}
+        act3: currentMessage := ∅
+    END
+
+END

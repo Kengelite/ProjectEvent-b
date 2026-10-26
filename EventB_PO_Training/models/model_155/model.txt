@@ -1,0 +1,316 @@
+CONTEXT RestaurantReservationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BookingSite, Diner, HostStand
+    fetchMenu_1, reserveTable_2, queryBooking_3, syncMenu_4, logMenu_5, approveMenu_6, ackBooking_7, reportMenu_8, assignBooking_9
+    bookingData, bookingValue, menuInfo
+AXIOMS
+    axm1: partition(Objects, {BookingSite}, {Diner}, {HostStand})
+    axm2: partition(Messages, {fetchMenu_1}, {reserveTable_2}, {queryBooking_3}, {syncMenu_4}, {logMenu_5}, {approveMenu_6}, {ackBooking_7}, {reportMenu_8}, {assignBooking_9})
+    axm3: partition(DataMessages, {bookingData}, {bookingValue}, {menuInfo})
+END
+
+MACHINE RestaurantReservationInteractionMachine_1
+SEES RestaurantReservationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, roundNo, needAck, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: roundNo ∈ ℤ
+    inv10: needAck ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_7 ∈ ℤ
+    inv18: t_delay_7 ∈ ℤ
+    inv19: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: roundNo := 0
+        act10: needAck := 1
+        act11: t_time_2 :∈ 0..60
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_4 :∈ 0..8
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_7 :∈ 0..2
+        act18: t_delay_7 := 2
+        act19: t_success_7 := 0
+    END
+
+
+    sendfetchMenu_1
+    WHEN
+        grd1: fetchMenu_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchMenu_1}
+        act2: sender := sender ∪ {fetchMenu_1 ↦ BookingSite}
+        act3: receiver := receiver ∪ {fetchMenu_1 ↦ HostStand}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchMenu_1}
+    END
+
+    receivefetchMenu_1
+    WHEN
+        grd1: fetchMenu_1 ∈ sentMessages
+        grd2: fetchMenu_1 ↦ BookingSite ∈ sender
+        grd3: fetchMenu_1 ↦ HostStand ∈ receiver
+        grd4: fetchMenu_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchMenu_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchMenu_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveTable_2
+    WHEN
+        grd1: reserveTable_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchMenu_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTable_2}
+        act2: sender := sender ∪ {reserveTable_2 ↦ HostStand}
+        act3: receiver := receiver ∪ {reserveTable_2 ↦ Diner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveTable_2 ↦ bookingValue}
+        act6: currentMessage := {reserveTable_2}
+    END
+
+    receivereserveTable_2
+    WHEN
+        grd1: reserveTable_2 ∈ sentMessages
+        grd2: reserveTable_2 ↦ HostStand ∈ sender
+        grd3: reserveTable_2 ↦ Diner ∈ receiver
+        grd4: reserveTable_2 ∉ receivedMessages
+        grd5: currentMessage = {reserveTable_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTable_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveTable_2 ↦ bookingValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendqueryBooking_3_opt1
+    WHEN
+        grd1: queryBooking_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveTable_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryBooking_3}
+        act2: sender := sender ∪ {queryBooking_3 ↦ BookingSite}
+        act3: receiver := receiver ∪ {queryBooking_3 ↦ HostStand}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryBooking_3 ↦ menuInfo}
+        act6: currentMessage := {queryBooking_3}
+    END
+
+    receivequeryBooking_3_opt1
+    WHEN
+        grd1: queryBooking_3 ∈ sentMessages
+        grd2: queryBooking_3 ↦ BookingSite ∈ sender
+        grd3: queryBooking_3 ↦ HostStand ∈ receiver
+        grd4: queryBooking_3 ∉ receivedMessages
+        grd5: currentMessage = {queryBooking_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryBooking_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryBooking_3 ↦ menuInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncMenu_4
+    WHEN
+        grd1: syncMenu_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryBooking_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncMenu_4}
+        act2: sender := sender ∪ {syncMenu_4 ↦ Diner}
+        act3: receiver := receiver ∪ {syncMenu_4 ↦ HostStand}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncMenu_4}
+    END
+
+    receivesyncMenu_4
+    WHEN
+        grd1: syncMenu_4 ∈ sentMessages
+        grd2: syncMenu_4 ↦ Diner ∈ sender
+        grd3: syncMenu_4 ↦ HostStand ∈ receiver
+        grd4: syncMenu_4 ∉ receivedMessages
+        grd5: currentMessage = {syncMenu_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncMenu_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendlogMenu_5
+    WHEN
+        grd1: logMenu_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncMenu_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logMenu_5}
+        act2: sender := sender ∪ {logMenu_5 ↦ BookingSite}
+        act3: receiver := receiver ∪ {logMenu_5 ↦ HostStand}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logMenu_5}
+    END
+
+    receivelogMenu_5
+    WHEN
+        grd1: logMenu_5 ∈ sentMessages
+        grd2: logMenu_5 ↦ BookingSite ∈ sender
+        grd3: logMenu_5 ↦ HostStand ∈ receiver
+        grd4: logMenu_5 ∉ receivedMessages
+        grd5: currentMessage = {logMenu_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logMenu_5}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveMenu_6
+    WHEN
+        grd1: approveMenu_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logMenu_5 ∈ receivedMessages
+        grd4: roundNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveMenu_6}
+        act2: sender := sender ∪ {approveMenu_6 ↦ HostStand}
+        act3: receiver := receiver ∪ {approveMenu_6 ↦ BookingSite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveMenu_6 ↦ bookingData}
+        act6: currentMessage := {approveMenu_6}
+    END
+
+    receiveapproveMenu_6
+    WHEN
+        grd1: approveMenu_6 ∈ sentMessages
+        grd2: approveMenu_6 ↦ HostStand ∈ sender
+        grd3: approveMenu_6 ↦ BookingSite ∈ receiver
+        grd4: approveMenu_6 ∉ receivedMessages
+        grd5: currentMessage = {approveMenu_6}
+        grd6: roundNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveMenu_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveMenu_6 ↦ bookingData}
+        act3: currentMessage := ∅
+    END
+
+    sendackBooking_7_opt2
+    WHEN
+        grd1: ackBooking_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveMenu_6 ∈ receivedMessages
+        grd4: roundNo < 8
+        grd5: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackBooking_7}
+        act2: sender := sender ∪ {ackBooking_7 ↦ Diner}
+        act3: receiver := receiver ∪ {ackBooking_7 ↦ HostStand}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackBooking_7 ↦ bookingData}
+        act6: currentMessage := {ackBooking_7}
+    END
+
+    receiveackBooking_7_opt2
+    WHEN
+        grd1: ackBooking_7 ∈ sentMessages
+        grd2: ackBooking_7 ↦ Diner ∈ sender
+        grd3: ackBooking_7 ↦ HostStand ∈ receiver
+        grd4: ackBooking_7 ∉ receivedMessages
+        grd5: currentMessage = {ackBooking_7}
+        grd6: roundNo < 8
+        grd7: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackBooking_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackBooking_7 ↦ bookingData}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreportMenu_8
+    WHEN
+        grd1: reportMenu_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackBooking_7 ∈ receivedMessages
+        grd4: roundNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportMenu_8}
+        act2: sender := sender ∪ {reportMenu_8 ↦ HostStand}
+        act3: receiver := receiver ∪ {reportMenu_8 ↦ BookingSite}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportMenu_8}
+    END
+
+    receivereportMenu_8
+    WHEN
+        grd1: reportMenu_8 ∈ sentMessages
+        grd2: reportMenu_8 ↦ HostStand ∈ sender
+        grd3: reportMenu_8 ↦ BookingSite ∈ receiver
+        grd4: reportMenu_8 ∉ receivedMessages
+        grd5: currentMessage = {reportMenu_8}
+        grd6: roundNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportMenu_8}
+        act2: currentMessage := ∅
+    END
+
+    sendassignBooking_9
+    WHEN
+        grd1: assignBooking_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportMenu_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignBooking_9}
+        act2: sender := sender ∪ {assignBooking_9 ↦ BookingSite}
+        act3: receiver := receiver ∪ {assignBooking_9 ↦ Diner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignBooking_9 ↦ menuInfo}
+        act6: currentMessage := {assignBooking_9}
+    END
+
+    receiveassignBooking_9
+    WHEN
+        grd1: assignBooking_9 ∈ sentMessages
+        grd2: assignBooking_9 ↦ BookingSite ∈ sender
+        grd3: assignBooking_9 ↦ Diner ∈ receiver
+        grd4: assignBooking_9 ∉ receivedMessages
+        grd5: currentMessage = {assignBooking_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignBooking_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignBooking_9 ↦ menuInfo}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_approveMenu_6_loop1
+    WHEN
+        grd1: roundNo < 8
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

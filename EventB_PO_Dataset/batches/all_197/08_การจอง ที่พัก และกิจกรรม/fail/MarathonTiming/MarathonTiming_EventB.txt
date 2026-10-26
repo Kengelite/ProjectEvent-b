@@ -1,0 +1,486 @@
+CONTEXT MarathonTimingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ChipMat, ResultsBoard, Runner, TimingServer
+    releaseSplit_1, querySplit_2, cancelBib_3, requestBib_4, requestFinish_5, assignSplit_6, cancelFinish_7, sendFinish_8, fetchFinish_9, reserveSplit_10, reserveFinish_11, validateFinish_12, releaseFinish_13, sendBib_14
+    bibData, bibInfo, bibValue, finishCode, finishData, finishID, finishInfo, splitCode, splitData, splitID
+AXIOMS
+    axm1: partition(Objects, {ChipMat}, {ResultsBoard}, {Runner}, {TimingServer})
+    axm2: partition(Messages, {releaseSplit_1}, {querySplit_2}, {cancelBib_3}, {requestBib_4}, {requestFinish_5}, {assignSplit_6}, {cancelFinish_7}, {sendFinish_8}, {fetchFinish_9}, {reserveSplit_10}, {reserveFinish_11}, {validateFinish_12}, {releaseFinish_13}, {sendBib_14})
+    axm3: partition(DataMessages, {bibData}, {bibInfo}, {bibValue}, {finishCode}, {finishData}, {finishID}, {finishInfo}, {splitCode}, {splitData}, {splitID})
+END
+
+MACHINE MarathonTimingInteractionMachine_1
+SEES MarathonTimingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, load, retryNo, t_time_1, t_delay_1, t_success_1, t_time_8, t_delay_8, t_success_8, t_time_11, t_delay_11, t_success_11, t_time_13, t_delay_13, t_success_13
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: load ∈ ℤ
+    inv10: retryNo ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_8 ∈ ℤ
+    inv15: t_delay_8 ∈ ℤ
+    inv16: t_success_8 ∈ ℤ
+    inv17: t_time_11 ∈ ℤ
+    inv18: t_delay_11 ∈ ℤ
+    inv19: t_success_11 ∈ ℤ
+    inv20: t_time_13 ∈ ℤ
+    inv21: t_delay_13 ∈ ℤ
+    inv22: t_success_13 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: load :∈ ℤ
+        act10: retryNo := 0
+        act11: t_time_1 :∈ 0..8
+        act12: t_delay_1 := 0
+        act13: t_success_1 := 0
+        act14: t_time_8 :∈ 0..3
+        act15: t_delay_8 := 0
+        act16: t_success_8 := 0
+        act17: t_time_11 :∈ 0..1
+        act18: t_delay_11 := 2
+        act19: t_success_11 := 0
+        act20: t_time_13 :∈ 0..3
+        act21: t_delay_13 := 0
+        act22: t_success_13 := 0
+    END
+
+
+    sendreleaseSplit_1
+    WHEN
+        grd1: releaseSplit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseSplit_1}
+        act2: sender := sender ∪ {releaseSplit_1 ↦ Runner}
+        act3: receiver := receiver ∪ {releaseSplit_1 ↦ ResultsBoard}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseSplit_1 ↦ finishCode}
+        act6: currentMessage := {releaseSplit_1}
+    END
+
+    receivereleaseSplit_1
+    WHEN
+        grd1: releaseSplit_1 ∈ sentMessages
+        grd2: releaseSplit_1 ↦ Runner ∈ sender
+        grd3: releaseSplit_1 ↦ ResultsBoard ∈ receiver
+        grd4: releaseSplit_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseSplit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseSplit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseSplit_1 ↦ finishCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendquerySplit_2
+    WHEN
+        grd1: querySplit_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseSplit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {querySplit_2}
+        act2: sender := sender ∪ {querySplit_2 ↦ TimingServer}
+        act3: receiver := receiver ∪ {querySplit_2 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {querySplit_2 ↦ splitCode}
+        act6: currentMessage := {querySplit_2}
+    END
+
+    receivequerySplit_2
+    WHEN
+        grd1: querySplit_2 ∈ sentMessages
+        grd2: querySplit_2 ↦ TimingServer ∈ sender
+        grd3: querySplit_2 ↦ Runner ∈ receiver
+        grd4: querySplit_2 ∉ receivedMessages
+        grd5: currentMessage = {querySplit_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {querySplit_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {querySplit_2 ↦ splitCode}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelBib_3
+    WHEN
+        grd1: cancelBib_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: querySplit_2 ∈ receivedMessages
+        grd4: roundNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelBib_3}
+        act2: sender := sender ∪ {cancelBib_3 ↦ ChipMat}
+        act3: receiver := receiver ∪ {cancelBib_3 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelBib_3}
+    END
+
+    receivecancelBib_3
+    WHEN
+        grd1: cancelBib_3 ∈ sentMessages
+        grd2: cancelBib_3 ↦ ChipMat ∈ sender
+        grd3: cancelBib_3 ↦ Runner ∈ receiver
+        grd4: cancelBib_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelBib_3}
+        grd6: roundNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelBib_3}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestBib_4_opt1
+    WHEN
+        grd1: requestBib_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelBib_3 ∈ receivedMessages
+        grd4: roundNo < 5
+        grd5: roundNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBib_4}
+        act2: sender := sender ∪ {requestBib_4 ↦ TimingServer}
+        act3: receiver := receiver ∪ {requestBib_4 ↦ ResultsBoard}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBib_4 ↦ bibValue, requestBib_4 ↦ splitCode}
+        act6: currentMessage := {requestBib_4}
+    END
+
+    receiverequestBib_4_opt1
+    WHEN
+        grd1: requestBib_4 ∈ sentMessages
+        grd2: requestBib_4 ↦ TimingServer ∈ sender
+        grd3: requestBib_4 ↦ ResultsBoard ∈ receiver
+        grd4: requestBib_4 ∉ receivedMessages
+        grd5: currentMessage = {requestBib_4}
+        grd6: roundNo < 5
+        grd7: roundNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBib_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBib_4 ↦ bibValue, requestBib_4 ↦ splitCode}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestFinish_5
+    WHEN
+        grd1: requestFinish_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBib_4 ∈ receivedMessages
+        grd4: roundNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestFinish_5}
+        act2: sender := sender ∪ {requestFinish_5 ↦ TimingServer}
+        act3: receiver := receiver ∪ {requestFinish_5 ↦ ResultsBoard}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestFinish_5 ↦ splitData}
+        act6: currentMessage := {requestFinish_5}
+    END
+
+    receiverequestFinish_5
+    WHEN
+        grd1: requestFinish_5 ∈ sentMessages
+        grd2: requestFinish_5 ↦ TimingServer ∈ sender
+        grd3: requestFinish_5 ↦ ResultsBoard ∈ receiver
+        grd4: requestFinish_5 ∉ receivedMessages
+        grd5: currentMessage = {requestFinish_5}
+        grd6: roundNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestFinish_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestFinish_5 ↦ splitData}
+        act3: currentMessage := ∅
+    END
+
+    sendassignSplit_6
+    WHEN
+        grd1: assignSplit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestFinish_5 ∈ receivedMessages
+        grd4: roundNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignSplit_6}
+        act2: sender := sender ∪ {assignSplit_6 ↦ ResultsBoard}
+        act3: receiver := receiver ∪ {assignSplit_6 ↦ TimingServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignSplit_6 ↦ finishID}
+        act6: currentMessage := {assignSplit_6}
+    END
+
+    receiveassignSplit_6
+    WHEN
+        grd1: assignSplit_6 ∈ sentMessages
+        grd2: assignSplit_6 ↦ ResultsBoard ∈ sender
+        grd3: assignSplit_6 ↦ TimingServer ∈ receiver
+        grd4: assignSplit_6 ∉ receivedMessages
+        grd5: currentMessage = {assignSplit_6}
+        grd6: roundNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignSplit_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignSplit_6 ↦ finishID}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelFinish_7
+    WHEN
+        grd1: cancelFinish_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignSplit_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelFinish_7}
+        act2: sender := sender ∪ {cancelFinish_7 ↦ ChipMat}
+        act3: receiver := receiver ∪ {cancelFinish_7 ↦ ResultsBoard}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelFinish_7 ↦ finishCode}
+        act6: currentMessage := {cancelFinish_7}
+    END
+
+    receivecancelFinish_7
+    WHEN
+        grd1: cancelFinish_7 ∈ sentMessages
+        grd2: cancelFinish_7 ↦ ChipMat ∈ sender
+        grd3: cancelFinish_7 ↦ ResultsBoard ∈ receiver
+        grd4: cancelFinish_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelFinish_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelFinish_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelFinish_7 ↦ finishCode}
+        act3: currentMessage := ∅
+    END
+
+    sendsendFinish_8
+    WHEN
+        grd1: sendFinish_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelFinish_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendFinish_8}
+        act2: sender := sender ∪ {sendFinish_8 ↦ Runner}
+        act3: receiver := receiver ∪ {sendFinish_8 ↦ ResultsBoard}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendFinish_8 ↦ finishData}
+        act6: currentMessage := {sendFinish_8}
+    END
+
+    receivesendFinish_8
+    WHEN
+        grd1: sendFinish_8 ∈ sentMessages
+        grd2: sendFinish_8 ↦ Runner ∈ sender
+        grd3: sendFinish_8 ↦ ResultsBoard ∈ receiver
+        grd4: sendFinish_8 ∉ receivedMessages
+        grd5: currentMessage = {sendFinish_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendFinish_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendFinish_8 ↦ finishData}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendfetchFinish_9
+    WHEN
+        grd1: fetchFinish_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendFinish_8 ∈ receivedMessages
+        grd4: load < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchFinish_9}
+        act2: sender := sender ∪ {fetchFinish_9 ↦ ResultsBoard}
+        act3: receiver := receiver ∪ {fetchFinish_9 ↦ TimingServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchFinish_9 ↦ bibData}
+        act6: currentMessage := {fetchFinish_9}
+    END
+
+    receivefetchFinish_9
+    WHEN
+        grd1: fetchFinish_9 ∈ sentMessages
+        grd2: fetchFinish_9 ↦ ResultsBoard ∈ sender
+        grd3: fetchFinish_9 ↦ TimingServer ∈ receiver
+        grd4: fetchFinish_9 ∉ receivedMessages
+        grd5: currentMessage = {fetchFinish_9}
+        grd6: load < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchFinish_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchFinish_9 ↦ bibData}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveSplit_10
+    WHEN
+        grd1: reserveSplit_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchFinish_9 ∈ receivedMessages
+        grd4: load < 10
+        grd5: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSplit_10}
+        act2: sender := sender ∪ {reserveSplit_10 ↦ ChipMat}
+        act3: receiver := receiver ∪ {reserveSplit_10 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveSplit_10 ↦ splitID}
+        act6: currentMessage := {reserveSplit_10}
+    END
+
+    receivereserveSplit_10
+    WHEN
+        grd1: reserveSplit_10 ∈ sentMessages
+        grd2: reserveSplit_10 ↦ ChipMat ∈ sender
+        grd3: reserveSplit_10 ↦ Runner ∈ receiver
+        grd4: reserveSplit_10 ∉ receivedMessages
+        grd5: currentMessage = {reserveSplit_10}
+        grd6: load < 10
+        grd7: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSplit_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveSplit_10 ↦ splitID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveFinish_11
+    WHEN
+        grd1: reserveFinish_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSplit_10 ∈ receivedMessages
+        grd4: load < 10
+        grd5: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveFinish_11}
+        act2: sender := sender ∪ {reserveFinish_11 ↦ TimingServer}
+        act3: receiver := receiver ∪ {reserveFinish_11 ↦ ChipMat}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveFinish_11 ↦ finishInfo}
+        act6: currentMessage := {reserveFinish_11}
+    END
+
+    receivereserveFinish_11
+    WHEN
+        grd1: reserveFinish_11 ∈ sentMessages
+        grd2: reserveFinish_11 ↦ TimingServer ∈ sender
+        grd3: reserveFinish_11 ↦ ChipMat ∈ receiver
+        grd4: reserveFinish_11 ∉ receivedMessages
+        grd5: currentMessage = {reserveFinish_11}
+        grd6: load < 10
+        grd7: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveFinish_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveFinish_11 ↦ finishInfo}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendvalidateFinish_12
+    WHEN
+        grd1: validateFinish_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveFinish_11 ∈ receivedMessages
+        grd4: load < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateFinish_12}
+        act2: sender := sender ∪ {validateFinish_12 ↦ ChipMat}
+        act3: receiver := receiver ∪ {validateFinish_12 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateFinish_12 ↦ splitData}
+        act6: currentMessage := {validateFinish_12}
+    END
+
+    receivevalidateFinish_12
+    WHEN
+        grd1: validateFinish_12 ∈ sentMessages
+        grd2: validateFinish_12 ↦ ChipMat ∈ sender
+        grd3: validateFinish_12 ↦ Runner ∈ receiver
+        grd4: validateFinish_12 ∉ receivedMessages
+        grd5: currentMessage = {validateFinish_12}
+        grd6: load < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateFinish_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateFinish_12 ↦ splitData}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseFinish_13
+    WHEN
+        grd1: releaseFinish_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendFinish_8 ∈ receivedMessages
+        grd4: load ≥ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseFinish_13}
+        act2: sender := sender ∪ {releaseFinish_13 ↦ Runner}
+        act3: receiver := receiver ∪ {releaseFinish_13 ↦ ChipMat}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseFinish_13 ↦ bibInfo}
+        act6: currentMessage := {releaseFinish_13}
+    END
+
+    receivereleaseFinish_13
+    WHEN
+        grd1: releaseFinish_13 ∈ sentMessages
+        grd2: releaseFinish_13 ↦ Runner ∈ sender
+        grd3: releaseFinish_13 ↦ ChipMat ∈ receiver
+        grd4: releaseFinish_13 ∉ receivedMessages
+        grd5: currentMessage = {releaseFinish_13}
+        grd6: load ≥ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseFinish_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseFinish_13 ↦ bibInfo}
+        act3: currentMessage := ∅
+        act4: t_success_13 := t_time_13 + t_delay_13
+    END
+
+    sendsendBib_14
+    WHEN
+        grd1: sendBib_14 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateFinish_12 ∈ receivedMessages ∨ releaseFinish_13 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendBib_14}
+        act2: sender := sender ∪ {sendBib_14 ↦ Runner}
+        act3: receiver := receiver ∪ {sendBib_14 ↦ ChipMat}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendBib_14 ↦ finishID}
+        act6: currentMessage := {sendBib_14}
+    END
+
+    receivesendBib_14
+    WHEN
+        grd1: sendBib_14 ∈ sentMessages
+        grd2: sendBib_14 ↦ Runner ∈ sender
+        grd3: sendBib_14 ↦ ChipMat ∈ receiver
+        grd4: sendBib_14 ∉ receivedMessages
+        grd5: currentMessage = {sendBib_14}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendBib_14}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendBib_14 ↦ finishID}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_cancelBib_3_loop1
+    WHEN
+        grd1: roundNo < 5
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+    checkloop_reserveSplit_10_loop2
+    WHEN
+        grd1: load < 10
+        grd2: retryNo < 11
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

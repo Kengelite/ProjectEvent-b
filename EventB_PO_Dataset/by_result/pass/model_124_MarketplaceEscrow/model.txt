@@ -1,0 +1,206 @@
+CONTEXT MarketplaceEscrowContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Buyer, EscrowSvc, Marketplace
+    validateEscrow_1, approveEscrow_2, logEscrow_3, requestEscrow_4, fetchEscrow_5, notifyEscrow_6
+    disputeID, escrowInfo, orderData, orderValue
+AXIOMS
+    axm1: partition(Objects, {Buyer}, {EscrowSvc}, {Marketplace})
+    axm2: partition(Messages, {validateEscrow_1}, {approveEscrow_2}, {logEscrow_3}, {requestEscrow_4}, {fetchEscrow_5}, {notifyEscrow_6})
+    axm3: partition(DataMessages, {disputeID}, {escrowInfo}, {orderData}, {orderValue})
+END
+
+MACHINE MarketplaceEscrowInteractionMachine_1
+SEES MarketplaceEscrowContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..3
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+    END
+
+
+    sendvalidateEscrow_1
+    WHEN
+        grd1: validateEscrow_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateEscrow_1}
+        act2: sender := sender ∪ {validateEscrow_1 ↦ Marketplace}
+        act3: receiver := receiver ∪ {validateEscrow_1 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateEscrow_1 ↦ disputeID}
+        act6: currentMessage := {validateEscrow_1}
+    END
+
+    receivevalidateEscrow_1
+    WHEN
+        grd1: validateEscrow_1 ∈ sentMessages
+        grd2: validateEscrow_1 ↦ Marketplace ∈ sender
+        grd3: validateEscrow_1 ↦ Buyer ∈ receiver
+        grd4: validateEscrow_1 ∉ receivedMessages
+        grd5: currentMessage = {validateEscrow_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateEscrow_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateEscrow_1 ↦ disputeID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendapproveEscrow_2
+    WHEN
+        grd1: approveEscrow_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateEscrow_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveEscrow_2}
+        act2: sender := sender ∪ {approveEscrow_2 ↦ Buyer}
+        act3: receiver := receiver ∪ {approveEscrow_2 ↦ Marketplace}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveEscrow_2}
+    END
+
+    receiveapproveEscrow_2
+    WHEN
+        grd1: approveEscrow_2 ∈ sentMessages
+        grd2: approveEscrow_2 ↦ Buyer ∈ sender
+        grd3: approveEscrow_2 ↦ Marketplace ∈ receiver
+        grd4: approveEscrow_2 ∉ receivedMessages
+        grd5: currentMessage = {approveEscrow_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveEscrow_2}
+        act2: currentMessage := ∅
+    END
+
+    sendlogEscrow_3
+    WHEN
+        grd1: logEscrow_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveEscrow_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logEscrow_3}
+        act2: sender := sender ∪ {logEscrow_3 ↦ Marketplace}
+        act3: receiver := receiver ∪ {logEscrow_3 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logEscrow_3 ↦ escrowInfo}
+        act6: currentMessage := {logEscrow_3}
+    END
+
+    receivelogEscrow_3
+    WHEN
+        grd1: logEscrow_3 ∈ sentMessages
+        grd2: logEscrow_3 ↦ Marketplace ∈ sender
+        grd3: logEscrow_3 ↦ Buyer ∈ receiver
+        grd4: logEscrow_3 ∉ receivedMessages
+        grd5: currentMessage = {logEscrow_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logEscrow_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logEscrow_3 ↦ escrowInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestEscrow_4
+    WHEN
+        grd1: requestEscrow_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logEscrow_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestEscrow_4}
+        act2: sender := sender ∪ {requestEscrow_4 ↦ Buyer}
+        act3: receiver := receiver ∪ {requestEscrow_4 ↦ EscrowSvc}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestEscrow_4 ↦ orderData}
+        act6: currentMessage := {requestEscrow_4}
+    END
+
+    receiverequestEscrow_4
+    WHEN
+        grd1: requestEscrow_4 ∈ sentMessages
+        grd2: requestEscrow_4 ↦ Buyer ∈ sender
+        grd3: requestEscrow_4 ↦ EscrowSvc ∈ receiver
+        grd4: requestEscrow_4 ∉ receivedMessages
+        grd5: currentMessage = {requestEscrow_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestEscrow_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestEscrow_4 ↦ orderData}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchEscrow_5
+    WHEN
+        grd1: fetchEscrow_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestEscrow_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchEscrow_5}
+        act2: sender := sender ∪ {fetchEscrow_5 ↦ Buyer}
+        act3: receiver := receiver ∪ {fetchEscrow_5 ↦ EscrowSvc}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchEscrow_5 ↦ orderValue}
+        act6: currentMessage := {fetchEscrow_5}
+    END
+
+    receivefetchEscrow_5
+    WHEN
+        grd1: fetchEscrow_5 ∈ sentMessages
+        grd2: fetchEscrow_5 ↦ Buyer ∈ sender
+        grd3: fetchEscrow_5 ↦ EscrowSvc ∈ receiver
+        grd4: fetchEscrow_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchEscrow_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchEscrow_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchEscrow_5 ↦ orderValue}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyEscrow_6
+    WHEN
+        grd1: notifyEscrow_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchEscrow_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyEscrow_6}
+        act2: sender := sender ∪ {notifyEscrow_6 ↦ Buyer}
+        act3: receiver := receiver ∪ {notifyEscrow_6 ↦ Marketplace}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyEscrow_6 ↦ escrowInfo}
+        act6: currentMessage := {notifyEscrow_6}
+    END
+
+    receivenotifyEscrow_6
+    WHEN
+        grd1: notifyEscrow_6 ∈ sentMessages
+        grd2: notifyEscrow_6 ↦ Buyer ∈ sender
+        grd3: notifyEscrow_6 ↦ Marketplace ∈ receiver
+        grd4: notifyEscrow_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyEscrow_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyEscrow_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyEscrow_6 ↦ escrowInfo}
+        act3: currentMessage := ∅
+    END
+
+END

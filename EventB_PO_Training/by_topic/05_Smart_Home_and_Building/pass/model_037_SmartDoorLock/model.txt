@@ -1,0 +1,265 @@
+CONTEXT SmartDoorLockContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DoorLock, Phone
+    unlockRequest_1, challenge_2, respond_3, doorUnlocked_4, scheduleRelock_5, accessDenied_6, statusUpdate_7
+    doorStatus, nonce, relockTime, signature, token
+    FAIL, PASS
+AXIOMS
+    axm1: partition(Objects, {DoorLock}, {Phone})
+    axm2: partition(Messages, {unlockRequest_1}, {challenge_2}, {respond_3}, {doorUnlocked_4}, {scheduleRelock_5}, {accessDenied_6}, {statusUpdate_7})
+    axm3: partition(DataMessages, {doorStatus}, {nonce}, {relockTime}, {signature}, {token})
+    axm4: FAIL = 0
+    axm5: PASS = 1
+END
+
+MACHINE SmartDoorLockInteractionMachine_1
+SEES SmartDoorLockContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, authResult, autoLock, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: authResult ∈ ℤ
+    inv9: autoLock ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: authResult := FAIL
+        act9: autoLock := 1
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_3 :∈ 0..2
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 0..0
+        act17: t_delay_4 := 1
+        act18: t_success_4 := 0
+        act19: t_time_5 :∈ 0..30
+        act20: t_delay_5 := 0
+        act21: t_success_5 := 0
+    END
+
+
+    sendunlockRequest_1
+    WHEN
+        grd1: unlockRequest_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {unlockRequest_1}
+        act2: sender := sender ∪ {unlockRequest_1 ↦ Phone}
+        act3: receiver := receiver ∪ {unlockRequest_1 ↦ DoorLock}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {unlockRequest_1 ↦ token}
+        act6: currentMessage := {unlockRequest_1}
+    END
+
+    receiveunlockRequest_1
+    WHEN
+        grd1: unlockRequest_1 ∈ sentMessages
+        grd2: unlockRequest_1 ↦ Phone ∈ sender
+        grd3: unlockRequest_1 ↦ DoorLock ∈ receiver
+        grd4: unlockRequest_1 ∉ receivedMessages
+        grd5: currentMessage = {unlockRequest_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {unlockRequest_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {unlockRequest_1 ↦ token}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendchallenge_2
+    WHEN
+        grd1: challenge_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: unlockRequest_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {challenge_2}
+        act2: sender := sender ∪ {challenge_2 ↦ DoorLock}
+        act3: receiver := receiver ∪ {challenge_2 ↦ Phone}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {challenge_2 ↦ nonce}
+        act6: currentMessage := {challenge_2}
+    END
+
+    receivechallenge_2
+    WHEN
+        grd1: challenge_2 ∈ sentMessages
+        grd2: challenge_2 ↦ DoorLock ∈ sender
+        grd3: challenge_2 ↦ Phone ∈ receiver
+        grd4: challenge_2 ∉ receivedMessages
+        grd5: currentMessage = {challenge_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {challenge_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {challenge_2 ↦ nonce}
+        act3: currentMessage := ∅
+    END
+
+    sendrespond_3
+    WHEN
+        grd1: respond_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: challenge_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {respond_3}
+        act2: sender := sender ∪ {respond_3 ↦ Phone}
+        act3: receiver := receiver ∪ {respond_3 ↦ DoorLock}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {respond_3 ↦ signature}
+        act6: currentMessage := {respond_3}
+    END
+
+    receiverespond_3
+    WHEN
+        grd1: respond_3 ∈ sentMessages
+        grd2: respond_3 ↦ Phone ∈ sender
+        grd3: respond_3 ↦ DoorLock ∈ receiver
+        grd4: respond_3 ∉ receivedMessages
+        grd5: currentMessage = {respond_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {respond_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {respond_3 ↦ signature}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    senddoorUnlocked_4
+    WHEN
+        grd1: doorUnlocked_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: respond_3 ∈ receivedMessages
+        grd4: authResult = PASS
+    THEN
+        act1: sentMessages := sentMessages ∪ {doorUnlocked_4}
+        act2: sender := sender ∪ {doorUnlocked_4 ↦ DoorLock}
+        act3: receiver := receiver ∪ {doorUnlocked_4 ↦ Phone}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {doorUnlocked_4}
+    END
+
+    receivedoorUnlocked_4
+    WHEN
+        grd1: doorUnlocked_4 ∈ sentMessages
+        grd2: doorUnlocked_4 ↦ DoorLock ∈ sender
+        grd3: doorUnlocked_4 ↦ Phone ∈ receiver
+        grd4: doorUnlocked_4 ∉ receivedMessages
+        grd5: currentMessage = {doorUnlocked_4}
+        grd6: authResult = PASS
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {doorUnlocked_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendscheduleRelock_5_opt1
+    WHEN
+        grd1: scheduleRelock_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: doorUnlocked_4 ∈ receivedMessages
+        grd4: authResult = PASS
+        grd5: autoLock = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleRelock_5}
+        act2: sender := sender ∪ {scheduleRelock_5 ↦ Phone}
+        act3: receiver := receiver ∪ {scheduleRelock_5 ↦ DoorLock}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleRelock_5 ↦ relockTime}
+        act6: currentMessage := {scheduleRelock_5}
+    END
+
+    receivescheduleRelock_5_opt1
+    WHEN
+        grd1: scheduleRelock_5 ∈ sentMessages
+        grd2: scheduleRelock_5 ↦ Phone ∈ sender
+        grd3: scheduleRelock_5 ↦ DoorLock ∈ receiver
+        grd4: scheduleRelock_5 ∉ receivedMessages
+        grd5: currentMessage = {scheduleRelock_5}
+        grd6: authResult = PASS
+        grd7: autoLock = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleRelock_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleRelock_5 ↦ relockTime}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendaccessDenied_6
+    WHEN
+        grd1: accessDenied_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: respond_3 ∈ receivedMessages
+        grd4: authResult = FAIL
+    THEN
+        act1: sentMessages := sentMessages ∪ {accessDenied_6}
+        act2: sender := sender ∪ {accessDenied_6 ↦ DoorLock}
+        act3: receiver := receiver ∪ {accessDenied_6 ↦ Phone}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {accessDenied_6}
+    END
+
+    receiveaccessDenied_6
+    WHEN
+        grd1: accessDenied_6 ∈ sentMessages
+        grd2: accessDenied_6 ↦ DoorLock ∈ sender
+        grd3: accessDenied_6 ↦ Phone ∈ receiver
+        grd4: accessDenied_6 ∉ receivedMessages
+        grd5: currentMessage = {accessDenied_6}
+        grd6: authResult = FAIL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {accessDenied_6}
+        act2: currentMessage := ∅
+    END
+
+    sendstatusUpdate_7
+    WHEN
+        grd1: statusUpdate_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleRelock_5 ∈ receivedMessages ∨ accessDenied_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {statusUpdate_7}
+        act2: sender := sender ∪ {statusUpdate_7 ↦ DoorLock}
+        act3: receiver := receiver ∪ {statusUpdate_7 ↦ Phone}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {statusUpdate_7 ↦ doorStatus}
+        act6: currentMessage := {statusUpdate_7}
+    END
+
+    receivestatusUpdate_7
+    WHEN
+        grd1: statusUpdate_7 ∈ sentMessages
+        grd2: statusUpdate_7 ↦ DoorLock ∈ sender
+        grd3: statusUpdate_7 ↦ Phone ∈ receiver
+        grd4: statusUpdate_7 ∉ receivedMessages
+        grd5: currentMessage = {statusUpdate_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {statusUpdate_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {statusUpdate_7 ↦ doorStatus}
+        act3: currentMessage := ∅
+    END
+
+END

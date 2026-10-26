@@ -1,0 +1,209 @@
+CONTEXT LabEquipmentBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BookingPortal, Researcher
+    reserveSample_1, releaseSample_2, sendSample_3, checkSample_4, sendSlot_5, issueSlot_6
+    runRef, sampleInfo, slotRef
+AXIOMS
+    axm1: partition(Objects, {BookingPortal}, {Researcher})
+    axm2: partition(Messages, {reserveSample_1}, {releaseSample_2}, {sendSample_3}, {checkSample_4}, {sendSlot_5}, {issueSlot_6})
+    axm3: partition(DataMessages, {runRef}, {sampleInfo}, {slotRef})
+END
+
+MACHINE LabEquipmentBookingInteractionMachine_1
+SEES LabEquipmentBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 0..15
+        act9: t_delay_3 := 0
+        act10: t_success_3 := 0
+        act11: t_time_4 :∈ 0..1
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+    END
+
+
+    sendreserveSample_1
+    WHEN
+        grd1: reserveSample_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSample_1}
+        act2: sender := sender ∪ {reserveSample_1 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {reserveSample_1 ↦ Researcher}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveSample_1}
+    END
+
+    receivereserveSample_1
+    WHEN
+        grd1: reserveSample_1 ∈ sentMessages
+        grd2: reserveSample_1 ↦ BookingPortal ∈ sender
+        grd3: reserveSample_1 ↦ Researcher ∈ receiver
+        grd4: reserveSample_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveSample_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSample_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseSample_2
+    WHEN
+        grd1: releaseSample_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSample_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseSample_2}
+        act2: sender := sender ∪ {releaseSample_2 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {releaseSample_2 ↦ Researcher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseSample_2 ↦ sampleInfo}
+        act6: currentMessage := {releaseSample_2}
+    END
+
+    receivereleaseSample_2
+    WHEN
+        grd1: releaseSample_2 ∈ sentMessages
+        grd2: releaseSample_2 ↦ BookingPortal ∈ sender
+        grd3: releaseSample_2 ↦ Researcher ∈ receiver
+        grd4: releaseSample_2 ∉ receivedMessages
+        grd5: currentMessage = {releaseSample_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseSample_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseSample_2 ↦ sampleInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsendSample_3
+    WHEN
+        grd1: sendSample_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseSample_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSample_3}
+        act2: sender := sender ∪ {sendSample_3 ↦ Researcher}
+        act3: receiver := receiver ∪ {sendSample_3 ↦ BookingPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendSample_3 ↦ slotRef}
+        act6: currentMessage := {sendSample_3}
+    END
+
+    receivesendSample_3
+    WHEN
+        grd1: sendSample_3 ∈ sentMessages
+        grd2: sendSample_3 ↦ Researcher ∈ sender
+        grd3: sendSample_3 ↦ BookingPortal ∈ receiver
+        grd4: sendSample_3 ∉ receivedMessages
+        grd5: currentMessage = {sendSample_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSample_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendSample_3 ↦ slotRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckSample_4
+    WHEN
+        grd1: checkSample_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendSample_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkSample_4}
+        act2: sender := sender ∪ {checkSample_4 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {checkSample_4 ↦ Researcher}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkSample_4}
+    END
+
+    receivecheckSample_4
+    WHEN
+        grd1: checkSample_4 ∈ sentMessages
+        grd2: checkSample_4 ↦ BookingPortal ∈ sender
+        grd3: checkSample_4 ↦ Researcher ∈ receiver
+        grd4: checkSample_4 ∉ receivedMessages
+        grd5: currentMessage = {checkSample_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkSample_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsendSlot_5
+    WHEN
+        grd1: sendSlot_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkSample_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSlot_5}
+        act2: sender := sender ∪ {sendSlot_5 ↦ Researcher}
+        act3: receiver := receiver ∪ {sendSlot_5 ↦ BookingPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendSlot_5 ↦ slotRef}
+        act6: currentMessage := {sendSlot_5}
+    END
+
+    receivesendSlot_5
+    WHEN
+        grd1: sendSlot_5 ∈ sentMessages
+        grd2: sendSlot_5 ↦ Researcher ∈ sender
+        grd3: sendSlot_5 ↦ BookingPortal ∈ receiver
+        grd4: sendSlot_5 ∉ receivedMessages
+        grd5: currentMessage = {sendSlot_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSlot_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendSlot_5 ↦ slotRef}
+        act3: currentMessage := ∅
+    END
+
+    sendissueSlot_6
+    WHEN
+        grd1: issueSlot_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendSlot_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSlot_6}
+        act2: sender := sender ∪ {issueSlot_6 ↦ BookingPortal}
+        act3: receiver := receiver ∪ {issueSlot_6 ↦ Researcher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueSlot_6 ↦ runRef, issueSlot_6 ↦ sampleInfo}
+        act6: currentMessage := {issueSlot_6}
+    END
+
+    receiveissueSlot_6
+    WHEN
+        grd1: issueSlot_6 ∈ sentMessages
+        grd2: issueSlot_6 ↦ BookingPortal ∈ sender
+        grd3: issueSlot_6 ↦ Researcher ∈ receiver
+        grd4: issueSlot_6 ∉ receivedMessages
+        grd5: currentMessage = {issueSlot_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSlot_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueSlot_6 ↦ runRef, issueSlot_6 ↦ sampleInfo}
+        act3: currentMessage := ∅
+    END
+
+END

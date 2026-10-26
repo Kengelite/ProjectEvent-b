@@ -1,0 +1,227 @@
+CONTEXT CustomsClearanceContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CustomsPortal, Importer, Inspector, Warehouse
+    sendRelease_1, requestDuty_2, cancelDuty_3, approveDeclaration_4, syncDeclaration_5, fetchRelease_6
+    declarationCode, declarationRef, dutyID, dutyValue
+AXIOMS
+    axm1: partition(Objects, {CustomsPortal}, {Importer}, {Inspector}, {Warehouse})
+    axm2: partition(Messages, {sendRelease_1}, {requestDuty_2}, {cancelDuty_3}, {approveDeclaration_4}, {syncDeclaration_5}, {fetchRelease_6})
+    axm3: partition(DataMessages, {declarationCode}, {declarationRef}, {dutyID}, {dutyValue})
+END
+
+MACHINE CustomsClearanceInteractionMachine_1
+SEES CustomsClearanceContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_5 ∈ ℤ
+    inv19: t_delay_5 ∈ ℤ
+    inv20: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: t_time_2 :∈ 0..1
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..20
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..60
+        act16: t_delay_4 := 2
+        act17: t_success_4 := 0
+        act18: t_time_5 :∈ 0..20
+        act19: t_delay_5 := 0
+        act20: t_success_5 := 0
+    END
+
+
+    sendsendRelease_1
+    WHEN
+        grd1: sendRelease_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendRelease_1}
+        act2: sender := sender ∪ {sendRelease_1 ↦ CustomsPortal}
+        act3: receiver := receiver ∪ {sendRelease_1 ↦ Importer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendRelease_1 ↦ declarationRef}
+        act6: currentMessage := {sendRelease_1}
+    END
+
+    receivesendRelease_1
+    WHEN
+        grd1: sendRelease_1 ∈ sentMessages
+        grd2: sendRelease_1 ↦ CustomsPortal ∈ sender
+        grd3: sendRelease_1 ↦ Importer ∈ receiver
+        grd4: sendRelease_1 ∉ receivedMessages
+        grd5: currentMessage = {sendRelease_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendRelease_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendRelease_1 ↦ declarationRef}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestDuty_2
+    WHEN
+        grd1: requestDuty_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendRelease_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestDuty_2}
+        act2: sender := sender ∪ {requestDuty_2 ↦ Warehouse}
+        act3: receiver := receiver ∪ {requestDuty_2 ↦ CustomsPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestDuty_2 ↦ dutyValue}
+        act6: currentMessage := {requestDuty_2}
+    END
+
+    receiverequestDuty_2
+    WHEN
+        grd1: requestDuty_2 ∈ sentMessages
+        grd2: requestDuty_2 ↦ Warehouse ∈ sender
+        grd3: requestDuty_2 ↦ CustomsPortal ∈ receiver
+        grd4: requestDuty_2 ∉ receivedMessages
+        grd5: currentMessage = {requestDuty_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestDuty_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestDuty_2 ↦ dutyValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcancelDuty_3_opt1
+    WHEN
+        grd1: cancelDuty_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestDuty_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelDuty_3}
+        act2: sender := sender ∪ {cancelDuty_3 ↦ Warehouse}
+        act3: receiver := receiver ∪ {cancelDuty_3 ↦ Importer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelDuty_3 ↦ dutyID}
+        act6: currentMessage := {cancelDuty_3}
+    END
+
+    receivecancelDuty_3_opt1
+    WHEN
+        grd1: cancelDuty_3 ∈ sentMessages
+        grd2: cancelDuty_3 ↦ Warehouse ∈ sender
+        grd3: cancelDuty_3 ↦ Importer ∈ receiver
+        grd4: cancelDuty_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelDuty_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelDuty_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelDuty_3 ↦ dutyID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapproveDeclaration_4
+    WHEN
+        grd1: approveDeclaration_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelDuty_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveDeclaration_4}
+        act2: sender := sender ∪ {approveDeclaration_4 ↦ Warehouse}
+        act3: receiver := receiver ∪ {approveDeclaration_4 ↦ Inspector}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveDeclaration_4}
+    END
+
+    receiveapproveDeclaration_4
+    WHEN
+        grd1: approveDeclaration_4 ∈ sentMessages
+        grd2: approveDeclaration_4 ↦ Warehouse ∈ sender
+        grd3: approveDeclaration_4 ↦ Inspector ∈ receiver
+        grd4: approveDeclaration_4 ∉ receivedMessages
+        grd5: currentMessage = {approveDeclaration_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveDeclaration_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncDeclaration_5
+    WHEN
+        grd1: syncDeclaration_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveDeclaration_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncDeclaration_5}
+        act2: sender := sender ∪ {syncDeclaration_5 ↦ Inspector}
+        act3: receiver := receiver ∪ {syncDeclaration_5 ↦ Importer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncDeclaration_5}
+    END
+
+    receivesyncDeclaration_5
+    WHEN
+        grd1: syncDeclaration_5 ∈ sentMessages
+        grd2: syncDeclaration_5 ↦ Inspector ∈ sender
+        grd3: syncDeclaration_5 ↦ Importer ∈ receiver
+        grd4: syncDeclaration_5 ∉ receivedMessages
+        grd5: currentMessage = {syncDeclaration_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncDeclaration_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendfetchRelease_6
+    WHEN
+        grd1: fetchRelease_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncDeclaration_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchRelease_6}
+        act2: sender := sender ∪ {fetchRelease_6 ↦ Inspector}
+        act3: receiver := receiver ∪ {fetchRelease_6 ↦ Importer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchRelease_6 ↦ declarationCode}
+        act6: currentMessage := {fetchRelease_6}
+    END
+
+    receivefetchRelease_6
+    WHEN
+        grd1: fetchRelease_6 ∈ sentMessages
+        grd2: fetchRelease_6 ↦ Inspector ∈ sender
+        grd3: fetchRelease_6 ↦ Importer ∈ receiver
+        grd4: fetchRelease_6 ∉ receivedMessages
+        grd5: currentMessage = {fetchRelease_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchRelease_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchRelease_6 ↦ declarationCode}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,371 @@
+CONTEXT IrrigationZoneControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Controller, SoilProbe, Valve, WeatherAPI
+    queryZone_1, ackSchedule_2, requestZone_3, checkMoisture_4, queryMoisture_5, cancelZone_6, requestSchedule_7, releaseMoisture_8, reserveMoisture_9, scheduleSchedule_10, sendSchedule_11
+    moistureRef, scheduleCode, scheduleData, zoneData, zoneID, zoneRef
+AXIOMS
+    axm1: partition(Objects, {Controller}, {SoilProbe}, {Valve}, {WeatherAPI})
+    axm2: partition(Messages, {queryZone_1}, {ackSchedule_2}, {requestZone_3}, {checkMoisture_4}, {queryMoisture_5}, {cancelZone_6}, {requestSchedule_7}, {releaseMoisture_8}, {reserveMoisture_9}, {scheduleSchedule_10}, {sendSchedule_11})
+    axm3: partition(DataMessages, {moistureRef}, {scheduleCode}, {scheduleData}, {zoneData}, {zoneID}, {zoneRef})
+END
+
+MACHINE IrrigationZoneControlInteractionMachine_1
+SEES IrrigationZoneControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, attemptNo, par_1, t_time_3, t_delay_3, t_success_3, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: attemptNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_7 ∈ ℤ
+    inv14: t_delay_7 ∈ ℤ
+    inv15: t_success_7 ∈ ℤ
+    inv16: t_time_8 ∈ ℤ
+    inv17: t_delay_8 ∈ ℤ
+    inv18: t_success_8 ∈ ℤ
+    inv19: t_time_11 ∈ ℤ
+    inv20: t_delay_11 ∈ ℤ
+    inv21: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: attemptNo := 0
+        act9: par_1 := 0
+        act10: t_time_3 :∈ 0..30
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_7 :∈ 0..20
+        act14: t_delay_7 := 0
+        act15: t_success_7 := 0
+        act16: t_time_8 :∈ 0..2
+        act17: t_delay_8 := 0
+        act18: t_success_8 := 0
+        act19: t_time_11 :∈ 0..3
+        act20: t_delay_11 := 0
+        act21: t_success_11 := 0
+    END
+
+
+    sendqueryZone_1
+    WHEN
+        grd1: queryZone_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryZone_1}
+        act2: sender := sender ∪ {queryZone_1 ↦ Controller}
+        act3: receiver := receiver ∪ {queryZone_1 ↦ Valve}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryZone_1}
+    END
+
+    receivequeryZone_1
+    WHEN
+        grd1: queryZone_1 ∈ sentMessages
+        grd2: queryZone_1 ↦ Controller ∈ sender
+        grd3: queryZone_1 ↦ Valve ∈ receiver
+        grd4: queryZone_1 ∉ receivedMessages
+        grd5: currentMessage = {queryZone_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryZone_1}
+        act2: currentMessage := ∅
+    END
+
+    sendackSchedule_2
+    WHEN
+        grd1: ackSchedule_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryZone_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackSchedule_2}
+        act2: sender := sender ∪ {ackSchedule_2 ↦ WeatherAPI}
+        act3: receiver := receiver ∪ {ackSchedule_2 ↦ Valve}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackSchedule_2}
+    END
+
+    receiveackSchedule_2
+    WHEN
+        grd1: ackSchedule_2 ∈ sentMessages
+        grd2: ackSchedule_2 ↦ WeatherAPI ∈ sender
+        grd3: ackSchedule_2 ↦ Valve ∈ receiver
+        grd4: ackSchedule_2 ∉ receivedMessages
+        grd5: currentMessage = {ackSchedule_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackSchedule_2}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestZone_3
+    WHEN
+        grd1: requestZone_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackSchedule_2 ∈ receivedMessages
+        grd4: attemptNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestZone_3}
+        act2: sender := sender ∪ {requestZone_3 ↦ Controller}
+        act3: receiver := receiver ∪ {requestZone_3 ↦ Valve}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestZone_3}
+    END
+
+    receiverequestZone_3
+    WHEN
+        grd1: requestZone_3 ∈ sentMessages
+        grd2: requestZone_3 ↦ Controller ∈ sender
+        grd3: requestZone_3 ↦ Valve ∈ receiver
+        grd4: requestZone_3 ∉ receivedMessages
+        grd5: currentMessage = {requestZone_3}
+        grd6: attemptNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestZone_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckMoisture_4
+    WHEN
+        grd1: checkMoisture_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestZone_3 ∈ receivedMessages
+        grd4: attemptNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkMoisture_4}
+        act2: sender := sender ∪ {checkMoisture_4 ↦ WeatherAPI}
+        act3: receiver := receiver ∪ {checkMoisture_4 ↦ SoilProbe}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkMoisture_4 ↦ zoneData}
+        act6: currentMessage := {checkMoisture_4}
+    END
+
+    receivecheckMoisture_4
+    WHEN
+        grd1: checkMoisture_4 ∈ sentMessages
+        grd2: checkMoisture_4 ↦ WeatherAPI ∈ sender
+        grd3: checkMoisture_4 ↦ SoilProbe ∈ receiver
+        grd4: checkMoisture_4 ∉ receivedMessages
+        grd5: currentMessage = {checkMoisture_4}
+        grd6: attemptNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkMoisture_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkMoisture_4 ↦ zoneData}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryMoisture_5
+    WHEN
+        grd1: queryMoisture_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkMoisture_4 ∈ receivedMessages
+        grd4: attemptNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryMoisture_5}
+        act2: sender := sender ∪ {queryMoisture_5 ↦ Valve}
+        act3: receiver := receiver ∪ {queryMoisture_5 ↦ Controller}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryMoisture_5}
+    END
+
+    receivequeryMoisture_5
+    WHEN
+        grd1: queryMoisture_5 ∈ sentMessages
+        grd2: queryMoisture_5 ↦ Valve ∈ sender
+        grd3: queryMoisture_5 ↦ Controller ∈ receiver
+        grd4: queryMoisture_5 ∉ receivedMessages
+        grd5: currentMessage = {queryMoisture_5}
+        grd6: attemptNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryMoisture_5}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelZone_6
+    WHEN
+        grd1: cancelZone_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryMoisture_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelZone_6}
+        act2: sender := sender ∪ {cancelZone_6 ↦ Controller}
+        act3: receiver := receiver ∪ {cancelZone_6 ↦ Valve}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelZone_6 ↦ moistureRef}
+        act6: currentMessage := {cancelZone_6}
+    END
+
+    receivecancelZone_6
+    WHEN
+        grd1: cancelZone_6 ∈ sentMessages
+        grd2: cancelZone_6 ↦ Controller ∈ sender
+        grd3: cancelZone_6 ↦ Valve ∈ receiver
+        grd4: cancelZone_6 ∉ receivedMessages
+        grd5: currentMessage = {cancelZone_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelZone_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelZone_6 ↦ moistureRef}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestSchedule_7
+    WHEN
+        grd1: requestSchedule_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelZone_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestSchedule_7}
+        act2: sender := sender ∪ {requestSchedule_7 ↦ Valve}
+        act3: receiver := receiver ∪ {requestSchedule_7 ↦ WeatherAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestSchedule_7 ↦ zoneRef}
+        act6: currentMessage := {requestSchedule_7}
+    END
+
+    receiverequestSchedule_7
+    WHEN
+        grd1: requestSchedule_7 ∈ sentMessages
+        grd2: requestSchedule_7 ↦ Valve ∈ sender
+        grd3: requestSchedule_7 ↦ WeatherAPI ∈ receiver
+        grd4: requestSchedule_7 ∉ receivedMessages
+        grd5: currentMessage = {requestSchedule_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestSchedule_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestSchedule_7 ↦ zoneRef}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreleaseMoisture_8
+    WHEN
+        grd1: releaseMoisture_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestSchedule_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseMoisture_8}
+        act2: sender := sender ∪ {releaseMoisture_8 ↦ Controller}
+        act3: receiver := receiver ∪ {releaseMoisture_8 ↦ WeatherAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseMoisture_8 ↦ moistureRef}
+        act6: currentMessage := {releaseMoisture_8}
+    END
+
+    receivereleaseMoisture_8
+    WHEN
+        grd1: releaseMoisture_8 ∈ sentMessages
+        grd2: releaseMoisture_8 ↦ Controller ∈ sender
+        grd3: releaseMoisture_8 ↦ WeatherAPI ∈ receiver
+        grd4: releaseMoisture_8 ∉ receivedMessages
+        grd5: currentMessage = {releaseMoisture_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseMoisture_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseMoisture_8 ↦ moistureRef}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendreserveMoisture_9
+    WHEN
+        grd1: reserveMoisture_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseMoisture_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveMoisture_9}
+        act2: sender := sender ∪ {reserveMoisture_9 ↦ Valve}
+        act3: receiver := receiver ∪ {reserveMoisture_9 ↦ WeatherAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveMoisture_9 ↦ scheduleData, reserveMoisture_9 ↦ zoneID}
+        act6: currentMessage := {reserveMoisture_9}
+    END
+
+    receivereserveMoisture_9
+    WHEN
+        grd1: reserveMoisture_9 ∈ sentMessages
+        grd2: reserveMoisture_9 ↦ Valve ∈ sender
+        grd3: reserveMoisture_9 ↦ WeatherAPI ∈ receiver
+        grd4: reserveMoisture_9 ∉ receivedMessages
+        grd5: currentMessage = {reserveMoisture_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveMoisture_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveMoisture_9 ↦ scheduleData, reserveMoisture_9 ↦ zoneID}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleSchedule_10
+    WHEN
+        grd1: scheduleSchedule_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveMoisture_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSchedule_10}
+        act2: sender := sender ∪ {scheduleSchedule_10 ↦ Controller}
+        act3: receiver := receiver ∪ {scheduleSchedule_10 ↦ WeatherAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSchedule_10 ↦ moistureRef, scheduleSchedule_10 ↦ scheduleCode}
+        act6: currentMessage := {scheduleSchedule_10}
+    END
+
+    receivescheduleSchedule_10
+    WHEN
+        grd1: scheduleSchedule_10 ∈ sentMessages
+        grd2: scheduleSchedule_10 ↦ Controller ∈ sender
+        grd3: scheduleSchedule_10 ↦ WeatherAPI ∈ receiver
+        grd4: scheduleSchedule_10 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSchedule_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSchedule_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSchedule_10 ↦ moistureRef, scheduleSchedule_10 ↦ scheduleCode}
+        act3: currentMessage := ∅
+    END
+
+    sendsendSchedule_11
+    WHEN
+        grd1: sendSchedule_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSchedule_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSchedule_11}
+        act2: sender := sender ∪ {sendSchedule_11 ↦ Controller}
+        act3: receiver := receiver ∪ {sendSchedule_11 ↦ SoilProbe}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendSchedule_11 ↦ zoneID}
+        act6: currentMessage := {sendSchedule_11}
+    END
+
+    receivesendSchedule_11
+    WHEN
+        grd1: sendSchedule_11 ∈ sentMessages
+        grd2: sendSchedule_11 ↦ Controller ∈ sender
+        grd3: sendSchedule_11 ↦ SoilProbe ∈ receiver
+        grd4: sendSchedule_11 ∉ receivedMessages
+        grd5: currentMessage = {sendSchedule_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSchedule_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendSchedule_11 ↦ zoneID}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_requestZone_3_loop1
+    WHEN
+        grd1: attemptNo < 12
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

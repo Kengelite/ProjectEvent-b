@@ -1,0 +1,29 @@
+{
+  "case": "HospitalLabRequest",
+  "design_intent": "expected_fail",
+  "variant": "diagram_error",
+  "rodin_project": "HospitalLabRequest_Project",
+  "batch": "batch_04",
+  "seed": 20261161,
+  "min_msgs": 6,
+  "mutation": "diagram: condition cycleNo mod 3 inside a loop: no invariant gives the counter ≥ 0",
+  "operations": {},
+  "category": "non_inductive",
+  "mutation_type": "mod_alt",
+  "expected_failed_pos": [
+    "sendscheduleOrder_4/grd5/WD",
+    "receivescheduleOrder_4/grd7/WD",
+    "sendackSample_5/grd5/WD",
+    "receiveackSample_5/grd7/WD",
+    "sendapproveSample_6/grd5/WD",
+    "receiveapproveSample_6/grd7/WD",
+    "sendissueResult_7/grd5/WD",
+    "receiveissueResult_7/grd7/WD",
+    "sendreportResult_8/grd5/WD",
+    "receivereportResult_8/grd7/WD",
+    "sendreportSample_9/grd5/WD",
+    "receivereportSample_9/grd7/WD",
+    "checkloop_ackSample_5_loop2/grd2/WD"
+  ],
+  "expected_failed_count": 13
+}

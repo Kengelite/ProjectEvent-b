@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="AmbulanceRouting" id="ambulancerouting">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="20" y="215" width="890" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="20" y="410" width="890" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[useCache == 1]" vertex="1">
+          <mxGeometry x="105" y="220" width="135" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+5}" vertex="1">
+          <mxGeometry x="560" y="367" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[needAck == 1]" vertex="1">
+          <mxGeometry x="105" y="415" width="126" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+1}" vertex="1">
+          <mxGeometry x="435" y="512" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Paramedic" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="ll8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="AmbulanceUnit" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="ll9" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="DispatchCenter" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="ll10" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="ERDesk" vertex="1">
+          <mxGeometry x="790" y="40" width="100" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="approveEta(etaID, routeInfo) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="590.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="ackPatient() {0..10}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="180" as="sourcePoint" />
+            <mxPoint x="840.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="assignPatient()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="265" as="sourcePoint" />
+            <mxPoint x="590.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="notifyRoute(patientID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="325" as="sourcePoint" />
+            <mxPoint x="840.0" y="325" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="reserveEta() {0..30}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840.0" y="375" as="sourcePoint" />
+            <mxPoint x="340.0" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="requestRoute(etaInfo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="460" as="sourcePoint" />
+            <mxPoint x="90.0" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="checkPatient() {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="520" as="sourcePoint" />
+            <mxPoint x="590.0" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

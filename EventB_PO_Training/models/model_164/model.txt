@@ -1,0 +1,309 @@
+CONTEXT SmartAquariumContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AquaHub, Feeder, TankSensor
+    validatePh_1, updateFeed_2, reportFeed_3, approveLight_4, queryFeed_5, notifyFeed_6, sendLight_7, syncLight_8
+    lightCode, lightData, lightID, lightValue, phValue
+AXIOMS
+    axm1: partition(Objects, {AquaHub}, {Feeder}, {TankSensor})
+    axm2: partition(Messages, {validatePh_1}, {updateFeed_2}, {reportFeed_3}, {approveLight_4}, {queryFeed_5}, {notifyFeed_6}, {sendLight_7}, {syncLight_8})
+    axm3: partition(DataMessages, {lightCode}, {lightData}, {lightID}, {lightValue}, {phValue})
+END
+
+MACHINE SmartAquariumInteractionMachine_1
+SEES SmartAquariumContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_3 ∈ ℤ
+    inv16: t_delay_3 ∈ ℤ
+    inv17: t_success_3 ∈ ℤ
+    inv18: t_time_7 ∈ ℤ
+    inv19: t_delay_7 ∈ ℤ
+    inv20: t_success_7 ∈ ℤ
+    inv21: t_time_8 ∈ ℤ
+    inv22: t_delay_8 ∈ ℤ
+    inv23: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: t_time_1 :∈ 0..5
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..30
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_3 :∈ 0..2
+        act16: t_delay_3 := 0
+        act17: t_success_3 := 0
+        act18: t_time_7 :∈ 0..60
+        act19: t_delay_7 := 0
+        act20: t_success_7 := 0
+        act21: t_time_8 :∈ 0..1
+        act22: t_delay_8 := 0
+        act23: t_success_8 := 0
+    END
+
+
+    sendvalidatePh_1
+    WHEN
+        grd1: validatePh_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePh_1}
+        act2: sender := sender ∪ {validatePh_1 ↦ Feeder}
+        act3: receiver := receiver ∪ {validatePh_1 ↦ AquaHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validatePh_1}
+    END
+
+    receivevalidatePh_1
+    WHEN
+        grd1: validatePh_1 ∈ sentMessages
+        grd2: validatePh_1 ↦ Feeder ∈ sender
+        grd3: validatePh_1 ↦ AquaHub ∈ receiver
+        grd4: validatePh_1 ∉ receivedMessages
+        grd5: currentMessage = {validatePh_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePh_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendupdateFeed_2
+    WHEN
+        grd1: updateFeed_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePh_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateFeed_2}
+        act2: sender := sender ∪ {updateFeed_2 ↦ TankSensor}
+        act3: receiver := receiver ∪ {updateFeed_2 ↦ AquaHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateFeed_2}
+    END
+
+    receiveupdateFeed_2
+    WHEN
+        grd1: updateFeed_2 ∈ sentMessages
+        grd2: updateFeed_2 ↦ TankSensor ∈ sender
+        grd3: updateFeed_2 ↦ AquaHub ∈ receiver
+        grd4: updateFeed_2 ∉ receivedMessages
+        grd5: currentMessage = {updateFeed_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateFeed_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreportFeed_3
+    WHEN
+        grd1: reportFeed_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateFeed_2 ∈ receivedMessages
+        grd4: cycleNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportFeed_3}
+        act2: sender := sender ∪ {reportFeed_3 ↦ AquaHub}
+        act3: receiver := receiver ∪ {reportFeed_3 ↦ TankSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportFeed_3 ↦ lightData}
+        act6: currentMessage := {reportFeed_3}
+    END
+
+    receivereportFeed_3
+    WHEN
+        grd1: reportFeed_3 ∈ sentMessages
+        grd2: reportFeed_3 ↦ AquaHub ∈ sender
+        grd3: reportFeed_3 ↦ TankSensor ∈ receiver
+        grd4: reportFeed_3 ∉ receivedMessages
+        grd5: currentMessage = {reportFeed_3}
+        grd6: cycleNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportFeed_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportFeed_3 ↦ lightData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapproveLight_4
+    WHEN
+        grd1: approveLight_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportFeed_3 ∈ receivedMessages
+        grd4: cycleNo < 4
+        grd5: cycleNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveLight_4}
+        act2: sender := sender ∪ {approveLight_4 ↦ Feeder}
+        act3: receiver := receiver ∪ {approveLight_4 ↦ TankSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveLight_4 ↦ lightCode, approveLight_4 ↦ lightID}
+        act6: currentMessage := {approveLight_4}
+    END
+
+    receiveapproveLight_4
+    WHEN
+        grd1: approveLight_4 ∈ sentMessages
+        grd2: approveLight_4 ↦ Feeder ∈ sender
+        grd3: approveLight_4 ↦ TankSensor ∈ receiver
+        grd4: approveLight_4 ∉ receivedMessages
+        grd5: currentMessage = {approveLight_4}
+        grd6: cycleNo < 4
+        grd7: cycleNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveLight_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveLight_4 ↦ lightCode, approveLight_4 ↦ lightID}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryFeed_5
+    WHEN
+        grd1: queryFeed_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveLight_4 ∈ receivedMessages
+        grd4: cycleNo < 4
+        grd5: cycleNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryFeed_5}
+        act2: sender := sender ∪ {queryFeed_5 ↦ AquaHub}
+        act3: receiver := receiver ∪ {queryFeed_5 ↦ TankSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryFeed_5 ↦ lightValue}
+        act6: currentMessage := {queryFeed_5}
+    END
+
+    receivequeryFeed_5
+    WHEN
+        grd1: queryFeed_5 ∈ sentMessages
+        grd2: queryFeed_5 ↦ AquaHub ∈ sender
+        grd3: queryFeed_5 ↦ TankSensor ∈ receiver
+        grd4: queryFeed_5 ∉ receivedMessages
+        grd5: currentMessage = {queryFeed_5}
+        grd6: cycleNo < 4
+        grd7: cycleNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryFeed_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryFeed_5 ↦ lightValue}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyFeed_6
+    WHEN
+        grd1: notifyFeed_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportFeed_3 ∈ receivedMessages
+        grd4: cycleNo < 4
+        grd5: cycleNo mod 2 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyFeed_6}
+        act2: sender := sender ∪ {notifyFeed_6 ↦ AquaHub}
+        act3: receiver := receiver ∪ {notifyFeed_6 ↦ TankSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyFeed_6 ↦ lightValue}
+        act6: currentMessage := {notifyFeed_6}
+    END
+
+    receivenotifyFeed_6
+    WHEN
+        grd1: notifyFeed_6 ∈ sentMessages
+        grd2: notifyFeed_6 ↦ AquaHub ∈ sender
+        grd3: notifyFeed_6 ↦ TankSensor ∈ receiver
+        grd4: notifyFeed_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyFeed_6}
+        grd6: cycleNo < 4
+        grd7: cycleNo mod 2 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyFeed_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyFeed_6 ↦ lightValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsendLight_7
+    WHEN
+        grd1: sendLight_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryFeed_5 ∈ receivedMessages ∨ notifyFeed_6 ∈ receivedMessages
+        grd4: cycleNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendLight_7}
+        act2: sender := sender ∪ {sendLight_7 ↦ Feeder}
+        act3: receiver := receiver ∪ {sendLight_7 ↦ TankSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendLight_7 ↦ phValue}
+        act6: currentMessage := {sendLight_7}
+    END
+
+    receivesendLight_7
+    WHEN
+        grd1: sendLight_7 ∈ sentMessages
+        grd2: sendLight_7 ↦ Feeder ∈ sender
+        grd3: sendLight_7 ↦ TankSensor ∈ receiver
+        grd4: sendLight_7 ∉ receivedMessages
+        grd5: currentMessage = {sendLight_7}
+        grd6: cycleNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendLight_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendLight_7 ↦ phValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendsyncLight_8
+    WHEN
+        grd1: syncLight_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendLight_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncLight_8}
+        act2: sender := sender ∪ {syncLight_8 ↦ TankSensor}
+        act3: receiver := receiver ∪ {syncLight_8 ↦ Feeder}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncLight_8 ↦ lightData}
+        act6: currentMessage := {syncLight_8}
+    END
+
+    receivesyncLight_8
+    WHEN
+        grd1: syncLight_8 ∈ sentMessages
+        grd2: syncLight_8 ↦ TankSensor ∈ sender
+        grd3: syncLight_8 ↦ Feeder ∈ receiver
+        grd4: syncLight_8 ∉ receivedMessages
+        grd5: currentMessage = {syncLight_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncLight_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncLight_8 ↦ lightData}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    checkloop_reportFeed_3_loop1
+    WHEN
+        grd1: cycleNo < 4
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+END

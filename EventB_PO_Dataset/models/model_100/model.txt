@@ -1,0 +1,301 @@
+CONTEXT GasStationPrepayContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Driver, PumpTerminal
+    notifyPrepay_1, validatePrepay_2, logFuel_3, reserveReceipt_4, assignFuel_5, releaseReceipt_6, fetchFuel_7, requestFuel_8
+    fuelValue, prepayCode, prepayID, receiptCode, receiptID, receiptRef
+AXIOMS
+    axm1: partition(Objects, {Driver}, {PumpTerminal})
+    axm2: partition(Messages, {notifyPrepay_1}, {validatePrepay_2}, {logFuel_3}, {reserveReceipt_4}, {assignFuel_5}, {releaseReceipt_6}, {fetchFuel_7}, {requestFuel_8})
+    axm3: partition(DataMessages, {fuelValue}, {prepayCode}, {prepayID}, {receiptCode}, {receiptID}, {receiptRef})
+END
+
+MACHINE GasStationPrepayInteractionMachine_1
+SEES GasStationPrepayContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, attemptNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: attemptNo ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+    inv19: t_time_5 ∈ ℤ
+    inv20: t_delay_5 ∈ ℤ
+    inv21: t_success_5 ∈ ℤ
+    inv22: t_time_6 ∈ ℤ
+    inv23: t_delay_6 ∈ ℤ
+    inv24: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: attemptNo := 0
+        act10: t_time_1 :∈ 0..0
+        act11: t_delay_1 := 1
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..10
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 0..0
+        act17: t_delay_3 := 3
+        act18: t_success_3 := 0
+        act19: t_time_5 :∈ 0..10
+        act20: t_delay_5 := 5
+        act21: t_success_5 := 0
+        act22: t_time_6 :∈ 0..20
+        act23: t_delay_6 := 0
+        act24: t_success_6 := 0
+    END
+
+
+    sendnotifyPrepay_1
+    WHEN
+        grd1: notifyPrepay_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPrepay_1}
+        act2: sender := sender ∪ {notifyPrepay_1 ↦ PumpTerminal}
+        act3: receiver := receiver ∪ {notifyPrepay_1 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyPrepay_1 ↦ receiptID}
+        act6: currentMessage := {notifyPrepay_1}
+    END
+
+    receivenotifyPrepay_1
+    WHEN
+        grd1: notifyPrepay_1 ∈ sentMessages
+        grd2: notifyPrepay_1 ↦ PumpTerminal ∈ sender
+        grd3: notifyPrepay_1 ↦ Driver ∈ receiver
+        grd4: notifyPrepay_1 ∉ receivedMessages
+        grd5: currentMessage = {notifyPrepay_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPrepay_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyPrepay_1 ↦ receiptID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidatePrepay_2
+    WHEN
+        grd1: validatePrepay_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyPrepay_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePrepay_2}
+        act2: sender := sender ∪ {validatePrepay_2 ↦ PumpTerminal}
+        act3: receiver := receiver ∪ {validatePrepay_2 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePrepay_2 ↦ prepayCode}
+        act6: currentMessage := {validatePrepay_2}
+    END
+
+    receivevalidatePrepay_2
+    WHEN
+        grd1: validatePrepay_2 ∈ sentMessages
+        grd2: validatePrepay_2 ↦ PumpTerminal ∈ sender
+        grd3: validatePrepay_2 ↦ Driver ∈ receiver
+        grd4: validatePrepay_2 ∉ receivedMessages
+        grd5: currentMessage = {validatePrepay_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePrepay_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePrepay_2 ↦ prepayCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendlogFuel_3_opt1
+    WHEN
+        grd1: logFuel_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePrepay_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logFuel_3}
+        act2: sender := sender ∪ {logFuel_3 ↦ Driver}
+        act3: receiver := receiver ∪ {logFuel_3 ↦ PumpTerminal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logFuel_3 ↦ receiptCode}
+        act6: currentMessage := {logFuel_3}
+    END
+
+    receivelogFuel_3_opt1
+    WHEN
+        grd1: logFuel_3 ∈ sentMessages
+        grd2: logFuel_3 ↦ Driver ∈ sender
+        grd3: logFuel_3 ↦ PumpTerminal ∈ receiver
+        grd4: logFuel_3 ∉ receivedMessages
+        grd5: currentMessage = {logFuel_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logFuel_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logFuel_3 ↦ receiptCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreserveReceipt_4
+    WHEN
+        grd1: reserveReceipt_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logFuel_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveReceipt_4}
+        act2: sender := sender ∪ {reserveReceipt_4 ↦ PumpTerminal}
+        act3: receiver := receiver ∪ {reserveReceipt_4 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveReceipt_4 ↦ prepayID}
+        act6: currentMessage := {reserveReceipt_4}
+    END
+
+    receivereserveReceipt_4
+    WHEN
+        grd1: reserveReceipt_4 ∈ sentMessages
+        grd2: reserveReceipt_4 ↦ PumpTerminal ∈ sender
+        grd3: reserveReceipt_4 ↦ Driver ∈ receiver
+        grd4: reserveReceipt_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveReceipt_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveReceipt_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveReceipt_4 ↦ prepayID}
+        act3: currentMessage := ∅
+    END
+
+    sendassignFuel_5
+    WHEN
+        grd1: assignFuel_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveReceipt_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignFuel_5}
+        act2: sender := sender ∪ {assignFuel_5 ↦ PumpTerminal}
+        act3: receiver := receiver ∪ {assignFuel_5 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignFuel_5 ↦ fuelValue, assignFuel_5 ↦ prepayID}
+        act6: currentMessage := {assignFuel_5}
+    END
+
+    receiveassignFuel_5
+    WHEN
+        grd1: assignFuel_5 ∈ sentMessages
+        grd2: assignFuel_5 ↦ PumpTerminal ∈ sender
+        grd3: assignFuel_5 ↦ Driver ∈ receiver
+        grd4: assignFuel_5 ∉ receivedMessages
+        grd5: currentMessage = {assignFuel_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignFuel_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignFuel_5 ↦ fuelValue, assignFuel_5 ↦ prepayID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseReceipt_6
+    WHEN
+        grd1: releaseReceipt_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignFuel_5 ∈ receivedMessages
+        grd4: attemptNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseReceipt_6}
+        act2: sender := sender ∪ {releaseReceipt_6 ↦ PumpTerminal}
+        act3: receiver := receiver ∪ {releaseReceipt_6 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseReceipt_6}
+    END
+
+    receivereleaseReceipt_6
+    WHEN
+        grd1: releaseReceipt_6 ∈ sentMessages
+        grd2: releaseReceipt_6 ↦ PumpTerminal ∈ sender
+        grd3: releaseReceipt_6 ↦ Driver ∈ receiver
+        grd4: releaseReceipt_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseReceipt_6}
+        grd6: attemptNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseReceipt_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendfetchFuel_7
+    WHEN
+        grd1: fetchFuel_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseReceipt_6 ∈ receivedMessages
+        grd4: attemptNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchFuel_7}
+        act2: sender := sender ∪ {fetchFuel_7 ↦ Driver}
+        act3: receiver := receiver ∪ {fetchFuel_7 ↦ PumpTerminal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchFuel_7 ↦ receiptRef}
+        act6: currentMessage := {fetchFuel_7}
+    END
+
+    receivefetchFuel_7
+    WHEN
+        grd1: fetchFuel_7 ∈ sentMessages
+        grd2: fetchFuel_7 ↦ Driver ∈ sender
+        grd3: fetchFuel_7 ↦ PumpTerminal ∈ receiver
+        grd4: fetchFuel_7 ∉ receivedMessages
+        grd5: currentMessage = {fetchFuel_7}
+        grd6: attemptNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchFuel_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchFuel_7 ↦ receiptRef}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestFuel_8
+    WHEN
+        grd1: requestFuel_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchFuel_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestFuel_8}
+        act2: sender := sender ∪ {requestFuel_8 ↦ Driver}
+        act3: receiver := receiver ∪ {requestFuel_8 ↦ PumpTerminal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestFuel_8}
+    END
+
+    receiverequestFuel_8
+    WHEN
+        grd1: requestFuel_8 ∈ sentMessages
+        grd2: requestFuel_8 ↦ Driver ∈ sender
+        grd3: requestFuel_8 ↦ PumpTerminal ∈ receiver
+        grd4: requestFuel_8 ∉ receivedMessages
+        grd5: currentMessage = {requestFuel_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestFuel_8}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_releaseReceipt_6_loop1
+    WHEN
+        grd1: attemptNo < 4
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

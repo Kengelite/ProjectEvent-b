@@ -1,0 +1,262 @@
+CONTEXT HospitalTriageContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Doctor, LabSystem, Nurse, Patient
+    registerPatient_1, measureVitals_2, callDoctor_3, orderLabTest_4, prescribeDrug_5, scheduleVisit_6, dischargeNote_7
+    appointment, drugID, patientID, summary, testID, vitalSigns
+    CRITICAL, NORMAL
+AXIOMS
+    axm1: partition(Objects, {Doctor}, {LabSystem}, {Nurse}, {Patient})
+    axm2: partition(Messages, {registerPatient_1}, {measureVitals_2}, {callDoctor_3}, {orderLabTest_4}, {prescribeDrug_5}, {scheduleVisit_6}, {dischargeNote_7})
+    axm3: partition(DataMessages, {appointment}, {drugID}, {patientID}, {summary}, {testID}, {vitalSigns})
+    axm4: CRITICAL = 0
+    axm5: NORMAL = 1
+END
+
+MACHINE HospitalTriageInteractionMachine_1
+SEES HospitalTriageContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, severity, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: severity ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: severity := NORMAL
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..10
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..5
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 0..15
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+    END
+
+
+    sendregisterPatient_1
+    WHEN
+        grd1: registerPatient_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {registerPatient_1}
+        act2: sender := sender ∪ {registerPatient_1 ↦ Patient}
+        act3: receiver := receiver ∪ {registerPatient_1 ↦ Nurse}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {registerPatient_1 ↦ patientID}
+        act6: currentMessage := {registerPatient_1}
+    END
+
+    receiveregisterPatient_1
+    WHEN
+        grd1: registerPatient_1 ∈ sentMessages
+        grd2: registerPatient_1 ↦ Patient ∈ sender
+        grd3: registerPatient_1 ↦ Nurse ∈ receiver
+        grd4: registerPatient_1 ∉ receivedMessages
+        grd5: currentMessage = {registerPatient_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {registerPatient_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {registerPatient_1 ↦ patientID}
+        act3: currentMessage := ∅
+    END
+
+    sendmeasureVitals_2
+    WHEN
+        grd1: measureVitals_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: registerPatient_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {measureVitals_2}
+        act2: sender := sender ∪ {measureVitals_2 ↦ Nurse}
+        act3: receiver := receiver ∪ {measureVitals_2 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {measureVitals_2 ↦ vitalSigns}
+        act6: currentMessage := {measureVitals_2}
+    END
+
+    receivemeasureVitals_2
+    WHEN
+        grd1: measureVitals_2 ∈ sentMessages
+        grd2: measureVitals_2 ↦ Nurse ∈ sender
+        grd3: measureVitals_2 ↦ Patient ∈ receiver
+        grd4: measureVitals_2 ∉ receivedMessages
+        grd5: currentMessage = {measureVitals_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {measureVitals_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {measureVitals_2 ↦ vitalSigns}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcallDoctor_3
+    WHEN
+        grd1: callDoctor_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: measureVitals_2 ∈ receivedMessages
+        grd4: severity = CRITICAL
+    THEN
+        act1: sentMessages := sentMessages ∪ {callDoctor_3}
+        act2: sender := sender ∪ {callDoctor_3 ↦ Nurse}
+        act3: receiver := receiver ∪ {callDoctor_3 ↦ Doctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {callDoctor_3 ↦ patientID}
+        act6: currentMessage := {callDoctor_3}
+    END
+
+    receivecallDoctor_3
+    WHEN
+        grd1: callDoctor_3 ∈ sentMessages
+        grd2: callDoctor_3 ↦ Nurse ∈ sender
+        grd3: callDoctor_3 ↦ Doctor ∈ receiver
+        grd4: callDoctor_3 ∉ receivedMessages
+        grd5: currentMessage = {callDoctor_3}
+        grd6: severity = CRITICAL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {callDoctor_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {callDoctor_3 ↦ patientID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendorderLabTest_4
+    WHEN
+        grd1: orderLabTest_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: callDoctor_3 ∈ receivedMessages
+        grd4: severity = CRITICAL
+    THEN
+        act1: sentMessages := sentMessages ∪ {orderLabTest_4}
+        act2: sender := sender ∪ {orderLabTest_4 ↦ Doctor}
+        act3: receiver := receiver ∪ {orderLabTest_4 ↦ LabSystem}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {orderLabTest_4 ↦ testID}
+        act6: currentMessage := {orderLabTest_4}
+    END
+
+    receiveorderLabTest_4
+    WHEN
+        grd1: orderLabTest_4 ∈ sentMessages
+        grd2: orderLabTest_4 ↦ Doctor ∈ sender
+        grd3: orderLabTest_4 ↦ LabSystem ∈ receiver
+        grd4: orderLabTest_4 ∉ receivedMessages
+        grd5: currentMessage = {orderLabTest_4}
+        grd6: severity = CRITICAL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {orderLabTest_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {orderLabTest_4 ↦ testID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendprescribeDrug_5
+    WHEN
+        grd1: prescribeDrug_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: orderLabTest_4 ∈ receivedMessages
+        grd4: severity = CRITICAL
+    THEN
+        act1: sentMessages := sentMessages ∪ {prescribeDrug_5}
+        act2: sender := sender ∪ {prescribeDrug_5 ↦ Doctor}
+        act3: receiver := receiver ∪ {prescribeDrug_5 ↦ Nurse}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {prescribeDrug_5 ↦ drugID}
+        act6: currentMessage := {prescribeDrug_5}
+    END
+
+    receiveprescribeDrug_5
+    WHEN
+        grd1: prescribeDrug_5 ∈ sentMessages
+        grd2: prescribeDrug_5 ↦ Doctor ∈ sender
+        grd3: prescribeDrug_5 ↦ Nurse ∈ receiver
+        grd4: prescribeDrug_5 ∉ receivedMessages
+        grd5: currentMessage = {prescribeDrug_5}
+        grd6: severity = CRITICAL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {prescribeDrug_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {prescribeDrug_5 ↦ drugID}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleVisit_6
+    WHEN
+        grd1: scheduleVisit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: measureVitals_2 ∈ receivedMessages
+        grd4: severity = NORMAL
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleVisit_6}
+        act2: sender := sender ∪ {scheduleVisit_6 ↦ Nurse}
+        act3: receiver := receiver ∪ {scheduleVisit_6 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleVisit_6 ↦ appointment}
+        act6: currentMessage := {scheduleVisit_6}
+    END
+
+    receivescheduleVisit_6
+    WHEN
+        grd1: scheduleVisit_6 ∈ sentMessages
+        grd2: scheduleVisit_6 ↦ Nurse ∈ sender
+        grd3: scheduleVisit_6 ↦ Patient ∈ receiver
+        grd4: scheduleVisit_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleVisit_6}
+        grd6: severity = NORMAL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleVisit_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleVisit_6 ↦ appointment}
+        act3: currentMessage := ∅
+    END
+
+    senddischargeNote_7
+    WHEN
+        grd1: dischargeNote_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: prescribeDrug_5 ∈ receivedMessages ∨ scheduleVisit_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {dischargeNote_7}
+        act2: sender := sender ∪ {dischargeNote_7 ↦ Nurse}
+        act3: receiver := receiver ∪ {dischargeNote_7 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {dischargeNote_7 ↦ summary}
+        act6: currentMessage := {dischargeNote_7}
+    END
+
+    receivedischargeNote_7
+    WHEN
+        grd1: dischargeNote_7 ∈ sentMessages
+        grd2: dischargeNote_7 ↦ Nurse ∈ sender
+        grd3: dischargeNote_7 ↦ Patient ∈ receiver
+        grd4: dischargeNote_7 ∉ receivedMessages
+        grd5: currentMessage = {dischargeNote_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dischargeNote_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {dischargeNote_7 ↦ summary}
+        act3: currentMessage := ∅
+    END
+
+END

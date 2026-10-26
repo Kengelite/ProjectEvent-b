@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="Renter" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="damageID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="carValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="fetchCar_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cancelCar_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ReturnKiosk" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="queryInvoice_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="carInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="validateDamage_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="fetchDamage_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="approveDamage_1" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/CarRentalReturn_Project/CarRentalReturnContext.bpo|org.eventb.core.poFile#CarRentalReturnContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Renter},{ReturnKiosk})" org.eventb.core.source="/CarRentalReturn_Project/CarRentalReturnContext.buc|org.eventb.core.contextFile#CarRentalReturnContext|org.eventb.core.axiom#internal_element15"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{approveDamage_1},{fetchCar_2},{validateDamage_3},{cancelCar_4},{fetchDamage_5},{queryInvoice_6})" org.eventb.core.source="/CarRentalReturn_Project/CarRentalReturnContext.buc|org.eventb.core.contextFile#CarRentalReturnContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{carInfo},{carValue},{damageID})" org.eventb.core.source="/CarRentalReturn_Project/CarRentalReturnContext.buc|org.eventb.core.contextFile#CarRentalReturnContext|org.eventb.core.axiom#internal_element17"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

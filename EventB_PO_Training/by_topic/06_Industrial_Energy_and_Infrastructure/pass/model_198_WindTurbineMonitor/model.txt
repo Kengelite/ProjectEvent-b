@@ -1,0 +1,267 @@
+CONTEXT WindTurbineMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    GridOperator, SCADA, Technician, Turbine
+    reserveRpm_1, updatePower_2, reservePower_3, notifyPower_4, syncPower_5, requestRpm_6, logRpm_7, scheduleFault_8
+    faultID, powerCode, powerID
+AXIOMS
+    axm1: partition(Objects, {GridOperator}, {SCADA}, {Technician}, {Turbine})
+    axm2: partition(Messages, {reserveRpm_1}, {updatePower_2}, {reservePower_3}, {notifyPower_4}, {syncPower_5}, {requestRpm_6}, {logRpm_7}, {scheduleFault_8})
+    axm3: partition(DataMessages, {faultID}, {powerCode}, {powerID})
+END
+
+MACHINE WindTurbineMonitorInteractionMachine_1
+SEES WindTurbineMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, withExtra, needAck, t_time_4, t_delay_4, t_success_4, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: withExtra ∈ ℤ
+    inv9: needAck ∈ ℤ
+    inv10: t_time_4 ∈ ℤ
+    inv11: t_delay_4 ∈ ℤ
+    inv12: t_success_4 ∈ ℤ
+    inv13: t_time_7 ∈ ℤ
+    inv14: t_delay_7 ∈ ℤ
+    inv15: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: withExtra := 1
+        act9: needAck := 1
+        act10: t_time_4 :∈ 0..1
+        act11: t_delay_4 := 0
+        act12: t_success_4 := 0
+        act13: t_time_7 :∈ 0..15
+        act14: t_delay_7 := 0
+        act15: t_success_7 := 0
+    END
+
+
+    sendreserveRpm_1
+    WHEN
+        grd1: reserveRpm_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveRpm_1}
+        act2: sender := sender ∪ {reserveRpm_1 ↦ GridOperator}
+        act3: receiver := receiver ∪ {reserveRpm_1 ↦ Turbine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveRpm_1 ↦ powerCode}
+        act6: currentMessage := {reserveRpm_1}
+    END
+
+    receivereserveRpm_1
+    WHEN
+        grd1: reserveRpm_1 ∈ sentMessages
+        grd2: reserveRpm_1 ↦ GridOperator ∈ sender
+        grd3: reserveRpm_1 ↦ Turbine ∈ receiver
+        grd4: reserveRpm_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveRpm_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveRpm_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveRpm_1 ↦ powerCode}
+        act3: currentMessage := ∅
+    END
+
+    sendupdatePower_2
+    WHEN
+        grd1: updatePower_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveRpm_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updatePower_2}
+        act2: sender := sender ∪ {updatePower_2 ↦ SCADA}
+        act3: receiver := receiver ∪ {updatePower_2 ↦ Turbine}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updatePower_2}
+    END
+
+    receiveupdatePower_2
+    WHEN
+        grd1: updatePower_2 ∈ sentMessages
+        grd2: updatePower_2 ↦ SCADA ∈ sender
+        grd3: updatePower_2 ↦ Turbine ∈ receiver
+        grd4: updatePower_2 ∉ receivedMessages
+        grd5: currentMessage = {updatePower_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updatePower_2}
+        act2: currentMessage := ∅
+    END
+
+    sendreservePower_3_opt1
+    WHEN
+        grd1: reservePower_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updatePower_2 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePower_3}
+        act2: sender := sender ∪ {reservePower_3 ↦ Turbine}
+        act3: receiver := receiver ∪ {reservePower_3 ↦ GridOperator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reservePower_3}
+    END
+
+    receivereservePower_3_opt1
+    WHEN
+        grd1: reservePower_3 ∈ sentMessages
+        grd2: reservePower_3 ↦ Turbine ∈ sender
+        grd3: reservePower_3 ↦ GridOperator ∈ receiver
+        grd4: reservePower_3 ∉ receivedMessages
+        grd5: currentMessage = {reservePower_3}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePower_3}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyPower_4
+    WHEN
+        grd1: notifyPower_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservePower_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPower_4}
+        act2: sender := sender ∪ {notifyPower_4 ↦ SCADA}
+        act3: receiver := receiver ∪ {notifyPower_4 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyPower_4}
+    END
+
+    receivenotifyPower_4
+    WHEN
+        grd1: notifyPower_4 ∈ sentMessages
+        grd2: notifyPower_4 ↦ SCADA ∈ sender
+        grd3: notifyPower_4 ↦ Technician ∈ receiver
+        grd4: notifyPower_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyPower_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPower_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncPower_5
+    WHEN
+        grd1: syncPower_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyPower_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPower_5}
+        act2: sender := sender ∪ {syncPower_5 ↦ SCADA}
+        act3: receiver := receiver ∪ {syncPower_5 ↦ GridOperator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncPower_5 ↦ faultID, syncPower_5 ↦ powerID}
+        act6: currentMessage := {syncPower_5}
+    END
+
+    receivesyncPower_5
+    WHEN
+        grd1: syncPower_5 ∈ sentMessages
+        grd2: syncPower_5 ↦ SCADA ∈ sender
+        grd3: syncPower_5 ↦ GridOperator ∈ receiver
+        grd4: syncPower_5 ∉ receivedMessages
+        grd5: currentMessage = {syncPower_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPower_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncPower_5 ↦ faultID, syncPower_5 ↦ powerID}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestRpm_6_opt2
+    WHEN
+        grd1: requestRpm_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncPower_5 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestRpm_6}
+        act2: sender := sender ∪ {requestRpm_6 ↦ GridOperator}
+        act3: receiver := receiver ∪ {requestRpm_6 ↦ Turbine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestRpm_6 ↦ faultID}
+        act6: currentMessage := {requestRpm_6}
+    END
+
+    receiverequestRpm_6_opt2
+    WHEN
+        grd1: requestRpm_6 ∈ sentMessages
+        grd2: requestRpm_6 ↦ GridOperator ∈ sender
+        grd3: requestRpm_6 ↦ Turbine ∈ receiver
+        grd4: requestRpm_6 ∉ receivedMessages
+        grd5: currentMessage = {requestRpm_6}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestRpm_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestRpm_6 ↦ faultID}
+        act3: currentMessage := ∅
+    END
+
+    sendlogRpm_7_opt2
+    WHEN
+        grd1: logRpm_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestRpm_6 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logRpm_7}
+        act2: sender := sender ∪ {logRpm_7 ↦ Technician}
+        act3: receiver := receiver ∪ {logRpm_7 ↦ SCADA}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logRpm_7}
+    END
+
+    receivelogRpm_7_opt2
+    WHEN
+        grd1: logRpm_7 ∈ sentMessages
+        grd2: logRpm_7 ↦ Technician ∈ sender
+        grd3: logRpm_7 ↦ SCADA ∈ receiver
+        grd4: logRpm_7 ∉ receivedMessages
+        grd5: currentMessage = {logRpm_7}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logRpm_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendscheduleFault_8
+    WHEN
+        grd1: scheduleFault_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logRpm_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleFault_8}
+        act2: sender := sender ∪ {scheduleFault_8 ↦ Turbine}
+        act3: receiver := receiver ∪ {scheduleFault_8 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleFault_8}
+    END
+
+    receivescheduleFault_8
+    WHEN
+        grd1: scheduleFault_8 ∈ sentMessages
+        grd2: scheduleFault_8 ↦ Turbine ∈ sender
+        grd3: scheduleFault_8 ↦ Technician ∈ receiver
+        grd4: scheduleFault_8 ∉ receivedMessages
+        grd5: currentMessage = {scheduleFault_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleFault_8}
+        act2: currentMessage := ∅
+    END
+
+END

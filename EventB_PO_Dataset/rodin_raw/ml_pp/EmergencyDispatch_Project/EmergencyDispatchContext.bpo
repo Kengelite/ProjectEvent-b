@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="CallCenter" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="sendLocation_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="scheduleCallback_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="notifyHospital_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="callbackTime" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="dispatchAmbulance_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Ambulance" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="askDetails_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Hospital" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="severityCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="route" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Caller" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="rerouteRequest_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="provideDetails_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="HIGH" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="caseID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="reportEmergency_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="closeCase_9" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="location" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="LOW" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="gpsPos" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/EmergencyDispatch_Project/EmergencyDispatchContext.bpo|org.eventb.core.poFile#EmergencyDispatchContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Ambulance},{CallCenter},{Caller},{Hospital})" org.eventb.core.source="/EmergencyDispatch_Project/EmergencyDispatchContext.buc|org.eventb.core.contextFile#EmergencyDispatchContext|org.eventb.core.axiom#internal_element25"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{reportEmergency_1},{askDetails_2},{provideDetails_3},{dispatchAmbulance_4},{sendLocation_5},{rerouteRequest_6},{notifyHospital_7},{scheduleCallback_8},{closeCase_9})" org.eventb.core.source="/EmergencyDispatch_Project/EmergencyDispatchContext.buc|org.eventb.core.contextFile#EmergencyDispatchContext|org.eventb.core.axiom#internal_element26"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{callbackTime},{caseID},{gpsPos},{location},{route},{severityCode})" org.eventb.core.source="/EmergencyDispatch_Project/EmergencyDispatchContext.buc|org.eventb.core.contextFile#EmergencyDispatchContext|org.eventb.core.axiom#internal_element27"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="HIGH=0" org.eventb.core.source="/EmergencyDispatch_Project/EmergencyDispatchContext.buc|org.eventb.core.contextFile#EmergencyDispatchContext|org.eventb.core.axiom#internal_element28"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="LOW=1" org.eventb.core.source="/EmergencyDispatch_Project/EmergencyDispatchContext.buc|org.eventb.core.contextFile#EmergencyDispatchContext|org.eventb.core.axiom#internal_element29"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

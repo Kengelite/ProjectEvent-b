@@ -1,0 +1,235 @@
+CONTEXT BloodBankRequestContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BloodBank, Courier, Hospital, LabTech
+    requestBlood_1, crossMatch_2, prepareCourier_3, deliverBlood_4, backorder_5, confirmReceipt_6
+    bagID, bloodType, etaHours, sampleID, units
+AXIOMS
+    axm1: partition(Objects, {BloodBank}, {Courier}, {Hospital}, {LabTech})
+    axm2: partition(Messages, {requestBlood_1}, {crossMatch_2}, {prepareCourier_3}, {deliverBlood_4}, {backorder_5}, {confirmReceipt_6})
+    axm3: partition(DataMessages, {bagID}, {bloodType}, {etaHours}, {sampleID}, {units})
+END
+
+MACHINE BloodBankRequestInteractionMachine_1
+SEES BloodBankRequestContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, stockUnits, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: stockUnits ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: currentMessage ⊆ sentMessages
+    inv20: t_time_4 ≥ 0
+    inv21: t_delay_4 ≥ 0
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: stockUnits :∈ ℤ
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..30
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..10
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 0..60
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+    END
+
+
+    sendrequestBlood_1
+    WHEN
+        grd1: requestBlood_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBlood_1}
+        act2: sender := sender ∪ {requestBlood_1 ↦ Hospital}
+        act3: receiver := receiver ∪ {requestBlood_1 ↦ BloodBank}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBlood_1 ↦ bloodType, requestBlood_1 ↦ units}
+        act6: currentMessage := {requestBlood_1}
+    END
+
+    receiverequestBlood_1
+    WHEN
+        grd1: requestBlood_1 ∈ sentMessages
+        grd2: requestBlood_1 ↦ Hospital ∈ sender
+        grd3: requestBlood_1 ↦ BloodBank ∈ receiver
+        grd4: requestBlood_1 ∉ receivedMessages
+        grd5: currentMessage = {requestBlood_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBlood_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBlood_1 ↦ bloodType, requestBlood_1 ↦ units}
+        act3: currentMessage := ∅
+    END
+
+    sendcrossMatch_2
+    WHEN
+        grd1: crossMatch_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBlood_1 ∈ receivedMessages
+        grd4: stockUnits ≥ 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {crossMatch_2}
+        act2: sender := sender ∪ {crossMatch_2 ↦ BloodBank}
+        act3: receiver := receiver ∪ {crossMatch_2 ↦ LabTech}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {crossMatch_2 ↦ sampleID}
+        act6: currentMessage := {crossMatch_2}
+    END
+
+    receivecrossMatch_2
+    WHEN
+        grd1: crossMatch_2 ∈ sentMessages
+        grd2: crossMatch_2 ↦ BloodBank ∈ sender
+        grd3: crossMatch_2 ↦ LabTech ∈ receiver
+        grd4: crossMatch_2 ∉ receivedMessages
+        grd5: currentMessage = {crossMatch_2}
+        grd6: stockUnits ≥ 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {crossMatch_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {crossMatch_2 ↦ sampleID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendprepareCourier_3
+    WHEN
+        grd1: prepareCourier_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: crossMatch_2 ∈ receivedMessages
+        grd4: stockUnits ≥ 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {prepareCourier_3}
+        act2: sender := sender ∪ {prepareCourier_3 ↦ BloodBank}
+        act3: receiver := receiver ∪ {prepareCourier_3 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {prepareCourier_3 ↦ bagID}
+        act6: currentMessage := {prepareCourier_3}
+    END
+
+    receiveprepareCourier_3
+    WHEN
+        grd1: prepareCourier_3 ∈ sentMessages
+        grd2: prepareCourier_3 ↦ BloodBank ∈ sender
+        grd3: prepareCourier_3 ↦ Courier ∈ receiver
+        grd4: prepareCourier_3 ∉ receivedMessages
+        grd5: currentMessage = {prepareCourier_3}
+        grd6: stockUnits ≥ 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {prepareCourier_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {prepareCourier_3 ↦ bagID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    senddeliverBlood_4
+    WHEN
+        grd1: deliverBlood_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: prepareCourier_3 ∈ receivedMessages
+        grd4: stockUnits ≥ 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {deliverBlood_4}
+        act2: sender := sender ∪ {deliverBlood_4 ↦ Courier}
+        act3: receiver := receiver ∪ {deliverBlood_4 ↦ Hospital}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {deliverBlood_4 ↦ bagID}
+        act6: currentMessage := {deliverBlood_4}
+    END
+
+    receivedeliverBlood_4
+    WHEN
+        grd1: deliverBlood_4 ∈ sentMessages
+        grd2: deliverBlood_4 ↦ Courier ∈ sender
+        grd3: deliverBlood_4 ↦ Hospital ∈ receiver
+        grd4: deliverBlood_4 ∉ receivedMessages
+        grd5: currentMessage = {deliverBlood_4}
+        grd6: stockUnits ≥ 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {deliverBlood_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {deliverBlood_4 ↦ bagID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendbackorder_5
+    WHEN
+        grd1: backorder_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBlood_1 ∈ receivedMessages
+        grd4: stockUnits < 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {backorder_5}
+        act2: sender := sender ∪ {backorder_5 ↦ BloodBank}
+        act3: receiver := receiver ∪ {backorder_5 ↦ Hospital}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {backorder_5 ↦ etaHours}
+        act6: currentMessage := {backorder_5}
+    END
+
+    receivebackorder_5
+    WHEN
+        grd1: backorder_5 ∈ sentMessages
+        grd2: backorder_5 ↦ BloodBank ∈ sender
+        grd3: backorder_5 ↦ Hospital ∈ receiver
+        grd4: backorder_5 ∉ receivedMessages
+        grd5: currentMessage = {backorder_5}
+        grd6: stockUnits < 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {backorder_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {backorder_5 ↦ etaHours}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmReceipt_6
+    WHEN
+        grd1: confirmReceipt_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: deliverBlood_4 ∈ receivedMessages ∨ backorder_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmReceipt_6}
+        act2: sender := sender ∪ {confirmReceipt_6 ↦ Hospital}
+        act3: receiver := receiver ∪ {confirmReceipt_6 ↦ BloodBank}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmReceipt_6 ↦ bagID}
+        act6: currentMessage := {confirmReceipt_6}
+    END
+
+    receiveconfirmReceipt_6
+    WHEN
+        grd1: confirmReceipt_6 ∈ sentMessages
+        grd2: confirmReceipt_6 ↦ Hospital ∈ sender
+        grd3: confirmReceipt_6 ↦ BloodBank ∈ receiver
+        grd4: confirmReceipt_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmReceipt_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmReceipt_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmReceipt_6 ↦ bagID}
+        act3: currentMessage := ∅
+    END
+
+END

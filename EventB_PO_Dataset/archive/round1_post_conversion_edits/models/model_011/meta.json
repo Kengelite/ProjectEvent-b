@@ -1,0 +1,26 @@
+{
+  "model_id": "model_011",
+  "case": "ColdChainMonitor",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "ColdChainMonitor_Project",
+  "category": "non_inductive",
+  "mutation": "t_time_2 ≥ 0 (provable) and t_success_2 ≥ 0 (true, but needs a missing t_delay_2 ≥ 0)",
+  "operations": {
+    "add_inv": [
+      "t_time_2 ≥ 0",
+      "t_success_2 ≥ 0"
+    ]
+  },
+  "added_invariant_labels": [
+    "inv18",
+    "inv19"
+  ],
+  "expected_failed_pos": [
+    "receiveuploadLog_2/inv19/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_011",
+  "rodin_raw_dir": "rodin_raw/ml_pp/ColdChainMonitor_Project"
+}

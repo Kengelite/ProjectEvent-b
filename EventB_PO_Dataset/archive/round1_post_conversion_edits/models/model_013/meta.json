@@ -1,0 +1,28 @@
+{
+  "model_id": "model_013",
+  "case": "CourseEnrollment",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "CourseEnrollment_Project",
+  "category": "model_error",
+  "mutation": "currentMessage ⊆ sentMessages (provable) and receivedMessages ⊆ dom(receiverdataMessages) (wrong: assumes every message carries data)",
+  "operations": {
+    "add_inv": [
+      "currentMessage ⊆ sentMessages",
+      "receivedMessages ⊆ dom(receiverdataMessages)"
+    ]
+  },
+  "added_invariant_labels": [
+    "inv18",
+    "inv19"
+  ],
+  "expected_failed_pos": [
+    "receivebrowseCourses_1/inv19/INV",
+    "receiveprereqOK_5/inv19/INV",
+    "receiveapproved_7_opt1/inv19/INV"
+  ],
+  "expected_failed_count": 3,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_013",
+  "rodin_raw_dir": "rodin_raw/ml_pp/CourseEnrollment_Project"
+}

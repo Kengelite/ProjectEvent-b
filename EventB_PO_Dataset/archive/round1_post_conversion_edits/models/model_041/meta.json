@@ -1,0 +1,26 @@
+{
+  "model_id": "model_041",
+  "case": "SmartPlugControl",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "SmartPlugControl_Project",
+  "category": "model_error",
+  "mutation": "receive of turnOff_3 records turnOn_5 (other alt branch, never sent) as received",
+  "operations": {
+    "replace_in_event": [
+      [
+        "receiveturnOff_3",
+        "receivedMessages ∪ {turnOff_3}",
+        "receivedMessages ∪ {turnOn_5}"
+      ]
+    ]
+  },
+  "added_invariant_labels": [],
+  "expected_failed_pos": [
+    "receiveturnOff_3/inv5/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_041",
+  "rodin_raw_dir": "rodin_raw/ml_pp/SmartPlugControl_Project"
+}

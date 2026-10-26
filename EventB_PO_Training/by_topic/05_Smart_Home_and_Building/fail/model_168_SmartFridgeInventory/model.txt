@@ -1,0 +1,416 @@
+CONTEXT SmartFridgeInventoryContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Fridge, GroceryAPI, HomeApp
+    approveOrder_1, assignExpiry_2, sendOrder_3, assignItem_4, scheduleOrder_5, logOrder_6, approveExpiry_7, queryItem_8, checkOrder_9, issueExpiry_10, syncOrder_11
+    expiryID, itemData, itemID, orderData, orderRef, orderValue
+    GREEN, RED
+AXIOMS
+    axm1: partition(Objects, {Fridge}, {GroceryAPI}, {HomeApp})
+    axm2: partition(Messages, {approveOrder_1}, {assignExpiry_2}, {sendOrder_3}, {assignItem_4}, {scheduleOrder_5}, {logOrder_6}, {approveExpiry_7}, {queryItem_8}, {checkOrder_9}, {issueExpiry_10}, {syncOrder_11})
+    axm3: partition(DataMessages, {expiryID}, {itemData}, {itemID}, {orderData}, {orderRef}, {orderValue})
+    axm4: GREEN = 0
+    axm5: RED = 1
+END
+
+MACHINE SmartFridgeInventoryInteractionMachine_1
+SEES SmartFridgeInventoryContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, attemptNo, tier, stepNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: attemptNo ∈ ℤ
+    inv9: tier ∈ ℤ
+    inv10: stepNo ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_2 ∈ ℤ
+    inv15: t_delay_2 ∈ ℤ
+    inv16: t_success_2 ∈ ℤ
+    inv17: t_time_3 ∈ ℤ
+    inv18: t_delay_3 ∈ ℤ
+    inv19: t_success_3 ∈ ℤ
+    inv20: t_time_5 ∈ ℤ
+    inv21: t_delay_5 ∈ ℤ
+    inv22: t_success_5 ∈ ℤ
+    inv23: t_time_7 ∈ ℤ
+    inv24: t_delay_7 ∈ ℤ
+    inv25: t_success_7 ∈ ℤ
+    inv26: t_time_8 ∈ ℤ
+    inv27: t_delay_8 ∈ ℤ
+    inv28: t_success_8 ∈ ℤ
+    inv29: t_time_11 ∈ ℤ
+    inv30: t_delay_11 ∈ ℤ
+    inv31: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: attemptNo := 0
+        act9: tier := RED
+        act10: stepNo := 0
+        act11: t_time_1 :∈ 0..0
+        act12: t_delay_1 := 2
+        act13: t_success_1 := 0
+        act14: t_time_2 :∈ 0..15
+        act15: t_delay_2 := 0
+        act16: t_success_2 := 0
+        act17: t_time_3 :∈ 0..2
+        act18: t_delay_3 := 0
+        act19: t_success_3 := 0
+        act20: t_time_5 :∈ 0..8
+        act21: t_delay_5 := 0
+        act22: t_success_5 := 0
+        act23: t_time_7 :∈ 0..8
+        act24: t_delay_7 := 3
+        act25: t_success_7 := 0
+        act26: t_time_8 :∈ 15..2
+        act27: t_delay_8 := 0
+        act28: t_success_8 := 0
+        act29: t_time_11 :∈ 8..3
+        act30: t_delay_11 := 0
+        act31: t_success_11 := 0
+    END
+
+
+    sendapproveOrder_1
+    WHEN
+        grd1: approveOrder_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveOrder_1}
+        act2: sender := sender ∪ {approveOrder_1 ↦ HomeApp}
+        act3: receiver := receiver ∪ {approveOrder_1 ↦ GroceryAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveOrder_1 ↦ expiryID}
+        act6: currentMessage := {approveOrder_1}
+    END
+
+    receiveapproveOrder_1
+    WHEN
+        grd1: approveOrder_1 ∈ sentMessages
+        grd2: approveOrder_1 ↦ HomeApp ∈ sender
+        grd3: approveOrder_1 ↦ GroceryAPI ∈ receiver
+        grd4: approveOrder_1 ∉ receivedMessages
+        grd5: currentMessage = {approveOrder_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveOrder_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveOrder_1 ↦ expiryID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignExpiry_2
+    WHEN
+        grd1: assignExpiry_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveOrder_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignExpiry_2}
+        act2: sender := sender ∪ {assignExpiry_2 ↦ GroceryAPI}
+        act3: receiver := receiver ∪ {assignExpiry_2 ↦ Fridge}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignExpiry_2 ↦ orderData}
+        act6: currentMessage := {assignExpiry_2}
+    END
+
+    receiveassignExpiry_2
+    WHEN
+        grd1: assignExpiry_2 ∈ sentMessages
+        grd2: assignExpiry_2 ↦ GroceryAPI ∈ sender
+        grd3: assignExpiry_2 ↦ Fridge ∈ receiver
+        grd4: assignExpiry_2 ∉ receivedMessages
+        grd5: currentMessage = {assignExpiry_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignExpiry_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignExpiry_2 ↦ orderData}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendOrder_3
+    WHEN
+        grd1: sendOrder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignExpiry_2 ∈ receivedMessages
+        grd4: attemptNo < 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendOrder_3}
+        act2: sender := sender ∪ {sendOrder_3 ↦ Fridge}
+        act3: receiver := receiver ∪ {sendOrder_3 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendOrder_3}
+    END
+
+    receivesendOrder_3
+    WHEN
+        grd1: sendOrder_3 ∈ sentMessages
+        grd2: sendOrder_3 ↦ Fridge ∈ sender
+        grd3: sendOrder_3 ↦ HomeApp ∈ receiver
+        grd4: sendOrder_3 ∉ receivedMessages
+        grd5: currentMessage = {sendOrder_3}
+        grd6: attemptNo < 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendOrder_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendassignItem_4
+    WHEN
+        grd1: assignItem_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendOrder_3 ∈ receivedMessages
+        grd4: attemptNo < 2
+        grd5: tier = GREEN
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignItem_4}
+        act2: sender := sender ∪ {assignItem_4 ↦ HomeApp}
+        act3: receiver := receiver ∪ {assignItem_4 ↦ GroceryAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignItem_4 ↦ orderValue}
+        act6: currentMessage := {assignItem_4}
+    END
+
+    receiveassignItem_4
+    WHEN
+        grd1: assignItem_4 ∈ sentMessages
+        grd2: assignItem_4 ↦ HomeApp ∈ sender
+        grd3: assignItem_4 ↦ GroceryAPI ∈ receiver
+        grd4: assignItem_4 ∉ receivedMessages
+        grd5: currentMessage = {assignItem_4}
+        grd6: attemptNo < 2
+        grd7: tier = GREEN
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignItem_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignItem_4 ↦ orderValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleOrder_5
+    WHEN
+        grd1: scheduleOrder_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignItem_4 ∈ receivedMessages
+        grd4: attemptNo < 2
+        grd5: tier = GREEN
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleOrder_5}
+        act2: sender := sender ∪ {scheduleOrder_5 ↦ HomeApp}
+        act3: receiver := receiver ∪ {scheduleOrder_5 ↦ GroceryAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleOrder_5}
+    END
+
+    receivescheduleOrder_5
+    WHEN
+        grd1: scheduleOrder_5 ∈ sentMessages
+        grd2: scheduleOrder_5 ↦ HomeApp ∈ sender
+        grd3: scheduleOrder_5 ↦ GroceryAPI ∈ receiver
+        grd4: scheduleOrder_5 ∉ receivedMessages
+        grd5: currentMessage = {scheduleOrder_5}
+        grd6: attemptNo < 2
+        grd7: tier = GREEN
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleOrder_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendlogOrder_6
+    WHEN
+        grd1: logOrder_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendOrder_3 ∈ receivedMessages
+        grd4: attemptNo < 2
+        grd5: tier = RED
+    THEN
+        act1: sentMessages := sentMessages ∪ {logOrder_6}
+        act2: sender := sender ∪ {logOrder_6 ↦ GroceryAPI}
+        act3: receiver := receiver ∪ {logOrder_6 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logOrder_6 ↦ itemData}
+        act6: currentMessage := {logOrder_6}
+    END
+
+    receivelogOrder_6
+    WHEN
+        grd1: logOrder_6 ∈ sentMessages
+        grd2: logOrder_6 ↦ GroceryAPI ∈ sender
+        grd3: logOrder_6 ↦ HomeApp ∈ receiver
+        grd4: logOrder_6 ∉ receivedMessages
+        grd5: currentMessage = {logOrder_6}
+        grd6: attemptNo < 2
+        grd7: tier = RED
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logOrder_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logOrder_6 ↦ itemData}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveExpiry_7
+    WHEN
+        grd1: approveExpiry_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleOrder_5 ∈ receivedMessages ∨ logOrder_6 ∈ receivedMessages
+        grd4: attemptNo < 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveExpiry_7}
+        act2: sender := sender ∪ {approveExpiry_7 ↦ GroceryAPI}
+        act3: receiver := receiver ∪ {approveExpiry_7 ↦ Fridge}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveExpiry_7 ↦ orderRef}
+        act6: currentMessage := {approveExpiry_7}
+    END
+
+    receiveapproveExpiry_7
+    WHEN
+        grd1: approveExpiry_7 ∈ sentMessages
+        grd2: approveExpiry_7 ↦ GroceryAPI ∈ sender
+        grd3: approveExpiry_7 ↦ Fridge ∈ receiver
+        grd4: approveExpiry_7 ∉ receivedMessages
+        grd5: currentMessage = {approveExpiry_7}
+        grd6: attemptNo < 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveExpiry_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveExpiry_7 ↦ orderRef}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendqueryItem_8
+    WHEN
+        grd1: queryItem_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveExpiry_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryItem_8}
+        act2: sender := sender ∪ {queryItem_8 ↦ GroceryAPI}
+        act3: receiver := receiver ∪ {queryItem_8 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryItem_8 ↦ itemID}
+        act6: currentMessage := {queryItem_8}
+    END
+
+    receivequeryItem_8
+    WHEN
+        grd1: queryItem_8 ∈ sentMessages
+        grd2: queryItem_8 ↦ GroceryAPI ∈ sender
+        grd3: queryItem_8 ↦ HomeApp ∈ receiver
+        grd4: queryItem_8 ∉ receivedMessages
+        grd5: currentMessage = {queryItem_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryItem_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryItem_8 ↦ itemID}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendcheckOrder_9
+    WHEN
+        grd1: checkOrder_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryItem_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkOrder_9}
+        act2: sender := sender ∪ {checkOrder_9 ↦ Fridge}
+        act3: receiver := receiver ∪ {checkOrder_9 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkOrder_9}
+    END
+
+    receivecheckOrder_9
+    WHEN
+        grd1: checkOrder_9 ∈ sentMessages
+        grd2: checkOrder_9 ↦ Fridge ∈ sender
+        grd3: checkOrder_9 ↦ HomeApp ∈ receiver
+        grd4: checkOrder_9 ∉ receivedMessages
+        grd5: currentMessage = {checkOrder_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkOrder_9}
+        act2: currentMessage := ∅
+    END
+
+    sendissueExpiry_10
+    WHEN
+        grd1: issueExpiry_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkOrder_9 ∈ receivedMessages
+        grd4: stepNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueExpiry_10}
+        act2: sender := sender ∪ {issueExpiry_10 ↦ GroceryAPI}
+        act3: receiver := receiver ∪ {issueExpiry_10 ↦ Fridge}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueExpiry_10 ↦ orderData}
+        act6: currentMessage := {issueExpiry_10}
+    END
+
+    receiveissueExpiry_10
+    WHEN
+        grd1: issueExpiry_10 ∈ sentMessages
+        grd2: issueExpiry_10 ↦ GroceryAPI ∈ sender
+        grd3: issueExpiry_10 ↦ Fridge ∈ receiver
+        grd4: issueExpiry_10 ∉ receivedMessages
+        grd5: currentMessage = {issueExpiry_10}
+        grd6: stepNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueExpiry_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueExpiry_10 ↦ orderData}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncOrder_11
+    WHEN
+        grd1: syncOrder_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueExpiry_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncOrder_11}
+        act2: sender := sender ∪ {syncOrder_11 ↦ HomeApp}
+        act3: receiver := receiver ∪ {syncOrder_11 ↦ GroceryAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncOrder_11}
+    END
+
+    receivesyncOrder_11
+    WHEN
+        grd1: syncOrder_11 ∈ sentMessages
+        grd2: syncOrder_11 ↦ HomeApp ∈ sender
+        grd3: syncOrder_11 ↦ GroceryAPI ∈ receiver
+        grd4: syncOrder_11 ∉ receivedMessages
+        grd5: currentMessage = {syncOrder_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncOrder_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_sendOrder_3_loop1
+    WHEN
+        grd1: attemptNo < 2
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+    checkloop_issueExpiry_10_loop2
+    WHEN
+        grd1: stepNo < 11
+    THEN
+        act1: stepNo := stepNo + 1
+    END
+
+END

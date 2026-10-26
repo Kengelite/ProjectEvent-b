@@ -1,0 +1,223 @@
+CONTEXT PhotoPrintKioskContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, LabPrinter, PhotoCloud, PrintKiosk
+    checkPrint_1, assignPrint_2, assignOrder_3, reservePhoto_4, updatePhoto_5, schedulePrint_6
+    orderValue, photoValue, printCode
+AXIOMS
+    axm1: partition(Objects, {Customer}, {LabPrinter}, {PhotoCloud}, {PrintKiosk})
+    axm2: partition(Messages, {checkPrint_1}, {assignPrint_2}, {assignOrder_3}, {reservePhoto_4}, {updatePhoto_5}, {schedulePrint_6})
+    axm3: partition(DataMessages, {orderValue}, {photoValue}, {printCode})
+END
+
+MACHINE PhotoPrintKioskInteractionMachine_1
+SEES PhotoPrintKioskContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: t_time_2 :∈ 0..20
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..8
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..1
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendcheckPrint_1
+    WHEN
+        grd1: checkPrint_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPrint_1}
+        act2: sender := sender ∪ {checkPrint_1 ↦ LabPrinter}
+        act3: receiver := receiver ∪ {checkPrint_1 ↦ PrintKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkPrint_1}
+    END
+
+    receivecheckPrint_1
+    WHEN
+        grd1: checkPrint_1 ∈ sentMessages
+        grd2: checkPrint_1 ↦ LabPrinter ∈ sender
+        grd3: checkPrint_1 ↦ PrintKiosk ∈ receiver
+        grd4: checkPrint_1 ∉ receivedMessages
+        grd5: currentMessage = {checkPrint_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPrint_1}
+        act2: currentMessage := ∅
+    END
+
+    sendassignPrint_2
+    WHEN
+        grd1: assignPrint_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkPrint_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignPrint_2}
+        act2: sender := sender ∪ {assignPrint_2 ↦ PrintKiosk}
+        act3: receiver := receiver ∪ {assignPrint_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignPrint_2}
+    END
+
+    receiveassignPrint_2
+    WHEN
+        grd1: assignPrint_2 ∈ sentMessages
+        grd2: assignPrint_2 ↦ PrintKiosk ∈ sender
+        grd3: assignPrint_2 ↦ Customer ∈ receiver
+        grd4: assignPrint_2 ∉ receivedMessages
+        grd5: currentMessage = {assignPrint_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignPrint_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+        act4: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendassignOrder_3
+    WHEN
+        grd1: assignOrder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignPrint_2 ∈ receivedMessages
+        grd4: t_obs ≤ 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignOrder_3}
+        act2: sender := sender ∪ {assignOrder_3 ↦ PhotoCloud}
+        act3: receiver := receiver ∪ {assignOrder_3 ↦ LabPrinter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignOrder_3}
+    END
+
+    receiveassignOrder_3
+    WHEN
+        grd1: assignOrder_3 ∈ sentMessages
+        grd2: assignOrder_3 ↦ PhotoCloud ∈ sender
+        grd3: assignOrder_3 ↦ LabPrinter ∈ receiver
+        grd4: assignOrder_3 ∉ receivedMessages
+        grd5: currentMessage = {assignOrder_3}
+        grd6: t_obs ≤ 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignOrder_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreservePhoto_4
+    WHEN
+        grd1: reservePhoto_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignOrder_3 ∈ receivedMessages
+        grd4: t_obs ≤ 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePhoto_4}
+        act2: sender := sender ∪ {reservePhoto_4 ↦ PhotoCloud}
+        act3: receiver := receiver ∪ {reservePhoto_4 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePhoto_4 ↦ photoValue}
+        act6: currentMessage := {reservePhoto_4}
+    END
+
+    receivereservePhoto_4
+    WHEN
+        grd1: reservePhoto_4 ∈ sentMessages
+        grd2: reservePhoto_4 ↦ PhotoCloud ∈ sender
+        grd3: reservePhoto_4 ↦ Customer ∈ receiver
+        grd4: reservePhoto_4 ∉ receivedMessages
+        grd5: currentMessage = {reservePhoto_4}
+        grd6: t_obs ≤ 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePhoto_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePhoto_4 ↦ photoValue}
+        act3: currentMessage := ∅
+    END
+
+    sendupdatePhoto_5
+    WHEN
+        grd1: updatePhoto_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignPrint_2 ∈ receivedMessages
+        grd4: t_obs > 13
+    THEN
+        act1: sentMessages := sentMessages ∪ {updatePhoto_5}
+        act2: sender := sender ∪ {updatePhoto_5 ↦ PhotoCloud}
+        act3: receiver := receiver ∪ {updatePhoto_5 ↦ LabPrinter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updatePhoto_5 ↦ orderValue}
+        act6: currentMessage := {updatePhoto_5}
+    END
+
+    receiveupdatePhoto_5
+    WHEN
+        grd1: updatePhoto_5 ∈ sentMessages
+        grd2: updatePhoto_5 ↦ PhotoCloud ∈ sender
+        grd3: updatePhoto_5 ↦ LabPrinter ∈ receiver
+        grd4: updatePhoto_5 ∉ receivedMessages
+        grd5: currentMessage = {updatePhoto_5}
+        grd6: t_obs > 13
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updatePhoto_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updatePhoto_5 ↦ orderValue}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendschedulePrint_6
+    WHEN
+        grd1: schedulePrint_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservePhoto_4 ∈ receivedMessages ∨ updatePhoto_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePrint_6}
+        act2: sender := sender ∪ {schedulePrint_6 ↦ PhotoCloud}
+        act3: receiver := receiver ∪ {schedulePrint_6 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {schedulePrint_6 ↦ printCode}
+        act6: currentMessage := {schedulePrint_6}
+    END
+
+    receiveschedulePrint_6
+    WHEN
+        grd1: schedulePrint_6 ∈ sentMessages
+        grd2: schedulePrint_6 ↦ PhotoCloud ∈ sender
+        grd3: schedulePrint_6 ↦ Customer ∈ receiver
+        grd4: schedulePrint_6 ∉ receivedMessages
+        grd5: currentMessage = {schedulePrint_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePrint_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {schedulePrint_6 ↦ printCode}
+        act3: currentMessage := ∅
+    END
+
+END

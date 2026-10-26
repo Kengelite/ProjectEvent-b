@@ -1,0 +1,265 @@
+CONTEXT GreenhouseLightingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    LightCtrl, LuxSensor, Scheduler
+    approveEnergy_1, ackLight_2, checkLux_3, reserveLux_4, releaseLight_5, notifyEnergy_6, queryEnergy_7, requestLight_8
+    lightID, luxCode, luxData, luxID, luxInfo
+AXIOMS
+    axm1: partition(Objects, {LightCtrl}, {LuxSensor}, {Scheduler})
+    axm2: partition(Messages, {approveEnergy_1}, {ackLight_2}, {checkLux_3}, {reserveLux_4}, {releaseLight_5}, {notifyEnergy_6}, {queryEnergy_7}, {requestLight_8})
+    axm3: partition(DataMessages, {lightID}, {luxCode}, {luxData}, {luxID}, {luxInfo})
+END
+
+MACHINE GreenhouseLightingInteractionMachine_1
+SEES GreenhouseLightingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_3, t_delay_3, t_success_3, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_7 ∈ ℤ
+    inv13: t_delay_7 ∈ ℤ
+    inv14: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_3 :∈ 0..20
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+        act12: t_time_7 :∈ 0..5
+        act13: t_delay_7 := 3
+        act14: t_success_7 := 0
+    END
+
+
+    sendapproveEnergy_1
+    WHEN
+        grd1: approveEnergy_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveEnergy_1}
+        act2: sender := sender ∪ {approveEnergy_1 ↦ LightCtrl}
+        act3: receiver := receiver ∪ {approveEnergy_1 ↦ LuxSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveEnergy_1 ↦ lightID}
+        act6: currentMessage := {approveEnergy_1}
+    END
+
+    receiveapproveEnergy_1
+    WHEN
+        grd1: approveEnergy_1 ∈ sentMessages
+        grd2: approveEnergy_1 ↦ LightCtrl ∈ sender
+        grd3: approveEnergy_1 ↦ LuxSensor ∈ receiver
+        grd4: approveEnergy_1 ∉ receivedMessages
+        grd5: currentMessage = {approveEnergy_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveEnergy_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveEnergy_1 ↦ lightID}
+        act3: currentMessage := ∅
+    END
+
+    sendackLight_2
+    WHEN
+        grd1: ackLight_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveEnergy_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackLight_2}
+        act2: sender := sender ∪ {ackLight_2 ↦ Scheduler}
+        act3: receiver := receiver ∪ {ackLight_2 ↦ LightCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackLight_2 ↦ luxID}
+        act6: currentMessage := {ackLight_2}
+    END
+
+    receiveackLight_2
+    WHEN
+        grd1: ackLight_2 ∈ sentMessages
+        grd2: ackLight_2 ↦ Scheduler ∈ sender
+        grd3: ackLight_2 ↦ LightCtrl ∈ receiver
+        grd4: ackLight_2 ∉ receivedMessages
+        grd5: currentMessage = {ackLight_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackLight_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackLight_2 ↦ luxID}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckLux_3
+    WHEN
+        grd1: checkLux_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackLight_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkLux_3}
+        act2: sender := sender ∪ {checkLux_3 ↦ Scheduler}
+        act3: receiver := receiver ∪ {checkLux_3 ↦ LightCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkLux_3 ↦ luxCode}
+        act6: currentMessage := {checkLux_3}
+    END
+
+    receivecheckLux_3
+    WHEN
+        grd1: checkLux_3 ∈ sentMessages
+        grd2: checkLux_3 ↦ Scheduler ∈ sender
+        grd3: checkLux_3 ↦ LightCtrl ∈ receiver
+        grd4: checkLux_3 ∉ receivedMessages
+        grd5: currentMessage = {checkLux_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkLux_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkLux_3 ↦ luxCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreserveLux_4
+    WHEN
+        grd1: reserveLux_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkLux_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveLux_4}
+        act2: sender := sender ∪ {reserveLux_4 ↦ Scheduler}
+        act3: receiver := receiver ∪ {reserveLux_4 ↦ LightCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveLux_4 ↦ luxData}
+        act6: currentMessage := {reserveLux_4}
+    END
+
+    receivereserveLux_4
+    WHEN
+        grd1: reserveLux_4 ∈ sentMessages
+        grd2: reserveLux_4 ↦ Scheduler ∈ sender
+        grd3: reserveLux_4 ↦ LightCtrl ∈ receiver
+        grd4: reserveLux_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveLux_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveLux_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveLux_4 ↦ luxData}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseLight_5
+    WHEN
+        grd1: releaseLight_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveLux_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLight_5}
+        act2: sender := sender ∪ {releaseLight_5 ↦ Scheduler}
+        act3: receiver := receiver ∪ {releaseLight_5 ↦ LuxSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseLight_5 ↦ luxCode}
+        act6: currentMessage := {releaseLight_5}
+    END
+
+    receivereleaseLight_5
+    WHEN
+        grd1: releaseLight_5 ∈ sentMessages
+        grd2: releaseLight_5 ↦ Scheduler ∈ sender
+        grd3: releaseLight_5 ↦ LuxSensor ∈ receiver
+        grd4: releaseLight_5 ∉ receivedMessages
+        grd5: currentMessage = {releaseLight_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLight_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseLight_5 ↦ luxCode}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyEnergy_6
+    WHEN
+        grd1: notifyEnergy_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLight_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyEnergy_6}
+        act2: sender := sender ∪ {notifyEnergy_6 ↦ LightCtrl}
+        act3: receiver := receiver ∪ {notifyEnergy_6 ↦ LuxSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyEnergy_6}
+    END
+
+    receivenotifyEnergy_6
+    WHEN
+        grd1: notifyEnergy_6 ∈ sentMessages
+        grd2: notifyEnergy_6 ↦ LightCtrl ∈ sender
+        grd3: notifyEnergy_6 ↦ LuxSensor ∈ receiver
+        grd4: notifyEnergy_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyEnergy_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyEnergy_6}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryEnergy_7
+    WHEN
+        grd1: queryEnergy_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyEnergy_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryEnergy_7}
+        act2: sender := sender ∪ {queryEnergy_7 ↦ LuxSensor}
+        act3: receiver := receiver ∪ {queryEnergy_7 ↦ LightCtrl}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryEnergy_7}
+    END
+
+    receivequeryEnergy_7
+    WHEN
+        grd1: queryEnergy_7 ∈ sentMessages
+        grd2: queryEnergy_7 ↦ LuxSensor ∈ sender
+        grd3: queryEnergy_7 ↦ LightCtrl ∈ receiver
+        grd4: queryEnergy_7 ∉ receivedMessages
+        grd5: currentMessage = {queryEnergy_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryEnergy_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendrequestLight_8
+    WHEN
+        grd1: requestLight_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryEnergy_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestLight_8}
+        act2: sender := sender ∪ {requestLight_8 ↦ Scheduler}
+        act3: receiver := receiver ∪ {requestLight_8 ↦ LuxSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestLight_8 ↦ luxInfo}
+        act6: currentMessage := {requestLight_8}
+    END
+
+    receiverequestLight_8
+    WHEN
+        grd1: requestLight_8 ∈ sentMessages
+        grd2: requestLight_8 ↦ Scheduler ∈ sender
+        grd3: requestLight_8 ↦ LuxSensor ∈ receiver
+        grd4: requestLight_8 ∉ receivedMessages
+        grd5: currentMessage = {requestLight_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestLight_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestLight_8 ↦ luxInfo}
+        act3: currentMessage := ∅
+    END
+
+END

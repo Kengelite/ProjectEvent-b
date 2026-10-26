@@ -1,0 +1,488 @@
+CONTEXT RailFareGateContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Commuter, FareGate
+    queryBalance_1, assignBalance_2, checkFare_3, validateCard_4, checkCard_5, queryFare_6, validateFare_7, requestCard_8, reportBalance_9, releaseFare_10, issueFare_11, logBalance_12, validateBalance_13, assignFare_14, cancelFare_15
+    balanceCode, balanceData, balanceValue, cardID, cardInfo, cardValue, fareCode, fareData, fareInfo
+AXIOMS
+    axm1: partition(Objects, {Commuter}, {FareGate})
+    axm2: partition(Messages, {queryBalance_1}, {assignBalance_2}, {checkFare_3}, {validateCard_4}, {checkCard_5}, {queryFare_6}, {validateFare_7}, {requestCard_8}, {reportBalance_9}, {releaseFare_10}, {issueFare_11}, {logBalance_12}, {validateBalance_13}, {assignFare_14}, {cancelFare_15})
+    axm3: partition(DataMessages, {balanceCode}, {balanceData}, {balanceValue}, {cardID}, {cardInfo}, {cardValue}, {fareCode}, {fareData}, {fareInfo})
+END
+
+MACHINE RailFareGateInteractionMachine_1
+SEES RailFareGateContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, withExtra, par_1, t_time_1, t_delay_1, t_success_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_9, t_delay_9, t_success_9, t_time_12, t_delay_12, t_success_12, t_time_13, t_delay_13, t_success_13
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: withExtra ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_9 ∈ ℤ
+    inv21: t_delay_9 ∈ ℤ
+    inv22: t_success_9 ∈ ℤ
+    inv23: t_time_12 ∈ ℤ
+    inv24: t_delay_12 ∈ ℤ
+    inv25: t_success_12 ∈ ℤ
+    inv26: t_time_13 ∈ ℤ
+    inv27: t_delay_13 ∈ ℤ
+    inv28: t_success_13 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: withExtra := 1
+        act10: par_1 := 0
+        act11: t_time_1 :∈ 0..0
+        act12: t_delay_1 := 5
+        act13: t_success_1 := 0
+        act14: t_time_4 :∈ 0..60
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 0..0
+        act18: t_delay_5 := 5
+        act19: t_success_5 := 0
+        act20: t_time_9 :∈ 0..20
+        act21: t_delay_9 := 0
+        act22: t_success_9 := 0
+        act23: t_time_12 :∈ 0..15
+        act24: t_delay_12 := 0
+        act25: t_success_12 := 0
+        act26: t_time_13 :∈ 0..0
+        act27: t_delay_13 := 3
+        act28: t_success_13 := 0
+    END
+
+
+    sendqueryBalance_1
+    WHEN
+        grd1: queryBalance_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryBalance_1}
+        act2: sender := sender ∪ {queryBalance_1 ↦ Commuter}
+        act3: receiver := receiver ∪ {queryBalance_1 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryBalance_1}
+    END
+
+    receivequeryBalance_1
+    WHEN
+        grd1: queryBalance_1 ∈ sentMessages
+        grd2: queryBalance_1 ↦ Commuter ∈ sender
+        grd3: queryBalance_1 ↦ FareGate ∈ receiver
+        grd4: queryBalance_1 ∉ receivedMessages
+        grd5: currentMessage = {queryBalance_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryBalance_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignBalance_2
+    WHEN
+        grd1: assignBalance_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryBalance_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignBalance_2}
+        act2: sender := sender ∪ {assignBalance_2 ↦ Commuter}
+        act3: receiver := receiver ∪ {assignBalance_2 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignBalance_2 ↦ fareInfo}
+        act6: currentMessage := {assignBalance_2}
+    END
+
+    receiveassignBalance_2
+    WHEN
+        grd1: assignBalance_2 ∈ sentMessages
+        grd2: assignBalance_2 ↦ Commuter ∈ sender
+        grd3: assignBalance_2 ↦ FareGate ∈ receiver
+        grd4: assignBalance_2 ∉ receivedMessages
+        grd5: currentMessage = {assignBalance_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignBalance_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignBalance_2 ↦ fareInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckFare_3_opt1
+    WHEN
+        grd1: checkFare_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignBalance_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkFare_3}
+        act2: sender := sender ∪ {checkFare_3 ↦ FareGate}
+        act3: receiver := receiver ∪ {checkFare_3 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkFare_3}
+    END
+
+    receivecheckFare_3_opt1
+    WHEN
+        grd1: checkFare_3 ∈ sentMessages
+        grd2: checkFare_3 ↦ FareGate ∈ sender
+        grd3: checkFare_3 ↦ Commuter ∈ receiver
+        grd4: checkFare_3 ∉ receivedMessages
+        grd5: currentMessage = {checkFare_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkFare_3}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateCard_4_opt1
+    WHEN
+        grd1: validateCard_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkFare_3 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateCard_4}
+        act2: sender := sender ∪ {validateCard_4 ↦ FareGate}
+        act3: receiver := receiver ∪ {validateCard_4 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateCard_4 ↦ cardID}
+        act6: currentMessage := {validateCard_4}
+    END
+
+    receivevalidateCard_4_opt1
+    WHEN
+        grd1: validateCard_4 ∈ sentMessages
+        grd2: validateCard_4 ↦ FareGate ∈ sender
+        grd3: validateCard_4 ↦ Commuter ∈ receiver
+        grd4: validateCard_4 ∉ receivedMessages
+        grd5: currentMessage = {validateCard_4}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateCard_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateCard_4 ↦ cardID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcheckCard_5
+    WHEN
+        grd1: checkCard_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateCard_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkCard_5}
+        act2: sender := sender ∪ {checkCard_5 ↦ Commuter}
+        act3: receiver := receiver ∪ {checkCard_5 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkCard_5 ↦ balanceValue}
+        act6: currentMessage := {checkCard_5}
+    END
+
+    receivecheckCard_5
+    WHEN
+        grd1: checkCard_5 ∈ sentMessages
+        grd2: checkCard_5 ↦ Commuter ∈ sender
+        grd3: checkCard_5 ↦ FareGate ∈ receiver
+        grd4: checkCard_5 ∉ receivedMessages
+        grd5: currentMessage = {checkCard_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkCard_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkCard_5 ↦ balanceValue}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendqueryFare_6
+    WHEN
+        grd1: queryFare_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkCard_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryFare_6}
+        act2: sender := sender ∪ {queryFare_6 ↦ Commuter}
+        act3: receiver := receiver ∪ {queryFare_6 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryFare_6 ↦ balanceData}
+        act6: currentMessage := {queryFare_6}
+    END
+
+    receivequeryFare_6
+    WHEN
+        grd1: queryFare_6 ∈ sentMessages
+        grd2: queryFare_6 ↦ Commuter ∈ sender
+        grd3: queryFare_6 ↦ FareGate ∈ receiver
+        grd4: queryFare_6 ∉ receivedMessages
+        grd5: currentMessage = {queryFare_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryFare_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryFare_6 ↦ balanceData}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateFare_7_opt2
+    WHEN
+        grd1: validateFare_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryFare_6 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateFare_7}
+        act2: sender := sender ∪ {validateFare_7 ↦ FareGate}
+        act3: receiver := receiver ∪ {validateFare_7 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateFare_7 ↦ fareData}
+        act6: currentMessage := {validateFare_7}
+    END
+
+    receivevalidateFare_7_opt2
+    WHEN
+        grd1: validateFare_7 ∈ sentMessages
+        grd2: validateFare_7 ↦ FareGate ∈ sender
+        grd3: validateFare_7 ↦ Commuter ∈ receiver
+        grd4: validateFare_7 ∉ receivedMessages
+        grd5: currentMessage = {validateFare_7}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateFare_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateFare_7 ↦ fareData}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestCard_8_opt2
+    WHEN
+        grd1: requestCard_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateFare_7 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestCard_8}
+        act2: sender := sender ∪ {requestCard_8 ↦ FareGate}
+        act3: receiver := receiver ∪ {requestCard_8 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestCard_8}
+    END
+
+    receiverequestCard_8_opt2
+    WHEN
+        grd1: requestCard_8 ∈ sentMessages
+        grd2: requestCard_8 ↦ FareGate ∈ sender
+        grd3: requestCard_8 ↦ Commuter ∈ receiver
+        grd4: requestCard_8 ∉ receivedMessages
+        grd5: currentMessage = {requestCard_8}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestCard_8}
+        act2: currentMessage := ∅
+    END
+
+    sendreportBalance_9
+    WHEN
+        grd1: reportBalance_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestCard_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportBalance_9}
+        act2: sender := sender ∪ {reportBalance_9 ↦ Commuter}
+        act3: receiver := receiver ∪ {reportBalance_9 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportBalance_9}
+    END
+
+    receivereportBalance_9
+    WHEN
+        grd1: reportBalance_9 ∈ sentMessages
+        grd2: reportBalance_9 ↦ Commuter ∈ sender
+        grd3: reportBalance_9 ↦ FareGate ∈ receiver
+        grd4: reportBalance_9 ∉ receivedMessages
+        grd5: currentMessage = {reportBalance_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportBalance_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendreleaseFare_10
+    WHEN
+        grd1: releaseFare_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportBalance_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseFare_10}
+        act2: sender := sender ∪ {releaseFare_10 ↦ Commuter}
+        act3: receiver := receiver ∪ {releaseFare_10 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseFare_10 ↦ balanceCode}
+        act6: currentMessage := {releaseFare_10}
+    END
+
+    receivereleaseFare_10
+    WHEN
+        grd1: releaseFare_10 ∈ sentMessages
+        grd2: releaseFare_10 ↦ Commuter ∈ sender
+        grd3: releaseFare_10 ↦ FareGate ∈ receiver
+        grd4: releaseFare_10 ∉ receivedMessages
+        grd5: currentMessage = {releaseFare_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseFare_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseFare_10 ↦ balanceCode}
+        act3: currentMessage := ∅
+    END
+
+    sendissueFare_11
+    WHEN
+        grd1: issueFare_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseFare_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueFare_11}
+        act2: sender := sender ∪ {issueFare_11 ↦ FareGate}
+        act3: receiver := receiver ∪ {issueFare_11 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueFare_11 ↦ balanceValue}
+        act6: currentMessage := {issueFare_11}
+    END
+
+    receiveissueFare_11
+    WHEN
+        grd1: issueFare_11 ∈ sentMessages
+        grd2: issueFare_11 ↦ FareGate ∈ sender
+        grd3: issueFare_11 ↦ Commuter ∈ receiver
+        grd4: issueFare_11 ∉ receivedMessages
+        grd5: currentMessage = {issueFare_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueFare_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueFare_11 ↦ balanceValue}
+        act3: currentMessage := ∅
+    END
+
+    sendlogBalance_12
+    WHEN
+        grd1: logBalance_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueFare_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logBalance_12}
+        act2: sender := sender ∪ {logBalance_12 ↦ FareGate}
+        act3: receiver := receiver ∪ {logBalance_12 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logBalance_12 ↦ cardValue}
+        act6: currentMessage := {logBalance_12}
+    END
+
+    receivelogBalance_12
+    WHEN
+        grd1: logBalance_12 ∈ sentMessages
+        grd2: logBalance_12 ↦ FareGate ∈ sender
+        grd3: logBalance_12 ↦ Commuter ∈ receiver
+        grd4: logBalance_12 ∉ receivedMessages
+        grd5: currentMessage = {logBalance_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logBalance_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logBalance_12 ↦ cardValue}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    sendvalidateBalance_13
+    WHEN
+        grd1: validateBalance_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logBalance_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateBalance_13}
+        act2: sender := sender ∪ {validateBalance_13 ↦ Commuter}
+        act3: receiver := receiver ∪ {validateBalance_13 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateBalance_13 ↦ cardInfo}
+        act6: currentMessage := {validateBalance_13}
+    END
+
+    receivevalidateBalance_13
+    WHEN
+        grd1: validateBalance_13 ∈ sentMessages
+        grd2: validateBalance_13 ↦ Commuter ∈ sender
+        grd3: validateBalance_13 ↦ FareGate ∈ receiver
+        grd4: validateBalance_13 ∉ receivedMessages
+        grd5: currentMessage = {validateBalance_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateBalance_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateBalance_13 ↦ cardInfo}
+        act3: currentMessage := ∅
+        act4: t_success_13 := t_time_13 + t_delay_13
+    END
+
+    sendassignFare_14
+    WHEN
+        grd1: assignFare_14 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateBalance_13 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignFare_14}
+        act2: sender := sender ∪ {assignFare_14 ↦ FareGate}
+        act3: receiver := receiver ∪ {assignFare_14 ↦ Commuter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignFare_14}
+    END
+
+    receiveassignFare_14
+    WHEN
+        grd1: assignFare_14 ∈ sentMessages
+        grd2: assignFare_14 ↦ FareGate ∈ sender
+        grd3: assignFare_14 ↦ Commuter ∈ receiver
+        grd4: assignFare_14 ∉ receivedMessages
+        grd5: currentMessage = {assignFare_14}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignFare_14}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelFare_15
+    WHEN
+        grd1: cancelFare_15 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignFare_14 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelFare_15}
+        act2: sender := sender ∪ {cancelFare_15 ↦ Commuter}
+        act3: receiver := receiver ∪ {cancelFare_15 ↦ FareGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelFare_15 ↦ fareCode}
+        act6: currentMessage := {cancelFare_15}
+    END
+
+    receivecancelFare_15
+    WHEN
+        grd1: cancelFare_15 ∈ sentMessages
+        grd2: cancelFare_15 ↦ Commuter ∈ sender
+        grd3: cancelFare_15 ↦ FareGate ∈ receiver
+        grd4: cancelFare_15 ∉ receivedMessages
+        grd5: currentMessage = {cancelFare_15}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelFare_15}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelFare_15 ↦ fareCode}
+        act3: currentMessage := ∅
+    END
+
+END

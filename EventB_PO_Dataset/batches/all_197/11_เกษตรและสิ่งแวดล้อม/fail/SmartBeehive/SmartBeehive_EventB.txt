@@ -1,0 +1,238 @@
+CONTEXT SmartBeehiveContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BeeCloud, HiveGateway, HiveSensor
+    updateHoney_1, releaseWeight_2, logWeight_3, issueWeight_4, checkWeight_5, scheduleSwarm_6, requestHoney_7
+    honeyID, swarmInfo, swarmValue, weightCode
+AXIOMS
+    axm1: partition(Objects, {BeeCloud}, {HiveGateway}, {HiveSensor})
+    axm2: partition(Messages, {updateHoney_1}, {releaseWeight_2}, {logWeight_3}, {issueWeight_4}, {checkWeight_5}, {scheduleSwarm_6}, {requestHoney_7})
+    axm3: partition(DataMessages, {honeyID}, {swarmInfo}, {swarmValue}, {weightCode})
+END
+
+MACHINE SmartBeehiveInteractionMachine_1
+SEES SmartBeehiveContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_3 :∈ 60..50
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+        act12: t_time_5 :∈ 0..8
+        act13: t_delay_5 := 0
+        act14: t_success_5 := 0
+    END
+
+
+    sendupdateHoney_1
+    WHEN
+        grd1: updateHoney_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateHoney_1}
+        act2: sender := sender ∪ {updateHoney_1 ↦ BeeCloud}
+        act3: receiver := receiver ∪ {updateHoney_1 ↦ HiveSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateHoney_1 ↦ weightCode}
+        act6: currentMessage := {updateHoney_1}
+    END
+
+    receiveupdateHoney_1
+    WHEN
+        grd1: updateHoney_1 ∈ sentMessages
+        grd2: updateHoney_1 ↦ BeeCloud ∈ sender
+        grd3: updateHoney_1 ↦ HiveSensor ∈ receiver
+        grd4: updateHoney_1 ∉ receivedMessages
+        grd5: currentMessage = {updateHoney_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateHoney_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateHoney_1 ↦ weightCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseWeight_2
+    WHEN
+        grd1: releaseWeight_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateHoney_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseWeight_2}
+        act2: sender := sender ∪ {releaseWeight_2 ↦ BeeCloud}
+        act3: receiver := receiver ∪ {releaseWeight_2 ↦ HiveSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseWeight_2 ↦ swarmInfo}
+        act6: currentMessage := {releaseWeight_2}
+    END
+
+    receivereleaseWeight_2
+    WHEN
+        grd1: releaseWeight_2 ∈ sentMessages
+        grd2: releaseWeight_2 ↦ BeeCloud ∈ sender
+        grd3: releaseWeight_2 ↦ HiveSensor ∈ receiver
+        grd4: releaseWeight_2 ∉ receivedMessages
+        grd5: currentMessage = {releaseWeight_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseWeight_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseWeight_2 ↦ swarmInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendlogWeight_3
+    WHEN
+        grd1: logWeight_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseWeight_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logWeight_3}
+        act2: sender := sender ∪ {logWeight_3 ↦ BeeCloud}
+        act3: receiver := receiver ∪ {logWeight_3 ↦ HiveSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logWeight_3}
+    END
+
+    receivelogWeight_3
+    WHEN
+        grd1: logWeight_3 ∈ sentMessages
+        grd2: logWeight_3 ↦ BeeCloud ∈ sender
+        grd3: logWeight_3 ↦ HiveSensor ∈ receiver
+        grd4: logWeight_3 ∉ receivedMessages
+        grd5: currentMessage = {logWeight_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logWeight_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendissueWeight_4
+    WHEN
+        grd1: issueWeight_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logWeight_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueWeight_4}
+        act2: sender := sender ∪ {issueWeight_4 ↦ HiveSensor}
+        act3: receiver := receiver ∪ {issueWeight_4 ↦ HiveGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueWeight_4 ↦ honeyID}
+        act6: currentMessage := {issueWeight_4}
+    END
+
+    receiveissueWeight_4
+    WHEN
+        grd1: issueWeight_4 ∈ sentMessages
+        grd2: issueWeight_4 ↦ HiveSensor ∈ sender
+        grd3: issueWeight_4 ↦ HiveGateway ∈ receiver
+        grd4: issueWeight_4 ∉ receivedMessages
+        grd5: currentMessage = {issueWeight_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueWeight_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueWeight_4 ↦ honeyID}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckWeight_5
+    WHEN
+        grd1: checkWeight_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueWeight_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkWeight_5}
+        act2: sender := sender ∪ {checkWeight_5 ↦ HiveGateway}
+        act3: receiver := receiver ∪ {checkWeight_5 ↦ HiveSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkWeight_5 ↦ weightCode}
+        act6: currentMessage := {checkWeight_5}
+    END
+
+    receivecheckWeight_5
+    WHEN
+        grd1: checkWeight_5 ∈ sentMessages
+        grd2: checkWeight_5 ↦ HiveGateway ∈ sender
+        grd3: checkWeight_5 ↦ HiveSensor ∈ receiver
+        grd4: checkWeight_5 ∉ receivedMessages
+        grd5: currentMessage = {checkWeight_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkWeight_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkWeight_5 ↦ weightCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendscheduleSwarm_6
+    WHEN
+        grd1: scheduleSwarm_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkWeight_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSwarm_6}
+        act2: sender := sender ∪ {scheduleSwarm_6 ↦ HiveGateway}
+        act3: receiver := receiver ∪ {scheduleSwarm_6 ↦ BeeCloud}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSwarm_6 ↦ swarmValue}
+        act6: currentMessage := {scheduleSwarm_6}
+    END
+
+    receivescheduleSwarm_6
+    WHEN
+        grd1: scheduleSwarm_6 ∈ sentMessages
+        grd2: scheduleSwarm_6 ↦ HiveGateway ∈ sender
+        grd3: scheduleSwarm_6 ↦ BeeCloud ∈ receiver
+        grd4: scheduleSwarm_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSwarm_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSwarm_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSwarm_6 ↦ swarmValue}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestHoney_7
+    WHEN
+        grd1: requestHoney_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSwarm_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestHoney_7}
+        act2: sender := sender ∪ {requestHoney_7 ↦ BeeCloud}
+        act3: receiver := receiver ∪ {requestHoney_7 ↦ HiveSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestHoney_7}
+    END
+
+    receiverequestHoney_7
+    WHEN
+        grd1: requestHoney_7 ∈ sentMessages
+        grd2: requestHoney_7 ↦ BeeCloud ∈ sender
+        grd3: requestHoney_7 ↦ HiveSensor ∈ receiver
+        grd4: requestHoney_7 ∉ receivedMessages
+        grd5: currentMessage = {requestHoney_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestHoney_7}
+        act2: currentMessage := ∅
+    END
+
+END

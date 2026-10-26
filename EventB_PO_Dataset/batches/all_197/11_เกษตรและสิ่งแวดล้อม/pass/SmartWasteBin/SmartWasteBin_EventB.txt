@@ -1,0 +1,352 @@
+CONTEXT SmartWasteBinContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Bin, FleetPlanner, Gateway
+    reserveRoute_1, sendRoute_2, assignRoute_3, reservePickup_4, scheduleFill_5, updatePickup_6, logPickup_7, issueRoute_8, syncPickup_9, releaseRoute_10
+    fillID, fillInfo, pickupID, routeData, routeRef
+    BRONZE, GOLD, SILVER
+AXIOMS
+    axm1: partition(Objects, {Bin}, {FleetPlanner}, {Gateway})
+    axm2: partition(Messages, {reserveRoute_1}, {sendRoute_2}, {assignRoute_3}, {reservePickup_4}, {scheduleFill_5}, {updatePickup_6}, {logPickup_7}, {issueRoute_8}, {syncPickup_9}, {releaseRoute_10})
+    axm3: partition(DataMessages, {fillID}, {fillInfo}, {pickupID}, {routeData}, {routeRef})
+    axm4: BRONZE = 0
+    axm5: GOLD = 1
+    axm6: SILVER = 2
+END
+
+MACHINE SmartWasteBinInteractionMachine_1
+SEES SmartWasteBinContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, hasKey, phase, t_time_1, t_delay_1, t_success_1, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: hasKey ∈ ℤ
+    inv9: phase ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_7 ∈ ℤ
+    inv17: t_delay_7 ∈ ℤ
+    inv18: t_success_7 ∈ ℤ
+    inv19: t_time_9 ∈ ℤ
+    inv20: t_delay_9 ∈ ℤ
+    inv21: t_success_9 ∈ ℤ
+    inv22: t_time_10 ∈ ℤ
+    inv23: t_delay_10 ∈ ℤ
+    inv24: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: hasKey := 0
+        act9: phase := BRONZE
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_5 :∈ 0..60
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+        act16: t_time_7 :∈ 0..2
+        act17: t_delay_7 := 0
+        act18: t_success_7 := 0
+        act19: t_time_9 :∈ 0..30
+        act20: t_delay_9 := 0
+        act21: t_success_9 := 0
+        act22: t_time_10 :∈ 0..30
+        act23: t_delay_10 := 0
+        act24: t_success_10 := 0
+    END
+
+
+    sendreserveRoute_1
+    WHEN
+        grd1: reserveRoute_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveRoute_1}
+        act2: sender := sender ∪ {reserveRoute_1 ↦ Bin}
+        act3: receiver := receiver ∪ {reserveRoute_1 ↦ FleetPlanner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveRoute_1 ↦ fillID}
+        act6: currentMessage := {reserveRoute_1}
+    END
+
+    receivereserveRoute_1
+    WHEN
+        grd1: reserveRoute_1 ∈ sentMessages
+        grd2: reserveRoute_1 ↦ Bin ∈ sender
+        grd3: reserveRoute_1 ↦ FleetPlanner ∈ receiver
+        grd4: reserveRoute_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveRoute_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveRoute_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveRoute_1 ↦ fillID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendsendRoute_2
+    WHEN
+        grd1: sendRoute_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveRoute_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendRoute_2}
+        act2: sender := sender ∪ {sendRoute_2 ↦ Gateway}
+        act3: receiver := receiver ∪ {sendRoute_2 ↦ FleetPlanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendRoute_2}
+    END
+
+    receivesendRoute_2
+    WHEN
+        grd1: sendRoute_2 ∈ sentMessages
+        grd2: sendRoute_2 ↦ Gateway ∈ sender
+        grd3: sendRoute_2 ↦ FleetPlanner ∈ receiver
+        grd4: sendRoute_2 ∉ receivedMessages
+        grd5: currentMessage = {sendRoute_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendRoute_2}
+        act2: currentMessage := ∅
+    END
+
+    sendassignRoute_3
+    WHEN
+        grd1: assignRoute_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendRoute_2 ∈ receivedMessages
+        grd4: hasKey = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignRoute_3}
+        act2: sender := sender ∪ {assignRoute_3 ↦ FleetPlanner}
+        act3: receiver := receiver ∪ {assignRoute_3 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignRoute_3}
+    END
+
+    receiveassignRoute_3
+    WHEN
+        grd1: assignRoute_3 ∈ sentMessages
+        grd2: assignRoute_3 ↦ FleetPlanner ∈ sender
+        grd3: assignRoute_3 ↦ Gateway ∈ receiver
+        grd4: assignRoute_3 ∉ receivedMessages
+        grd5: currentMessage = {assignRoute_3}
+        grd6: hasKey = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignRoute_3}
+        act2: currentMessage := ∅
+    END
+
+    sendreservePickup_4
+    WHEN
+        grd1: reservePickup_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendRoute_2 ∈ receivedMessages
+        grd4: hasKey = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePickup_4}
+        act2: sender := sender ∪ {reservePickup_4 ↦ FleetPlanner}
+        act3: receiver := receiver ∪ {reservePickup_4 ↦ Bin}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePickup_4 ↦ routeRef}
+        act6: currentMessage := {reservePickup_4}
+    END
+
+    receivereservePickup_4
+    WHEN
+        grd1: reservePickup_4 ∈ sentMessages
+        grd2: reservePickup_4 ↦ FleetPlanner ∈ sender
+        grd3: reservePickup_4 ↦ Bin ∈ receiver
+        grd4: reservePickup_4 ∉ receivedMessages
+        grd5: currentMessage = {reservePickup_4}
+        grd6: hasKey = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePickup_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePickup_4 ↦ routeRef}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleFill_5
+    WHEN
+        grd1: scheduleFill_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignRoute_3 ∈ receivedMessages ∨ reservePickup_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleFill_5}
+        act2: sender := sender ∪ {scheduleFill_5 ↦ Gateway}
+        act3: receiver := receiver ∪ {scheduleFill_5 ↦ FleetPlanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleFill_5}
+    END
+
+    receivescheduleFill_5
+    WHEN
+        grd1: scheduleFill_5 ∈ sentMessages
+        grd2: scheduleFill_5 ↦ Gateway ∈ sender
+        grd3: scheduleFill_5 ↦ FleetPlanner ∈ receiver
+        grd4: scheduleFill_5 ∉ receivedMessages
+        grd5: currentMessage = {scheduleFill_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleFill_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendupdatePickup_6
+    WHEN
+        grd1: updatePickup_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleFill_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updatePickup_6}
+        act2: sender := sender ∪ {updatePickup_6 ↦ Gateway}
+        act3: receiver := receiver ∪ {updatePickup_6 ↦ FleetPlanner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updatePickup_6}
+    END
+
+    receiveupdatePickup_6
+    WHEN
+        grd1: updatePickup_6 ∈ sentMessages
+        grd2: updatePickup_6 ↦ Gateway ∈ sender
+        grd3: updatePickup_6 ↦ FleetPlanner ∈ receiver
+        grd4: updatePickup_6 ∉ receivedMessages
+        grd5: currentMessage = {updatePickup_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updatePickup_6}
+        act2: currentMessage := ∅
+    END
+
+    sendlogPickup_7
+    WHEN
+        grd1: logPickup_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updatePickup_6 ∈ receivedMessages
+        grd4: phase = GOLD
+    THEN
+        act1: sentMessages := sentMessages ∪ {logPickup_7}
+        act2: sender := sender ∪ {logPickup_7 ↦ FleetPlanner}
+        act3: receiver := receiver ∪ {logPickup_7 ↦ Bin}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logPickup_7 ↦ fillInfo}
+        act6: currentMessage := {logPickup_7}
+    END
+
+    receivelogPickup_7
+    WHEN
+        grd1: logPickup_7 ∈ sentMessages
+        grd2: logPickup_7 ↦ FleetPlanner ∈ sender
+        grd3: logPickup_7 ↦ Bin ∈ receiver
+        grd4: logPickup_7 ∉ receivedMessages
+        grd5: currentMessage = {logPickup_7}
+        grd6: phase = GOLD
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logPickup_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logPickup_7 ↦ fillInfo}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendissueRoute_8
+    WHEN
+        grd1: issueRoute_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updatePickup_6 ∈ receivedMessages
+        grd4: phase = SILVER
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueRoute_8}
+        act2: sender := sender ∪ {issueRoute_8 ↦ Gateway}
+        act3: receiver := receiver ∪ {issueRoute_8 ↦ Bin}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueRoute_8 ↦ pickupID}
+        act6: currentMessage := {issueRoute_8}
+    END
+
+    receiveissueRoute_8
+    WHEN
+        grd1: issueRoute_8 ∈ sentMessages
+        grd2: issueRoute_8 ↦ Gateway ∈ sender
+        grd3: issueRoute_8 ↦ Bin ∈ receiver
+        grd4: issueRoute_8 ∉ receivedMessages
+        grd5: currentMessage = {issueRoute_8}
+        grd6: phase = SILVER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueRoute_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueRoute_8 ↦ pickupID}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncPickup_9
+    WHEN
+        grd1: syncPickup_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updatePickup_6 ∈ receivedMessages
+        grd4: phase = BRONZE
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPickup_9}
+        act2: sender := sender ∪ {syncPickup_9 ↦ FleetPlanner}
+        act3: receiver := receiver ∪ {syncPickup_9 ↦ Bin}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncPickup_9 ↦ fillID}
+        act6: currentMessage := {syncPickup_9}
+    END
+
+    receivesyncPickup_9
+    WHEN
+        grd1: syncPickup_9 ∈ sentMessages
+        grd2: syncPickup_9 ↦ FleetPlanner ∈ sender
+        grd3: syncPickup_9 ↦ Bin ∈ receiver
+        grd4: syncPickup_9 ∉ receivedMessages
+        grd5: currentMessage = {syncPickup_9}
+        grd6: phase = BRONZE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPickup_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncPickup_9 ↦ fillID}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendreleaseRoute_10
+    WHEN
+        grd1: releaseRoute_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logPickup_7 ∈ receivedMessages ∨ issueRoute_8 ∈ receivedMessages ∨ syncPickup_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseRoute_10}
+        act2: sender := sender ∪ {releaseRoute_10 ↦ Bin}
+        act3: receiver := receiver ∪ {releaseRoute_10 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseRoute_10 ↦ routeData}
+        act6: currentMessage := {releaseRoute_10}
+    END
+
+    receivereleaseRoute_10
+    WHEN
+        grd1: releaseRoute_10 ∈ sentMessages
+        grd2: releaseRoute_10 ↦ Bin ∈ sender
+        grd3: releaseRoute_10 ↦ Gateway ∈ receiver
+        grd4: releaseRoute_10 ∉ receivedMessages
+        grd5: currentMessage = {releaseRoute_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseRoute_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseRoute_10 ↦ routeData}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+END

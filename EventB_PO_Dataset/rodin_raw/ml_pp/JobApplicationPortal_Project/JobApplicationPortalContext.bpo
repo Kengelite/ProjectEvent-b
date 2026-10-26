@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="requestOffer_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="updateOffer_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="validateInterview_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="CareerSite" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="assignResume_10" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ACTIVE" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="ackOffer_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="offerRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Applicant" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="assignInterview_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="interviewData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="cancelResume_9" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="checkResume_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ATS" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="offerInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="requestInterview_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="resumeValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="offerID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="releaseInterview_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="IDLE" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/JobApplicationPortal_Project/JobApplicationPortalContext.bpo|org.eventb.core.poFile#JobApplicationPortalContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{ATS},{Applicant},{CareerSite})" org.eventb.core.source="/JobApplicationPortal_Project/JobApplicationPortalContext.buc|org.eventb.core.contextFile#JobApplicationPortalContext|org.eventb.core.axiom#internal_element24"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{assignInterview_1},{checkResume_2},{validateInterview_3},{releaseInterview_4},{ackOffer_5},{requestOffer_6},{requestInterview_7},{updateOffer_8},{cancelResume_9},{assignResume_10})" org.eventb.core.source="/JobApplicationPortal_Project/JobApplicationPortalContext.buc|org.eventb.core.contextFile#JobApplicationPortalContext|org.eventb.core.axiom#internal_element25"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{interviewData},{offerID},{offerInfo},{offerRef},{resumeValue})" org.eventb.core.source="/JobApplicationPortal_Project/JobApplicationPortalContext.buc|org.eventb.core.contextFile#JobApplicationPortalContext|org.eventb.core.axiom#internal_element26"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="ACTIVE=0" org.eventb.core.source="/JobApplicationPortal_Project/JobApplicationPortalContext.buc|org.eventb.core.contextFile#JobApplicationPortalContext|org.eventb.core.axiom#internal_element27"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="IDLE=1" org.eventb.core.source="/JobApplicationPortal_Project/JobApplicationPortalContext.buc|org.eventb.core.contextFile#JobApplicationPortalContext|org.eventb.core.axiom#internal_element28"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

@@ -1,0 +1,263 @@
+CONTEXT OnlineGroceryPickingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    PickApp, Picker, StoreWMS
+    logOrder_1, assignOrder_2, cancelOrder_3, fetchOrder_4, fetchItem_5, cancelItem_6, confirmBag_7, approveOrder_8
+    bagCode, bagID, bagRef, orderData, orderInfo
+AXIOMS
+    axm1: partition(Objects, {PickApp}, {Picker}, {StoreWMS})
+    axm2: partition(Messages, {logOrder_1}, {assignOrder_2}, {cancelOrder_3}, {fetchOrder_4}, {fetchItem_5}, {cancelItem_6}, {confirmBag_7}, {approveOrder_8})
+    axm3: partition(DataMessages, {bagCode}, {bagID}, {bagRef}, {orderData}, {orderInfo})
+END
+
+MACHINE OnlineGroceryPickingInteractionMachine_1
+SEES OnlineGroceryPickingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_5, t_delay_5, t_success_5, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_5 ∈ ℤ
+    inv10: t_delay_5 ∈ ℤ
+    inv11: t_success_5 ∈ ℤ
+    inv12: t_time_8 ∈ ℤ
+    inv13: t_delay_8 ∈ ℤ
+    inv14: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_5 :∈ 0..15
+        act10: t_delay_5 := 0
+        act11: t_success_5 := 0
+        act12: t_time_8 :∈ 0..0
+        act13: t_delay_8 := 3
+        act14: t_success_8 := 0
+    END
+
+
+    sendlogOrder_1
+    WHEN
+        grd1: logOrder_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {logOrder_1}
+        act2: sender := sender ∪ {logOrder_1 ↦ PickApp}
+        act3: receiver := receiver ∪ {logOrder_1 ↦ StoreWMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logOrder_1}
+    END
+
+    receivelogOrder_1
+    WHEN
+        grd1: logOrder_1 ∈ sentMessages
+        grd2: logOrder_1 ↦ PickApp ∈ sender
+        grd3: logOrder_1 ↦ StoreWMS ∈ receiver
+        grd4: logOrder_1 ∉ receivedMessages
+        grd5: currentMessage = {logOrder_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logOrder_1}
+        act2: currentMessage := ∅
+    END
+
+    sendassignOrder_2
+    WHEN
+        grd1: assignOrder_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logOrder_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignOrder_2}
+        act2: sender := sender ∪ {assignOrder_2 ↦ Picker}
+        act3: receiver := receiver ∪ {assignOrder_2 ↦ StoreWMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignOrder_2}
+    END
+
+    receiveassignOrder_2
+    WHEN
+        grd1: assignOrder_2 ∈ sentMessages
+        grd2: assignOrder_2 ↦ Picker ∈ sender
+        grd3: assignOrder_2 ↦ StoreWMS ∈ receiver
+        grd4: assignOrder_2 ∉ receivedMessages
+        grd5: currentMessage = {assignOrder_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignOrder_2}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelOrder_3
+    WHEN
+        grd1: cancelOrder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignOrder_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelOrder_3}
+        act2: sender := sender ∪ {cancelOrder_3 ↦ PickApp}
+        act3: receiver := receiver ∪ {cancelOrder_3 ↦ Picker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelOrder_3 ↦ bagID}
+        act6: currentMessage := {cancelOrder_3}
+    END
+
+    receivecancelOrder_3
+    WHEN
+        grd1: cancelOrder_3 ∈ sentMessages
+        grd2: cancelOrder_3 ↦ PickApp ∈ sender
+        grd3: cancelOrder_3 ↦ Picker ∈ receiver
+        grd4: cancelOrder_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelOrder_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelOrder_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelOrder_3 ↦ bagID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchOrder_4
+    WHEN
+        grd1: fetchOrder_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelOrder_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchOrder_4}
+        act2: sender := sender ∪ {fetchOrder_4 ↦ Picker}
+        act3: receiver := receiver ∪ {fetchOrder_4 ↦ PickApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchOrder_4 ↦ bagRef}
+        act6: currentMessage := {fetchOrder_4}
+    END
+
+    receivefetchOrder_4
+    WHEN
+        grd1: fetchOrder_4 ∈ sentMessages
+        grd2: fetchOrder_4 ↦ Picker ∈ sender
+        grd3: fetchOrder_4 ↦ PickApp ∈ receiver
+        grd4: fetchOrder_4 ∉ receivedMessages
+        grd5: currentMessage = {fetchOrder_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchOrder_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchOrder_4 ↦ bagRef}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchItem_5
+    WHEN
+        grd1: fetchItem_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchOrder_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchItem_5}
+        act2: sender := sender ∪ {fetchItem_5 ↦ PickApp}
+        act3: receiver := receiver ∪ {fetchItem_5 ↦ StoreWMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchItem_5 ↦ orderData}
+        act6: currentMessage := {fetchItem_5}
+    END
+
+    receivefetchItem_5
+    WHEN
+        grd1: fetchItem_5 ∈ sentMessages
+        grd2: fetchItem_5 ↦ PickApp ∈ sender
+        grd3: fetchItem_5 ↦ StoreWMS ∈ receiver
+        grd4: fetchItem_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchItem_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchItem_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchItem_5 ↦ orderData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcancelItem_6
+    WHEN
+        grd1: cancelItem_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchItem_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelItem_6}
+        act2: sender := sender ∪ {cancelItem_6 ↦ StoreWMS}
+        act3: receiver := receiver ∪ {cancelItem_6 ↦ PickApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelItem_6}
+    END
+
+    receivecancelItem_6
+    WHEN
+        grd1: cancelItem_6 ∈ sentMessages
+        grd2: cancelItem_6 ↦ StoreWMS ∈ sender
+        grd3: cancelItem_6 ↦ PickApp ∈ receiver
+        grd4: cancelItem_6 ∉ receivedMessages
+        grd5: currentMessage = {cancelItem_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelItem_6}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmBag_7
+    WHEN
+        grd1: confirmBag_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelItem_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBag_7}
+        act2: sender := sender ∪ {confirmBag_7 ↦ Picker}
+        act3: receiver := receiver ∪ {confirmBag_7 ↦ StoreWMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmBag_7 ↦ orderInfo}
+        act6: currentMessage := {confirmBag_7}
+    END
+
+    receiveconfirmBag_7
+    WHEN
+        grd1: confirmBag_7 ∈ sentMessages
+        grd2: confirmBag_7 ↦ Picker ∈ sender
+        grd3: confirmBag_7 ↦ StoreWMS ∈ receiver
+        grd4: confirmBag_7 ∉ receivedMessages
+        grd5: currentMessage = {confirmBag_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBag_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmBag_7 ↦ orderInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveOrder_8
+    WHEN
+        grd1: approveOrder_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmBag_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveOrder_8}
+        act2: sender := sender ∪ {approveOrder_8 ↦ Picker}
+        act3: receiver := receiver ∪ {approveOrder_8 ↦ PickApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveOrder_8 ↦ bagCode}
+        act6: currentMessage := {approveOrder_8}
+    END
+
+    receiveapproveOrder_8
+    WHEN
+        grd1: approveOrder_8 ∈ sentMessages
+        grd2: approveOrder_8 ↦ Picker ∈ sender
+        grd3: approveOrder_8 ↦ PickApp ∈ receiver
+        grd4: approveOrder_8 ∉ receivedMessages
+        grd5: currentMessage = {approveOrder_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveOrder_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveOrder_8 ↦ bagCode}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+END

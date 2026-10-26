@@ -1,0 +1,249 @@
+CONTEXT ToolRentalLockerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    LockerUnit, RentalServer, Renter
+    reserveTool_1, reservationCode_2, unlockLocker_3, verifyCode_4, codeValid_5, releaseTool_6, chargeLateFee_7
+    accessCode, lateFee, toolID
+AXIOMS
+    axm1: partition(Objects, {LockerUnit}, {RentalServer}, {Renter})
+    axm2: partition(Messages, {reserveTool_1}, {reservationCode_2}, {unlockLocker_3}, {verifyCode_4}, {codeValid_5}, {releaseTool_6}, {chargeLateFee_7})
+    axm3: partition(DataMessages, {accessCode}, {lateFee}, {toolID})
+END
+
+MACHINE ToolRentalLockerInteractionMachine_1
+SEES ToolRentalLockerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, lateReturn, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: lateReturn ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: lateReturn := 1
+        act9: t_time_1 :∈ 5..3
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..2
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..3
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendreserveTool_1
+    WHEN
+        grd1: reserveTool_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTool_1}
+        act2: sender := sender ∪ {reserveTool_1 ↦ Renter}
+        act3: receiver := receiver ∪ {reserveTool_1 ↦ RentalServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveTool_1 ↦ toolID}
+        act6: currentMessage := {reserveTool_1}
+    END
+
+    receivereserveTool_1
+    WHEN
+        grd1: reserveTool_1 ∈ sentMessages
+        grd2: reserveTool_1 ↦ Renter ∈ sender
+        grd3: reserveTool_1 ↦ RentalServer ∈ receiver
+        grd4: reserveTool_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveTool_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTool_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveTool_1 ↦ toolID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendreservationCode_2
+    WHEN
+        grd1: reservationCode_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveTool_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservationCode_2}
+        act2: sender := sender ∪ {reservationCode_2 ↦ RentalServer}
+        act3: receiver := receiver ∪ {reservationCode_2 ↦ Renter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservationCode_2 ↦ accessCode}
+        act6: currentMessage := {reservationCode_2}
+    END
+
+    receivereservationCode_2
+    WHEN
+        grd1: reservationCode_2 ∈ sentMessages
+        grd2: reservationCode_2 ↦ RentalServer ∈ sender
+        grd3: reservationCode_2 ↦ Renter ∈ receiver
+        grd4: reservationCode_2 ∉ receivedMessages
+        grd5: currentMessage = {reservationCode_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservationCode_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservationCode_2 ↦ accessCode}
+        act3: currentMessage := ∅
+    END
+
+    sendunlockLocker_3
+    WHEN
+        grd1: unlockLocker_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservationCode_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {unlockLocker_3}
+        act2: sender := sender ∪ {unlockLocker_3 ↦ Renter}
+        act3: receiver := receiver ∪ {unlockLocker_3 ↦ LockerUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {unlockLocker_3 ↦ accessCode}
+        act6: currentMessage := {unlockLocker_3}
+    END
+
+    receiveunlockLocker_3
+    WHEN
+        grd1: unlockLocker_3 ∈ sentMessages
+        grd2: unlockLocker_3 ↦ Renter ∈ sender
+        grd3: unlockLocker_3 ↦ LockerUnit ∈ receiver
+        grd4: unlockLocker_3 ∉ receivedMessages
+        grd5: currentMessage = {unlockLocker_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {unlockLocker_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {unlockLocker_3 ↦ accessCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendverifyCode_4
+    WHEN
+        grd1: verifyCode_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: unlockLocker_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {verifyCode_4}
+        act2: sender := sender ∪ {verifyCode_4 ↦ LockerUnit}
+        act3: receiver := receiver ∪ {verifyCode_4 ↦ RentalServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {verifyCode_4 ↦ accessCode}
+        act6: currentMessage := {verifyCode_4}
+    END
+
+    receiveverifyCode_4
+    WHEN
+        grd1: verifyCode_4 ∈ sentMessages
+        grd2: verifyCode_4 ↦ LockerUnit ∈ sender
+        grd3: verifyCode_4 ↦ RentalServer ∈ receiver
+        grd4: verifyCode_4 ∉ receivedMessages
+        grd5: currentMessage = {verifyCode_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {verifyCode_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {verifyCode_4 ↦ accessCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcodeValid_5
+    WHEN
+        grd1: codeValid_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: verifyCode_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {codeValid_5}
+        act2: sender := sender ∪ {codeValid_5 ↦ RentalServer}
+        act3: receiver := receiver ∪ {codeValid_5 ↦ LockerUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {codeValid_5}
+    END
+
+    receivecodeValid_5
+    WHEN
+        grd1: codeValid_5 ∈ sentMessages
+        grd2: codeValid_5 ↦ RentalServer ∈ sender
+        grd3: codeValid_5 ↦ LockerUnit ∈ receiver
+        grd4: codeValid_5 ∉ receivedMessages
+        grd5: currentMessage = {codeValid_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {codeValid_5}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseTool_6
+    WHEN
+        grd1: releaseTool_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: codeValid_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseTool_6}
+        act2: sender := sender ∪ {releaseTool_6 ↦ LockerUnit}
+        act3: receiver := receiver ∪ {releaseTool_6 ↦ Renter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseTool_6 ↦ toolID}
+        act6: currentMessage := {releaseTool_6}
+    END
+
+    receivereleaseTool_6
+    WHEN
+        grd1: releaseTool_6 ∈ sentMessages
+        grd2: releaseTool_6 ↦ LockerUnit ∈ sender
+        grd3: releaseTool_6 ↦ Renter ∈ receiver
+        grd4: releaseTool_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseTool_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseTool_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseTool_6 ↦ toolID}
+        act3: currentMessage := ∅
+    END
+
+    sendchargeLateFee_7_opt1
+    WHEN
+        grd1: chargeLateFee_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseTool_6 ∈ receivedMessages
+        grd4: lateReturn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {chargeLateFee_7}
+        act2: sender := sender ∪ {chargeLateFee_7 ↦ RentalServer}
+        act3: receiver := receiver ∪ {chargeLateFee_7 ↦ Renter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {chargeLateFee_7 ↦ lateFee}
+        act6: currentMessage := {chargeLateFee_7}
+    END
+
+    receivechargeLateFee_7_opt1
+    WHEN
+        grd1: chargeLateFee_7 ∈ sentMessages
+        grd2: chargeLateFee_7 ↦ RentalServer ∈ sender
+        grd3: chargeLateFee_7 ↦ Renter ∈ receiver
+        grd4: chargeLateFee_7 ∉ receivedMessages
+        grd5: currentMessage = {chargeLateFee_7}
+        grd6: lateReturn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {chargeLateFee_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {chargeLateFee_7 ↦ lateFee}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,250 @@
+CONTEXT SensorDataPipelineContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CloudDB, EdgeGateway, IoTSensor
+    publishReading_1, ackReading_2, aggregateBatch_3, storeConfirm_4, syncClock_5, clockSynced_6, heartbeat_7
+    batchID, healthStatus, humidity, readingCount, recordID, sensorID, temperature, timestamp
+AXIOMS
+    axm1: partition(Objects, {CloudDB}, {EdgeGateway}, {IoTSensor})
+    axm2: partition(Messages, {publishReading_1}, {ackReading_2}, {aggregateBatch_3}, {storeConfirm_4}, {syncClock_5}, {clockSynced_6}, {heartbeat_7})
+    axm3: partition(DataMessages, {batchID}, {healthStatus}, {humidity}, {readingCount}, {recordID}, {sensorID}, {temperature}, {timestamp})
+END
+
+MACHINE SensorDataPipelineInteractionMachine_1
+SEES SensorDataPipelineContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..2
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..10
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..3
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 0..0
+        act18: t_delay_5 := 1
+        act19: t_success_5 := 0
+    END
+
+
+    sendpublishReading_1
+    WHEN
+        grd1: publishReading_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {publishReading_1}
+        act2: sender := sender ∪ {publishReading_1 ↦ IoTSensor}
+        act3: receiver := receiver ∪ {publishReading_1 ↦ EdgeGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {publishReading_1 ↦ sensorID, publishReading_1 ↦ temperature, publishReading_1 ↦ humidity}
+        act6: currentMessage := {publishReading_1}
+    END
+
+    receivepublishReading_1
+    WHEN
+        grd1: publishReading_1 ∈ sentMessages
+        grd2: publishReading_1 ↦ IoTSensor ∈ sender
+        grd3: publishReading_1 ↦ EdgeGateway ∈ receiver
+        grd4: publishReading_1 ∉ receivedMessages
+        grd5: currentMessage = {publishReading_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {publishReading_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {publishReading_1 ↦ sensorID, publishReading_1 ↦ temperature, publishReading_1 ↦ humidity}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendackReading_2
+    WHEN
+        grd1: ackReading_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: publishReading_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackReading_2}
+        act2: sender := sender ∪ {ackReading_2 ↦ EdgeGateway}
+        act3: receiver := receiver ∪ {ackReading_2 ↦ IoTSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackReading_2}
+    END
+
+    receiveackReading_2
+    WHEN
+        grd1: ackReading_2 ∈ sentMessages
+        grd2: ackReading_2 ↦ EdgeGateway ∈ sender
+        grd3: ackReading_2 ↦ IoTSensor ∈ receiver
+        grd4: ackReading_2 ∉ receivedMessages
+        grd5: currentMessage = {ackReading_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackReading_2}
+        act2: currentMessage := ∅
+    END
+
+    sendaggregateBatch_3
+    WHEN
+        grd1: aggregateBatch_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackReading_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {aggregateBatch_3}
+        act2: sender := sender ∪ {aggregateBatch_3 ↦ EdgeGateway}
+        act3: receiver := receiver ∪ {aggregateBatch_3 ↦ CloudDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {aggregateBatch_3 ↦ batchID, aggregateBatch_3 ↦ readingCount}
+        act6: currentMessage := {aggregateBatch_3}
+    END
+
+    receiveaggregateBatch_3
+    WHEN
+        grd1: aggregateBatch_3 ∈ sentMessages
+        grd2: aggregateBatch_3 ↦ EdgeGateway ∈ sender
+        grd3: aggregateBatch_3 ↦ CloudDB ∈ receiver
+        grd4: aggregateBatch_3 ∉ receivedMessages
+        grd5: currentMessage = {aggregateBatch_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {aggregateBatch_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {aggregateBatch_3 ↦ batchID, aggregateBatch_3 ↦ readingCount}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendstoreConfirm_4
+    WHEN
+        grd1: storeConfirm_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: aggregateBatch_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {storeConfirm_4}
+        act2: sender := sender ∪ {storeConfirm_4 ↦ CloudDB}
+        act3: receiver := receiver ∪ {storeConfirm_4 ↦ EdgeGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {storeConfirm_4 ↦ recordID}
+        act6: currentMessage := {storeConfirm_4}
+    END
+
+    receivestoreConfirm_4
+    WHEN
+        grd1: storeConfirm_4 ∈ sentMessages
+        grd2: storeConfirm_4 ↦ CloudDB ∈ sender
+        grd3: storeConfirm_4 ↦ EdgeGateway ∈ receiver
+        grd4: storeConfirm_4 ∉ receivedMessages
+        grd5: currentMessage = {storeConfirm_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {storeConfirm_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {storeConfirm_4 ↦ recordID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncClock_5
+    WHEN
+        grd1: syncClock_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: storeConfirm_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncClock_5}
+        act2: sender := sender ∪ {syncClock_5 ↦ EdgeGateway}
+        act3: receiver := receiver ∪ {syncClock_5 ↦ IoTSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncClock_5 ↦ timestamp}
+        act6: currentMessage := {syncClock_5}
+    END
+
+    receivesyncClock_5
+    WHEN
+        grd1: syncClock_5 ∈ sentMessages
+        grd2: syncClock_5 ↦ EdgeGateway ∈ sender
+        grd3: syncClock_5 ↦ IoTSensor ∈ receiver
+        grd4: syncClock_5 ∉ receivedMessages
+        grd5: currentMessage = {syncClock_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncClock_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncClock_5 ↦ timestamp}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendclockSynced_6
+    WHEN
+        grd1: clockSynced_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncClock_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {clockSynced_6}
+        act2: sender := sender ∪ {clockSynced_6 ↦ IoTSensor}
+        act3: receiver := receiver ∪ {clockSynced_6 ↦ EdgeGateway}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {clockSynced_6}
+    END
+
+    receiveclockSynced_6
+    WHEN
+        grd1: clockSynced_6 ∈ sentMessages
+        grd2: clockSynced_6 ↦ IoTSensor ∈ sender
+        grd3: clockSynced_6 ↦ EdgeGateway ∈ receiver
+        grd4: clockSynced_6 ∉ receivedMessages
+        grd5: currentMessage = {clockSynced_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {clockSynced_6}
+        act2: currentMessage := ∅
+    END
+
+    sendheartbeat_7
+    WHEN
+        grd1: heartbeat_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: clockSynced_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {heartbeat_7}
+        act2: sender := sender ∪ {heartbeat_7 ↦ EdgeGateway}
+        act3: receiver := receiver ∪ {heartbeat_7 ↦ CloudDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {heartbeat_7 ↦ healthStatus}
+        act6: currentMessage := {heartbeat_7}
+    END
+
+    receiveheartbeat_7
+    WHEN
+        grd1: heartbeat_7 ∈ sentMessages
+        grd2: heartbeat_7 ↦ EdgeGateway ∈ sender
+        grd3: heartbeat_7 ↦ CloudDB ∈ receiver
+        grd4: heartbeat_7 ∉ receivedMessages
+        grd5: currentMessage = {heartbeat_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {heartbeat_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {heartbeat_7 ↦ healthStatus}
+        act3: currentMessage := ∅
+    END
+
+END

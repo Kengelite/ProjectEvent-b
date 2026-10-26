@@ -1,0 +1,410 @@
+CONTEXT SmartPillBoxContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CareApp, Caregiver, PillBox
+    syncRefill_1, validateRefill_2, fetchReminder_3, queryReminder_4, confirmReminder_5, issueDose_6, cancelRefill_7, confirmDose_8, queryDose_9, ackRefill_10, scheduleRefill_11, approveReminder_12
+    doseCode, doseRef, doseValue, refillCode, refillData, refillID
+    BRONZE, GOLD, SILVER
+AXIOMS
+    axm1: partition(Objects, {CareApp}, {Caregiver}, {PillBox})
+    axm2: partition(Messages, {syncRefill_1}, {validateRefill_2}, {fetchReminder_3}, {queryReminder_4}, {confirmReminder_5}, {issueDose_6}, {cancelRefill_7}, {confirmDose_8}, {queryDose_9}, {ackRefill_10}, {scheduleRefill_11}, {approveReminder_12})
+    axm3: partition(DataMessages, {doseCode}, {doseRef}, {doseValue}, {refillCode}, {refillData}, {refillID})
+    axm4: BRONZE = 0
+    axm5: GOLD = 1
+    axm6: SILVER = 2
+END
+
+MACHINE SmartPillBoxInteractionMachine_1
+SEES SmartPillBoxContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, mode, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_9, t_delay_9, t_success_9, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: mode ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_9 ∈ ℤ
+    inv17: t_delay_9 ∈ ℤ
+    inv18: t_success_9 ∈ ℤ
+    inv19: t_time_11 ∈ ℤ
+    inv20: t_delay_11 ∈ ℤ
+    inv21: t_success_11 ∈ ℤ
+    inv22: t_time_12 ∈ ℤ
+    inv23: t_delay_12 ∈ ℤ
+    inv24: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: mode := BRONZE
+        act10: t_time_1 :∈ 0..1
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_3 :∈ 0..0
+        act14: t_delay_3 := 1
+        act15: t_success_3 := 0
+        act16: t_time_9 :∈ 0..30
+        act17: t_delay_9 := 0
+        act18: t_success_9 := 0
+        act19: t_time_11 :∈ 0..3
+        act20: t_delay_11 := 0
+        act21: t_success_11 := 0
+        act22: t_time_12 :∈ 0..3
+        act23: t_delay_12 := 0
+        act24: t_success_12 := 0
+    END
+
+
+    sendsyncRefill_1
+    WHEN
+        grd1: syncRefill_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncRefill_1}
+        act2: sender := sender ∪ {syncRefill_1 ↦ CareApp}
+        act3: receiver := receiver ∪ {syncRefill_1 ↦ Caregiver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncRefill_1 ↦ doseValue}
+        act6: currentMessage := {syncRefill_1}
+    END
+
+    receivesyncRefill_1
+    WHEN
+        grd1: syncRefill_1 ∈ sentMessages
+        grd2: syncRefill_1 ↦ CareApp ∈ sender
+        grd3: syncRefill_1 ↦ Caregiver ∈ receiver
+        grd4: syncRefill_1 ∉ receivedMessages
+        grd5: currentMessage = {syncRefill_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncRefill_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncRefill_1 ↦ doseValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidateRefill_2
+    WHEN
+        grd1: validateRefill_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncRefill_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateRefill_2}
+        act2: sender := sender ∪ {validateRefill_2 ↦ Caregiver}
+        act3: receiver := receiver ∪ {validateRefill_2 ↦ PillBox}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateRefill_2 ↦ refillCode, validateRefill_2 ↦ refillID}
+        act6: currentMessage := {validateRefill_2}
+    END
+
+    receivevalidateRefill_2
+    WHEN
+        grd1: validateRefill_2 ∈ sentMessages
+        grd2: validateRefill_2 ↦ Caregiver ∈ sender
+        grd3: validateRefill_2 ↦ PillBox ∈ receiver
+        grd4: validateRefill_2 ∉ receivedMessages
+        grd5: currentMessage = {validateRefill_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateRefill_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateRefill_2 ↦ refillCode, validateRefill_2 ↦ refillID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchReminder_3_opt1
+    WHEN
+        grd1: fetchReminder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateRefill_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchReminder_3}
+        act2: sender := sender ∪ {fetchReminder_3 ↦ Caregiver}
+        act3: receiver := receiver ∪ {fetchReminder_3 ↦ PillBox}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchReminder_3 ↦ refillCode}
+        act6: currentMessage := {fetchReminder_3}
+    END
+
+    receivefetchReminder_3_opt1
+    WHEN
+        grd1: fetchReminder_3 ∈ sentMessages
+        grd2: fetchReminder_3 ↦ Caregiver ∈ sender
+        grd3: fetchReminder_3 ↦ PillBox ∈ receiver
+        grd4: fetchReminder_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchReminder_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchReminder_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchReminder_3 ↦ refillCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendqueryReminder_4_opt1
+    WHEN
+        grd1: queryReminder_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchReminder_3 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryReminder_4}
+        act2: sender := sender ∪ {queryReminder_4 ↦ PillBox}
+        act3: receiver := receiver ∪ {queryReminder_4 ↦ Caregiver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryReminder_4}
+    END
+
+    receivequeryReminder_4_opt1
+    WHEN
+        grd1: queryReminder_4 ∈ sentMessages
+        grd2: queryReminder_4 ↦ PillBox ∈ sender
+        grd3: queryReminder_4 ↦ Caregiver ∈ receiver
+        grd4: queryReminder_4 ∉ receivedMessages
+        grd5: currentMessage = {queryReminder_4}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryReminder_4}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmReminder_5
+    WHEN
+        grd1: confirmReminder_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryReminder_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmReminder_5}
+        act2: sender := sender ∪ {confirmReminder_5 ↦ CareApp}
+        act3: receiver := receiver ∪ {confirmReminder_5 ↦ PillBox}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmReminder_5}
+    END
+
+    receiveconfirmReminder_5
+    WHEN
+        grd1: confirmReminder_5 ∈ sentMessages
+        grd2: confirmReminder_5 ↦ CareApp ∈ sender
+        grd3: confirmReminder_5 ↦ PillBox ∈ receiver
+        grd4: confirmReminder_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmReminder_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmReminder_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueDose_6
+    WHEN
+        grd1: issueDose_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmReminder_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueDose_6}
+        act2: sender := sender ∪ {issueDose_6 ↦ CareApp}
+        act3: receiver := receiver ∪ {issueDose_6 ↦ Caregiver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueDose_6}
+    END
+
+    receiveissueDose_6
+    WHEN
+        grd1: issueDose_6 ∈ sentMessages
+        grd2: issueDose_6 ↦ CareApp ∈ sender
+        grd3: issueDose_6 ↦ Caregiver ∈ receiver
+        grd4: issueDose_6 ∉ receivedMessages
+        grd5: currentMessage = {issueDose_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueDose_6}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelRefill_7
+    WHEN
+        grd1: cancelRefill_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueDose_6 ∈ receivedMessages
+        grd4: mode = GOLD
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelRefill_7}
+        act2: sender := sender ∪ {cancelRefill_7 ↦ PillBox}
+        act3: receiver := receiver ∪ {cancelRefill_7 ↦ Caregiver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelRefill_7 ↦ refillCode}
+        act6: currentMessage := {cancelRefill_7}
+    END
+
+    receivecancelRefill_7
+    WHEN
+        grd1: cancelRefill_7 ∈ sentMessages
+        grd2: cancelRefill_7 ↦ PillBox ∈ sender
+        grd3: cancelRefill_7 ↦ Caregiver ∈ receiver
+        grd4: cancelRefill_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelRefill_7}
+        grd6: mode = GOLD
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelRefill_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelRefill_7 ↦ refillCode}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmDose_8
+    WHEN
+        grd1: confirmDose_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelRefill_7 ∈ receivedMessages
+        grd4: mode = GOLD
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmDose_8}
+        act2: sender := sender ∪ {confirmDose_8 ↦ CareApp}
+        act3: receiver := receiver ∪ {confirmDose_8 ↦ Caregiver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmDose_8 ↦ doseValue}
+        act6: currentMessage := {confirmDose_8}
+    END
+
+    receiveconfirmDose_8
+    WHEN
+        grd1: confirmDose_8 ∈ sentMessages
+        grd2: confirmDose_8 ↦ CareApp ∈ sender
+        grd3: confirmDose_8 ↦ Caregiver ∈ receiver
+        grd4: confirmDose_8 ∉ receivedMessages
+        grd5: currentMessage = {confirmDose_8}
+        grd6: mode = GOLD
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmDose_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmDose_8 ↦ doseValue}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryDose_9
+    WHEN
+        grd1: queryDose_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueDose_6 ∈ receivedMessages
+        grd4: mode = SILVER
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryDose_9}
+        act2: sender := sender ∪ {queryDose_9 ↦ Caregiver}
+        act3: receiver := receiver ∪ {queryDose_9 ↦ CareApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryDose_9 ↦ doseCode, queryDose_9 ↦ refillData}
+        act6: currentMessage := {queryDose_9}
+    END
+
+    receivequeryDose_9
+    WHEN
+        grd1: queryDose_9 ∈ sentMessages
+        grd2: queryDose_9 ↦ Caregiver ∈ sender
+        grd3: queryDose_9 ↦ CareApp ∈ receiver
+        grd4: queryDose_9 ∉ receivedMessages
+        grd5: currentMessage = {queryDose_9}
+        grd6: mode = SILVER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryDose_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryDose_9 ↦ doseCode, queryDose_9 ↦ refillData}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendackRefill_10
+    WHEN
+        grd1: ackRefill_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryDose_9 ∈ receivedMessages
+        grd4: mode = SILVER
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackRefill_10}
+        act2: sender := sender ∪ {ackRefill_10 ↦ CareApp}
+        act3: receiver := receiver ∪ {ackRefill_10 ↦ PillBox}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackRefill_10}
+    END
+
+    receiveackRefill_10
+    WHEN
+        grd1: ackRefill_10 ∈ sentMessages
+        grd2: ackRefill_10 ↦ CareApp ∈ sender
+        grd3: ackRefill_10 ↦ PillBox ∈ receiver
+        grd4: ackRefill_10 ∉ receivedMessages
+        grd5: currentMessage = {ackRefill_10}
+        grd6: mode = SILVER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackRefill_10}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleRefill_11
+    WHEN
+        grd1: scheduleRefill_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueDose_6 ∈ receivedMessages
+        grd4: mode = BRONZE
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleRefill_11}
+        act2: sender := sender ∪ {scheduleRefill_11 ↦ CareApp}
+        act3: receiver := receiver ∪ {scheduleRefill_11 ↦ PillBox}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleRefill_11 ↦ doseCode}
+        act6: currentMessage := {scheduleRefill_11}
+    END
+
+    receivescheduleRefill_11
+    WHEN
+        grd1: scheduleRefill_11 ∈ sentMessages
+        grd2: scheduleRefill_11 ↦ CareApp ∈ sender
+        grd3: scheduleRefill_11 ↦ PillBox ∈ receiver
+        grd4: scheduleRefill_11 ∉ receivedMessages
+        grd5: currentMessage = {scheduleRefill_11}
+        grd6: mode = BRONZE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleRefill_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleRefill_11 ↦ doseCode}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendapproveReminder_12
+    WHEN
+        grd1: approveReminder_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmDose_8 ∈ receivedMessages ∨ ackRefill_10 ∈ receivedMessages ∨ scheduleRefill_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveReminder_12}
+        act2: sender := sender ∪ {approveReminder_12 ↦ CareApp}
+        act3: receiver := receiver ∪ {approveReminder_12 ↦ PillBox}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveReminder_12 ↦ doseRef}
+        act6: currentMessage := {approveReminder_12}
+    END
+
+    receiveapproveReminder_12
+    WHEN
+        grd1: approveReminder_12 ∈ sentMessages
+        grd2: approveReminder_12 ↦ CareApp ∈ sender
+        grd3: approveReminder_12 ↦ PillBox ∈ receiver
+        grd4: approveReminder_12 ∉ receivedMessages
+        grd5: currentMessage = {approveReminder_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveReminder_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveReminder_12 ↦ doseRef}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+END

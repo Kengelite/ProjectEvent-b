@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="GOLD" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="signatureData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="ackSignature_10" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Courier" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="validateSignature_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="syncSignature_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="DeliveryApp" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="fetchRoute_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="scheduleSignature_11" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="queryPackage_9" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="issuePackage_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="BRONZE" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="signatureID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="queryRoute_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="packageCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="confirmPackage_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="approveRoute_12" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cancelSignature_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmRoute_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="SILVER" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="packageValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="signatureCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Pharmacist" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="packageRef" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/PharmacyDelivery_Project/PharmacyDeliveryContext.bpo|org.eventb.core.poFile#PharmacyDeliveryContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Courier},{DeliveryApp},{Pharmacist})" org.eventb.core.source="/PharmacyDelivery_Project/PharmacyDeliveryContext.buc|org.eventb.core.contextFile#PharmacyDeliveryContext|org.eventb.core.axiom#internal_element28"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{syncSignature_1},{validateSignature_2},{fetchRoute_3},{queryRoute_4},{confirmRoute_5},{issuePackage_6},{cancelSignature_7},{confirmPackage_8},{queryPackage_9},{ackSignature_10},{scheduleSignature_11},{approveRoute_12})" org.eventb.core.source="/PharmacyDelivery_Project/PharmacyDeliveryContext.buc|org.eventb.core.contextFile#PharmacyDeliveryContext|org.eventb.core.axiom#internal_element29"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{packageCode},{packageRef},{packageValue},{signatureCode},{signatureData},{signatureID})" org.eventb.core.source="/PharmacyDelivery_Project/PharmacyDeliveryContext.buc|org.eventb.core.contextFile#PharmacyDeliveryContext|org.eventb.core.axiom#internal_element30"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="BRONZE=0" org.eventb.core.source="/PharmacyDelivery_Project/PharmacyDeliveryContext.buc|org.eventb.core.contextFile#PharmacyDeliveryContext|org.eventb.core.axiom#internal_element31"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="GOLD=1" org.eventb.core.source="/PharmacyDelivery_Project/PharmacyDeliveryContext.buc|org.eventb.core.contextFile#PharmacyDeliveryContext|org.eventb.core.axiom#internal_element32"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="SILVER=2" org.eventb.core.source="/PharmacyDelivery_Project/PharmacyDeliveryContext.buc|org.eventb.core.contextFile#PharmacyDeliveryContext|org.eventb.core.axiom#internal_element33"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

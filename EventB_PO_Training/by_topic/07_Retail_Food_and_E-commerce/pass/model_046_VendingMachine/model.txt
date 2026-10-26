@@ -1,0 +1,257 @@
+CONTEXT VendingMachineContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Buyer, VendingMachine
+    insertCoin_1, selectItem_2, dispenseItem_3, returnChange_4, requestMoreCoins_5, rejectCoin_6, showIdle_7
+    change, coinValue, itemCode
+    ENOUGH, INVALID, SHORT
+AXIOMS
+    axm1: partition(Objects, {Buyer}, {VendingMachine})
+    axm2: partition(Messages, {insertCoin_1}, {selectItem_2}, {dispenseItem_3}, {returnChange_4}, {requestMoreCoins_5}, {rejectCoin_6}, {showIdle_7})
+    axm3: partition(DataMessages, {change}, {coinValue}, {itemCode})
+    axm4: ENOUGH = 0
+    axm5: INVALID = 1
+    axm6: SHORT = 2
+END
+
+MACHINE VendingMachineInteractionMachine_1
+SEES VendingMachineContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, coinStatus, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: coinStatus ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_7 ∈ ℤ
+    inv16: t_delay_7 ∈ ℤ
+    inv17: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: coinStatus := INVALID
+        act9: t_time_1 :∈ 0..5
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..10
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_7 :∈ 0..0
+        act16: t_delay_7 := 3
+        act17: t_success_7 := 0
+    END
+
+
+    sendinsertCoin_1
+    WHEN
+        grd1: insertCoin_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {insertCoin_1}
+        act2: sender := sender ∪ {insertCoin_1 ↦ Buyer}
+        act3: receiver := receiver ∪ {insertCoin_1 ↦ VendingMachine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {insertCoin_1 ↦ coinValue}
+        act6: currentMessage := {insertCoin_1}
+    END
+
+    receiveinsertCoin_1
+    WHEN
+        grd1: insertCoin_1 ∈ sentMessages
+        grd2: insertCoin_1 ↦ Buyer ∈ sender
+        grd3: insertCoin_1 ↦ VendingMachine ∈ receiver
+        grd4: insertCoin_1 ∉ receivedMessages
+        grd5: currentMessage = {insertCoin_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {insertCoin_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {insertCoin_1 ↦ coinValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendselectItem_2
+    WHEN
+        grd1: selectItem_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: insertCoin_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {selectItem_2}
+        act2: sender := sender ∪ {selectItem_2 ↦ Buyer}
+        act3: receiver := receiver ∪ {selectItem_2 ↦ VendingMachine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {selectItem_2 ↦ itemCode}
+        act6: currentMessage := {selectItem_2}
+    END
+
+    receiveselectItem_2
+    WHEN
+        grd1: selectItem_2 ∈ sentMessages
+        grd2: selectItem_2 ↦ Buyer ∈ sender
+        grd3: selectItem_2 ↦ VendingMachine ∈ receiver
+        grd4: selectItem_2 ∉ receivedMessages
+        grd5: currentMessage = {selectItem_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {selectItem_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {selectItem_2 ↦ itemCode}
+        act3: currentMessage := ∅
+    END
+
+    senddispenseItem_3
+    WHEN
+        grd1: dispenseItem_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: selectItem_2 ∈ receivedMessages
+        grd4: coinStatus = ENOUGH
+    THEN
+        act1: sentMessages := sentMessages ∪ {dispenseItem_3}
+        act2: sender := sender ∪ {dispenseItem_3 ↦ VendingMachine}
+        act3: receiver := receiver ∪ {dispenseItem_3 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {dispenseItem_3 ↦ itemCode}
+        act6: currentMessage := {dispenseItem_3}
+    END
+
+    receivedispenseItem_3
+    WHEN
+        grd1: dispenseItem_3 ∈ sentMessages
+        grd2: dispenseItem_3 ↦ VendingMachine ∈ sender
+        grd3: dispenseItem_3 ↦ Buyer ∈ receiver
+        grd4: dispenseItem_3 ∉ receivedMessages
+        grd5: currentMessage = {dispenseItem_3}
+        grd6: coinStatus = ENOUGH
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dispenseItem_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {dispenseItem_3 ↦ itemCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreturnChange_4
+    WHEN
+        grd1: returnChange_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: dispenseItem_3 ∈ receivedMessages
+        grd4: coinStatus = ENOUGH
+    THEN
+        act1: sentMessages := sentMessages ∪ {returnChange_4}
+        act2: sender := sender ∪ {returnChange_4 ↦ VendingMachine}
+        act3: receiver := receiver ∪ {returnChange_4 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {returnChange_4 ↦ change}
+        act6: currentMessage := {returnChange_4}
+    END
+
+    receivereturnChange_4
+    WHEN
+        grd1: returnChange_4 ∈ sentMessages
+        grd2: returnChange_4 ↦ VendingMachine ∈ sender
+        grd3: returnChange_4 ↦ Buyer ∈ receiver
+        grd4: returnChange_4 ∉ receivedMessages
+        grd5: currentMessage = {returnChange_4}
+        grd6: coinStatus = ENOUGH
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {returnChange_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {returnChange_4 ↦ change}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestMoreCoins_5
+    WHEN
+        grd1: requestMoreCoins_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: selectItem_2 ∈ receivedMessages
+        grd4: coinStatus = SHORT
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestMoreCoins_5}
+        act2: sender := sender ∪ {requestMoreCoins_5 ↦ VendingMachine}
+        act3: receiver := receiver ∪ {requestMoreCoins_5 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestMoreCoins_5}
+    END
+
+    receiverequestMoreCoins_5
+    WHEN
+        grd1: requestMoreCoins_5 ∈ sentMessages
+        grd2: requestMoreCoins_5 ↦ VendingMachine ∈ sender
+        grd3: requestMoreCoins_5 ↦ Buyer ∈ receiver
+        grd4: requestMoreCoins_5 ∉ receivedMessages
+        grd5: currentMessage = {requestMoreCoins_5}
+        grd6: coinStatus = SHORT
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestMoreCoins_5}
+        act2: currentMessage := ∅
+    END
+
+    sendrejectCoin_6
+    WHEN
+        grd1: rejectCoin_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: selectItem_2 ∈ receivedMessages
+        grd4: coinStatus = INVALID
+    THEN
+        act1: sentMessages := sentMessages ∪ {rejectCoin_6}
+        act2: sender := sender ∪ {rejectCoin_6 ↦ VendingMachine}
+        act3: receiver := receiver ∪ {rejectCoin_6 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {rejectCoin_6 ↦ coinValue}
+        act6: currentMessage := {rejectCoin_6}
+    END
+
+    receiverejectCoin_6
+    WHEN
+        grd1: rejectCoin_6 ∈ sentMessages
+        grd2: rejectCoin_6 ↦ VendingMachine ∈ sender
+        grd3: rejectCoin_6 ↦ Buyer ∈ receiver
+        grd4: rejectCoin_6 ∉ receivedMessages
+        grd5: currentMessage = {rejectCoin_6}
+        grd6: coinStatus = INVALID
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {rejectCoin_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {rejectCoin_6 ↦ coinValue}
+        act3: currentMessage := ∅
+    END
+
+    sendshowIdle_7
+    WHEN
+        grd1: showIdle_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: returnChange_4 ∈ receivedMessages ∨ requestMoreCoins_5 ∈ receivedMessages ∨ rejectCoin_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {showIdle_7}
+        act2: sender := sender ∪ {showIdle_7 ↦ VendingMachine}
+        act3: receiver := receiver ∪ {showIdle_7 ↦ Buyer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {showIdle_7}
+    END
+
+    receiveshowIdle_7
+    WHEN
+        grd1: showIdle_7 ∈ sentMessages
+        grd2: showIdle_7 ↦ VendingMachine ∈ sender
+        grd3: showIdle_7 ↦ Buyer ∈ receiver
+        grd4: showIdle_7 ∉ receivedMessages
+        grd5: currentMessage = {showIdle_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {showIdle_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+END

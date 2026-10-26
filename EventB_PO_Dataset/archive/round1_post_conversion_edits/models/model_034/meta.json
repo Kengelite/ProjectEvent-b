@@ -1,0 +1,29 @@
+{
+  "model_id": "model_034",
+  "case": "PrinterQueue",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "PrinterQueue_Project",
+  "category": "model_error",
+  "mutation": "loop-counter bounds added; retryPrint initialised to 4 against retryPrint ≤ 3",
+  "operations": {
+    "add_inv": [
+      "jobCount ≤ 5",
+      "retryPrint ≤ 3"
+    ],
+    "set_init": {
+      "retryPrint": "4"
+    }
+  },
+  "added_invariant_labels": [
+    "inv16",
+    "inv17"
+  ],
+  "expected_failed_pos": [
+    "INITIALISATION/inv17/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_034",
+  "rodin_raw_dir": "rodin_raw/ml_pp/PrinterQueue_Project"
+}

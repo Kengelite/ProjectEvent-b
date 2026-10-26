@@ -1,0 +1,207 @@
+CONTEXT FarmMilkingRobotContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Cow, HerdServer, MilkRobot
+    reserveYield_1, logYield_2, reportYield_3, reserveMilk_4, queryHealth_5, issueMilk_6
+    healthRef, milkInfo, yieldID
+AXIOMS
+    axm1: partition(Objects, {Cow}, {HerdServer}, {MilkRobot})
+    axm2: partition(Messages, {reserveYield_1}, {logYield_2}, {reportYield_3}, {reserveMilk_4}, {queryHealth_5}, {issueMilk_6})
+    axm3: partition(DataMessages, {healthRef}, {milkInfo}, {yieldID})
+END
+
+MACHINE FarmMilkingRobotInteractionMachine_1
+SEES FarmMilkingRobotContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 0..20
+        act9: t_delay_3 := 0
+        act10: t_success_3 := 0
+        act11: t_time_4 :∈ 0..20
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+    END
+
+
+    sendreserveYield_1
+    WHEN
+        grd1: reserveYield_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveYield_1}
+        act2: sender := sender ∪ {reserveYield_1 ↦ HerdServer}
+        act3: receiver := receiver ∪ {reserveYield_1 ↦ Cow}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveYield_1 ↦ milkInfo}
+        act6: currentMessage := {reserveYield_1}
+    END
+
+    receivereserveYield_1
+    WHEN
+        grd1: reserveYield_1 ∈ sentMessages
+        grd2: reserveYield_1 ↦ HerdServer ∈ sender
+        grd3: reserveYield_1 ↦ Cow ∈ receiver
+        grd4: reserveYield_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveYield_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveYield_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveYield_1 ↦ milkInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendlogYield_2
+    WHEN
+        grd1: logYield_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveYield_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logYield_2}
+        act2: sender := sender ∪ {logYield_2 ↦ HerdServer}
+        act3: receiver := receiver ∪ {logYield_2 ↦ Cow}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logYield_2 ↦ yieldID}
+        act6: currentMessage := {logYield_2}
+    END
+
+    receivelogYield_2
+    WHEN
+        grd1: logYield_2 ∈ sentMessages
+        grd2: logYield_2 ↦ HerdServer ∈ sender
+        grd3: logYield_2 ↦ Cow ∈ receiver
+        grd4: logYield_2 ∉ receivedMessages
+        grd5: currentMessage = {logYield_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logYield_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logYield_2 ↦ yieldID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportYield_3
+    WHEN
+        grd1: reportYield_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logYield_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportYield_3}
+        act2: sender := sender ∪ {reportYield_3 ↦ Cow}
+        act3: receiver := receiver ∪ {reportYield_3 ↦ MilkRobot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportYield_3 ↦ healthRef}
+        act6: currentMessage := {reportYield_3}
+    END
+
+    receivereportYield_3
+    WHEN
+        grd1: reportYield_3 ∈ sentMessages
+        grd2: reportYield_3 ↦ Cow ∈ sender
+        grd3: reportYield_3 ↦ MilkRobot ∈ receiver
+        grd4: reportYield_3 ∉ receivedMessages
+        grd5: currentMessage = {reportYield_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportYield_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportYield_3 ↦ healthRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreserveMilk_4
+    WHEN
+        grd1: reserveMilk_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportYield_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveMilk_4}
+        act2: sender := sender ∪ {reserveMilk_4 ↦ MilkRobot}
+        act3: receiver := receiver ∪ {reserveMilk_4 ↦ HerdServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveMilk_4}
+    END
+
+    receivereserveMilk_4
+    WHEN
+        grd1: reserveMilk_4 ∈ sentMessages
+        grd2: reserveMilk_4 ↦ MilkRobot ∈ sender
+        grd3: reserveMilk_4 ↦ HerdServer ∈ receiver
+        grd4: reserveMilk_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveMilk_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveMilk_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendqueryHealth_5
+    WHEN
+        grd1: queryHealth_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveMilk_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryHealth_5}
+        act2: sender := sender ∪ {queryHealth_5 ↦ Cow}
+        act3: receiver := receiver ∪ {queryHealth_5 ↦ MilkRobot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryHealth_5}
+    END
+
+    receivequeryHealth_5
+    WHEN
+        grd1: queryHealth_5 ∈ sentMessages
+        grd2: queryHealth_5 ↦ Cow ∈ sender
+        grd3: queryHealth_5 ↦ MilkRobot ∈ receiver
+        grd4: queryHealth_5 ∉ receivedMessages
+        grd5: currentMessage = {queryHealth_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryHealth_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueMilk_6
+    WHEN
+        grd1: issueMilk_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryHealth_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueMilk_6}
+        act2: sender := sender ∪ {issueMilk_6 ↦ MilkRobot}
+        act3: receiver := receiver ∪ {issueMilk_6 ↦ HerdServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueMilk_6}
+    END
+
+    receiveissueMilk_6
+    WHEN
+        grd1: issueMilk_6 ∈ sentMessages
+        grd2: issueMilk_6 ↦ MilkRobot ∈ sender
+        grd3: issueMilk_6 ↦ HerdServer ∈ receiver
+        grd4: issueMilk_6 ∉ receivedMessages
+        grd5: currentMessage = {issueMilk_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueMilk_6}
+        act2: currentMessage := ∅
+    END
+
+END

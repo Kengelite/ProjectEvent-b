@@ -1,0 +1,295 @@
+CONTEXT ElevatorControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DoorUnit, ElevatorCtrl, Motor, Passenger
+    callElevator_1, moveCar_2, arrived_3, openDoor_4, doorOpened_5, closeDoor_6, doorSensor_7, notifyPassenger_8
+    floorNo, sensorValue
+    BLOCKED, CLEAR
+AXIOMS
+    axm1: partition(Objects, {DoorUnit}, {ElevatorCtrl}, {Motor}, {Passenger})
+    axm2: partition(Messages, {callElevator_1}, {moveCar_2}, {arrived_3}, {openDoor_4}, {doorOpened_5}, {closeDoor_6}, {doorSensor_7}, {notifyPassenger_8})
+    axm3: partition(DataMessages, {floorNo}, {sensorValue})
+    axm4: BLOCKED = 0
+    axm5: CLEAR = 1
+END
+
+MACHINE ElevatorControlInteractionMachine_1
+SEES ElevatorControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, doorState, retryDoor, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: doorState ∈ ℤ
+    inv9: retryDoor ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: doorState := BLOCKED
+        act9: retryDoor := 0
+        act10: t_time_2 :∈ 0..10
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_4 :∈ 0..0
+        act14: t_delay_4 := 2
+        act15: t_success_4 := 0
+        act16: t_time_6 :∈ 0..1
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+    END
+
+
+    sendcallElevator_1
+    WHEN
+        grd1: callElevator_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {callElevator_1}
+        act2: sender := sender ∪ {callElevator_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {callElevator_1 ↦ ElevatorCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {callElevator_1 ↦ floorNo}
+        act6: currentMessage := {callElevator_1}
+    END
+
+    receivecallElevator_1
+    WHEN
+        grd1: callElevator_1 ∈ sentMessages
+        grd2: callElevator_1 ↦ Passenger ∈ sender
+        grd3: callElevator_1 ↦ ElevatorCtrl ∈ receiver
+        grd4: callElevator_1 ∉ receivedMessages
+        grd5: currentMessage = {callElevator_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {callElevator_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {callElevator_1 ↦ floorNo}
+        act3: currentMessage := ∅
+    END
+
+    sendmoveCar_2
+    WHEN
+        grd1: moveCar_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: callElevator_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {moveCar_2}
+        act2: sender := sender ∪ {moveCar_2 ↦ ElevatorCtrl}
+        act3: receiver := receiver ∪ {moveCar_2 ↦ Motor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {moveCar_2 ↦ floorNo}
+        act6: currentMessage := {moveCar_2}
+    END
+
+    receivemoveCar_2
+    WHEN
+        grd1: moveCar_2 ∈ sentMessages
+        grd2: moveCar_2 ↦ ElevatorCtrl ∈ sender
+        grd3: moveCar_2 ↦ Motor ∈ receiver
+        grd4: moveCar_2 ∉ receivedMessages
+        grd5: currentMessage = {moveCar_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {moveCar_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {moveCar_2 ↦ floorNo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendarrived_3
+    WHEN
+        grd1: arrived_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: moveCar_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {arrived_3}
+        act2: sender := sender ∪ {arrived_3 ↦ Motor}
+        act3: receiver := receiver ∪ {arrived_3 ↦ ElevatorCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {arrived_3 ↦ floorNo}
+        act6: currentMessage := {arrived_3}
+    END
+
+    receivearrived_3
+    WHEN
+        grd1: arrived_3 ∈ sentMessages
+        grd2: arrived_3 ↦ Motor ∈ sender
+        grd3: arrived_3 ↦ ElevatorCtrl ∈ receiver
+        grd4: arrived_3 ∉ receivedMessages
+        grd5: currentMessage = {arrived_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {arrived_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {arrived_3 ↦ floorNo}
+        act3: currentMessage := ∅
+    END
+
+    sendopenDoor_4
+    WHEN
+        grd1: openDoor_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: arrived_3 ∈ receivedMessages
+        grd4: doorState = CLEAR
+    THEN
+        act1: sentMessages := sentMessages ∪ {openDoor_4}
+        act2: sender := sender ∪ {openDoor_4 ↦ ElevatorCtrl}
+        act3: receiver := receiver ∪ {openDoor_4 ↦ DoorUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {openDoor_4}
+    END
+
+    receiveopenDoor_4
+    WHEN
+        grd1: openDoor_4 ∈ sentMessages
+        grd2: openDoor_4 ↦ ElevatorCtrl ∈ sender
+        grd3: openDoor_4 ↦ DoorUnit ∈ receiver
+        grd4: openDoor_4 ∉ receivedMessages
+        grd5: currentMessage = {openDoor_4}
+        grd6: doorState = CLEAR
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {openDoor_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    senddoorOpened_5
+    WHEN
+        grd1: doorOpened_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: openDoor_4 ∈ receivedMessages
+        grd4: doorState = CLEAR
+    THEN
+        act1: sentMessages := sentMessages ∪ {doorOpened_5}
+        act2: sender := sender ∪ {doorOpened_5 ↦ DoorUnit}
+        act3: receiver := receiver ∪ {doorOpened_5 ↦ ElevatorCtrl}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {doorOpened_5}
+    END
+
+    receivedoorOpened_5
+    WHEN
+        grd1: doorOpened_5 ∈ sentMessages
+        grd2: doorOpened_5 ↦ DoorUnit ∈ sender
+        grd3: doorOpened_5 ↦ ElevatorCtrl ∈ receiver
+        grd4: doorOpened_5 ∉ receivedMessages
+        grd5: currentMessage = {doorOpened_5}
+        grd6: doorState = CLEAR
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {doorOpened_5}
+        act2: currentMessage := ∅
+    END
+
+    sendcloseDoor_6
+    WHEN
+        grd1: closeDoor_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: arrived_3 ∈ receivedMessages
+        grd4: doorState = BLOCKED
+        grd5: retryDoor < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {closeDoor_6}
+        act2: sender := sender ∪ {closeDoor_6 ↦ ElevatorCtrl}
+        act3: receiver := receiver ∪ {closeDoor_6 ↦ DoorUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {closeDoor_6}
+    END
+
+    receivecloseDoor_6
+    WHEN
+        grd1: closeDoor_6 ∈ sentMessages
+        grd2: closeDoor_6 ↦ ElevatorCtrl ∈ sender
+        grd3: closeDoor_6 ↦ DoorUnit ∈ receiver
+        grd4: closeDoor_6 ∉ receivedMessages
+        grd5: currentMessage = {closeDoor_6}
+        grd6: doorState = BLOCKED
+        grd7: retryDoor < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {closeDoor_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    senddoorSensor_7
+    WHEN
+        grd1: doorSensor_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: closeDoor_6 ∈ receivedMessages
+        grd4: doorState = BLOCKED
+        grd5: retryDoor < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {doorSensor_7}
+        act2: sender := sender ∪ {doorSensor_7 ↦ DoorUnit}
+        act3: receiver := receiver ∪ {doorSensor_7 ↦ ElevatorCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {doorSensor_7 ↦ sensorValue}
+        act6: currentMessage := {doorSensor_7}
+    END
+
+    receivedoorSensor_7
+    WHEN
+        grd1: doorSensor_7 ∈ sentMessages
+        grd2: doorSensor_7 ↦ DoorUnit ∈ sender
+        grd3: doorSensor_7 ↦ ElevatorCtrl ∈ receiver
+        grd4: doorSensor_7 ∉ receivedMessages
+        grd5: currentMessage = {doorSensor_7}
+        grd6: doorState = BLOCKED
+        grd7: retryDoor < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {doorSensor_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {doorSensor_7 ↦ sensorValue}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyPassenger_8
+    WHEN
+        grd1: notifyPassenger_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: doorOpened_5 ∈ receivedMessages ∨ doorSensor_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPassenger_8}
+        act2: sender := sender ∪ {notifyPassenger_8 ↦ ElevatorCtrl}
+        act3: receiver := receiver ∪ {notifyPassenger_8 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyPassenger_8 ↦ floorNo}
+        act6: currentMessage := {notifyPassenger_8}
+    END
+
+    receivenotifyPassenger_8
+    WHEN
+        grd1: notifyPassenger_8 ∈ sentMessages
+        grd2: notifyPassenger_8 ↦ ElevatorCtrl ∈ sender
+        grd3: notifyPassenger_8 ↦ Passenger ∈ receiver
+        grd4: notifyPassenger_8 ∉ receivedMessages
+        grd5: currentMessage = {notifyPassenger_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPassenger_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyPassenger_8 ↦ floorNo}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_closeDoor_6_loop1
+    WHEN
+        grd1: doorState = BLOCKED
+        grd2: retryDoor < 3
+    THEN
+        act1: retryDoor := retryDoor + 1
+    END
+
+END

@@ -1,0 +1,424 @@
+CONTEXT RemotePatientMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ClinicServer, HomeHub, Nurse, Wearable
+    syncAlert_1, cancelReport_2, approveVital_3, scheduleReport_4, releaseReport_5, sendAlert_6, reportVital_7, notifyAlert_8, fetchVital_9, reportAlert_10, reportReport_11, confirmVital_12, assignAlert_13
+    alertCode, alertID, reportInfo, reportValue, vitalData, vitalInfo
+AXIOMS
+    axm1: partition(Objects, {ClinicServer}, {HomeHub}, {Nurse}, {Wearable})
+    axm2: partition(Messages, {syncAlert_1}, {cancelReport_2}, {approveVital_3}, {scheduleReport_4}, {releaseReport_5}, {sendAlert_6}, {reportVital_7}, {notifyAlert_8}, {fetchVital_9}, {reportAlert_10}, {reportReport_11}, {confirmVital_12}, {assignAlert_13})
+    axm3: partition(DataMessages, {alertCode}, {alertID}, {reportInfo}, {reportValue}, {vitalData}, {vitalInfo})
+END
+
+MACHINE RemotePatientMonitorInteractionMachine_1
+SEES RemotePatientMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, par_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_8, t_delay_8, t_success_8, t_time_13, t_delay_13, t_success_13
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+    inv19: t_time_8 ∈ ℤ
+    inv20: t_delay_8 ∈ ℤ
+    inv21: t_success_8 ∈ ℤ
+    inv22: t_time_13 ∈ ℤ
+    inv23: t_delay_13 ∈ ℤ
+    inv24: t_success_13 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: par_1 := 0
+        act10: t_time_3 :∈ 0..1
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_5 :∈ 0..0
+        act14: t_delay_5 := 3
+        act15: t_success_5 := 0
+        act16: t_time_6 :∈ 0..8
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+        act19: t_time_8 :∈ 60..52
+        act20: t_delay_8 := 0
+        act21: t_success_8 := 0
+        act22: t_time_13 :∈ 0..5
+        act23: t_delay_13 := 1
+        act24: t_success_13 := 0
+    END
+
+
+    sendsyncAlert_1
+    WHEN
+        grd1: syncAlert_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncAlert_1}
+        act2: sender := sender ∪ {syncAlert_1 ↦ HomeHub}
+        act3: receiver := receiver ∪ {syncAlert_1 ↦ Wearable}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncAlert_1}
+    END
+
+    receivesyncAlert_1
+    WHEN
+        grd1: syncAlert_1 ∈ sentMessages
+        grd2: syncAlert_1 ↦ HomeHub ∈ sender
+        grd3: syncAlert_1 ↦ Wearable ∈ receiver
+        grd4: syncAlert_1 ∉ receivedMessages
+        grd5: currentMessage = {syncAlert_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncAlert_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelReport_2
+    WHEN
+        grd1: cancelReport_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncAlert_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelReport_2}
+        act2: sender := sender ∪ {cancelReport_2 ↦ Nurse}
+        act3: receiver := receiver ∪ {cancelReport_2 ↦ ClinicServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelReport_2}
+    END
+
+    receivecancelReport_2
+    WHEN
+        grd1: cancelReport_2 ∈ sentMessages
+        grd2: cancelReport_2 ↦ Nurse ∈ sender
+        grd3: cancelReport_2 ↦ ClinicServer ∈ receiver
+        grd4: cancelReport_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelReport_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelReport_2}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveVital_3
+    WHEN
+        grd1: approveVital_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelReport_2 ∈ receivedMessages
+        grd4: passNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveVital_3}
+        act2: sender := sender ∪ {approveVital_3 ↦ ClinicServer}
+        act3: receiver := receiver ∪ {approveVital_3 ↦ Nurse}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveVital_3 ↦ reportValue}
+        act6: currentMessage := {approveVital_3}
+    END
+
+    receiveapproveVital_3
+    WHEN
+        grd1: approveVital_3 ∈ sentMessages
+        grd2: approveVital_3 ↦ ClinicServer ∈ sender
+        grd3: approveVital_3 ↦ Nurse ∈ receiver
+        grd4: approveVital_3 ∉ receivedMessages
+        grd5: currentMessage = {approveVital_3}
+        grd6: passNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveVital_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveVital_3 ↦ reportValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendscheduleReport_4
+    WHEN
+        grd1: scheduleReport_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveVital_3 ∈ receivedMessages
+        grd4: passNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleReport_4}
+        act2: sender := sender ∪ {scheduleReport_4 ↦ Nurse}
+        act3: receiver := receiver ∪ {scheduleReport_4 ↦ ClinicServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleReport_4}
+    END
+
+    receivescheduleReport_4
+    WHEN
+        grd1: scheduleReport_4 ∈ sentMessages
+        grd2: scheduleReport_4 ↦ Nurse ∈ sender
+        grd3: scheduleReport_4 ↦ ClinicServer ∈ receiver
+        grd4: scheduleReport_4 ∉ receivedMessages
+        grd5: currentMessage = {scheduleReport_4}
+        grd6: passNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleReport_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseReport_5
+    WHEN
+        grd1: releaseReport_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleReport_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseReport_5}
+        act2: sender := sender ∪ {releaseReport_5 ↦ Nurse}
+        act3: receiver := receiver ∪ {releaseReport_5 ↦ Wearable}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseReport_5}
+    END
+
+    receivereleaseReport_5
+    WHEN
+        grd1: releaseReport_5 ∈ sentMessages
+        grd2: releaseReport_5 ↦ Nurse ∈ sender
+        grd3: releaseReport_5 ↦ Wearable ∈ receiver
+        grd4: releaseReport_5 ∉ receivedMessages
+        grd5: currentMessage = {releaseReport_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseReport_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendsendAlert_6
+    WHEN
+        grd1: sendAlert_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseReport_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAlert_6}
+        act2: sender := sender ∪ {sendAlert_6 ↦ Nurse}
+        act3: receiver := receiver ∪ {sendAlert_6 ↦ ClinicServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendAlert_6}
+    END
+
+    receivesendAlert_6
+    WHEN
+        grd1: sendAlert_6 ∈ sentMessages
+        grd2: sendAlert_6 ↦ Nurse ∈ sender
+        grd3: sendAlert_6 ↦ ClinicServer ∈ receiver
+        grd4: sendAlert_6 ∉ receivedMessages
+        grd5: currentMessage = {sendAlert_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAlert_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendreportVital_7
+    WHEN
+        grd1: reportVital_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAlert_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportVital_7}
+        act2: sender := sender ∪ {reportVital_7 ↦ HomeHub}
+        act3: receiver := receiver ∪ {reportVital_7 ↦ ClinicServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportVital_7 ↦ reportInfo}
+        act6: currentMessage := {reportVital_7}
+    END
+
+    receivereportVital_7
+    WHEN
+        grd1: reportVital_7 ∈ sentMessages
+        grd2: reportVital_7 ↦ HomeHub ∈ sender
+        grd3: reportVital_7 ↦ ClinicServer ∈ receiver
+        grd4: reportVital_7 ∉ receivedMessages
+        grd5: currentMessage = {reportVital_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportVital_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportVital_7 ↦ reportInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyAlert_8
+    WHEN
+        grd1: notifyAlert_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportVital_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyAlert_8}
+        act2: sender := sender ∪ {notifyAlert_8 ↦ Wearable}
+        act3: receiver := receiver ∪ {notifyAlert_8 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyAlert_8 ↦ alertCode}
+        act6: currentMessage := {notifyAlert_8}
+    END
+
+    receivenotifyAlert_8
+    WHEN
+        grd1: notifyAlert_8 ∈ sentMessages
+        grd2: notifyAlert_8 ↦ Wearable ∈ sender
+        grd3: notifyAlert_8 ↦ HomeHub ∈ receiver
+        grd4: notifyAlert_8 ∉ receivedMessages
+        grd5: currentMessage = {notifyAlert_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyAlert_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyAlert_8 ↦ alertCode}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendfetchVital_9
+    WHEN
+        grd1: fetchVital_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyAlert_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchVital_9}
+        act2: sender := sender ∪ {fetchVital_9 ↦ ClinicServer}
+        act3: receiver := receiver ∪ {fetchVital_9 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchVital_9 ↦ alertID}
+        act6: currentMessage := {fetchVital_9}
+    END
+
+    receivefetchVital_9
+    WHEN
+        grd1: fetchVital_9 ∈ sentMessages
+        grd2: fetchVital_9 ↦ ClinicServer ∈ sender
+        grd3: fetchVital_9 ↦ HomeHub ∈ receiver
+        grd4: fetchVital_9 ∉ receivedMessages
+        grd5: currentMessage = {fetchVital_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchVital_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchVital_9 ↦ alertID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportAlert_10
+    WHEN
+        grd1: reportAlert_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchVital_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportAlert_10}
+        act2: sender := sender ∪ {reportAlert_10 ↦ ClinicServer}
+        act3: receiver := receiver ∪ {reportAlert_10 ↦ Wearable}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportAlert_10 ↦ vitalInfo}
+        act6: currentMessage := {reportAlert_10}
+    END
+
+    receivereportAlert_10
+    WHEN
+        grd1: reportAlert_10 ∈ sentMessages
+        grd2: reportAlert_10 ↦ ClinicServer ∈ sender
+        grd3: reportAlert_10 ↦ Wearable ∈ receiver
+        grd4: reportAlert_10 ∉ receivedMessages
+        grd5: currentMessage = {reportAlert_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportAlert_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportAlert_10 ↦ vitalInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreportReport_11
+    WHEN
+        grd1: reportReport_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportAlert_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportReport_11}
+        act2: sender := sender ∪ {reportReport_11 ↦ HomeHub}
+        act3: receiver := receiver ∪ {reportReport_11 ↦ Wearable}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportReport_11}
+    END
+
+    receivereportReport_11
+    WHEN
+        grd1: reportReport_11 ∈ sentMessages
+        grd2: reportReport_11 ↦ HomeHub ∈ sender
+        grd3: reportReport_11 ↦ Wearable ∈ receiver
+        grd4: reportReport_11 ∉ receivedMessages
+        grd5: currentMessage = {reportReport_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportReport_11}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmVital_12
+    WHEN
+        grd1: confirmVital_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportReport_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmVital_12}
+        act2: sender := sender ∪ {confirmVital_12 ↦ Nurse}
+        act3: receiver := receiver ∪ {confirmVital_12 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmVital_12 ↦ vitalData}
+        act6: currentMessage := {confirmVital_12}
+    END
+
+    receiveconfirmVital_12
+    WHEN
+        grd1: confirmVital_12 ∈ sentMessages
+        grd2: confirmVital_12 ↦ Nurse ∈ sender
+        grd3: confirmVital_12 ↦ HomeHub ∈ receiver
+        grd4: confirmVital_12 ∉ receivedMessages
+        grd5: currentMessage = {confirmVital_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmVital_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmVital_12 ↦ vitalData}
+        act3: currentMessage := ∅
+    END
+
+    sendassignAlert_13
+    WHEN
+        grd1: assignAlert_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmVital_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignAlert_13}
+        act2: sender := sender ∪ {assignAlert_13 ↦ Wearable}
+        act3: receiver := receiver ∪ {assignAlert_13 ↦ Nurse}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignAlert_13}
+    END
+
+    receiveassignAlert_13
+    WHEN
+        grd1: assignAlert_13 ∈ sentMessages
+        grd2: assignAlert_13 ↦ Wearable ∈ sender
+        grd3: assignAlert_13 ↦ Nurse ∈ receiver
+        grd4: assignAlert_13 ∉ receivedMessages
+        grd5: currentMessage = {assignAlert_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignAlert_13}
+        act2: currentMessage := ∅
+        act3: t_success_13 := t_time_13 + t_delay_13
+    END
+
+    checkloop_approveVital_3_loop1
+    WHEN
+        grd1: passNo < 12
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

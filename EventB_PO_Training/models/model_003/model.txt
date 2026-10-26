@@ -1,0 +1,289 @@
+CONTEXT ATMWithdrawalContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ATM, Customer
+    insertCard_1, requestPIN_2, enterPIN_3, invalidPIN_4, reenterPIN_5, selectAmount_6, dispenseCash_7, retainCard_8
+    amountReq, cardNo, cash, pin
+AXIOMS
+    axm1: partition(Objects, {ATM}, {Customer})
+    axm2: partition(Messages, {insertCard_1}, {requestPIN_2}, {enterPIN_3}, {invalidPIN_4}, {reenterPIN_5}, {selectAmount_6}, {dispenseCash_7}, {retainCard_8})
+    axm3: partition(DataMessages, {amountReq}, {cardNo}, {cash}, {pin})
+END
+
+MACHINE ATMWithdrawalInteractionMachine_1
+SEES ATMWithdrawalContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, pinAttempt, pinValid, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: pinAttempt ∈ ℤ
+    inv9: pinValid ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_7 ∈ ℤ
+    inv17: t_delay_7 ∈ ℤ
+    inv18: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: pinAttempt := 0
+        act9: pinValid := 0
+        act10: t_time_3 :∈ 0..30
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_5 :∈ 0..30
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+        act16: t_time_7 :∈ 0..5
+        act17: t_delay_7 := 0
+        act18: t_success_7 := 0
+    END
+
+
+    sendinsertCard_1
+    WHEN
+        grd1: insertCard_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {insertCard_1}
+        act2: sender := sender ∪ {insertCard_1 ↦ Customer}
+        act3: receiver := receiver ∪ {insertCard_1 ↦ ATM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {insertCard_1 ↦ cardNo}
+        act6: currentMessage := {insertCard_1}
+    END
+
+    receiveinsertCard_1
+    WHEN
+        grd1: insertCard_1 ∈ sentMessages
+        grd2: insertCard_1 ↦ Customer ∈ sender
+        grd3: insertCard_1 ↦ ATM ∈ receiver
+        grd4: insertCard_1 ∉ receivedMessages
+        grd5: currentMessage = {insertCard_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {insertCard_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {insertCard_1 ↦ cardNo}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestPIN_2
+    WHEN
+        grd1: requestPIN_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: insertCard_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestPIN_2}
+        act2: sender := sender ∪ {requestPIN_2 ↦ ATM}
+        act3: receiver := receiver ∪ {requestPIN_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestPIN_2}
+    END
+
+    receiverequestPIN_2
+    WHEN
+        grd1: requestPIN_2 ∈ sentMessages
+        grd2: requestPIN_2 ↦ ATM ∈ sender
+        grd3: requestPIN_2 ↦ Customer ∈ receiver
+        grd4: requestPIN_2 ∉ receivedMessages
+        grd5: currentMessage = {requestPIN_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestPIN_2}
+        act2: currentMessage := ∅
+    END
+
+    sendenterPIN_3
+    WHEN
+        grd1: enterPIN_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestPIN_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {enterPIN_3}
+        act2: sender := sender ∪ {enterPIN_3 ↦ Customer}
+        act3: receiver := receiver ∪ {enterPIN_3 ↦ ATM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {enterPIN_3 ↦ pin}
+        act6: currentMessage := {enterPIN_3}
+    END
+
+    receiveenterPIN_3
+    WHEN
+        grd1: enterPIN_3 ∈ sentMessages
+        grd2: enterPIN_3 ↦ Customer ∈ sender
+        grd3: enterPIN_3 ↦ ATM ∈ receiver
+        grd4: enterPIN_3 ∉ receivedMessages
+        grd5: currentMessage = {enterPIN_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {enterPIN_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {enterPIN_3 ↦ pin}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendinvalidPIN_4
+    WHEN
+        grd1: invalidPIN_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: enterPIN_3 ∈ receivedMessages
+        grd4: pinAttempt < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {invalidPIN_4}
+        act2: sender := sender ∪ {invalidPIN_4 ↦ ATM}
+        act3: receiver := receiver ∪ {invalidPIN_4 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {invalidPIN_4}
+    END
+
+    receiveinvalidPIN_4
+    WHEN
+        grd1: invalidPIN_4 ∈ sentMessages
+        grd2: invalidPIN_4 ↦ ATM ∈ sender
+        grd3: invalidPIN_4 ↦ Customer ∈ receiver
+        grd4: invalidPIN_4 ∉ receivedMessages
+        grd5: currentMessage = {invalidPIN_4}
+        grd6: pinAttempt < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {invalidPIN_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreenterPIN_5
+    WHEN
+        grd1: reenterPIN_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: invalidPIN_4 ∈ receivedMessages
+        grd4: pinAttempt < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {reenterPIN_5}
+        act2: sender := sender ∪ {reenterPIN_5 ↦ Customer}
+        act3: receiver := receiver ∪ {reenterPIN_5 ↦ ATM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reenterPIN_5 ↦ pin}
+        act6: currentMessage := {reenterPIN_5}
+    END
+
+    receivereenterPIN_5
+    WHEN
+        grd1: reenterPIN_5 ∈ sentMessages
+        grd2: reenterPIN_5 ↦ Customer ∈ sender
+        grd3: reenterPIN_5 ↦ ATM ∈ receiver
+        grd4: reenterPIN_5 ∉ receivedMessages
+        grd5: currentMessage = {reenterPIN_5}
+        grd6: pinAttempt < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reenterPIN_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reenterPIN_5 ↦ pin}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendselectAmount_6
+    WHEN
+        grd1: selectAmount_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reenterPIN_5 ∈ receivedMessages
+        grd4: pinValid = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {selectAmount_6}
+        act2: sender := sender ∪ {selectAmount_6 ↦ Customer}
+        act3: receiver := receiver ∪ {selectAmount_6 ↦ ATM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {selectAmount_6 ↦ amountReq}
+        act6: currentMessage := {selectAmount_6}
+    END
+
+    receiveselectAmount_6
+    WHEN
+        grd1: selectAmount_6 ∈ sentMessages
+        grd2: selectAmount_6 ↦ Customer ∈ sender
+        grd3: selectAmount_6 ↦ ATM ∈ receiver
+        grd4: selectAmount_6 ∉ receivedMessages
+        grd5: currentMessage = {selectAmount_6}
+        grd6: pinValid = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {selectAmount_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {selectAmount_6 ↦ amountReq}
+        act3: currentMessage := ∅
+    END
+
+    senddispenseCash_7
+    WHEN
+        grd1: dispenseCash_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: selectAmount_6 ∈ receivedMessages
+        grd4: pinValid = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {dispenseCash_7}
+        act2: sender := sender ∪ {dispenseCash_7 ↦ ATM}
+        act3: receiver := receiver ∪ {dispenseCash_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {dispenseCash_7 ↦ cash}
+        act6: currentMessage := {dispenseCash_7}
+    END
+
+    receivedispenseCash_7
+    WHEN
+        grd1: dispenseCash_7 ∈ sentMessages
+        grd2: dispenseCash_7 ↦ ATM ∈ sender
+        grd3: dispenseCash_7 ↦ Customer ∈ receiver
+        grd4: dispenseCash_7 ∉ receivedMessages
+        grd5: currentMessage = {dispenseCash_7}
+        grd6: pinValid = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dispenseCash_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {dispenseCash_7 ↦ cash}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendretainCard_8
+    WHEN
+        grd1: retainCard_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reenterPIN_5 ∈ receivedMessages
+        grd4: pinValid = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {retainCard_8}
+        act2: sender := sender ∪ {retainCard_8 ↦ ATM}
+        act3: receiver := receiver ∪ {retainCard_8 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {retainCard_8}
+    END
+
+    receiveretainCard_8
+    WHEN
+        grd1: retainCard_8 ∈ sentMessages
+        grd2: retainCard_8 ↦ ATM ∈ sender
+        grd3: retainCard_8 ↦ Customer ∈ receiver
+        grd4: retainCard_8 ∉ receivedMessages
+        grd5: currentMessage = {retainCard_8}
+        grd6: pinValid = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {retainCard_8}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_invalidPIN_4_loop1
+    WHEN
+        grd1: pinAttempt < 3
+    THEN
+        act1: pinAttempt := pinAttempt + 1
+    END
+
+END

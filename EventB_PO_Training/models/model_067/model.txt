@@ -1,0 +1,240 @@
+CONTEXT CargoShipTrackingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    PortSystem, Shipper, Vessel
+    syncManifest_1, assignContainer_2, ackContainer_3, updateManifest_4, updateBerth_5, releaseContainer_6
+    berthData, containerCode, manifestData
+AXIOMS
+    axm1: partition(Objects, {PortSystem}, {Shipper}, {Vessel})
+    axm2: partition(Messages, {syncManifest_1}, {assignContainer_2}, {ackContainer_3}, {updateManifest_4}, {updateBerth_5}, {releaseContainer_6})
+    axm3: partition(DataMessages, {berthData}, {containerCode}, {manifestData})
+END
+
+MACHINE CargoShipTrackingInteractionMachine_1
+SEES CargoShipTrackingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, useCache, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: useCache ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_6 ∈ ℤ
+    inv20: t_delay_6 ∈ ℤ
+    inv21: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: useCache := 1
+        act10: t_time_3 :∈ 0..0
+        act11: t_delay_3 := 3
+        act12: t_success_3 := 0
+        act13: t_time_4 :∈ 0..10
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..0
+        act17: t_delay_5 := 10
+        act18: t_success_5 := 0
+        act19: t_time_6 :∈ 20..1
+        act20: t_delay_6 := 0
+        act21: t_success_6 := 0
+    END
+
+
+    sendsyncManifest_1
+    WHEN
+        grd1: syncManifest_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncManifest_1}
+        act2: sender := sender ∪ {syncManifest_1 ↦ Shipper}
+        act3: receiver := receiver ∪ {syncManifest_1 ↦ PortSystem}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncManifest_1}
+    END
+
+    receivesyncManifest_1
+    WHEN
+        grd1: syncManifest_1 ∈ sentMessages
+        grd2: syncManifest_1 ↦ Shipper ∈ sender
+        grd3: syncManifest_1 ↦ PortSystem ∈ receiver
+        grd4: syncManifest_1 ∉ receivedMessages
+        grd5: currentMessage = {syncManifest_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncManifest_1}
+        act2: currentMessage := ∅
+    END
+
+    sendassignContainer_2
+    WHEN
+        grd1: assignContainer_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncManifest_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignContainer_2}
+        act2: sender := sender ∪ {assignContainer_2 ↦ PortSystem}
+        act3: receiver := receiver ∪ {assignContainer_2 ↦ Shipper}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignContainer_2 ↦ manifestData}
+        act6: currentMessage := {assignContainer_2}
+    END
+
+    receiveassignContainer_2
+    WHEN
+        grd1: assignContainer_2 ∈ sentMessages
+        grd2: assignContainer_2 ↦ PortSystem ∈ sender
+        grd3: assignContainer_2 ↦ Shipper ∈ receiver
+        grd4: assignContainer_2 ∉ receivedMessages
+        grd5: currentMessage = {assignContainer_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignContainer_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignContainer_2 ↦ manifestData}
+        act3: currentMessage := ∅
+    END
+
+    sendackContainer_3
+    WHEN
+        grd1: ackContainer_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignContainer_2 ∈ receivedMessages
+        grd4: cycleNo < 7
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackContainer_3}
+        act2: sender := sender ∪ {ackContainer_3 ↦ Shipper}
+        act3: receiver := receiver ∪ {ackContainer_3 ↦ Vessel}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackContainer_3 ↦ berthData}
+        act6: currentMessage := {ackContainer_3}
+    END
+
+    receiveackContainer_3
+    WHEN
+        grd1: ackContainer_3 ∈ sentMessages
+        grd2: ackContainer_3 ↦ Shipper ∈ sender
+        grd3: ackContainer_3 ↦ Vessel ∈ receiver
+        grd4: ackContainer_3 ∉ receivedMessages
+        grd5: currentMessage = {ackContainer_3}
+        grd6: cycleNo < 7
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackContainer_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackContainer_3 ↦ berthData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendupdateManifest_4_opt1
+    WHEN
+        grd1: updateManifest_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackContainer_3 ∈ receivedMessages
+        grd4: cycleNo < 7
+        grd5: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateManifest_4}
+        act2: sender := sender ∪ {updateManifest_4 ↦ Shipper}
+        act3: receiver := receiver ∪ {updateManifest_4 ↦ Vessel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateManifest_4}
+    END
+
+    receiveupdateManifest_4_opt1
+    WHEN
+        grd1: updateManifest_4 ∈ sentMessages
+        grd2: updateManifest_4 ↦ Shipper ∈ sender
+        grd3: updateManifest_4 ↦ Vessel ∈ receiver
+        grd4: updateManifest_4 ∉ receivedMessages
+        grd5: currentMessage = {updateManifest_4}
+        grd6: cycleNo < 7
+        grd7: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateManifest_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendupdateBerth_5
+    WHEN
+        grd1: updateBerth_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateManifest_4 ∈ receivedMessages
+        grd4: cycleNo < 7
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateBerth_5}
+        act2: sender := sender ∪ {updateBerth_5 ↦ Shipper}
+        act3: receiver := receiver ∪ {updateBerth_5 ↦ Vessel}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateBerth_5 ↦ containerCode}
+        act6: currentMessage := {updateBerth_5}
+    END
+
+    receiveupdateBerth_5
+    WHEN
+        grd1: updateBerth_5 ∈ sentMessages
+        grd2: updateBerth_5 ↦ Shipper ∈ sender
+        grd3: updateBerth_5 ↦ Vessel ∈ receiver
+        grd4: updateBerth_5 ∉ receivedMessages
+        grd5: currentMessage = {updateBerth_5}
+        grd6: cycleNo < 7
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateBerth_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateBerth_5 ↦ containerCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseContainer_6
+    WHEN
+        grd1: releaseContainer_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateBerth_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseContainer_6}
+        act2: sender := sender ∪ {releaseContainer_6 ↦ Vessel}
+        act3: receiver := receiver ∪ {releaseContainer_6 ↦ Shipper}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseContainer_6}
+    END
+
+    receivereleaseContainer_6
+    WHEN
+        grd1: releaseContainer_6 ∈ sentMessages
+        grd2: releaseContainer_6 ↦ Vessel ∈ sender
+        grd3: releaseContainer_6 ↦ Shipper ∈ receiver
+        grd4: releaseContainer_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseContainer_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseContainer_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    checkloop_ackContainer_3_loop1
+    WHEN
+        grd1: cycleNo < 7
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+END

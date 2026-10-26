@@ -1,0 +1,258 @@
+CONTEXT TaxiDispatchContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DispatchApp, Driver, Rider
+    requestRide_1, findDriver_2, driverAccept_3, rideConfirmed_4, addPassenger_5, tripComplete_6, chargeRider_7
+    driverID, etaMin, fare, pickupLoc, riderID
+AXIOMS
+    axm1: partition(Objects, {DispatchApp}, {Driver}, {Rider})
+    axm2: partition(Messages, {requestRide_1}, {findDriver_2}, {driverAccept_3}, {rideConfirmed_4}, {addPassenger_5}, {tripComplete_6}, {chargeRider_7})
+    axm3: partition(DataMessages, {driverID}, {etaMin}, {fare}, {pickupLoc}, {riderID})
+END
+
+MACHINE TaxiDispatchInteractionMachine_1
+SEES TaxiDispatchContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, shareRide, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: shareRide ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+    inv18: t_time_7 ∈ ℤ
+    inv19: t_delay_7 ∈ ℤ
+    inv20: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: shareRide := 1
+        act9: t_time_1 :∈ 0..2
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 30..20
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_6 :∈ 60..7
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+        act18: t_time_7 :∈ 0..5
+        act19: t_delay_7 := 0
+        act20: t_success_7 := 0
+    END
+
+
+    sendrequestRide_1
+    WHEN
+        grd1: requestRide_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestRide_1}
+        act2: sender := sender ∪ {requestRide_1 ↦ Rider}
+        act3: receiver := receiver ∪ {requestRide_1 ↦ DispatchApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestRide_1 ↦ pickupLoc}
+        act6: currentMessage := {requestRide_1}
+    END
+
+    receiverequestRide_1
+    WHEN
+        grd1: requestRide_1 ∈ sentMessages
+        grd2: requestRide_1 ↦ Rider ∈ sender
+        grd3: requestRide_1 ↦ DispatchApp ∈ receiver
+        grd4: requestRide_1 ∉ receivedMessages
+        grd5: currentMessage = {requestRide_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestRide_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestRide_1 ↦ pickupLoc}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendfindDriver_2
+    WHEN
+        grd1: findDriver_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestRide_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {findDriver_2}
+        act2: sender := sender ∪ {findDriver_2 ↦ DispatchApp}
+        act3: receiver := receiver ∪ {findDriver_2 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {findDriver_2 ↦ pickupLoc}
+        act6: currentMessage := {findDriver_2}
+    END
+
+    receivefindDriver_2
+    WHEN
+        grd1: findDriver_2 ∈ sentMessages
+        grd2: findDriver_2 ↦ DispatchApp ∈ sender
+        grd3: findDriver_2 ↦ Driver ∈ receiver
+        grd4: findDriver_2 ∉ receivedMessages
+        grd5: currentMessage = {findDriver_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {findDriver_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {findDriver_2 ↦ pickupLoc}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    senddriverAccept_3
+    WHEN
+        grd1: driverAccept_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: findDriver_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {driverAccept_3}
+        act2: sender := sender ∪ {driverAccept_3 ↦ Driver}
+        act3: receiver := receiver ∪ {driverAccept_3 ↦ DispatchApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {driverAccept_3 ↦ driverID}
+        act6: currentMessage := {driverAccept_3}
+    END
+
+    receivedriverAccept_3
+    WHEN
+        grd1: driverAccept_3 ∈ sentMessages
+        grd2: driverAccept_3 ↦ Driver ∈ sender
+        grd3: driverAccept_3 ↦ DispatchApp ∈ receiver
+        grd4: driverAccept_3 ∉ receivedMessages
+        grd5: currentMessage = {driverAccept_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {driverAccept_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {driverAccept_3 ↦ driverID}
+        act3: currentMessage := ∅
+    END
+
+    sendrideConfirmed_4
+    WHEN
+        grd1: rideConfirmed_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: driverAccept_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {rideConfirmed_4}
+        act2: sender := sender ∪ {rideConfirmed_4 ↦ DispatchApp}
+        act3: receiver := receiver ∪ {rideConfirmed_4 ↦ Rider}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {rideConfirmed_4 ↦ etaMin}
+        act6: currentMessage := {rideConfirmed_4}
+    END
+
+    receiverideConfirmed_4
+    WHEN
+        grd1: rideConfirmed_4 ∈ sentMessages
+        grd2: rideConfirmed_4 ↦ DispatchApp ∈ sender
+        grd3: rideConfirmed_4 ↦ Rider ∈ receiver
+        grd4: rideConfirmed_4 ∉ receivedMessages
+        grd5: currentMessage = {rideConfirmed_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {rideConfirmed_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {rideConfirmed_4 ↦ etaMin}
+        act3: currentMessage := ∅
+    END
+
+    sendaddPassenger_5_opt1
+    WHEN
+        grd1: addPassenger_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: rideConfirmed_4 ∈ receivedMessages
+        grd4: shareRide = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {addPassenger_5}
+        act2: sender := sender ∪ {addPassenger_5 ↦ DispatchApp}
+        act3: receiver := receiver ∪ {addPassenger_5 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {addPassenger_5 ↦ riderID}
+        act6: currentMessage := {addPassenger_5}
+    END
+
+    receiveaddPassenger_5_opt1
+    WHEN
+        grd1: addPassenger_5 ∈ sentMessages
+        grd2: addPassenger_5 ↦ DispatchApp ∈ sender
+        grd3: addPassenger_5 ↦ Driver ∈ receiver
+        grd4: addPassenger_5 ∉ receivedMessages
+        grd5: currentMessage = {addPassenger_5}
+        grd6: shareRide = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {addPassenger_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {addPassenger_5 ↦ riderID}
+        act3: currentMessage := ∅
+    END
+
+    sendtripComplete_6
+    WHEN
+        grd1: tripComplete_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: addPassenger_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {tripComplete_6}
+        act2: sender := sender ∪ {tripComplete_6 ↦ Driver}
+        act3: receiver := receiver ∪ {tripComplete_6 ↦ DispatchApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {tripComplete_6 ↦ fare}
+        act6: currentMessage := {tripComplete_6}
+    END
+
+    receivetripComplete_6
+    WHEN
+        grd1: tripComplete_6 ∈ sentMessages
+        grd2: tripComplete_6 ↦ Driver ∈ sender
+        grd3: tripComplete_6 ↦ DispatchApp ∈ receiver
+        grd4: tripComplete_6 ∉ receivedMessages
+        grd5: currentMessage = {tripComplete_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {tripComplete_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {tripComplete_6 ↦ fare}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendchargeRider_7
+    WHEN
+        grd1: chargeRider_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: tripComplete_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {chargeRider_7}
+        act2: sender := sender ∪ {chargeRider_7 ↦ DispatchApp}
+        act3: receiver := receiver ∪ {chargeRider_7 ↦ Rider}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {chargeRider_7 ↦ fare}
+        act6: currentMessage := {chargeRider_7}
+    END
+
+    receivechargeRider_7
+    WHEN
+        grd1: chargeRider_7 ∈ sentMessages
+        grd2: chargeRider_7 ↦ DispatchApp ∈ sender
+        grd3: chargeRider_7 ↦ Rider ∈ receiver
+        grd4: chargeRider_7 ∉ receivedMessages
+        grd5: currentMessage = {chargeRider_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {chargeRider_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {chargeRider_7 ↦ fare}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+END

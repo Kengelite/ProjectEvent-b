@@ -1,0 +1,200 @@
+CONTEXT GolfCartFleetContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CartApp, GolfCart, Golfer
+    fetchFee_1, scheduleRound_2, fetchCart_3, confirmCart_4, approveCart_5, issueCart_6
+    feeData, roundID, roundValue
+AXIOMS
+    axm1: partition(Objects, {CartApp}, {GolfCart}, {Golfer})
+    axm2: partition(Messages, {fetchFee_1}, {scheduleRound_2}, {fetchCart_3}, {confirmCart_4}, {approveCart_5}, {issueCart_6})
+    axm3: partition(DataMessages, {feeData}, {roundID}, {roundValue})
+END
+
+MACHINE GolfCartFleetInteractionMachine_1
+SEES GolfCartFleetContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_4 ∈ ℤ
+    inv9: t_delay_4 ∈ ℤ
+    inv10: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_4 :∈ 8..6
+        act9: t_delay_4 := 0
+        act10: t_success_4 := 0
+    END
+
+
+    sendfetchFee_1
+    WHEN
+        grd1: fetchFee_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchFee_1}
+        act2: sender := sender ∪ {fetchFee_1 ↦ Golfer}
+        act3: receiver := receiver ∪ {fetchFee_1 ↦ CartApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchFee_1}
+    END
+
+    receivefetchFee_1
+    WHEN
+        grd1: fetchFee_1 ∈ sentMessages
+        grd2: fetchFee_1 ↦ Golfer ∈ sender
+        grd3: fetchFee_1 ↦ CartApp ∈ receiver
+        grd4: fetchFee_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchFee_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchFee_1}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleRound_2
+    WHEN
+        grd1: scheduleRound_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchFee_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleRound_2}
+        act2: sender := sender ∪ {scheduleRound_2 ↦ Golfer}
+        act3: receiver := receiver ∪ {scheduleRound_2 ↦ GolfCart}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleRound_2 ↦ roundValue}
+        act6: currentMessage := {scheduleRound_2}
+    END
+
+    receivescheduleRound_2
+    WHEN
+        grd1: scheduleRound_2 ∈ sentMessages
+        grd2: scheduleRound_2 ↦ Golfer ∈ sender
+        grd3: scheduleRound_2 ↦ GolfCart ∈ receiver
+        grd4: scheduleRound_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleRound_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleRound_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleRound_2 ↦ roundValue}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchCart_3
+    WHEN
+        grd1: fetchCart_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleRound_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchCart_3}
+        act2: sender := sender ∪ {fetchCart_3 ↦ CartApp}
+        act3: receiver := receiver ∪ {fetchCart_3 ↦ Golfer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchCart_3}
+    END
+
+    receivefetchCart_3
+    WHEN
+        grd1: fetchCart_3 ∈ sentMessages
+        grd2: fetchCart_3 ↦ CartApp ∈ sender
+        grd3: fetchCart_3 ↦ Golfer ∈ receiver
+        grd4: fetchCart_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchCart_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchCart_3}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmCart_4
+    WHEN
+        grd1: confirmCart_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchCart_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCart_4}
+        act2: sender := sender ∪ {confirmCart_4 ↦ GolfCart}
+        act3: receiver := receiver ∪ {confirmCart_4 ↦ CartApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmCart_4 ↦ feeData}
+        act6: currentMessage := {confirmCart_4}
+    END
+
+    receiveconfirmCart_4
+    WHEN
+        grd1: confirmCart_4 ∈ sentMessages
+        grd2: confirmCart_4 ↦ GolfCart ∈ sender
+        grd3: confirmCart_4 ↦ CartApp ∈ receiver
+        grd4: confirmCart_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmCart_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCart_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmCart_4 ↦ feeData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendapproveCart_5
+    WHEN
+        grd1: approveCart_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmCart_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveCart_5}
+        act2: sender := sender ∪ {approveCart_5 ↦ CartApp}
+        act3: receiver := receiver ∪ {approveCart_5 ↦ Golfer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveCart_5}
+    END
+
+    receiveapproveCart_5
+    WHEN
+        grd1: approveCart_5 ∈ sentMessages
+        grd2: approveCart_5 ↦ CartApp ∈ sender
+        grd3: approveCart_5 ↦ Golfer ∈ receiver
+        grd4: approveCart_5 ∉ receivedMessages
+        grd5: currentMessage = {approveCart_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveCart_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueCart_6
+    WHEN
+        grd1: issueCart_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveCart_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueCart_6}
+        act2: sender := sender ∪ {issueCart_6 ↦ Golfer}
+        act3: receiver := receiver ∪ {issueCart_6 ↦ GolfCart}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueCart_6 ↦ roundID}
+        act6: currentMessage := {issueCart_6}
+    END
+
+    receiveissueCart_6
+    WHEN
+        grd1: issueCart_6 ∈ sentMessages
+        grd2: issueCart_6 ↦ Golfer ∈ sender
+        grd3: issueCart_6 ↦ GolfCart ∈ receiver
+        grd4: issueCart_6 ∉ receivedMessages
+        grd5: currentMessage = {issueCart_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueCart_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueCart_6 ↦ roundID}
+        act3: currentMessage := ∅
+    END
+
+END

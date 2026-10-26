@@ -1,0 +1,294 @@
+CONTEXT PatientIntakeFormContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    HISServer, KioskTablet, Patient
+    releaseForm_1, cancelForm_2, confirmForm_3, reportForm_4, scheduleConsent_5, confirmConsent_6, issueForm_7, assignRecord_8
+    consentInfo, formRef, recordValue
+AXIOMS
+    axm1: partition(Objects, {HISServer}, {KioskTablet}, {Patient})
+    axm2: partition(Messages, {releaseForm_1}, {cancelForm_2}, {confirmForm_3}, {reportForm_4}, {scheduleConsent_5}, {confirmConsent_6}, {issueForm_7}, {assignRecord_8})
+    axm3: partition(DataMessages, {consentInfo}, {formRef}, {recordValue})
+END
+
+MACHINE PatientIntakeFormInteractionMachine_1
+SEES PatientIntakeFormContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, attemptNo, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: attemptNo ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_4 ∈ ℤ
+    inv13: t_delay_4 ∈ ℤ
+    inv14: t_success_4 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+    inv18: t_time_8 ∈ ℤ
+    inv19: t_delay_8 ∈ ℤ
+    inv20: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: attemptNo := 0
+        act9: t_time_3 :∈ 0..2
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+        act12: t_time_4 :∈ 0..2
+        act13: t_delay_4 := 0
+        act14: t_success_4 := 0
+        act15: t_time_6 :∈ 0..0
+        act16: t_delay_6 := 1
+        act17: t_success_6 := 0
+        act18: t_time_8 :∈ 0..0
+        act19: t_delay_8 := 5
+        act20: t_success_8 := 0
+    END
+
+
+    sendreleaseForm_1
+    WHEN
+        grd1: releaseForm_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseForm_1}
+        act2: sender := sender ∪ {releaseForm_1 ↦ HISServer}
+        act3: receiver := receiver ∪ {releaseForm_1 ↦ KioskTablet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseForm_1}
+    END
+
+    receivereleaseForm_1
+    WHEN
+        grd1: releaseForm_1 ∈ sentMessages
+        grd2: releaseForm_1 ↦ HISServer ∈ sender
+        grd3: releaseForm_1 ↦ KioskTablet ∈ receiver
+        grd4: releaseForm_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseForm_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseForm_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelForm_2
+    WHEN
+        grd1: cancelForm_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseForm_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelForm_2}
+        act2: sender := sender ∪ {cancelForm_2 ↦ KioskTablet}
+        act3: receiver := receiver ∪ {cancelForm_2 ↦ HISServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelForm_2 ↦ recordValue}
+        act6: currentMessage := {cancelForm_2}
+    END
+
+    receivecancelForm_2
+    WHEN
+        grd1: cancelForm_2 ∈ sentMessages
+        grd2: cancelForm_2 ↦ KioskTablet ∈ sender
+        grd3: cancelForm_2 ↦ HISServer ∈ receiver
+        grd4: cancelForm_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelForm_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelForm_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelForm_2 ↦ recordValue}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmForm_3
+    WHEN
+        grd1: confirmForm_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelForm_2 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmForm_3}
+        act2: sender := sender ∪ {confirmForm_3 ↦ KioskTablet}
+        act3: receiver := receiver ∪ {confirmForm_3 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmForm_3}
+    END
+
+    receiveconfirmForm_3
+    WHEN
+        grd1: confirmForm_3 ∈ sentMessages
+        grd2: confirmForm_3 ↦ KioskTablet ∈ sender
+        grd3: confirmForm_3 ↦ Patient ∈ receiver
+        grd4: confirmForm_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmForm_3}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmForm_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreportForm_4_opt1
+    WHEN
+        grd1: reportForm_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmForm_3 ∈ receivedMessages
+        grd4: attemptNo < 5
+        grd5: attemptNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportForm_4}
+        act2: sender := sender ∪ {reportForm_4 ↦ Patient}
+        act3: receiver := receiver ∪ {reportForm_4 ↦ HISServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportForm_4 ↦ consentInfo}
+        act6: currentMessage := {reportForm_4}
+    END
+
+    receivereportForm_4_opt1
+    WHEN
+        grd1: reportForm_4 ∈ sentMessages
+        grd2: reportForm_4 ↦ Patient ∈ sender
+        grd3: reportForm_4 ↦ HISServer ∈ receiver
+        grd4: reportForm_4 ∉ receivedMessages
+        grd5: currentMessage = {reportForm_4}
+        grd6: attemptNo < 5
+        grd7: attemptNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportForm_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportForm_4 ↦ consentInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendscheduleConsent_5
+    WHEN
+        grd1: scheduleConsent_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportForm_4 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleConsent_5}
+        act2: sender := sender ∪ {scheduleConsent_5 ↦ Patient}
+        act3: receiver := receiver ∪ {scheduleConsent_5 ↦ KioskTablet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleConsent_5}
+    END
+
+    receivescheduleConsent_5
+    WHEN
+        grd1: scheduleConsent_5 ∈ sentMessages
+        grd2: scheduleConsent_5 ↦ Patient ∈ sender
+        grd3: scheduleConsent_5 ↦ KioskTablet ∈ receiver
+        grd4: scheduleConsent_5 ∉ receivedMessages
+        grd5: currentMessage = {scheduleConsent_5}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleConsent_5}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmConsent_6
+    WHEN
+        grd1: confirmConsent_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleConsent_5 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmConsent_6}
+        act2: sender := sender ∪ {confirmConsent_6 ↦ KioskTablet}
+        act3: receiver := receiver ∪ {confirmConsent_6 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmConsent_6}
+    END
+
+    receiveconfirmConsent_6
+    WHEN
+        grd1: confirmConsent_6 ∈ sentMessages
+        grd2: confirmConsent_6 ↦ KioskTablet ∈ sender
+        grd3: confirmConsent_6 ↦ Patient ∈ receiver
+        grd4: confirmConsent_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmConsent_6}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmConsent_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendissueForm_7
+    WHEN
+        grd1: issueForm_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmConsent_6 ∈ receivedMessages
+        grd4: attemptNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueForm_7}
+        act2: sender := sender ∪ {issueForm_7 ↦ HISServer}
+        act3: receiver := receiver ∪ {issueForm_7 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueForm_7 ↦ formRef}
+        act6: currentMessage := {issueForm_7}
+    END
+
+    receiveissueForm_7
+    WHEN
+        grd1: issueForm_7 ∈ sentMessages
+        grd2: issueForm_7 ↦ HISServer ∈ sender
+        grd3: issueForm_7 ↦ Patient ∈ receiver
+        grd4: issueForm_7 ∉ receivedMessages
+        grd5: currentMessage = {issueForm_7}
+        grd6: attemptNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueForm_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueForm_7 ↦ formRef}
+        act3: currentMessage := ∅
+    END
+
+    sendassignRecord_8
+    WHEN
+        grd1: assignRecord_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueForm_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignRecord_8}
+        act2: sender := sender ∪ {assignRecord_8 ↦ HISServer}
+        act3: receiver := receiver ∪ {assignRecord_8 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignRecord_8 ↦ formRef}
+        act6: currentMessage := {assignRecord_8}
+    END
+
+    receiveassignRecord_8
+    WHEN
+        grd1: assignRecord_8 ∈ sentMessages
+        grd2: assignRecord_8 ↦ HISServer ∈ sender
+        grd3: assignRecord_8 ↦ Patient ∈ receiver
+        grd4: assignRecord_8 ∉ receivedMessages
+        grd5: currentMessage = {assignRecord_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignRecord_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignRecord_8 ↦ formRef}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    checkloop_confirmForm_3_loop1
+    WHEN
+        grd1: attemptNo < 5
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

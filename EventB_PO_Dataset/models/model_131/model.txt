@@ -1,0 +1,428 @@
+CONTEXT OnlineBankingOTPContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BankApp, CoreLedger, Customer, OTPService
+    confirmTransfer_1, sendOtp_2, sendTransfer_3, validateAccount_4, updateOtp_5, syncOtp_6, approveOtp_7, cancelTransfer_8, approveAccount_9, sendAccount_10, issueOtp_11
+    accountCode, accountData, accountRef, accountValue, otpData, otpRef, transferCode, transferData, transferID, transferRef
+AXIOMS
+    axm1: partition(Objects, {BankApp}, {CoreLedger}, {Customer}, {OTPService})
+    axm2: partition(Messages, {confirmTransfer_1}, {sendOtp_2}, {sendTransfer_3}, {validateAccount_4}, {updateOtp_5}, {syncOtp_6}, {approveOtp_7}, {cancelTransfer_8}, {approveAccount_9}, {sendAccount_10}, {issueOtp_11})
+    axm3: partition(DataMessages, {accountCode}, {accountData}, {accountRef}, {accountValue}, {otpData}, {otpRef}, {transferCode}, {transferData}, {transferID}, {transferRef})
+END
+
+MACHINE OnlineBankingOTPInteractionMachine_1
+SEES OnlineBankingOTPContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_3 ∈ ℤ
+    inv16: t_delay_3 ∈ ℤ
+    inv17: t_success_3 ∈ ℤ
+    inv18: t_time_5 ∈ ℤ
+    inv19: t_delay_5 ∈ ℤ
+    inv20: t_success_5 ∈ ℤ
+    inv21: t_time_7 ∈ ℤ
+    inv22: t_delay_7 ∈ ℤ
+    inv23: t_success_7 ∈ ℤ
+    inv24: t_time_8 ∈ ℤ
+    inv25: t_delay_8 ∈ ℤ
+    inv26: t_success_8 ∈ ℤ
+    inv27: t_time_9 ∈ ℤ
+    inv28: t_delay_9 ∈ ℤ
+    inv29: t_success_9 ∈ ℤ
+    inv30: t_time_10 ∈ ℤ
+    inv31: t_delay_10 ∈ ℤ
+    inv32: t_success_10 ∈ ℤ
+    inv33: t_time_11 ∈ ℤ
+    inv34: t_delay_11 ∈ ℤ
+    inv35: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: t_time_1 :∈ 0..30
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..3
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_3 :∈ 0..8
+        act16: t_delay_3 := 0
+        act17: t_success_3 := 0
+        act18: t_time_5 :∈ 0..3
+        act19: t_delay_5 := 0
+        act20: t_success_5 := 0
+        act21: t_time_7 :∈ 0..1
+        act22: t_delay_7 := 0
+        act23: t_success_7 := 0
+        act24: t_time_8 :∈ 0..20
+        act25: t_delay_8 := 0
+        act26: t_success_8 := 0
+        act27: t_time_9 :∈ 0..3
+        act28: t_delay_9 := 0
+        act29: t_success_9 := 0
+        act30: t_time_10 :∈ 0..10
+        act31: t_delay_10 := 0
+        act32: t_success_10 := 0
+        act33: t_time_11 :∈ 0..5
+        act34: t_delay_11 := 0
+        act35: t_success_11 := 0
+    END
+
+
+    sendconfirmTransfer_1
+    WHEN
+        grd1: confirmTransfer_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmTransfer_1}
+        act2: sender := sender ∪ {confirmTransfer_1 ↦ CoreLedger}
+        act3: receiver := receiver ∪ {confirmTransfer_1 ↦ BankApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmTransfer_1}
+    END
+
+    receiveconfirmTransfer_1
+    WHEN
+        grd1: confirmTransfer_1 ∈ sentMessages
+        grd2: confirmTransfer_1 ↦ CoreLedger ∈ sender
+        grd3: confirmTransfer_1 ↦ BankApp ∈ receiver
+        grd4: confirmTransfer_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmTransfer_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmTransfer_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendsendOtp_2
+    WHEN
+        grd1: sendOtp_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmTransfer_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendOtp_2}
+        act2: sender := sender ∪ {sendOtp_2 ↦ OTPService}
+        act3: receiver := receiver ∪ {sendOtp_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendOtp_2 ↦ transferCode, sendOtp_2 ↦ transferData}
+        act6: currentMessage := {sendOtp_2}
+    END
+
+    receivesendOtp_2
+    WHEN
+        grd1: sendOtp_2 ∈ sentMessages
+        grd2: sendOtp_2 ↦ OTPService ∈ sender
+        grd3: sendOtp_2 ↦ Customer ∈ receiver
+        grd4: sendOtp_2 ∉ receivedMessages
+        grd5: currentMessage = {sendOtp_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendOtp_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendOtp_2 ↦ transferCode, sendOtp_2 ↦ transferData}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendTransfer_3
+    WHEN
+        grd1: sendTransfer_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendOtp_2 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendTransfer_3}
+        act2: sender := sender ∪ {sendTransfer_3 ↦ BankApp}
+        act3: receiver := receiver ∪ {sendTransfer_3 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendTransfer_3 ↦ accountRef}
+        act6: currentMessage := {sendTransfer_3}
+    END
+
+    receivesendTransfer_3
+    WHEN
+        grd1: sendTransfer_3 ∈ sentMessages
+        grd2: sendTransfer_3 ↦ BankApp ∈ sender
+        grd3: sendTransfer_3 ↦ Customer ∈ receiver
+        grd4: sendTransfer_3 ∉ receivedMessages
+        grd5: currentMessage = {sendTransfer_3}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendTransfer_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendTransfer_3 ↦ accountRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendvalidateAccount_4
+    WHEN
+        grd1: validateAccount_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendTransfer_3 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: retryNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateAccount_4}
+        act2: sender := sender ∪ {validateAccount_4 ↦ Customer}
+        act3: receiver := receiver ∪ {validateAccount_4 ↦ BankApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateAccount_4 ↦ accountCode, validateAccount_4 ↦ transferData}
+        act6: currentMessage := {validateAccount_4}
+    END
+
+    receivevalidateAccount_4
+    WHEN
+        grd1: validateAccount_4 ∈ sentMessages
+        grd2: validateAccount_4 ↦ Customer ∈ sender
+        grd3: validateAccount_4 ↦ BankApp ∈ receiver
+        grd4: validateAccount_4 ∉ receivedMessages
+        grd5: currentMessage = {validateAccount_4}
+        grd6: retryNo < 12
+        grd7: retryNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateAccount_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateAccount_4 ↦ accountCode, validateAccount_4 ↦ transferData}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateOtp_5
+    WHEN
+        grd1: updateOtp_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateAccount_4 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: retryNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateOtp_5}
+        act2: sender := sender ∪ {updateOtp_5 ↦ CoreLedger}
+        act3: receiver := receiver ∪ {updateOtp_5 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateOtp_5 ↦ otpRef}
+        act6: currentMessage := {updateOtp_5}
+    END
+
+    receiveupdateOtp_5
+    WHEN
+        grd1: updateOtp_5 ∈ sentMessages
+        grd2: updateOtp_5 ↦ CoreLedger ∈ sender
+        grd3: updateOtp_5 ↦ Customer ∈ receiver
+        grd4: updateOtp_5 ∉ receivedMessages
+        grd5: currentMessage = {updateOtp_5}
+        grd6: retryNo < 12
+        grd7: retryNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateOtp_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateOtp_5 ↦ otpRef}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendsyncOtp_6
+    WHEN
+        grd1: syncOtp_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendTransfer_3 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: retryNo mod 4 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncOtp_6}
+        act2: sender := sender ∪ {syncOtp_6 ↦ Customer}
+        act3: receiver := receiver ∪ {syncOtp_6 ↦ OTPService}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncOtp_6 ↦ transferRef}
+        act6: currentMessage := {syncOtp_6}
+    END
+
+    receivesyncOtp_6
+    WHEN
+        grd1: syncOtp_6 ∈ sentMessages
+        grd2: syncOtp_6 ↦ Customer ∈ sender
+        grd3: syncOtp_6 ↦ OTPService ∈ receiver
+        grd4: syncOtp_6 ∉ receivedMessages
+        grd5: currentMessage = {syncOtp_6}
+        grd6: retryNo < 12
+        grd7: retryNo mod 4 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncOtp_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncOtp_6 ↦ transferRef}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveOtp_7
+    WHEN
+        grd1: approveOtp_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncOtp_6 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: retryNo mod 4 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveOtp_7}
+        act2: sender := sender ∪ {approveOtp_7 ↦ BankApp}
+        act3: receiver := receiver ∪ {approveOtp_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveOtp_7 ↦ accountValue}
+        act6: currentMessage := {approveOtp_7}
+    END
+
+    receiveapproveOtp_7
+    WHEN
+        grd1: approveOtp_7 ∈ sentMessages
+        grd2: approveOtp_7 ↦ BankApp ∈ sender
+        grd3: approveOtp_7 ↦ Customer ∈ receiver
+        grd4: approveOtp_7 ∉ receivedMessages
+        grd5: currentMessage = {approveOtp_7}
+        grd6: retryNo < 12
+        grd7: retryNo mod 4 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveOtp_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveOtp_7 ↦ accountValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendcancelTransfer_8
+    WHEN
+        grd1: cancelTransfer_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateOtp_5 ∈ receivedMessages ∨ approveOtp_7 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelTransfer_8}
+        act2: sender := sender ∪ {cancelTransfer_8 ↦ BankApp}
+        act3: receiver := receiver ∪ {cancelTransfer_8 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelTransfer_8 ↦ otpRef}
+        act6: currentMessage := {cancelTransfer_8}
+    END
+
+    receivecancelTransfer_8
+    WHEN
+        grd1: cancelTransfer_8 ∈ sentMessages
+        grd2: cancelTransfer_8 ↦ BankApp ∈ sender
+        grd3: cancelTransfer_8 ↦ Customer ∈ receiver
+        grd4: cancelTransfer_8 ∉ receivedMessages
+        grd5: currentMessage = {cancelTransfer_8}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelTransfer_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelTransfer_8 ↦ otpRef}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendapproveAccount_9
+    WHEN
+        grd1: approveAccount_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelTransfer_8 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveAccount_9}
+        act2: sender := sender ∪ {approveAccount_9 ↦ BankApp}
+        act3: receiver := receiver ∪ {approveAccount_9 ↦ OTPService}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveAccount_9 ↦ accountData}
+        act6: currentMessage := {approveAccount_9}
+    END
+
+    receiveapproveAccount_9
+    WHEN
+        grd1: approveAccount_9 ∈ sentMessages
+        grd2: approveAccount_9 ↦ BankApp ∈ sender
+        grd3: approveAccount_9 ↦ OTPService ∈ receiver
+        grd4: approveAccount_9 ∉ receivedMessages
+        grd5: currentMessage = {approveAccount_9}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveAccount_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveAccount_9 ↦ accountData}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendsendAccount_10
+    WHEN
+        grd1: sendAccount_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveAccount_9 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAccount_10}
+        act2: sender := sender ∪ {sendAccount_10 ↦ CoreLedger}
+        act3: receiver := receiver ∪ {sendAccount_10 ↦ BankApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendAccount_10 ↦ otpData}
+        act6: currentMessage := {sendAccount_10}
+    END
+
+    receivesendAccount_10
+    WHEN
+        grd1: sendAccount_10 ∈ sentMessages
+        grd2: sendAccount_10 ↦ CoreLedger ∈ sender
+        grd3: sendAccount_10 ↦ BankApp ∈ receiver
+        grd4: sendAccount_10 ∉ receivedMessages
+        grd5: currentMessage = {sendAccount_10}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAccount_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendAccount_10 ↦ otpData}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendissueOtp_11
+    WHEN
+        grd1: issueOtp_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAccount_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueOtp_11}
+        act2: sender := sender ∪ {issueOtp_11 ↦ BankApp}
+        act3: receiver := receiver ∪ {issueOtp_11 ↦ OTPService}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueOtp_11 ↦ transferID}
+        act6: currentMessage := {issueOtp_11}
+    END
+
+    receiveissueOtp_11
+    WHEN
+        grd1: issueOtp_11 ∈ sentMessages
+        grd2: issueOtp_11 ↦ BankApp ∈ sender
+        grd3: issueOtp_11 ↦ OTPService ∈ receiver
+        grd4: issueOtp_11 ∉ receivedMessages
+        grd5: currentMessage = {issueOtp_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueOtp_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueOtp_11 ↦ transferID}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_sendTransfer_3_loop1
+    WHEN
+        grd1: retryNo < 12
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

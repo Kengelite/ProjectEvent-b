@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="indexRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="reserveBatch_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ScanStation" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="documentRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Clerk" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="issueDocument_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendDocument_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="batchInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="checkBatch_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="releaseBatch_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendBatch_3" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/ArchiveDocumentScan_Project/ArchiveDocumentScanContext.bpo|org.eventb.core.poFile#ArchiveDocumentScanContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Clerk},{ScanStation})" org.eventb.core.source="/ArchiveDocumentScan_Project/ArchiveDocumentScanContext.buc|org.eventb.core.contextFile#ArchiveDocumentScanContext|org.eventb.core.axiom#internal_element15"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{reserveBatch_1},{releaseBatch_2},{sendBatch_3},{checkBatch_4},{sendDocument_5},{issueDocument_6})" org.eventb.core.source="/ArchiveDocumentScan_Project/ArchiveDocumentScanContext.buc|org.eventb.core.contextFile#ArchiveDocumentScanContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{batchInfo},{documentRef},{indexRef})" org.eventb.core.source="/ArchiveDocumentScan_Project/ArchiveDocumentScanContext.buc|org.eventb.core.contextFile#ArchiveDocumentScanContext|org.eventb.core.axiom#internal_element17"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

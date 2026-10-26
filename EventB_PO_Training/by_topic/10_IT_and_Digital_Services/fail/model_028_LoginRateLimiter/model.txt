@@ -1,0 +1,257 @@
+CONTEXT LoginRateLimiterContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AuthService, Browser, WebServer
+    loginForm_1, submitLogin_2, verify_3, verifyResult_4, loginPage_5, lockAccount_6, sessionToken_7
+    authCode, credentials, errorMsg, token, userID
+AXIOMS
+    axm1: partition(Objects, {AuthService}, {Browser}, {WebServer})
+    axm2: partition(Messages, {loginForm_1}, {submitLogin_2}, {verify_3}, {verifyResult_4}, {loginPage_5}, {lockAccount_6}, {sessionToken_7})
+    axm3: partition(DataMessages, {authCode}, {credentials}, {errorMsg}, {token}, {userID})
+END
+
+MACHINE LoginRateLimiterInteractionMachine_1
+SEES LoginRateLimiterContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, failCount, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: failCount ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: failCount := 0
+        act9: t_time_2 :∈ 0..3
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..2
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+    END
+
+
+    sendloginForm_1
+    WHEN
+        grd1: loginForm_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {loginForm_1}
+        act2: sender := sender ∪ {loginForm_1 ↦ Browser}
+        act3: receiver := receiver ∪ {loginForm_1 ↦ WebServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {loginForm_1}
+    END
+
+    receiveloginForm_1
+    WHEN
+        grd1: loginForm_1 ∈ sentMessages
+        grd2: loginForm_1 ↦ Browser ∈ sender
+        grd3: loginForm_1 ↦ WebServer ∈ receiver
+        grd4: loginForm_1 ∉ receivedMessages
+        grd5: currentMessage = {loginForm_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {loginForm_1}
+        act2: currentMessage := ∅
+    END
+
+    sendsubmitLogin_2
+    WHEN
+        grd1: submitLogin_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: loginForm_1 ∈ receivedMessages
+        grd4: failCount < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {submitLogin_2}
+        act2: sender := sender ∪ {submitLogin_2 ↦ Browser}
+        act3: receiver := receiver ∪ {submitLogin_2 ↦ WebServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {submitLogin_2 ↦ credentials}
+        act6: currentMessage := {submitLogin_2}
+    END
+
+    receivesubmitLogin_2
+    WHEN
+        grd1: submitLogin_2 ∈ sentMessages
+        grd2: submitLogin_2 ↦ Browser ∈ sender
+        grd3: submitLogin_2 ↦ WebServer ∈ receiver
+        grd4: submitLogin_2 ∉ receivedMessages
+        grd5: currentMessage = {submitLogin_2}
+        grd6: failCount < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {submitLogin_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {submitLogin_2 ↦ credentials}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendverify_3
+    WHEN
+        grd1: verify_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: submitLogin_2 ∈ receivedMessages
+        grd4: failCount < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {verify_3}
+        act2: sender := sender ∪ {verify_3 ↦ WebServer}
+        act3: receiver := receiver ∪ {verify_3 ↦ AuthService}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {verify_3 ↦ credentials}
+        act6: currentMessage := {verify_3}
+    END
+
+    receiveverify_3
+    WHEN
+        grd1: verify_3 ∈ sentMessages
+        grd2: verify_3 ↦ WebServer ∈ sender
+        grd3: verify_3 ↦ AuthService ∈ receiver
+        grd4: verify_3 ∉ receivedMessages
+        grd5: currentMessage = {verify_3}
+        grd6: failCount < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {verify_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {verify_3 ↦ credentials}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendverifyResult_4
+    WHEN
+        grd1: verifyResult_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: verify_3 ∈ receivedMessages
+        grd4: failCount < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {verifyResult_4}
+        act2: sender := sender ∪ {verifyResult_4 ↦ AuthService}
+        act3: receiver := receiver ∪ {verifyResult_4 ↦ WebServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {verifyResult_4 ↦ authCode}
+        act6: currentMessage := {verifyResult_4}
+    END
+
+    receiveverifyResult_4
+    WHEN
+        grd1: verifyResult_4 ∈ sentMessages
+        grd2: verifyResult_4 ↦ AuthService ∈ sender
+        grd3: verifyResult_4 ↦ WebServer ∈ receiver
+        grd4: verifyResult_4 ∉ receivedMessages
+        grd5: currentMessage = {verifyResult_4}
+        grd6: failCount < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {verifyResult_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {verifyResult_4 ↦ authCode}
+        act3: currentMessage := ∅
+    END
+
+    sendloginPage_5
+    WHEN
+        grd1: loginPage_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: verifyResult_4 ∈ receivedMessages
+        grd4: failCount < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {loginPage_5}
+        act2: sender := sender ∪ {loginPage_5 ↦ WebServer}
+        act3: receiver := receiver ∪ {loginPage_5 ↦ Browser}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {loginPage_5 ↦ errorMsg}
+        act6: currentMessage := {loginPage_5}
+    END
+
+    receiveloginPage_5
+    WHEN
+        grd1: loginPage_5 ∈ sentMessages
+        grd2: loginPage_5 ↦ WebServer ∈ sender
+        grd3: loginPage_5 ↦ Browser ∈ receiver
+        grd4: loginPage_5 ∉ receivedMessages
+        grd5: currentMessage = {loginPage_5}
+        grd6: failCount < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {loginPage_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {loginPage_5 ↦ errorMsg}
+        act3: currentMessage := ∅
+    END
+
+    sendlockAccount_6_opt1
+    WHEN
+        grd1: lockAccount_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: loginPage_5 ∈ receivedMessages
+        grd4: failCount mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {lockAccount_6}
+        act2: sender := sender ∪ {lockAccount_6 ↦ WebServer}
+        act3: receiver := receiver ∪ {lockAccount_6 ↦ AuthService}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {lockAccount_6 ↦ userID}
+        act6: currentMessage := {lockAccount_6}
+    END
+
+    receivelockAccount_6_opt1
+    WHEN
+        grd1: lockAccount_6 ∈ sentMessages
+        grd2: lockAccount_6 ↦ WebServer ∈ sender
+        grd3: lockAccount_6 ↦ AuthService ∈ receiver
+        grd4: lockAccount_6 ∉ receivedMessages
+        grd5: currentMessage = {lockAccount_6}
+        grd6: failCount mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {lockAccount_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {lockAccount_6 ↦ userID}
+        act3: currentMessage := ∅
+    END
+
+    sendsessionToken_7
+    WHEN
+        grd1: sessionToken_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: lockAccount_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sessionToken_7}
+        act2: sender := sender ∪ {sessionToken_7 ↦ WebServer}
+        act3: receiver := receiver ∪ {sessionToken_7 ↦ Browser}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sessionToken_7 ↦ token}
+        act6: currentMessage := {sessionToken_7}
+    END
+
+    receivesessionToken_7
+    WHEN
+        grd1: sessionToken_7 ∈ sentMessages
+        grd2: sessionToken_7 ↦ WebServer ∈ sender
+        grd3: sessionToken_7 ↦ Browser ∈ receiver
+        grd4: sessionToken_7 ∉ receivedMessages
+        grd5: currentMessage = {sessionToken_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sessionToken_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sessionToken_7 ↦ token}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_submitLogin_2_loop1
+    WHEN
+        grd1: failCount < 5
+    THEN
+        act1: failCount := failCount + 1
+    END
+
+END

@@ -1,0 +1,326 @@
+CONTEXT PharmacyRefillContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    InsurerAPI, Patient, Pharmacist, PharmacyApp
+    issuePrescription_1, checkClaim_2, schedulePrescription_3, queryRefill_4, ackRefill_5, reservePrescription_6, cancelRefill_7, validateClaim_8, confirmPrescription_9
+    claimCode, claimData, claimID, prescriptionCode, refillData, refillID, refillRef
+AXIOMS
+    axm1: partition(Objects, {InsurerAPI}, {Patient}, {Pharmacist}, {PharmacyApp})
+    axm2: partition(Messages, {issuePrescription_1}, {checkClaim_2}, {schedulePrescription_3}, {queryRefill_4}, {ackRefill_5}, {reservePrescription_6}, {cancelRefill_7}, {validateClaim_8}, {confirmPrescription_9})
+    axm3: partition(DataMessages, {claimCode}, {claimData}, {claimID}, {prescriptionCode}, {refillData}, {refillID}, {refillRef})
+END
+
+MACHINE PharmacyRefillInteractionMachine_1
+SEES PharmacyRefillContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, par_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+    inv22: t_time_8 ∈ ℤ
+    inv23: t_delay_8 ∈ ℤ
+    inv24: t_success_8 ∈ ℤ
+    inv25: t_time_9 ∈ ℤ
+    inv26: t_delay_9 ∈ ℤ
+    inv27: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 2..1
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_4 :∈ 30..8
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 30..5
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_7 :∈ 0..8
+        act20: t_delay_7 := 0
+        act21: t_success_7 := 0
+        act22: t_time_8 :∈ 0..1
+        act23: t_delay_8 := 0
+        act24: t_success_8 := 0
+        act25: t_time_9 :∈ 0..5
+        act26: t_delay_9 := 0
+        act27: t_success_9 := 0
+    END
+
+
+    sendissuePrescription_1
+    WHEN
+        grd1: issuePrescription_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {issuePrescription_1}
+        act2: sender := sender ∪ {issuePrescription_1 ↦ PharmacyApp}
+        act3: receiver := receiver ∪ {issuePrescription_1 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issuePrescription_1}
+    END
+
+    receiveissuePrescription_1
+    WHEN
+        grd1: issuePrescription_1 ∈ sentMessages
+        grd2: issuePrescription_1 ↦ PharmacyApp ∈ sender
+        grd3: issuePrescription_1 ↦ Pharmacist ∈ receiver
+        grd4: issuePrescription_1 ∉ receivedMessages
+        grd5: currentMessage = {issuePrescription_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issuePrescription_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcheckClaim_2
+    WHEN
+        grd1: checkClaim_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePrescription_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkClaim_2}
+        act2: sender := sender ∪ {checkClaim_2 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {checkClaim_2 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkClaim_2 ↦ claimCode}
+        act6: currentMessage := {checkClaim_2}
+    END
+
+    receivecheckClaim_2
+    WHEN
+        grd1: checkClaim_2 ∈ sentMessages
+        grd2: checkClaim_2 ↦ InsurerAPI ∈ sender
+        grd3: checkClaim_2 ↦ Pharmacist ∈ receiver
+        grd4: checkClaim_2 ∉ receivedMessages
+        grd5: currentMessage = {checkClaim_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkClaim_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkClaim_2 ↦ claimCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendschedulePrescription_3_opt1
+    WHEN
+        grd1: schedulePrescription_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkClaim_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePrescription_3}
+        act2: sender := sender ∪ {schedulePrescription_3 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {schedulePrescription_3 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {schedulePrescription_3 ↦ refillID}
+        act6: currentMessage := {schedulePrescription_3}
+    END
+
+    receiveschedulePrescription_3_opt1
+    WHEN
+        grd1: schedulePrescription_3 ∈ sentMessages
+        grd2: schedulePrescription_3 ↦ InsurerAPI ∈ sender
+        grd3: schedulePrescription_3 ↦ Pharmacist ∈ receiver
+        grd4: schedulePrescription_3 ∉ receivedMessages
+        grd5: currentMessage = {schedulePrescription_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePrescription_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {schedulePrescription_3 ↦ refillID}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryRefill_4_opt1
+    WHEN
+        grd1: queryRefill_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePrescription_3 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryRefill_4}
+        act2: sender := sender ∪ {queryRefill_4 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {queryRefill_4 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryRefill_4 ↦ prescriptionCode}
+        act6: currentMessage := {queryRefill_4}
+    END
+
+    receivequeryRefill_4_opt1
+    WHEN
+        grd1: queryRefill_4 ∈ sentMessages
+        grd2: queryRefill_4 ↦ InsurerAPI ∈ sender
+        grd3: queryRefill_4 ↦ Pharmacist ∈ receiver
+        grd4: queryRefill_4 ∉ receivedMessages
+        grd5: currentMessage = {queryRefill_4}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryRefill_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryRefill_4 ↦ prescriptionCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendackRefill_5
+    WHEN
+        grd1: ackRefill_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryRefill_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackRefill_5}
+        act2: sender := sender ∪ {ackRefill_5 ↦ Patient}
+        act3: receiver := receiver ∪ {ackRefill_5 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackRefill_5 ↦ claimData}
+        act6: currentMessage := {ackRefill_5}
+    END
+
+    receiveackRefill_5
+    WHEN
+        grd1: ackRefill_5 ∈ sentMessages
+        grd2: ackRefill_5 ↦ Patient ∈ sender
+        grd3: ackRefill_5 ↦ Pharmacist ∈ receiver
+        grd4: ackRefill_5 ∉ receivedMessages
+        grd5: currentMessage = {ackRefill_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackRefill_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackRefill_5 ↦ claimData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreservePrescription_6
+    WHEN
+        grd1: reservePrescription_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackRefill_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePrescription_6}
+        act2: sender := sender ∪ {reservePrescription_6 ↦ Pharmacist}
+        act3: receiver := receiver ∪ {reservePrescription_6 ↦ InsurerAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePrescription_6 ↦ refillRef}
+        act6: currentMessage := {reservePrescription_6}
+    END
+
+    receivereservePrescription_6
+    WHEN
+        grd1: reservePrescription_6 ∈ sentMessages
+        grd2: reservePrescription_6 ↦ Pharmacist ∈ sender
+        grd3: reservePrescription_6 ↦ InsurerAPI ∈ receiver
+        grd4: reservePrescription_6 ∉ receivedMessages
+        grd5: currentMessage = {reservePrescription_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePrescription_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePrescription_6 ↦ refillRef}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelRefill_7
+    WHEN
+        grd1: cancelRefill_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservePrescription_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelRefill_7}
+        act2: sender := sender ∪ {cancelRefill_7 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {cancelRefill_7 ↦ PharmacyApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelRefill_7 ↦ claimID}
+        act6: currentMessage := {cancelRefill_7}
+    END
+
+    receivecancelRefill_7
+    WHEN
+        grd1: cancelRefill_7 ∈ sentMessages
+        grd2: cancelRefill_7 ↦ InsurerAPI ∈ sender
+        grd3: cancelRefill_7 ↦ PharmacyApp ∈ receiver
+        grd4: cancelRefill_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelRefill_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelRefill_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelRefill_7 ↦ claimID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendvalidateClaim_8
+    WHEN
+        grd1: validateClaim_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelRefill_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateClaim_8}
+        act2: sender := sender ∪ {validateClaim_8 ↦ InsurerAPI}
+        act3: receiver := receiver ∪ {validateClaim_8 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateClaim_8}
+    END
+
+    receivevalidateClaim_8
+    WHEN
+        grd1: validateClaim_8 ∈ sentMessages
+        grd2: validateClaim_8 ↦ InsurerAPI ∈ sender
+        grd3: validateClaim_8 ↦ Pharmacist ∈ receiver
+        grd4: validateClaim_8 ∉ receivedMessages
+        grd5: currentMessage = {validateClaim_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateClaim_8}
+        act2: currentMessage := ∅
+        act3: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendconfirmPrescription_9
+    WHEN
+        grd1: confirmPrescription_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateClaim_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPrescription_9}
+        act2: sender := sender ∪ {confirmPrescription_9 ↦ Pharmacist}
+        act3: receiver := receiver ∪ {confirmPrescription_9 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmPrescription_9 ↦ refillData}
+        act6: currentMessage := {confirmPrescription_9}
+    END
+
+    receiveconfirmPrescription_9
+    WHEN
+        grd1: confirmPrescription_9 ∈ sentMessages
+        grd2: confirmPrescription_9 ↦ Pharmacist ∈ sender
+        grd3: confirmPrescription_9 ↦ Patient ∈ receiver
+        grd4: confirmPrescription_9 ∉ receivedMessages
+        grd5: currentMessage = {confirmPrescription_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPrescription_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmPrescription_9 ↦ refillData}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+END

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="requestEnergy_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sessionID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="sessionValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Charger" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="validateSession_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="tariffData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="CSMS" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="updateTariff_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="EVCar" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="sessionInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="cancelTariff_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sessionCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="ackSession_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="notifySession_2" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/EVChargingSession_Project/EVChargingSessionContext.bpo|org.eventb.core.poFile#EVChargingSessionContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CSMS},{Charger},{EVCar})" org.eventb.core.source="/EVChargingSession_Project/EVChargingSessionContext.buc|org.eventb.core.contextFile#EVChargingSessionContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{cancelTariff_1},{notifySession_2},{updateTariff_3},{requestEnergy_4},{validateSession_5},{ackSession_6})" org.eventb.core.source="/EVChargingSession_Project/EVChargingSessionContext.buc|org.eventb.core.contextFile#EVChargingSessionContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{sessionCode},{sessionID},{sessionInfo},{sessionValue},{tariffData})" org.eventb.core.source="/EVChargingSession_Project/EVChargingSessionContext.buc|org.eventb.core.contextFile#EVChargingSessionContext|org.eventb.core.axiom#internal_element20"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

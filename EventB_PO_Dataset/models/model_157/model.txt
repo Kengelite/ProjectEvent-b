@@ -1,0 +1,227 @@
+CONTEXT RoboticLawnMowerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BaseStation, HomeApp, Mower, RainSensor
+    sendDock_1, requestBlade_2, cancelBlade_3, approveZone_4, syncZone_5, fetchDock_6
+    bladeID, bladeValue, zoneCode, zoneRef
+AXIOMS
+    axm1: partition(Objects, {BaseStation}, {HomeApp}, {Mower}, {RainSensor})
+    axm2: partition(Messages, {sendDock_1}, {requestBlade_2}, {cancelBlade_3}, {approveZone_4}, {syncZone_5}, {fetchDock_6})
+    axm3: partition(DataMessages, {bladeID}, {bladeValue}, {zoneCode}, {zoneRef})
+END
+
+MACHINE RoboticLawnMowerInteractionMachine_1
+SEES RoboticLawnMowerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_5 ∈ ℤ
+    inv19: t_delay_5 ∈ ℤ
+    inv20: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: t_time_2 :∈ 0..1
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 20..0
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..60
+        act16: t_delay_4 := 2
+        act17: t_success_4 := 0
+        act18: t_time_5 :∈ 0..20
+        act19: t_delay_5 := 0
+        act20: t_success_5 := 0
+    END
+
+
+    sendsendDock_1
+    WHEN
+        grd1: sendDock_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendDock_1}
+        act2: sender := sender ∪ {sendDock_1 ↦ BaseStation}
+        act3: receiver := receiver ∪ {sendDock_1 ↦ Mower}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendDock_1 ↦ zoneRef}
+        act6: currentMessage := {sendDock_1}
+    END
+
+    receivesendDock_1
+    WHEN
+        grd1: sendDock_1 ∈ sentMessages
+        grd2: sendDock_1 ↦ BaseStation ∈ sender
+        grd3: sendDock_1 ↦ Mower ∈ receiver
+        grd4: sendDock_1 ∉ receivedMessages
+        grd5: currentMessage = {sendDock_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendDock_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendDock_1 ↦ zoneRef}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestBlade_2
+    WHEN
+        grd1: requestBlade_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendDock_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBlade_2}
+        act2: sender := sender ∪ {requestBlade_2 ↦ RainSensor}
+        act3: receiver := receiver ∪ {requestBlade_2 ↦ BaseStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBlade_2 ↦ bladeValue}
+        act6: currentMessage := {requestBlade_2}
+    END
+
+    receiverequestBlade_2
+    WHEN
+        grd1: requestBlade_2 ∈ sentMessages
+        grd2: requestBlade_2 ↦ RainSensor ∈ sender
+        grd3: requestBlade_2 ↦ BaseStation ∈ receiver
+        grd4: requestBlade_2 ∉ receivedMessages
+        grd5: currentMessage = {requestBlade_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBlade_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBlade_2 ↦ bladeValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcancelBlade_3_opt1
+    WHEN
+        grd1: cancelBlade_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBlade_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelBlade_3}
+        act2: sender := sender ∪ {cancelBlade_3 ↦ RainSensor}
+        act3: receiver := receiver ∪ {cancelBlade_3 ↦ Mower}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelBlade_3 ↦ bladeID}
+        act6: currentMessage := {cancelBlade_3}
+    END
+
+    receivecancelBlade_3_opt1
+    WHEN
+        grd1: cancelBlade_3 ∈ sentMessages
+        grd2: cancelBlade_3 ↦ RainSensor ∈ sender
+        grd3: cancelBlade_3 ↦ Mower ∈ receiver
+        grd4: cancelBlade_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelBlade_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelBlade_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelBlade_3 ↦ bladeID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapproveZone_4
+    WHEN
+        grd1: approveZone_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelBlade_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveZone_4}
+        act2: sender := sender ∪ {approveZone_4 ↦ RainSensor}
+        act3: receiver := receiver ∪ {approveZone_4 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveZone_4}
+    END
+
+    receiveapproveZone_4
+    WHEN
+        grd1: approveZone_4 ∈ sentMessages
+        grd2: approveZone_4 ↦ RainSensor ∈ sender
+        grd3: approveZone_4 ↦ HomeApp ∈ receiver
+        grd4: approveZone_4 ∉ receivedMessages
+        grd5: currentMessage = {approveZone_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveZone_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncZone_5
+    WHEN
+        grd1: syncZone_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveZone_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncZone_5}
+        act2: sender := sender ∪ {syncZone_5 ↦ HomeApp}
+        act3: receiver := receiver ∪ {syncZone_5 ↦ Mower}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncZone_5}
+    END
+
+    receivesyncZone_5
+    WHEN
+        grd1: syncZone_5 ∈ sentMessages
+        grd2: syncZone_5 ↦ HomeApp ∈ sender
+        grd3: syncZone_5 ↦ Mower ∈ receiver
+        grd4: syncZone_5 ∉ receivedMessages
+        grd5: currentMessage = {syncZone_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncZone_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendfetchDock_6
+    WHEN
+        grd1: fetchDock_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncZone_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchDock_6}
+        act2: sender := sender ∪ {fetchDock_6 ↦ HomeApp}
+        act3: receiver := receiver ∪ {fetchDock_6 ↦ Mower}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchDock_6 ↦ zoneCode}
+        act6: currentMessage := {fetchDock_6}
+    END
+
+    receivefetchDock_6
+    WHEN
+        grd1: fetchDock_6 ∈ sentMessages
+        grd2: fetchDock_6 ↦ HomeApp ∈ sender
+        grd3: fetchDock_6 ↦ Mower ∈ receiver
+        grd4: fetchDock_6 ∉ receivedMessages
+        grd5: currentMessage = {fetchDock_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchDock_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchDock_6 ↦ zoneCode}
+        act3: currentMessage := ∅
+    END
+
+END

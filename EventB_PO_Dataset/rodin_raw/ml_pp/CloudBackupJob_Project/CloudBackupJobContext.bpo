@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="AdminConsole" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="Agent" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="BackupServer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="notifyChunk_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="StorageNode" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="requestChunk_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="checkJob_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="chunkInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="jobValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="chunkRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="syncJob_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmSnapshot_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="updateSnapshot_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="jobID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="snapshotData" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/CloudBackupJob_Project/CloudBackupJobContext.bpo|org.eventb.core.poFile#CloudBackupJobContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{AdminConsole},{Agent},{BackupServer},{StorageNode})" org.eventb.core.source="/CloudBackupJob_Project/CloudBackupJobContext.buc|org.eventb.core.contextFile#CloudBackupJobContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{updateSnapshot_1},{confirmSnapshot_2},{checkJob_3},{requestChunk_4},{notifyChunk_5},{syncJob_6})" org.eventb.core.source="/CloudBackupJob_Project/CloudBackupJobContext.buc|org.eventb.core.contextFile#CloudBackupJobContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{chunkInfo},{chunkRef},{jobID},{jobValue},{snapshotData})" org.eventb.core.source="/CloudBackupJob_Project/CloudBackupJobContext.buc|org.eventb.core.contextFile#CloudBackupJobContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

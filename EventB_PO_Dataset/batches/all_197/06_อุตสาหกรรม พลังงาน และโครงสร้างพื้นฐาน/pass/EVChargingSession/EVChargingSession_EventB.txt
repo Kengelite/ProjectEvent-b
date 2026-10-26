@@ -1,0 +1,216 @@
+CONTEXT EVChargingSessionContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CSMS, Charger, EVCar
+    cancelTariff_1, notifySession_2, updateTariff_3, requestEnergy_4, validateSession_5, ackSession_6
+    sessionCode, sessionID, sessionInfo, sessionValue, tariffData
+AXIOMS
+    axm1: partition(Objects, {CSMS}, {Charger}, {EVCar})
+    axm2: partition(Messages, {cancelTariff_1}, {notifySession_2}, {updateTariff_3}, {requestEnergy_4}, {validateSession_5}, {ackSession_6})
+    axm3: partition(DataMessages, {sessionCode}, {sessionID}, {sessionInfo}, {sessionValue}, {tariffData})
+END
+
+MACHINE EVChargingSessionInteractionMachine_1
+SEES EVChargingSessionContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..2
+        act9: t_delay_2 := 0
+        act10: t_success_2 := 0
+        act11: t_time_4 :∈ 0..30
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+        act14: t_time_5 :∈ 0..8
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+    END
+
+
+    sendcancelTariff_1
+    WHEN
+        grd1: cancelTariff_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelTariff_1}
+        act2: sender := sender ∪ {cancelTariff_1 ↦ Charger}
+        act3: receiver := receiver ∪ {cancelTariff_1 ↦ CSMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelTariff_1}
+    END
+
+    receivecancelTariff_1
+    WHEN
+        grd1: cancelTariff_1 ∈ sentMessages
+        grd2: cancelTariff_1 ↦ Charger ∈ sender
+        grd3: cancelTariff_1 ↦ CSMS ∈ receiver
+        grd4: cancelTariff_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelTariff_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelTariff_1}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifySession_2
+    WHEN
+        grd1: notifySession_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelTariff_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifySession_2}
+        act2: sender := sender ∪ {notifySession_2 ↦ CSMS}
+        act3: receiver := receiver ∪ {notifySession_2 ↦ EVCar}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifySession_2 ↦ sessionValue, notifySession_2 ↦ tariffData}
+        act6: currentMessage := {notifySession_2}
+    END
+
+    receivenotifySession_2
+    WHEN
+        grd1: notifySession_2 ∈ sentMessages
+        grd2: notifySession_2 ↦ CSMS ∈ sender
+        grd3: notifySession_2 ↦ EVCar ∈ receiver
+        grd4: notifySession_2 ∉ receivedMessages
+        grd5: currentMessage = {notifySession_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifySession_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifySession_2 ↦ sessionValue, notifySession_2 ↦ tariffData}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendupdateTariff_3
+    WHEN
+        grd1: updateTariff_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifySession_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateTariff_3}
+        act2: sender := sender ∪ {updateTariff_3 ↦ Charger}
+        act3: receiver := receiver ∪ {updateTariff_3 ↦ EVCar}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateTariff_3 ↦ sessionCode}
+        act6: currentMessage := {updateTariff_3}
+    END
+
+    receiveupdateTariff_3
+    WHEN
+        grd1: updateTariff_3 ∈ sentMessages
+        grd2: updateTariff_3 ↦ Charger ∈ sender
+        grd3: updateTariff_3 ↦ EVCar ∈ receiver
+        grd4: updateTariff_3 ∉ receivedMessages
+        grd5: currentMessage = {updateTariff_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateTariff_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateTariff_3 ↦ sessionCode}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestEnergy_4
+    WHEN
+        grd1: requestEnergy_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateTariff_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestEnergy_4}
+        act2: sender := sender ∪ {requestEnergy_4 ↦ Charger}
+        act3: receiver := receiver ∪ {requestEnergy_4 ↦ EVCar}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestEnergy_4 ↦ sessionInfo}
+        act6: currentMessage := {requestEnergy_4}
+    END
+
+    receiverequestEnergy_4
+    WHEN
+        grd1: requestEnergy_4 ∈ sentMessages
+        grd2: requestEnergy_4 ↦ Charger ∈ sender
+        grd3: requestEnergy_4 ↦ EVCar ∈ receiver
+        grd4: requestEnergy_4 ∉ receivedMessages
+        grd5: currentMessage = {requestEnergy_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestEnergy_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestEnergy_4 ↦ sessionInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendvalidateSession_5
+    WHEN
+        grd1: validateSession_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestEnergy_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSession_5}
+        act2: sender := sender ∪ {validateSession_5 ↦ EVCar}
+        act3: receiver := receiver ∪ {validateSession_5 ↦ Charger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateSession_5 ↦ sessionID}
+        act6: currentMessage := {validateSession_5}
+    END
+
+    receivevalidateSession_5
+    WHEN
+        grd1: validateSession_5 ∈ sentMessages
+        grd2: validateSession_5 ↦ EVCar ∈ sender
+        grd3: validateSession_5 ↦ Charger ∈ receiver
+        grd4: validateSession_5 ∉ receivedMessages
+        grd5: currentMessage = {validateSession_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSession_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateSession_5 ↦ sessionID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendackSession_6
+    WHEN
+        grd1: ackSession_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateSession_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackSession_6}
+        act2: sender := sender ∪ {ackSession_6 ↦ Charger}
+        act3: receiver := receiver ∪ {ackSession_6 ↦ EVCar}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackSession_6}
+    END
+
+    receiveackSession_6
+    WHEN
+        grd1: ackSession_6 ∈ sentMessages
+        grd2: ackSession_6 ↦ Charger ∈ sender
+        grd3: ackSession_6 ↦ EVCar ∈ receiver
+        grd4: ackSession_6 ∉ receivedMessages
+        grd5: currentMessage = {ackSession_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackSession_6}
+        act2: currentMessage := ∅
+    END
+
+END

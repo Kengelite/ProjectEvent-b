@@ -1,0 +1,438 @@
+CONTEXT VideoStreamingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CDNEdge, LicenseServer, PlayerApp, Viewer
+    reserveLicense_1, reportChunk_2, reportStream_3, validateStream_4, sendChunk_5, approveStream_6, ackChunk_7, scheduleLicense_8, fetchStream_9, scheduleStream_10, updateStream_11, releaseChunk_12, requestStream_13
+    chunkCode, chunkID, chunkInfo, licenseData, licenseInfo, licenseValue, streamID, streamValue
+AXIOMS
+    axm1: partition(Objects, {CDNEdge}, {LicenseServer}, {PlayerApp}, {Viewer})
+    axm2: partition(Messages, {reserveLicense_1}, {reportChunk_2}, {reportStream_3}, {validateStream_4}, {sendChunk_5}, {approveStream_6}, {ackChunk_7}, {scheduleLicense_8}, {fetchStream_9}, {scheduleStream_10}, {updateStream_11}, {releaseChunk_12}, {requestStream_13})
+    axm3: partition(DataMessages, {chunkCode}, {chunkID}, {chunkInfo}, {licenseData}, {licenseInfo}, {licenseValue}, {streamID}, {streamValue})
+END
+
+MACHINE VideoStreamingInteractionMachine_1
+SEES VideoStreamingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, stepNo, par_1, t_time_1, t_delay_1, t_success_1, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: stepNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_8 ∈ ℤ
+    inv14: t_delay_8 ∈ ℤ
+    inv15: t_success_8 ∈ ℤ
+    inv16: t_time_9 ∈ ℤ
+    inv17: t_delay_9 ∈ ℤ
+    inv18: t_success_9 ∈ ℤ
+    inv19: t_time_10 ∈ ℤ
+    inv20: t_delay_10 ∈ ℤ
+    inv21: t_success_10 ∈ ℤ
+    inv22: t_time_12 ∈ ℤ
+    inv23: t_delay_12 ∈ ℤ
+    inv24: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: stepNo := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..10
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_8 :∈ 0..3
+        act14: t_delay_8 := 0
+        act15: t_success_8 := 0
+        act16: t_time_9 :∈ 0..10
+        act17: t_delay_9 := 3
+        act18: t_success_9 := 0
+        act19: t_time_10 :∈ 0..15
+        act20: t_delay_10 := 0
+        act21: t_success_10 := 0
+        act22: t_time_12 :∈ 0..0
+        act23: t_delay_12 := 3
+        act24: t_success_12 := 0
+    END
+
+
+    sendreserveLicense_1
+    WHEN
+        grd1: reserveLicense_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveLicense_1}
+        act2: sender := sender ∪ {reserveLicense_1 ↦ PlayerApp}
+        act3: receiver := receiver ∪ {reserveLicense_1 ↦ LicenseServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveLicense_1 ↦ licenseValue}
+        act6: currentMessage := {reserveLicense_1}
+    END
+
+    receivereserveLicense_1
+    WHEN
+        grd1: reserveLicense_1 ∈ sentMessages
+        grd2: reserveLicense_1 ↦ PlayerApp ∈ sender
+        grd3: reserveLicense_1 ↦ LicenseServer ∈ receiver
+        grd4: reserveLicense_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveLicense_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveLicense_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveLicense_1 ↦ licenseValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendreportChunk_2
+    WHEN
+        grd1: reportChunk_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveLicense_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportChunk_2}
+        act2: sender := sender ∪ {reportChunk_2 ↦ PlayerApp}
+        act3: receiver := receiver ∪ {reportChunk_2 ↦ CDNEdge}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportChunk_2}
+    END
+
+    receivereportChunk_2
+    WHEN
+        grd1: reportChunk_2 ∈ sentMessages
+        grd2: reportChunk_2 ↦ PlayerApp ∈ sender
+        grd3: reportChunk_2 ↦ CDNEdge ∈ receiver
+        grd4: reportChunk_2 ∉ receivedMessages
+        grd5: currentMessage = {reportChunk_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportChunk_2}
+        act2: currentMessage := ∅
+    END
+
+    sendreportStream_3
+    WHEN
+        grd1: reportStream_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportChunk_2 ∈ receivedMessages
+        grd4: stepNo < 7
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportStream_3}
+        act2: sender := sender ∪ {reportStream_3 ↦ LicenseServer}
+        act3: receiver := receiver ∪ {reportStream_3 ↦ PlayerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportStream_3 ↦ streamID}
+        act6: currentMessage := {reportStream_3}
+    END
+
+    receivereportStream_3
+    WHEN
+        grd1: reportStream_3 ∈ sentMessages
+        grd2: reportStream_3 ↦ LicenseServer ∈ sender
+        grd3: reportStream_3 ↦ PlayerApp ∈ receiver
+        grd4: reportStream_3 ∉ receivedMessages
+        grd5: currentMessage = {reportStream_3}
+        grd6: stepNo < 7
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportStream_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportStream_3 ↦ streamID}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateStream_4
+    WHEN
+        grd1: validateStream_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportStream_3 ∈ receivedMessages
+        grd4: stepNo < 7
+        grd5: stepNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateStream_4}
+        act2: sender := sender ∪ {validateStream_4 ↦ CDNEdge}
+        act3: receiver := receiver ∪ {validateStream_4 ↦ LicenseServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateStream_4 ↦ chunkInfo}
+        act6: currentMessage := {validateStream_4}
+    END
+
+    receivevalidateStream_4
+    WHEN
+        grd1: validateStream_4 ∈ sentMessages
+        grd2: validateStream_4 ↦ CDNEdge ∈ sender
+        grd3: validateStream_4 ↦ LicenseServer ∈ receiver
+        grd4: validateStream_4 ∉ receivedMessages
+        grd5: currentMessage = {validateStream_4}
+        grd6: stepNo < 7
+        grd7: stepNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateStream_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateStream_4 ↦ chunkInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsendChunk_5
+    WHEN
+        grd1: sendChunk_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportStream_3 ∈ receivedMessages
+        grd4: stepNo < 7
+        grd5: stepNo mod 2 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendChunk_5}
+        act2: sender := sender ∪ {sendChunk_5 ↦ CDNEdge}
+        act3: receiver := receiver ∪ {sendChunk_5 ↦ LicenseServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendChunk_5}
+    END
+
+    receivesendChunk_5
+    WHEN
+        grd1: sendChunk_5 ∈ sentMessages
+        grd2: sendChunk_5 ↦ CDNEdge ∈ sender
+        grd3: sendChunk_5 ↦ LicenseServer ∈ receiver
+        grd4: sendChunk_5 ∉ receivedMessages
+        grd5: currentMessage = {sendChunk_5}
+        grd6: stepNo < 7
+        grd7: stepNo mod 2 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendChunk_5}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveStream_6
+    WHEN
+        grd1: approveStream_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendChunk_5 ∈ receivedMessages
+        grd4: stepNo < 7
+        grd5: stepNo mod 2 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveStream_6}
+        act2: sender := sender ∪ {approveStream_6 ↦ CDNEdge}
+        act3: receiver := receiver ∪ {approveStream_6 ↦ LicenseServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveStream_6}
+    END
+
+    receiveapproveStream_6
+    WHEN
+        grd1: approveStream_6 ∈ sentMessages
+        grd2: approveStream_6 ↦ CDNEdge ∈ sender
+        grd3: approveStream_6 ↦ LicenseServer ∈ receiver
+        grd4: approveStream_6 ∉ receivedMessages
+        grd5: currentMessage = {approveStream_6}
+        grd6: stepNo < 7
+        grd7: stepNo mod 2 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveStream_6}
+        act2: currentMessage := ∅
+    END
+
+    sendackChunk_7
+    WHEN
+        grd1: ackChunk_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateStream_4 ∈ receivedMessages ∨ approveStream_6 ∈ receivedMessages
+        grd4: stepNo < 7
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackChunk_7}
+        act2: sender := sender ∪ {ackChunk_7 ↦ PlayerApp}
+        act3: receiver := receiver ∪ {ackChunk_7 ↦ LicenseServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackChunk_7}
+    END
+
+    receiveackChunk_7
+    WHEN
+        grd1: ackChunk_7 ∈ sentMessages
+        grd2: ackChunk_7 ↦ PlayerApp ∈ sender
+        grd3: ackChunk_7 ↦ LicenseServer ∈ receiver
+        grd4: ackChunk_7 ∉ receivedMessages
+        grd5: currentMessage = {ackChunk_7}
+        grd6: stepNo < 7
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackChunk_7}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleLicense_8
+    WHEN
+        grd1: scheduleLicense_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackChunk_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleLicense_8}
+        act2: sender := sender ∪ {scheduleLicense_8 ↦ PlayerApp}
+        act3: receiver := receiver ∪ {scheduleLicense_8 ↦ CDNEdge}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleLicense_8 ↦ chunkCode, scheduleLicense_8 ↦ streamValue}
+        act6: currentMessage := {scheduleLicense_8}
+    END
+
+    receivescheduleLicense_8
+    WHEN
+        grd1: scheduleLicense_8 ∈ sentMessages
+        grd2: scheduleLicense_8 ↦ PlayerApp ∈ sender
+        grd3: scheduleLicense_8 ↦ CDNEdge ∈ receiver
+        grd4: scheduleLicense_8 ∉ receivedMessages
+        grd5: currentMessage = {scheduleLicense_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleLicense_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleLicense_8 ↦ chunkCode, scheduleLicense_8 ↦ streamValue}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendfetchStream_9
+    WHEN
+        grd1: fetchStream_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleLicense_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchStream_9}
+        act2: sender := sender ∪ {fetchStream_9 ↦ Viewer}
+        act3: receiver := receiver ∪ {fetchStream_9 ↦ CDNEdge}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchStream_9 ↦ licenseData}
+        act6: currentMessage := {fetchStream_9}
+    END
+
+    receivefetchStream_9
+    WHEN
+        grd1: fetchStream_9 ∈ sentMessages
+        grd2: fetchStream_9 ↦ Viewer ∈ sender
+        grd3: fetchStream_9 ↦ CDNEdge ∈ receiver
+        grd4: fetchStream_9 ∉ receivedMessages
+        grd5: currentMessage = {fetchStream_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchStream_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchStream_9 ↦ licenseData}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendscheduleStream_10
+    WHEN
+        grd1: scheduleStream_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchStream_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleStream_10}
+        act2: sender := sender ∪ {scheduleStream_10 ↦ LicenseServer}
+        act3: receiver := receiver ∪ {scheduleStream_10 ↦ PlayerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleStream_10 ↦ chunkID}
+        act6: currentMessage := {scheduleStream_10}
+    END
+
+    receivescheduleStream_10
+    WHEN
+        grd1: scheduleStream_10 ∈ sentMessages
+        grd2: scheduleStream_10 ↦ LicenseServer ∈ sender
+        grd3: scheduleStream_10 ↦ PlayerApp ∈ receiver
+        grd4: scheduleStream_10 ∉ receivedMessages
+        grd5: currentMessage = {scheduleStream_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleStream_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleStream_10 ↦ chunkID}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendupdateStream_11
+    WHEN
+        grd1: updateStream_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleStream_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateStream_11}
+        act2: sender := sender ∪ {updateStream_11 ↦ PlayerApp}
+        act3: receiver := receiver ∪ {updateStream_11 ↦ Viewer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateStream_11 ↦ licenseInfo}
+        act6: currentMessage := {updateStream_11}
+    END
+
+    receiveupdateStream_11
+    WHEN
+        grd1: updateStream_11 ∈ sentMessages
+        grd2: updateStream_11 ↦ PlayerApp ∈ sender
+        grd3: updateStream_11 ↦ Viewer ∈ receiver
+        grd4: updateStream_11 ∉ receivedMessages
+        grd5: currentMessage = {updateStream_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateStream_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateStream_11 ↦ licenseInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseChunk_12
+    WHEN
+        grd1: releaseChunk_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateStream_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseChunk_12}
+        act2: sender := sender ∪ {releaseChunk_12 ↦ Viewer}
+        act3: receiver := receiver ∪ {releaseChunk_12 ↦ LicenseServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseChunk_12}
+    END
+
+    receivereleaseChunk_12
+    WHEN
+        grd1: releaseChunk_12 ∈ sentMessages
+        grd2: releaseChunk_12 ↦ Viewer ∈ sender
+        grd3: releaseChunk_12 ↦ LicenseServer ∈ receiver
+        grd4: releaseChunk_12 ∉ receivedMessages
+        grd5: currentMessage = {releaseChunk_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseChunk_12}
+        act2: currentMessage := ∅
+        act3: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    sendrequestStream_13
+    WHEN
+        grd1: requestStream_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseChunk_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestStream_13}
+        act2: sender := sender ∪ {requestStream_13 ↦ PlayerApp}
+        act3: receiver := receiver ∪ {requestStream_13 ↦ Viewer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestStream_13}
+    END
+
+    receiverequestStream_13
+    WHEN
+        grd1: requestStream_13 ∈ sentMessages
+        grd2: requestStream_13 ↦ PlayerApp ∈ sender
+        grd3: requestStream_13 ↦ Viewer ∈ receiver
+        grd4: requestStream_13 ∉ receivedMessages
+        grd5: currentMessage = {requestStream_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestStream_13}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_reportStream_3_loop1
+    WHEN
+        grd1: stepNo < 7
+    THEN
+        act1: stepNo := stepNo + 1
+    END
+
+END

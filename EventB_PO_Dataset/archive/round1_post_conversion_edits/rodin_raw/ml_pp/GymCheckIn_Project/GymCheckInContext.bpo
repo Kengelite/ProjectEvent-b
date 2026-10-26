@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="ACTIVE" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="exitScan_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="renewPrompt_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="scanQR_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="openGate_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="accessFlag" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="renewURL" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Turnstile" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="accessResult_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Member" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="memberCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="EXPIRED" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/GymCheckIn_Project/GymCheckInContext.bpo|org.eventb.core.poFile#GymCheckInContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Member},{Turnstile})" org.eventb.core.source="/GymCheckIn_Project/GymCheckInContext.buc|org.eventb.core.contextFile#GymCheckInContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{scanQR_1},{accessResult_2},{openGate_3},{renewPrompt_4},{exitScan_5})" org.eventb.core.source="/GymCheckIn_Project/GymCheckInContext.buc|org.eventb.core.contextFile#GymCheckInContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{accessFlag},{memberCode},{renewURL})" org.eventb.core.source="/GymCheckIn_Project/GymCheckInContext.buc|org.eventb.core.contextFile#GymCheckInContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="ACTIVE=0" org.eventb.core.source="/GymCheckIn_Project/GymCheckInContext.buc|org.eventb.core.contextFile#GymCheckInContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="EXPIRED=1" org.eventb.core.source="/GymCheckIn_Project/GymCheckInContext.buc|org.eventb.core.contextFile#GymCheckInContext|org.eventb.core.axiom#internal_element20"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

@@ -1,0 +1,30 @@
+{
+  "model_id": "model_004",
+  "case": "BankTransfer",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "BankTransfer_Project",
+  "category": "non_inductive",
+  "mutation": "removed enabling guard `m ∈ sentMessages` from two receive events",
+  "operations": {
+    "remove_guard": [
+      [
+        "receivepostTransfer_4",
+        "grd1"
+      ],
+      [
+        "receivetransferStatus_7",
+        "grd1"
+      ]
+    ]
+  },
+  "added_invariant_labels": [],
+  "expected_failed_pos": [
+    "receivepostTransfer_4/inv5/INV",
+    "receivetransferStatus_7/inv5/INV"
+  ],
+  "expected_failed_count": 2,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_004",
+  "rodin_raw_dir": "rodin_raw/ml_pp/BankTransfer_Project"
+}

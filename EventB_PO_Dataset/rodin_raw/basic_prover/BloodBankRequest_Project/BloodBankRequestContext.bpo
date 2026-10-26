@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="confirmReceipt_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sampleID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="requestBlood_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="backorder_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="units" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="crossMatch_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Courier" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="Hospital" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="bloodType" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="deliverBlood_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="BloodBank" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="etaHours" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="prepareCourier_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="bagID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="LabTech" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/BloodBankRequest_Project/BloodBankRequestContext.bpo|org.eventb.core.poFile#BloodBankRequestContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{BloodBank},{Courier},{Hospital},{LabTech})" org.eventb.core.source="/BloodBankRequest_Project/BloodBankRequestContext.buc|org.eventb.core.contextFile#BloodBankRequestContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{requestBlood_1},{crossMatch_2},{prepareCourier_3},{deliverBlood_4},{backorder_5},{confirmReceipt_6})" org.eventb.core.source="/BloodBankRequest_Project/BloodBankRequestContext.buc|org.eventb.core.contextFile#BloodBankRequestContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{bagID},{bloodType},{etaHours},{sampleID},{units})" org.eventb.core.source="/BloodBankRequest_Project/BloodBankRequestContext.buc|org.eventb.core.contextFile#BloodBankRequestContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

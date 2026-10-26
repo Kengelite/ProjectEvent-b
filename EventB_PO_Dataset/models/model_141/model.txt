@@ -1,0 +1,410 @@
+CONTEXT PharmacyDeliveryContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Courier, DeliveryApp, Pharmacist
+    syncSignature_1, validateSignature_2, fetchRoute_3, queryRoute_4, confirmRoute_5, issuePackage_6, cancelSignature_7, confirmPackage_8, queryPackage_9, ackSignature_10, scheduleSignature_11, approveRoute_12
+    packageCode, packageRef, packageValue, signatureCode, signatureData, signatureID
+    BRONZE, GOLD, SILVER
+AXIOMS
+    axm1: partition(Objects, {Courier}, {DeliveryApp}, {Pharmacist})
+    axm2: partition(Messages, {syncSignature_1}, {validateSignature_2}, {fetchRoute_3}, {queryRoute_4}, {confirmRoute_5}, {issuePackage_6}, {cancelSignature_7}, {confirmPackage_8}, {queryPackage_9}, {ackSignature_10}, {scheduleSignature_11}, {approveRoute_12})
+    axm3: partition(DataMessages, {packageCode}, {packageRef}, {packageValue}, {signatureCode}, {signatureData}, {signatureID})
+    axm4: BRONZE = 0
+    axm5: GOLD = 1
+    axm6: SILVER = 2
+END
+
+MACHINE PharmacyDeliveryInteractionMachine_1
+SEES PharmacyDeliveryContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, mode, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_9, t_delay_9, t_success_9, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: mode ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_9 ∈ ℤ
+    inv17: t_delay_9 ∈ ℤ
+    inv18: t_success_9 ∈ ℤ
+    inv19: t_time_11 ∈ ℤ
+    inv20: t_delay_11 ∈ ℤ
+    inv21: t_success_11 ∈ ℤ
+    inv22: t_time_12 ∈ ℤ
+    inv23: t_delay_12 ∈ ℤ
+    inv24: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: mode := BRONZE
+        act10: t_time_1 :∈ 0..1
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_3 :∈ 0..0
+        act14: t_delay_3 := 1
+        act15: t_success_3 := 0
+        act16: t_time_9 :∈ 0..30
+        act17: t_delay_9 := 0
+        act18: t_success_9 := 0
+        act19: t_time_11 :∈ 3..0
+        act20: t_delay_11 := 0
+        act21: t_success_11 := 0
+        act22: t_time_12 :∈ 3..2
+        act23: t_delay_12 := 0
+        act24: t_success_12 := 0
+    END
+
+
+    sendsyncSignature_1
+    WHEN
+        grd1: syncSignature_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncSignature_1}
+        act2: sender := sender ∪ {syncSignature_1 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {syncSignature_1 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncSignature_1 ↦ packageValue}
+        act6: currentMessage := {syncSignature_1}
+    END
+
+    receivesyncSignature_1
+    WHEN
+        grd1: syncSignature_1 ∈ sentMessages
+        grd2: syncSignature_1 ↦ DeliveryApp ∈ sender
+        grd3: syncSignature_1 ↦ Courier ∈ receiver
+        grd4: syncSignature_1 ∉ receivedMessages
+        grd5: currentMessage = {syncSignature_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncSignature_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncSignature_1 ↦ packageValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidateSignature_2
+    WHEN
+        grd1: validateSignature_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncSignature_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSignature_2}
+        act2: sender := sender ∪ {validateSignature_2 ↦ Courier}
+        act3: receiver := receiver ∪ {validateSignature_2 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateSignature_2 ↦ signatureCode, validateSignature_2 ↦ signatureID}
+        act6: currentMessage := {validateSignature_2}
+    END
+
+    receivevalidateSignature_2
+    WHEN
+        grd1: validateSignature_2 ∈ sentMessages
+        grd2: validateSignature_2 ↦ Courier ∈ sender
+        grd3: validateSignature_2 ↦ Pharmacist ∈ receiver
+        grd4: validateSignature_2 ∉ receivedMessages
+        grd5: currentMessage = {validateSignature_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSignature_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateSignature_2 ↦ signatureCode, validateSignature_2 ↦ signatureID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchRoute_3_opt1
+    WHEN
+        grd1: fetchRoute_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateSignature_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchRoute_3}
+        act2: sender := sender ∪ {fetchRoute_3 ↦ Courier}
+        act3: receiver := receiver ∪ {fetchRoute_3 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchRoute_3 ↦ signatureCode}
+        act6: currentMessage := {fetchRoute_3}
+    END
+
+    receivefetchRoute_3_opt1
+    WHEN
+        grd1: fetchRoute_3 ∈ sentMessages
+        grd2: fetchRoute_3 ↦ Courier ∈ sender
+        grd3: fetchRoute_3 ↦ Pharmacist ∈ receiver
+        grd4: fetchRoute_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchRoute_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchRoute_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchRoute_3 ↦ signatureCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendqueryRoute_4_opt1
+    WHEN
+        grd1: queryRoute_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchRoute_3 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryRoute_4}
+        act2: sender := sender ∪ {queryRoute_4 ↦ Pharmacist}
+        act3: receiver := receiver ∪ {queryRoute_4 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryRoute_4}
+    END
+
+    receivequeryRoute_4_opt1
+    WHEN
+        grd1: queryRoute_4 ∈ sentMessages
+        grd2: queryRoute_4 ↦ Pharmacist ∈ sender
+        grd3: queryRoute_4 ↦ Courier ∈ receiver
+        grd4: queryRoute_4 ∉ receivedMessages
+        grd5: currentMessage = {queryRoute_4}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryRoute_4}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmRoute_5
+    WHEN
+        grd1: confirmRoute_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryRoute_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmRoute_5}
+        act2: sender := sender ∪ {confirmRoute_5 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {confirmRoute_5 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmRoute_5}
+    END
+
+    receiveconfirmRoute_5
+    WHEN
+        grd1: confirmRoute_5 ∈ sentMessages
+        grd2: confirmRoute_5 ↦ DeliveryApp ∈ sender
+        grd3: confirmRoute_5 ↦ Pharmacist ∈ receiver
+        grd4: confirmRoute_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmRoute_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmRoute_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissuePackage_6
+    WHEN
+        grd1: issuePackage_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmRoute_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issuePackage_6}
+        act2: sender := sender ∪ {issuePackage_6 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {issuePackage_6 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issuePackage_6}
+    END
+
+    receiveissuePackage_6
+    WHEN
+        grd1: issuePackage_6 ∈ sentMessages
+        grd2: issuePackage_6 ↦ DeliveryApp ∈ sender
+        grd3: issuePackage_6 ↦ Courier ∈ receiver
+        grd4: issuePackage_6 ∉ receivedMessages
+        grd5: currentMessage = {issuePackage_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issuePackage_6}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelSignature_7
+    WHEN
+        grd1: cancelSignature_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePackage_6 ∈ receivedMessages
+        grd4: mode = GOLD
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSignature_7}
+        act2: sender := sender ∪ {cancelSignature_7 ↦ Pharmacist}
+        act3: receiver := receiver ∪ {cancelSignature_7 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelSignature_7 ↦ signatureCode}
+        act6: currentMessage := {cancelSignature_7}
+    END
+
+    receivecancelSignature_7
+    WHEN
+        grd1: cancelSignature_7 ∈ sentMessages
+        grd2: cancelSignature_7 ↦ Pharmacist ∈ sender
+        grd3: cancelSignature_7 ↦ Courier ∈ receiver
+        grd4: cancelSignature_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelSignature_7}
+        grd6: mode = GOLD
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSignature_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelSignature_7 ↦ signatureCode}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmPackage_8
+    WHEN
+        grd1: confirmPackage_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSignature_7 ∈ receivedMessages
+        grd4: mode = GOLD
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPackage_8}
+        act2: sender := sender ∪ {confirmPackage_8 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {confirmPackage_8 ↦ Courier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmPackage_8 ↦ packageValue}
+        act6: currentMessage := {confirmPackage_8}
+    END
+
+    receiveconfirmPackage_8
+    WHEN
+        grd1: confirmPackage_8 ∈ sentMessages
+        grd2: confirmPackage_8 ↦ DeliveryApp ∈ sender
+        grd3: confirmPackage_8 ↦ Courier ∈ receiver
+        grd4: confirmPackage_8 ∉ receivedMessages
+        grd5: currentMessage = {confirmPackage_8}
+        grd6: mode = GOLD
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPackage_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmPackage_8 ↦ packageValue}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryPackage_9
+    WHEN
+        grd1: queryPackage_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePackage_6 ∈ receivedMessages
+        grd4: mode = SILVER
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryPackage_9}
+        act2: sender := sender ∪ {queryPackage_9 ↦ Courier}
+        act3: receiver := receiver ∪ {queryPackage_9 ↦ DeliveryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryPackage_9 ↦ packageCode, queryPackage_9 ↦ signatureData}
+        act6: currentMessage := {queryPackage_9}
+    END
+
+    receivequeryPackage_9
+    WHEN
+        grd1: queryPackage_9 ∈ sentMessages
+        grd2: queryPackage_9 ↦ Courier ∈ sender
+        grd3: queryPackage_9 ↦ DeliveryApp ∈ receiver
+        grd4: queryPackage_9 ∉ receivedMessages
+        grd5: currentMessage = {queryPackage_9}
+        grd6: mode = SILVER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryPackage_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryPackage_9 ↦ packageCode, queryPackage_9 ↦ signatureData}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendackSignature_10
+    WHEN
+        grd1: ackSignature_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryPackage_9 ∈ receivedMessages
+        grd4: mode = SILVER
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackSignature_10}
+        act2: sender := sender ∪ {ackSignature_10 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {ackSignature_10 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackSignature_10}
+    END
+
+    receiveackSignature_10
+    WHEN
+        grd1: ackSignature_10 ∈ sentMessages
+        grd2: ackSignature_10 ↦ DeliveryApp ∈ sender
+        grd3: ackSignature_10 ↦ Pharmacist ∈ receiver
+        grd4: ackSignature_10 ∉ receivedMessages
+        grd5: currentMessage = {ackSignature_10}
+        grd6: mode = SILVER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackSignature_10}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleSignature_11
+    WHEN
+        grd1: scheduleSignature_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePackage_6 ∈ receivedMessages
+        grd4: mode = BRONZE
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSignature_11}
+        act2: sender := sender ∪ {scheduleSignature_11 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {scheduleSignature_11 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSignature_11 ↦ packageCode}
+        act6: currentMessage := {scheduleSignature_11}
+    END
+
+    receivescheduleSignature_11
+    WHEN
+        grd1: scheduleSignature_11 ∈ sentMessages
+        grd2: scheduleSignature_11 ↦ DeliveryApp ∈ sender
+        grd3: scheduleSignature_11 ↦ Pharmacist ∈ receiver
+        grd4: scheduleSignature_11 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSignature_11}
+        grd6: mode = BRONZE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSignature_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSignature_11 ↦ packageCode}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendapproveRoute_12
+    WHEN
+        grd1: approveRoute_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPackage_8 ∈ receivedMessages ∨ ackSignature_10 ∈ receivedMessages ∨ scheduleSignature_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveRoute_12}
+        act2: sender := sender ∪ {approveRoute_12 ↦ DeliveryApp}
+        act3: receiver := receiver ∪ {approveRoute_12 ↦ Pharmacist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveRoute_12 ↦ packageRef}
+        act6: currentMessage := {approveRoute_12}
+    END
+
+    receiveapproveRoute_12
+    WHEN
+        grd1: approveRoute_12 ∈ sentMessages
+        grd2: approveRoute_12 ↦ DeliveryApp ∈ sender
+        grd3: approveRoute_12 ↦ Pharmacist ∈ receiver
+        grd4: approveRoute_12 ∉ receivedMessages
+        grd5: currentMessage = {approveRoute_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveRoute_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveRoute_12 ↦ packageRef}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+END

@@ -1,0 +1,252 @@
+CONTEXT MedicationDispenserContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CareServer, Dispenser, Patient
+    scheduleDose_1, doseAlert_2, confirmIntake_3, logDose_4, logAck_5, escalateMissed_6, refillCheck_7
+    doseID, doseTime, patientID, pillCount
+AXIOMS
+    axm1: partition(Objects, {CareServer}, {Dispenser}, {Patient})
+    axm2: partition(Messages, {scheduleDose_1}, {doseAlert_2}, {confirmIntake_3}, {logDose_4}, {logAck_5}, {escalateMissed_6}, {refillCheck_7})
+    axm3: partition(DataMessages, {doseID}, {doseTime}, {patientID}, {pillCount})
+END
+
+MACHINE MedicationDispenserInteractionMachine_1
+SEES MedicationDispenserContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, taken, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: taken ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: currentMessage ⊆ sentMessages
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: taken := 0
+        act9: t_time_1 :∈ 0..5
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..60
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_4 :∈ 0..3
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendscheduleDose_1
+    WHEN
+        grd1: scheduleDose_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleDose_1}
+        act2: sender := sender ∪ {scheduleDose_1 ↦ CareServer}
+        act3: receiver := receiver ∪ {scheduleDose_1 ↦ Dispenser}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleDose_1 ↦ doseTime}
+        act6: currentMessage := {scheduleDose_1}
+    END
+
+    receivescheduleDose_1
+    WHEN
+        grd1: scheduleDose_1 ∈ sentMessages
+        grd2: scheduleDose_1 ↦ CareServer ∈ sender
+        grd3: scheduleDose_1 ↦ Dispenser ∈ receiver
+        grd4: scheduleDose_1 ∉ receivedMessages
+        grd5: currentMessage = {scheduleDose_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleDose_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleDose_1 ↦ doseTime}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    senddoseAlert_2
+    WHEN
+        grd1: doseAlert_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleDose_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {doseAlert_2}
+        act2: sender := sender ∪ {doseAlert_2 ↦ Dispenser}
+        act3: receiver := receiver ∪ {doseAlert_2 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {doseAlert_2 ↦ pillCount}
+        act6: currentMessage := {doseAlert_2}
+    END
+
+    receivedoseAlert_2
+    WHEN
+        grd1: doseAlert_2 ∈ sentMessages
+        grd2: doseAlert_2 ↦ Dispenser ∈ sender
+        grd3: doseAlert_2 ↦ Patient ∈ receiver
+        grd4: doseAlert_2 ∉ receivedMessages
+        grd5: currentMessage = {doseAlert_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {doseAlert_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {doseAlert_2 ↦ pillCount}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendconfirmIntake_3
+    WHEN
+        grd1: confirmIntake_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: doseAlert_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmIntake_3}
+        act2: sender := sender ∪ {confirmIntake_3 ↦ Patient}
+        act3: receiver := receiver ∪ {confirmIntake_3 ↦ Dispenser}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmIntake_3}
+    END
+
+    receiveconfirmIntake_3
+    WHEN
+        grd1: confirmIntake_3 ∈ sentMessages
+        grd2: confirmIntake_3 ↦ Patient ∈ sender
+        grd3: confirmIntake_3 ↦ Dispenser ∈ receiver
+        grd4: confirmIntake_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmIntake_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmIntake_3}
+        act2: currentMessage := ∅
+    END
+
+    sendlogDose_4
+    WHEN
+        grd1: logDose_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmIntake_3 ∈ receivedMessages
+        grd4: taken = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logDose_4}
+        act2: sender := sender ∪ {logDose_4 ↦ Dispenser}
+        act3: receiver := receiver ∪ {logDose_4 ↦ CareServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logDose_4 ↦ doseID}
+        act6: currentMessage := {logAck_5}
+    END
+
+    receivelogDose_4
+    WHEN
+        grd1: logDose_4 ∈ sentMessages
+        grd2: logDose_4 ↦ Dispenser ∈ sender
+        grd3: logDose_4 ↦ CareServer ∈ receiver
+        grd4: logDose_4 ∉ receivedMessages
+        grd5: currentMessage = {logDose_4}
+        grd6: taken = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logDose_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logDose_4 ↦ doseID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendlogAck_5
+    WHEN
+        grd1: logAck_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logDose_4 ∈ receivedMessages
+        grd4: taken = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logAck_5}
+        act2: sender := sender ∪ {logAck_5 ↦ CareServer}
+        act3: receiver := receiver ∪ {logAck_5 ↦ Dispenser}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logAck_5}
+    END
+
+    receivelogAck_5
+    WHEN
+        grd1: logAck_5 ∈ sentMessages
+        grd2: logAck_5 ↦ CareServer ∈ sender
+        grd3: logAck_5 ↦ Dispenser ∈ receiver
+        grd4: logAck_5 ∉ receivedMessages
+        grd5: currentMessage = {logAck_5}
+        grd6: taken = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logAck_5}
+        act2: currentMessage := ∅
+    END
+
+    sendescalateMissed_6
+    WHEN
+        grd1: escalateMissed_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmIntake_3 ∈ receivedMessages
+        grd4: taken = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {escalateMissed_6}
+        act2: sender := sender ∪ {escalateMissed_6 ↦ Dispenser}
+        act3: receiver := receiver ∪ {escalateMissed_6 ↦ CareServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {escalateMissed_6 ↦ patientID}
+        act6: currentMessage := {escalateMissed_6}
+    END
+
+    receiveescalateMissed_6
+    WHEN
+        grd1: escalateMissed_6 ∈ sentMessages
+        grd2: escalateMissed_6 ↦ Dispenser ∈ sender
+        grd3: escalateMissed_6 ↦ CareServer ∈ receiver
+        grd4: escalateMissed_6 ∉ receivedMessages
+        grd5: currentMessage = {escalateMissed_6}
+        grd6: taken = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {escalateMissed_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {escalateMissed_6 ↦ patientID}
+        act3: currentMessage := ∅
+    END
+
+    sendrefillCheck_7
+    WHEN
+        grd1: refillCheck_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logAck_5 ∈ receivedMessages ∨ escalateMissed_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {refillCheck_7}
+        act2: sender := sender ∪ {refillCheck_7 ↦ CareServer}
+        act3: receiver := receiver ∪ {refillCheck_7 ↦ Dispenser}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {refillCheck_7 ↦ pillCount}
+        act6: currentMessage := {refillCheck_7}
+    END
+
+    receiverefillCheck_7
+    WHEN
+        grd1: refillCheck_7 ∈ sentMessages
+        grd2: refillCheck_7 ↦ CareServer ∈ sender
+        grd3: refillCheck_7 ↦ Dispenser ∈ receiver
+        grd4: refillCheck_7 ∉ receivedMessages
+        grd5: currentMessage = {refillCheck_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {refillCheck_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {refillCheck_7 ↦ pillCount}
+        act3: currentMessage := ∅
+    END
+
+END

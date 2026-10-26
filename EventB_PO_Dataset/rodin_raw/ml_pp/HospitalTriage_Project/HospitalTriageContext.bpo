@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="measureVitals_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="NORMAL" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="drugID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="testID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="registerPatient_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="prescribeDrug_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="appointment" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="dischargeNote_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="CRITICAL" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="LabSystem" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="scheduleVisit_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="patientID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="vitalSigns" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Nurse" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="callDoctor_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="summary" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Patient" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="Doctor" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="orderLabTest_4" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/HospitalTriage_Project/HospitalTriageContext.bpo|org.eventb.core.poFile#HospitalTriageContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Doctor},{LabSystem},{Nurse},{Patient})" org.eventb.core.source="/HospitalTriage_Project/HospitalTriageContext.buc|org.eventb.core.contextFile#HospitalTriageContext|org.eventb.core.axiom#internal_element23"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{registerPatient_1},{measureVitals_2},{callDoctor_3},{orderLabTest_4},{prescribeDrug_5},{scheduleVisit_6},{dischargeNote_7})" org.eventb.core.source="/HospitalTriage_Project/HospitalTriageContext.buc|org.eventb.core.contextFile#HospitalTriageContext|org.eventb.core.axiom#internal_element24"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{appointment},{drugID},{patientID},{summary},{testID},{vitalSigns})" org.eventb.core.source="/HospitalTriage_Project/HospitalTriageContext.buc|org.eventb.core.contextFile#HospitalTriageContext|org.eventb.core.axiom#internal_element25"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="CRITICAL=0" org.eventb.core.source="/HospitalTriage_Project/HospitalTriageContext.buc|org.eventb.core.contextFile#HospitalTriageContext|org.eventb.core.axiom#internal_element26"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="NORMAL=1" org.eventb.core.source="/HospitalTriage_Project/HospitalTriageContext.buc|org.eventb.core.contextFile#HospitalTriageContext|org.eventb.core.axiom#internal_element27"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

@@ -1,0 +1,415 @@
+CONTEXT HospitalLabRequestContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    LabLIS, OrderEntry, Phlebotomist, Physician
+    checkOrder_1, requestResult_2, confirmOrder_3, scheduleOrder_4, ackSample_5, approveSample_6, issueResult_7, reportResult_8, reportSample_9, requestSample_10, reserveSample_11
+    orderCode, orderInfo, orderValue, resultCode, resultID, sampleCode, sampleInfo, sampleValue
+AXIOMS
+    axm1: partition(Objects, {LabLIS}, {OrderEntry}, {Phlebotomist}, {Physician})
+    axm2: partition(Messages, {checkOrder_1}, {requestResult_2}, {confirmOrder_3}, {scheduleOrder_4}, {ackSample_5}, {approveSample_6}, {issueResult_7}, {reportResult_8}, {reportSample_9}, {requestSample_10}, {reserveSample_11})
+    axm3: partition(DataMessages, {orderCode}, {orderInfo}, {orderValue}, {resultCode}, {resultID}, {sampleCode}, {sampleInfo}, {sampleValue})
+END
+
+MACHINE HospitalLabRequestInteractionMachine_1
+SEES HospitalLabRequestContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, attemptNo, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: attemptNo ∈ ℤ
+    inv10: t_time_5 ∈ ℤ
+    inv11: t_delay_5 ∈ ℤ
+    inv12: t_success_5 ∈ ℤ
+    inv13: t_time_7 ∈ ℤ
+    inv14: t_delay_7 ∈ ℤ
+    inv15: t_success_7 ∈ ℤ
+    inv16: t_time_8 ∈ ℤ
+    inv17: t_delay_8 ∈ ℤ
+    inv18: t_success_8 ∈ ℤ
+    inv19: t_time_9 ∈ ℤ
+    inv20: t_delay_9 ∈ ℤ
+    inv21: t_success_9 ∈ ℤ
+    inv22: t_time_11 ∈ ℤ
+    inv23: t_delay_11 ∈ ℤ
+    inv24: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: attemptNo := 0
+        act10: t_time_5 :∈ 0..15
+        act11: t_delay_5 := 0
+        act12: t_success_5 := 0
+        act13: t_time_7 :∈ 0..0
+        act14: t_delay_7 := 2
+        act15: t_success_7 := 0
+        act16: t_time_8 :∈ 0..1
+        act17: t_delay_8 := 0
+        act18: t_success_8 := 0
+        act19: t_time_9 :∈ 0..0
+        act20: t_delay_9 := 1
+        act21: t_success_9 := 0
+        act22: t_time_11 :∈ 0..15
+        act23: t_delay_11 := 0
+        act24: t_success_11 := 0
+    END
+
+
+    sendcheckOrder_1
+    WHEN
+        grd1: checkOrder_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkOrder_1}
+        act2: sender := sender ∪ {checkOrder_1 ↦ Physician}
+        act3: receiver := receiver ∪ {checkOrder_1 ↦ LabLIS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkOrder_1}
+    END
+
+    receivecheckOrder_1
+    WHEN
+        grd1: checkOrder_1 ∈ sentMessages
+        grd2: checkOrder_1 ↦ Physician ∈ sender
+        grd3: checkOrder_1 ↦ LabLIS ∈ receiver
+        grd4: checkOrder_1 ∉ receivedMessages
+        grd5: currentMessage = {checkOrder_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkOrder_1}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestResult_2
+    WHEN
+        grd1: requestResult_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkOrder_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestResult_2}
+        act2: sender := sender ∪ {requestResult_2 ↦ OrderEntry}
+        act3: receiver := receiver ∪ {requestResult_2 ↦ Physician}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestResult_2 ↦ orderInfo}
+        act6: currentMessage := {requestResult_2}
+    END
+
+    receiverequestResult_2
+    WHEN
+        grd1: requestResult_2 ∈ sentMessages
+        grd2: requestResult_2 ↦ OrderEntry ∈ sender
+        grd3: requestResult_2 ↦ Physician ∈ receiver
+        grd4: requestResult_2 ∉ receivedMessages
+        grd5: currentMessage = {requestResult_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestResult_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestResult_2 ↦ orderInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmOrder_3
+    WHEN
+        grd1: confirmOrder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestResult_2 ∈ receivedMessages
+        grd4: cycleNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmOrder_3}
+        act2: sender := sender ∪ {confirmOrder_3 ↦ Physician}
+        act3: receiver := receiver ∪ {confirmOrder_3 ↦ LabLIS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmOrder_3 ↦ orderCode, confirmOrder_3 ↦ sampleValue}
+        act6: currentMessage := {confirmOrder_3}
+    END
+
+    receiveconfirmOrder_3
+    WHEN
+        grd1: confirmOrder_3 ∈ sentMessages
+        grd2: confirmOrder_3 ↦ Physician ∈ sender
+        grd3: confirmOrder_3 ↦ LabLIS ∈ receiver
+        grd4: confirmOrder_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmOrder_3}
+        grd6: cycleNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmOrder_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmOrder_3 ↦ orderCode, confirmOrder_3 ↦ sampleValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleOrder_4
+    WHEN
+        grd1: scheduleOrder_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmOrder_3 ∈ receivedMessages
+        grd4: cycleNo < 8
+        grd5: cycleNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleOrder_4}
+        act2: sender := sender ∪ {scheduleOrder_4 ↦ Physician}
+        act3: receiver := receiver ∪ {scheduleOrder_4 ↦ Phlebotomist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleOrder_4 ↦ orderValue}
+        act6: currentMessage := {scheduleOrder_4}
+    END
+
+    receivescheduleOrder_4
+    WHEN
+        grd1: scheduleOrder_4 ∈ sentMessages
+        grd2: scheduleOrder_4 ↦ Physician ∈ sender
+        grd3: scheduleOrder_4 ↦ Phlebotomist ∈ receiver
+        grd4: scheduleOrder_4 ∉ receivedMessages
+        grd5: currentMessage = {scheduleOrder_4}
+        grd6: cycleNo < 8
+        grd7: cycleNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleOrder_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleOrder_4 ↦ orderValue}
+        act3: currentMessage := ∅
+    END
+
+    sendackSample_5
+    WHEN
+        grd1: ackSample_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleOrder_4 ∈ receivedMessages
+        grd4: cycleNo < 8
+        grd5: cycleNo mod 3 = 0
+        grd6: attemptNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackSample_5}
+        act2: sender := sender ∪ {ackSample_5 ↦ LabLIS}
+        act3: receiver := receiver ∪ {ackSample_5 ↦ OrderEntry}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackSample_5 ↦ orderInfo, ackSample_5 ↦ sampleCode}
+        act6: currentMessage := {ackSample_5}
+    END
+
+    receiveackSample_5
+    WHEN
+        grd1: ackSample_5 ∈ sentMessages
+        grd2: ackSample_5 ↦ LabLIS ∈ sender
+        grd3: ackSample_5 ↦ OrderEntry ∈ receiver
+        grd4: ackSample_5 ∉ receivedMessages
+        grd5: currentMessage = {ackSample_5}
+        grd6: cycleNo < 8
+        grd7: cycleNo mod 3 = 0
+        grd8: attemptNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackSample_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackSample_5 ↦ orderInfo, ackSample_5 ↦ sampleCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendapproveSample_6
+    WHEN
+        grd1: approveSample_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackSample_5 ∈ receivedMessages
+        grd4: cycleNo < 8
+        grd5: cycleNo mod 3 = 0
+        grd6: attemptNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveSample_6}
+        act2: sender := sender ∪ {approveSample_6 ↦ Physician}
+        act3: receiver := receiver ∪ {approveSample_6 ↦ Phlebotomist}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveSample_6}
+    END
+
+    receiveapproveSample_6
+    WHEN
+        grd1: approveSample_6 ∈ sentMessages
+        grd2: approveSample_6 ↦ Physician ∈ sender
+        grd3: approveSample_6 ↦ Phlebotomist ∈ receiver
+        grd4: approveSample_6 ∉ receivedMessages
+        grd5: currentMessage = {approveSample_6}
+        grd6: cycleNo < 8
+        grd7: cycleNo mod 3 = 0
+        grd8: attemptNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveSample_6}
+        act2: currentMessage := ∅
+    END
+
+    sendissueResult_7
+    WHEN
+        grd1: issueResult_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveSample_6 ∈ receivedMessages
+        grd4: cycleNo < 8
+        grd5: cycleNo mod 3 = 0
+        grd6: attemptNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueResult_7}
+        act2: sender := sender ∪ {issueResult_7 ↦ LabLIS}
+        act3: receiver := receiver ∪ {issueResult_7 ↦ OrderEntry}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueResult_7 ↦ resultCode}
+        act6: currentMessage := {issueResult_7}
+    END
+
+    receiveissueResult_7
+    WHEN
+        grd1: issueResult_7 ∈ sentMessages
+        grd2: issueResult_7 ↦ LabLIS ∈ sender
+        grd3: issueResult_7 ↦ OrderEntry ∈ receiver
+        grd4: issueResult_7 ∉ receivedMessages
+        grd5: currentMessage = {issueResult_7}
+        grd6: cycleNo < 8
+        grd7: cycleNo mod 3 = 0
+        grd8: attemptNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueResult_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueResult_7 ↦ resultCode}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreportResult_8
+    WHEN
+        grd1: reportResult_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueResult_7 ∈ receivedMessages
+        grd4: cycleNo < 8
+        grd5: cycleNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportResult_8}
+        act2: sender := sender ∪ {reportResult_8 ↦ Physician}
+        act3: receiver := receiver ∪ {reportResult_8 ↦ Phlebotomist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportResult_8 ↦ sampleInfo}
+        act6: currentMessage := {reportResult_8}
+    END
+
+    receivereportResult_8
+    WHEN
+        grd1: reportResult_8 ∈ sentMessages
+        grd2: reportResult_8 ↦ Physician ∈ sender
+        grd3: reportResult_8 ↦ Phlebotomist ∈ receiver
+        grd4: reportResult_8 ∉ receivedMessages
+        grd5: currentMessage = {reportResult_8}
+        grd6: cycleNo < 8
+        grd7: cycleNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportResult_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportResult_8 ↦ sampleInfo}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendreportSample_9
+    WHEN
+        grd1: reportSample_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmOrder_3 ∈ receivedMessages
+        grd4: cycleNo < 8
+        grd5: cycleNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportSample_9}
+        act2: sender := sender ∪ {reportSample_9 ↦ OrderEntry}
+        act3: receiver := receiver ∪ {reportSample_9 ↦ LabLIS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportSample_9}
+    END
+
+    receivereportSample_9
+    WHEN
+        grd1: reportSample_9 ∈ sentMessages
+        grd2: reportSample_9 ↦ OrderEntry ∈ sender
+        grd3: reportSample_9 ↦ LabLIS ∈ receiver
+        grd4: reportSample_9 ∉ receivedMessages
+        grd5: currentMessage = {reportSample_9}
+        grd6: cycleNo < 8
+        grd7: cycleNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportSample_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendrequestSample_10
+    WHEN
+        grd1: requestSample_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportResult_8 ∈ receivedMessages ∨ reportSample_9 ∈ receivedMessages
+        grd4: cycleNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestSample_10}
+        act2: sender := sender ∪ {requestSample_10 ↦ Phlebotomist}
+        act3: receiver := receiver ∪ {requestSample_10 ↦ Physician}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestSample_10 ↦ resultID}
+        act6: currentMessage := {requestSample_10}
+    END
+
+    receiverequestSample_10
+    WHEN
+        grd1: requestSample_10 ∈ sentMessages
+        grd2: requestSample_10 ↦ Phlebotomist ∈ sender
+        grd3: requestSample_10 ↦ Physician ∈ receiver
+        grd4: requestSample_10 ∉ receivedMessages
+        grd5: currentMessage = {requestSample_10}
+        grd6: cycleNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestSample_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestSample_10 ↦ resultID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveSample_11
+    WHEN
+        grd1: reserveSample_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestSample_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSample_11}
+        act2: sender := sender ∪ {reserveSample_11 ↦ OrderEntry}
+        act3: receiver := receiver ∪ {reserveSample_11 ↦ LabLIS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveSample_11}
+    END
+
+    receivereserveSample_11
+    WHEN
+        grd1: reserveSample_11 ∈ sentMessages
+        grd2: reserveSample_11 ↦ OrderEntry ∈ sender
+        grd3: reserveSample_11 ↦ LabLIS ∈ receiver
+        grd4: reserveSample_11 ∉ receivedMessages
+        grd5: currentMessage = {reserveSample_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSample_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_confirmOrder_3_loop1
+    WHEN
+        grd1: cycleNo < 8
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+    checkloop_ackSample_5_loop2
+    WHEN
+        grd1: cycleNo < 8
+        grd2: cycleNo mod 3 = 0
+        grd3: attemptNo < 10
+    THEN
+        act1: attemptNo := attemptNo + 1
+    END
+
+END

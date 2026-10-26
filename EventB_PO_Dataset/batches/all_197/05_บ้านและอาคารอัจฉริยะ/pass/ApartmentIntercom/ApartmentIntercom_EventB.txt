@@ -1,0 +1,229 @@
+CONTEXT ApartmentIntercomContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DoorRelay, IntercomPanel, ResidentApp, Visitor
+    syncCall_1, reserveCall_2, reserveDoor_3, checkDoor_4, queryDoor_5, cancelCall_6, logCode_7
+    callData, codeCode, codeRef, codeValue, doorCode, doorData
+AXIOMS
+    axm1: partition(Objects, {DoorRelay}, {IntercomPanel}, {ResidentApp}, {Visitor})
+    axm2: partition(Messages, {syncCall_1}, {reserveCall_2}, {reserveDoor_3}, {checkDoor_4}, {queryDoor_5}, {cancelCall_6}, {logCode_7})
+    axm3: partition(DataMessages, {callData}, {codeCode}, {codeRef}, {codeValue}, {doorCode}, {doorData})
+END
+
+MACHINE ApartmentIntercomInteractionMachine_1
+SEES ApartmentIntercomContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_3 :∈ 0..60
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+    END
+
+
+    sendsyncCall_1
+    WHEN
+        grd1: syncCall_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncCall_1}
+        act2: sender := sender ∪ {syncCall_1 ↦ IntercomPanel}
+        act3: receiver := receiver ∪ {syncCall_1 ↦ ResidentApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncCall_1}
+    END
+
+    receivesyncCall_1
+    WHEN
+        grd1: syncCall_1 ∈ sentMessages
+        grd2: syncCall_1 ↦ IntercomPanel ∈ sender
+        grd3: syncCall_1 ↦ ResidentApp ∈ receiver
+        grd4: syncCall_1 ∉ receivedMessages
+        grd5: currentMessage = {syncCall_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncCall_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveCall_2
+    WHEN
+        grd1: reserveCall_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncCall_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveCall_2}
+        act2: sender := sender ∪ {reserveCall_2 ↦ DoorRelay}
+        act3: receiver := receiver ∪ {reserveCall_2 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveCall_2 ↦ codeCode}
+        act6: currentMessage := {reserveCall_2}
+    END
+
+    receivereserveCall_2
+    WHEN
+        grd1: reserveCall_2 ∈ sentMessages
+        grd2: reserveCall_2 ↦ DoorRelay ∈ sender
+        grd3: reserveCall_2 ↦ Visitor ∈ receiver
+        grd4: reserveCall_2 ∉ receivedMessages
+        grd5: currentMessage = {reserveCall_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveCall_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveCall_2 ↦ codeCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveDoor_3
+    WHEN
+        grd1: reserveDoor_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveCall_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveDoor_3}
+        act2: sender := sender ∪ {reserveDoor_3 ↦ IntercomPanel}
+        act3: receiver := receiver ∪ {reserveDoor_3 ↦ DoorRelay}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveDoor_3}
+    END
+
+    receivereserveDoor_3
+    WHEN
+        grd1: reserveDoor_3 ∈ sentMessages
+        grd2: reserveDoor_3 ↦ IntercomPanel ∈ sender
+        grd3: reserveDoor_3 ↦ DoorRelay ∈ receiver
+        grd4: reserveDoor_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveDoor_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveDoor_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckDoor_4
+    WHEN
+        grd1: checkDoor_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveDoor_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkDoor_4}
+        act2: sender := sender ∪ {checkDoor_4 ↦ DoorRelay}
+        act3: receiver := receiver ∪ {checkDoor_4 ↦ ResidentApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkDoor_4}
+    END
+
+    receivecheckDoor_4
+    WHEN
+        grd1: checkDoor_4 ∈ sentMessages
+        grd2: checkDoor_4 ↦ DoorRelay ∈ sender
+        grd3: checkDoor_4 ↦ ResidentApp ∈ receiver
+        grd4: checkDoor_4 ∉ receivedMessages
+        grd5: currentMessage = {checkDoor_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkDoor_4}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryDoor_5
+    WHEN
+        grd1: queryDoor_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkDoor_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryDoor_5}
+        act2: sender := sender ∪ {queryDoor_5 ↦ IntercomPanel}
+        act3: receiver := receiver ∪ {queryDoor_5 ↦ DoorRelay}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryDoor_5 ↦ callData, queryDoor_5 ↦ codeRef}
+        act6: currentMessage := {queryDoor_5}
+    END
+
+    receivequeryDoor_5
+    WHEN
+        grd1: queryDoor_5 ∈ sentMessages
+        grd2: queryDoor_5 ↦ IntercomPanel ∈ sender
+        grd3: queryDoor_5 ↦ DoorRelay ∈ receiver
+        grd4: queryDoor_5 ∉ receivedMessages
+        grd5: currentMessage = {queryDoor_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryDoor_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryDoor_5 ↦ callData, queryDoor_5 ↦ codeRef}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelCall_6
+    WHEN
+        grd1: cancelCall_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryDoor_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCall_6}
+        act2: sender := sender ∪ {cancelCall_6 ↦ ResidentApp}
+        act3: receiver := receiver ∪ {cancelCall_6 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelCall_6 ↦ doorCode}
+        act6: currentMessage := {cancelCall_6}
+    END
+
+    receivecancelCall_6
+    WHEN
+        grd1: cancelCall_6 ∈ sentMessages
+        grd2: cancelCall_6 ↦ ResidentApp ∈ sender
+        grd3: cancelCall_6 ↦ Visitor ∈ receiver
+        grd4: cancelCall_6 ∉ receivedMessages
+        grd5: currentMessage = {cancelCall_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCall_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelCall_6 ↦ doorCode}
+        act3: currentMessage := ∅
+    END
+
+    sendlogCode_7
+    WHEN
+        grd1: logCode_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelCall_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCode_7}
+        act2: sender := sender ∪ {logCode_7 ↦ ResidentApp}
+        act3: receiver := receiver ∪ {logCode_7 ↦ DoorRelay}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logCode_7 ↦ codeValue, logCode_7 ↦ doorData}
+        act6: currentMessage := {logCode_7}
+    END
+
+    receivelogCode_7
+    WHEN
+        grd1: logCode_7 ∈ sentMessages
+        grd2: logCode_7 ↦ ResidentApp ∈ sender
+        grd3: logCode_7 ↦ DoorRelay ∈ receiver
+        grd4: logCode_7 ∉ receivedMessages
+        grd5: currentMessage = {logCode_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCode_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logCode_7 ↦ codeValue, logCode_7 ↦ doorData}
+        act3: currentMessage := ∅
+    END
+
+END

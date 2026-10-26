@@ -1,0 +1,202 @@
+CONTEXT VeterinaryClinicContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    PetOwner, VetApp, Veterinarian
+    releaseAppointment_1, cancelAppointment_2, reportInvoice_3, sendAppointment_4, approveAppointment_5, validateInvoice_6
+    appointmentID, appointmentInfo, invoiceValue
+AXIOMS
+    axm1: partition(Objects, {PetOwner}, {VetApp}, {Veterinarian})
+    axm2: partition(Messages, {releaseAppointment_1}, {cancelAppointment_2}, {reportInvoice_3}, {sendAppointment_4}, {approveAppointment_5}, {validateInvoice_6})
+    axm3: partition(DataMessages, {appointmentID}, {appointmentInfo}, {invoiceValue})
+END
+
+MACHINE VeterinaryClinicInteractionMachine_1
+SEES VeterinaryClinicContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 0..2
+        act9: t_delay_3 := 0
+        act10: t_success_3 := 0
+    END
+
+
+    sendreleaseAppointment_1
+    WHEN
+        grd1: releaseAppointment_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseAppointment_1}
+        act2: sender := sender ∪ {releaseAppointment_1 ↦ Veterinarian}
+        act3: receiver := receiver ∪ {releaseAppointment_1 ↦ VetApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseAppointment_1}
+    END
+
+    receivereleaseAppointment_1
+    WHEN
+        grd1: releaseAppointment_1 ∈ sentMessages
+        grd2: releaseAppointment_1 ↦ Veterinarian ∈ sender
+        grd3: releaseAppointment_1 ↦ VetApp ∈ receiver
+        grd4: releaseAppointment_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseAppointment_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseAppointment_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelAppointment_2
+    WHEN
+        grd1: cancelAppointment_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseAppointment_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelAppointment_2}
+        act2: sender := sender ∪ {cancelAppointment_2 ↦ VetApp}
+        act3: receiver := receiver ∪ {cancelAppointment_2 ↦ Veterinarian}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelAppointment_2 ↦ invoiceValue}
+        act6: currentMessage := {cancelAppointment_2}
+    END
+
+    receivecancelAppointment_2
+    WHEN
+        grd1: cancelAppointment_2 ∈ sentMessages
+        grd2: cancelAppointment_2 ↦ VetApp ∈ sender
+        grd3: cancelAppointment_2 ↦ Veterinarian ∈ receiver
+        grd4: cancelAppointment_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelAppointment_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelAppointment_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelAppointment_2 ↦ invoiceValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreportInvoice_3
+    WHEN
+        grd1: reportInvoice_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelAppointment_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportInvoice_3}
+        act2: sender := sender ∪ {reportInvoice_3 ↦ PetOwner}
+        act3: receiver := receiver ∪ {reportInvoice_3 ↦ Veterinarian}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportInvoice_3 ↦ appointmentInfo}
+        act6: currentMessage := {reportInvoice_3}
+    END
+
+    receivereportInvoice_3
+    WHEN
+        grd1: reportInvoice_3 ∈ sentMessages
+        grd2: reportInvoice_3 ↦ PetOwner ∈ sender
+        grd3: reportInvoice_3 ↦ Veterinarian ∈ receiver
+        grd4: reportInvoice_3 ∉ receivedMessages
+        grd5: currentMessage = {reportInvoice_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportInvoice_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportInvoice_3 ↦ appointmentInfo}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendsendAppointment_4
+    WHEN
+        grd1: sendAppointment_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportInvoice_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAppointment_4}
+        act2: sender := sender ∪ {sendAppointment_4 ↦ PetOwner}
+        act3: receiver := receiver ∪ {sendAppointment_4 ↦ Veterinarian}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendAppointment_4 ↦ invoiceValue}
+        act6: currentMessage := {sendAppointment_4}
+    END
+
+    receivesendAppointment_4
+    WHEN
+        grd1: sendAppointment_4 ∈ sentMessages
+        grd2: sendAppointment_4 ↦ PetOwner ∈ sender
+        grd3: sendAppointment_4 ↦ Veterinarian ∈ receiver
+        grd4: sendAppointment_4 ∉ receivedMessages
+        grd5: currentMessage = {sendAppointment_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAppointment_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendAppointment_4 ↦ invoiceValue}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveAppointment_5
+    WHEN
+        grd1: approveAppointment_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAppointment_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveAppointment_5}
+        act2: sender := sender ∪ {approveAppointment_5 ↦ VetApp}
+        act3: receiver := receiver ∪ {approveAppointment_5 ↦ PetOwner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveAppointment_5 ↦ appointmentID}
+        act6: currentMessage := {approveAppointment_5}
+    END
+
+    receiveapproveAppointment_5
+    WHEN
+        grd1: approveAppointment_5 ∈ sentMessages
+        grd2: approveAppointment_5 ↦ VetApp ∈ sender
+        grd3: approveAppointment_5 ↦ PetOwner ∈ receiver
+        grd4: approveAppointment_5 ∉ receivedMessages
+        grd5: currentMessage = {approveAppointment_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveAppointment_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveAppointment_5 ↦ appointmentID}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateInvoice_6
+    WHEN
+        grd1: validateInvoice_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveAppointment_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateInvoice_6}
+        act2: sender := sender ∪ {validateInvoice_6 ↦ PetOwner}
+        act3: receiver := receiver ∪ {validateInvoice_6 ↦ VetApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateInvoice_6}
+    END
+
+    receivevalidateInvoice_6
+    WHEN
+        grd1: validateInvoice_6 ∈ sentMessages
+        grd2: validateInvoice_6 ↦ PetOwner ∈ sender
+        grd3: validateInvoice_6 ↦ VetApp ∈ receiver
+        grd4: validateInvoice_6 ∉ receivedMessages
+        grd5: currentMessage = {validateInvoice_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateInvoice_6}
+        act2: currentMessage := ∅
+    END
+
+END

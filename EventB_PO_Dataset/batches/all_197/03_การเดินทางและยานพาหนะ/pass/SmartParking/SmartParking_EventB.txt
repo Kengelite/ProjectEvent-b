@@ -1,0 +1,217 @@
+CONTEXT SmartParkingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Driver, ParkingGate, ParkingServer
+    requestEntry_1, checkSlot_2, slotStatus_3, openGate_4, issueTicket_5, logEntry_6
+    plateNo, slotInfo, ticketID
+AXIOMS
+    axm1: partition(Objects, {Driver}, {ParkingGate}, {ParkingServer})
+    axm2: partition(Messages, {requestEntry_1}, {checkSlot_2}, {slotStatus_3}, {openGate_4}, {issueTicket_5}, {logEntry_6})
+    axm3: partition(DataMessages, {plateNo}, {slotInfo}, {ticketID})
+END
+
+MACHINE SmartParkingInteractionMachine_1
+SEES SmartParkingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, slotFree, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: slotFree ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: slotFree := 1
+        act9: t_time_2 :∈ 0..3
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_5 :∈ 0..2
+        act13: t_delay_5 := 0
+        act14: t_success_5 := 0
+    END
+
+
+    sendrequestEntry_1
+    WHEN
+        grd1: requestEntry_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestEntry_1}
+        act2: sender := sender ∪ {requestEntry_1 ↦ Driver}
+        act3: receiver := receiver ∪ {requestEntry_1 ↦ ParkingGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestEntry_1 ↦ plateNo}
+        act6: currentMessage := {requestEntry_1}
+    END
+
+    receiverequestEntry_1
+    WHEN
+        grd1: requestEntry_1 ∈ sentMessages
+        grd2: requestEntry_1 ↦ Driver ∈ sender
+        grd3: requestEntry_1 ↦ ParkingGate ∈ receiver
+        grd4: requestEntry_1 ∉ receivedMessages
+        grd5: currentMessage = {requestEntry_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestEntry_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestEntry_1 ↦ plateNo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckSlot_2
+    WHEN
+        grd1: checkSlot_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestEntry_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkSlot_2}
+        act2: sender := sender ∪ {checkSlot_2 ↦ ParkingGate}
+        act3: receiver := receiver ∪ {checkSlot_2 ↦ ParkingServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkSlot_2 ↦ plateNo}
+        act6: currentMessage := {checkSlot_2}
+    END
+
+    receivecheckSlot_2
+    WHEN
+        grd1: checkSlot_2 ∈ sentMessages
+        grd2: checkSlot_2 ↦ ParkingGate ∈ sender
+        grd3: checkSlot_2 ↦ ParkingServer ∈ receiver
+        grd4: checkSlot_2 ∉ receivedMessages
+        grd5: currentMessage = {checkSlot_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkSlot_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkSlot_2 ↦ plateNo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendslotStatus_3
+    WHEN
+        grd1: slotStatus_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkSlot_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {slotStatus_3}
+        act2: sender := sender ∪ {slotStatus_3 ↦ ParkingServer}
+        act3: receiver := receiver ∪ {slotStatus_3 ↦ ParkingGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {slotStatus_3 ↦ slotInfo}
+        act6: currentMessage := {slotStatus_3}
+    END
+
+    receiveslotStatus_3
+    WHEN
+        grd1: slotStatus_3 ∈ sentMessages
+        grd2: slotStatus_3 ↦ ParkingServer ∈ sender
+        grd3: slotStatus_3 ↦ ParkingGate ∈ receiver
+        grd4: slotStatus_3 ∉ receivedMessages
+        grd5: currentMessage = {slotStatus_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {slotStatus_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {slotStatus_3 ↦ slotInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendopenGate_4_opt1
+    WHEN
+        grd1: openGate_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: slotStatus_3 ∈ receivedMessages
+        grd4: slotFree = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {openGate_4}
+        act2: sender := sender ∪ {openGate_4 ↦ ParkingGate}
+        act3: receiver := receiver ∪ {openGate_4 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {openGate_4}
+    END
+
+    receiveopenGate_4_opt1
+    WHEN
+        grd1: openGate_4 ∈ sentMessages
+        grd2: openGate_4 ↦ ParkingGate ∈ sender
+        grd3: openGate_4 ↦ Driver ∈ receiver
+        grd4: openGate_4 ∉ receivedMessages
+        grd5: currentMessage = {openGate_4}
+        grd6: slotFree = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {openGate_4}
+        act2: currentMessage := ∅
+    END
+
+    sendissueTicket_5_opt1
+    WHEN
+        grd1: issueTicket_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: openGate_4 ∈ receivedMessages
+        grd4: slotFree = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueTicket_5}
+        act2: sender := sender ∪ {issueTicket_5 ↦ ParkingGate}
+        act3: receiver := receiver ∪ {issueTicket_5 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueTicket_5 ↦ ticketID}
+        act6: currentMessage := {issueTicket_5}
+    END
+
+    receiveissueTicket_5_opt1
+    WHEN
+        grd1: issueTicket_5 ∈ sentMessages
+        grd2: issueTicket_5 ↦ ParkingGate ∈ sender
+        grd3: issueTicket_5 ↦ Driver ∈ receiver
+        grd4: issueTicket_5 ∉ receivedMessages
+        grd5: currentMessage = {issueTicket_5}
+        grd6: slotFree = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueTicket_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueTicket_5 ↦ ticketID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendlogEntry_6
+    WHEN
+        grd1: logEntry_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueTicket_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logEntry_6}
+        act2: sender := sender ∪ {logEntry_6 ↦ ParkingGate}
+        act3: receiver := receiver ∪ {logEntry_6 ↦ ParkingServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logEntry_6 ↦ plateNo, logEntry_6 ↦ ticketID}
+        act6: currentMessage := {logEntry_6}
+    END
+
+    receivelogEntry_6
+    WHEN
+        grd1: logEntry_6 ∈ sentMessages
+        grd2: logEntry_6 ↦ ParkingGate ∈ sender
+        grd3: logEntry_6 ↦ ParkingServer ∈ receiver
+        grd4: logEntry_6 ∉ receivedMessages
+        grd5: currentMessage = {logEntry_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logEntry_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logEntry_6 ↦ plateNo, logEntry_6 ↦ ticketID}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,423 @@
+CONTEXT EventCheckInQRContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Attendee, EventServer, ScannerApp
+    releaseBadge_1, syncBadge_2, notifyEntry_3, sendBadge_4, reportEntry_5, updateBadge_6, syncPass_7, fetchBadge_8, reportBadge_9, assignEntry_10, logEntry_11, issuePass_12
+    badgeID, badgeInfo, badgeValue, passCode, passData, passID, passRef, passValue
+AXIOMS
+    axm1: partition(Objects, {Attendee}, {EventServer}, {ScannerApp})
+    axm2: partition(Messages, {releaseBadge_1}, {syncBadge_2}, {notifyEntry_3}, {sendBadge_4}, {reportEntry_5}, {updateBadge_6}, {syncPass_7}, {fetchBadge_8}, {reportBadge_9}, {assignEntry_10}, {logEntry_11}, {issuePass_12})
+    axm3: partition(DataMessages, {badgeID}, {badgeInfo}, {badgeValue}, {passCode}, {passData}, {passID}, {passRef}, {passValue})
+END
+
+MACHINE EventCheckInQRInteractionMachine_1
+SEES EventCheckInQRContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, withExtra, t_time_1, t_delay_1, t_success_1, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: withExtra ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_8 ∈ ℤ
+    inv14: t_delay_8 ∈ ℤ
+    inv15: t_success_8 ∈ ℤ
+    inv16: t_time_9 ∈ ℤ
+    inv17: t_delay_9 ∈ ℤ
+    inv18: t_success_9 ∈ ℤ
+    inv19: t_time_10 ∈ ℤ
+    inv20: t_delay_10 ∈ ℤ
+    inv21: t_success_10 ∈ ℤ
+    inv22: t_time_12 ∈ ℤ
+    inv23: t_delay_12 ∈ ℤ
+    inv24: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: withExtra := 1
+        act10: t_time_1 :∈ 0..20
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_8 :∈ 0..10
+        act14: t_delay_8 := 0
+        act15: t_success_8 := 0
+        act16: t_time_9 :∈ 0..10
+        act17: t_delay_9 := 0
+        act18: t_success_9 := 0
+        act19: t_time_10 :∈ 0..30
+        act20: t_delay_10 := 0
+        act21: t_success_10 := 0
+        act22: t_time_12 :∈ 60..6
+        act23: t_delay_12 := 0
+        act24: t_success_12 := 0
+    END
+
+
+    sendreleaseBadge_1
+    WHEN
+        grd1: releaseBadge_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseBadge_1}
+        act2: sender := sender ∪ {releaseBadge_1 ↦ ScannerApp}
+        act3: receiver := receiver ∪ {releaseBadge_1 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseBadge_1 ↦ badgeInfo}
+        act6: currentMessage := {releaseBadge_1}
+    END
+
+    receivereleaseBadge_1
+    WHEN
+        grd1: releaseBadge_1 ∈ sentMessages
+        grd2: releaseBadge_1 ↦ ScannerApp ∈ sender
+        grd3: releaseBadge_1 ↦ Attendee ∈ receiver
+        grd4: releaseBadge_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseBadge_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseBadge_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseBadge_1 ↦ badgeInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendsyncBadge_2
+    WHEN
+        grd1: syncBadge_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseBadge_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncBadge_2}
+        act2: sender := sender ∪ {syncBadge_2 ↦ EventServer}
+        act3: receiver := receiver ∪ {syncBadge_2 ↦ ScannerApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncBadge_2}
+    END
+
+    receivesyncBadge_2
+    WHEN
+        grd1: syncBadge_2 ∈ sentMessages
+        grd2: syncBadge_2 ↦ EventServer ∈ sender
+        grd3: syncBadge_2 ↦ ScannerApp ∈ receiver
+        grd4: syncBadge_2 ∉ receivedMessages
+        grd5: currentMessage = {syncBadge_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncBadge_2}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyEntry_3
+    WHEN
+        grd1: notifyEntry_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncBadge_2 ∈ receivedMessages
+        grd4: passNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyEntry_3}
+        act2: sender := sender ∪ {notifyEntry_3 ↦ EventServer}
+        act3: receiver := receiver ∪ {notifyEntry_3 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyEntry_3 ↦ badgeID, notifyEntry_3 ↦ passID}
+        act6: currentMessage := {notifyEntry_3}
+    END
+
+    receivenotifyEntry_3
+    WHEN
+        grd1: notifyEntry_3 ∈ sentMessages
+        grd2: notifyEntry_3 ↦ EventServer ∈ sender
+        grd3: notifyEntry_3 ↦ Attendee ∈ receiver
+        grd4: notifyEntry_3 ∉ receivedMessages
+        grd5: currentMessage = {notifyEntry_3}
+        grd6: passNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyEntry_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyEntry_3 ↦ badgeID, notifyEntry_3 ↦ passID}
+        act3: currentMessage := ∅
+    END
+
+    sendsendBadge_4
+    WHEN
+        grd1: sendBadge_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyEntry_3 ∈ receivedMessages
+        grd4: passNo < 8
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendBadge_4}
+        act2: sender := sender ∪ {sendBadge_4 ↦ EventServer}
+        act3: receiver := receiver ∪ {sendBadge_4 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendBadge_4 ↦ badgeValue}
+        act6: currentMessage := {sendBadge_4}
+    END
+
+    receivesendBadge_4
+    WHEN
+        grd1: sendBadge_4 ∈ sentMessages
+        grd2: sendBadge_4 ↦ EventServer ∈ sender
+        grd3: sendBadge_4 ↦ Attendee ∈ receiver
+        grd4: sendBadge_4 ∉ receivedMessages
+        grd5: currentMessage = {sendBadge_4}
+        grd6: passNo < 8
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendBadge_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendBadge_4 ↦ badgeValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreportEntry_5
+    WHEN
+        grd1: reportEntry_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendBadge_4 ∈ receivedMessages
+        grd4: passNo < 8
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportEntry_5}
+        act2: sender := sender ∪ {reportEntry_5 ↦ EventServer}
+        act3: receiver := receiver ∪ {reportEntry_5 ↦ ScannerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportEntry_5 ↦ passData}
+        act6: currentMessage := {reportEntry_5}
+    END
+
+    receivereportEntry_5
+    WHEN
+        grd1: reportEntry_5 ∈ sentMessages
+        grd2: reportEntry_5 ↦ EventServer ∈ sender
+        grd3: reportEntry_5 ↦ ScannerApp ∈ receiver
+        grd4: reportEntry_5 ∉ receivedMessages
+        grd5: currentMessage = {reportEntry_5}
+        grd6: passNo < 8
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportEntry_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportEntry_5 ↦ passData}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateBadge_6
+    WHEN
+        grd1: updateBadge_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyEntry_3 ∈ receivedMessages
+        grd4: passNo < 8
+        grd5: passNo mod 4 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateBadge_6}
+        act2: sender := sender ∪ {updateBadge_6 ↦ EventServer}
+        act3: receiver := receiver ∪ {updateBadge_6 ↦ ScannerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateBadge_6 ↦ badgeInfo}
+        act6: currentMessage := {updateBadge_6}
+    END
+
+    receiveupdateBadge_6
+    WHEN
+        grd1: updateBadge_6 ∈ sentMessages
+        grd2: updateBadge_6 ↦ EventServer ∈ sender
+        grd3: updateBadge_6 ↦ ScannerApp ∈ receiver
+        grd4: updateBadge_6 ∉ receivedMessages
+        grd5: currentMessage = {updateBadge_6}
+        grd6: passNo < 8
+        grd7: passNo mod 4 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateBadge_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateBadge_6 ↦ badgeInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncPass_7
+    WHEN
+        grd1: syncPass_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportEntry_5 ∈ receivedMessages ∨ updateBadge_6 ∈ receivedMessages
+        grd4: passNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPass_7}
+        act2: sender := sender ∪ {syncPass_7 ↦ ScannerApp}
+        act3: receiver := receiver ∪ {syncPass_7 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncPass_7 ↦ passCode}
+        act6: currentMessage := {syncPass_7}
+    END
+
+    receivesyncPass_7
+    WHEN
+        grd1: syncPass_7 ∈ sentMessages
+        grd2: syncPass_7 ↦ ScannerApp ∈ sender
+        grd3: syncPass_7 ↦ Attendee ∈ receiver
+        grd4: syncPass_7 ∉ receivedMessages
+        grd5: currentMessage = {syncPass_7}
+        grd6: passNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPass_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncPass_7 ↦ passCode}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchBadge_8
+    WHEN
+        grd1: fetchBadge_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncPass_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchBadge_8}
+        act2: sender := sender ∪ {fetchBadge_8 ↦ EventServer}
+        act3: receiver := receiver ∪ {fetchBadge_8 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchBadge_8}
+    END
+
+    receivefetchBadge_8
+    WHEN
+        grd1: fetchBadge_8 ∈ sentMessages
+        grd2: fetchBadge_8 ↦ EventServer ∈ sender
+        grd3: fetchBadge_8 ↦ Attendee ∈ receiver
+        grd4: fetchBadge_8 ∉ receivedMessages
+        grd5: currentMessage = {fetchBadge_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchBadge_8}
+        act2: currentMessage := ∅
+        act3: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendreportBadge_9
+    WHEN
+        grd1: reportBadge_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchBadge_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportBadge_9}
+        act2: sender := sender ∪ {reportBadge_9 ↦ EventServer}
+        act3: receiver := receiver ∪ {reportBadge_9 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportBadge_9 ↦ passRef}
+        act6: currentMessage := {reportBadge_9}
+    END
+
+    receivereportBadge_9
+    WHEN
+        grd1: reportBadge_9 ∈ sentMessages
+        grd2: reportBadge_9 ↦ EventServer ∈ sender
+        grd3: reportBadge_9 ↦ Attendee ∈ receiver
+        grd4: reportBadge_9 ∉ receivedMessages
+        grd5: currentMessage = {reportBadge_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportBadge_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportBadge_9 ↦ passRef}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendassignEntry_10_opt1
+    WHEN
+        grd1: assignEntry_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportBadge_9 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignEntry_10}
+        act2: sender := sender ∪ {assignEntry_10 ↦ EventServer}
+        act3: receiver := receiver ∪ {assignEntry_10 ↦ Attendee}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignEntry_10 ↦ passValue}
+        act6: currentMessage := {assignEntry_10}
+    END
+
+    receiveassignEntry_10_opt1
+    WHEN
+        grd1: assignEntry_10 ∈ sentMessages
+        grd2: assignEntry_10 ↦ EventServer ∈ sender
+        grd3: assignEntry_10 ↦ Attendee ∈ receiver
+        grd4: assignEntry_10 ∉ receivedMessages
+        grd5: currentMessage = {assignEntry_10}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignEntry_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignEntry_10 ↦ passValue}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendlogEntry_11_opt1
+    WHEN
+        grd1: logEntry_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignEntry_10 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logEntry_11}
+        act2: sender := sender ∪ {logEntry_11 ↦ Attendee}
+        act3: receiver := receiver ∪ {logEntry_11 ↦ ScannerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logEntry_11 ↦ badgeInfo}
+        act6: currentMessage := {logEntry_11}
+    END
+
+    receivelogEntry_11_opt1
+    WHEN
+        grd1: logEntry_11 ∈ sentMessages
+        grd2: logEntry_11 ↦ Attendee ∈ sender
+        grd3: logEntry_11 ↦ ScannerApp ∈ receiver
+        grd4: logEntry_11 ∉ receivedMessages
+        grd5: currentMessage = {logEntry_11}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logEntry_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logEntry_11 ↦ badgeInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendissuePass_12
+    WHEN
+        grd1: issuePass_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logEntry_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issuePass_12}
+        act2: sender := sender ∪ {issuePass_12 ↦ ScannerApp}
+        act3: receiver := receiver ∪ {issuePass_12 ↦ EventServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issuePass_12 ↦ passValue}
+        act6: currentMessage := {issuePass_12}
+    END
+
+    receiveissuePass_12
+    WHEN
+        grd1: issuePass_12 ∈ sentMessages
+        grd2: issuePass_12 ↦ ScannerApp ∈ sender
+        grd3: issuePass_12 ↦ EventServer ∈ receiver
+        grd4: issuePass_12 ∉ receivedMessages
+        grd5: currentMessage = {issuePass_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issuePass_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issuePass_12 ↦ passValue}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    checkloop_notifyEntry_3_loop1
+    WHEN
+        grd1: passNo < 8
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

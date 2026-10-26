@@ -1,0 +1,257 @@
+CONTEXT TelemedicineVisitContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Patient, TeleApp
+    issuePrescription_1, confirmPrescription_2, updateVisit_3, schedulePrescription_4, requestVisit_5, syncPrescription_6, sendNote_7
+    noteInfo, noteRef, prescriptionInfo, visitValue
+AXIOMS
+    axm1: partition(Objects, {Patient}, {TeleApp})
+    axm2: partition(Messages, {issuePrescription_1}, {confirmPrescription_2}, {updateVisit_3}, {schedulePrescription_4}, {requestVisit_5}, {syncPrescription_6}, {sendNote_7})
+    axm3: partition(DataMessages, {noteInfo}, {noteRef}, {prescriptionInfo}, {visitValue})
+END
+
+MACHINE TelemedicineVisitInteractionMachine_1
+SEES TelemedicineVisitContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, stepNo, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: stepNo ∈ ℤ
+    inv9: t_time_6 ∈ ℤ
+    inv10: t_delay_6 ∈ ℤ
+    inv11: t_success_6 ∈ ℤ
+    inv12: t_time_7 ∈ ℤ
+    inv13: t_delay_7 ∈ ℤ
+    inv14: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: stepNo := 0
+        act9: t_time_6 :∈ 0..2
+        act10: t_delay_6 := 0
+        act11: t_success_6 := 0
+        act12: t_time_7 :∈ 0..8
+        act13: t_delay_7 := 0
+        act14: t_success_7 := 0
+    END
+
+
+    sendissuePrescription_1
+    WHEN
+        grd1: issuePrescription_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {issuePrescription_1}
+        act2: sender := sender ∪ {issuePrescription_1 ↦ Patient}
+        act3: receiver := receiver ∪ {issuePrescription_1 ↦ TeleApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issuePrescription_1}
+    END
+
+    receiveissuePrescription_1
+    WHEN
+        grd1: issuePrescription_1 ∈ sentMessages
+        grd2: issuePrescription_1 ↦ Patient ∈ sender
+        grd3: issuePrescription_1 ↦ TeleApp ∈ receiver
+        grd4: issuePrescription_1 ∉ receivedMessages
+        grd5: currentMessage = {issuePrescription_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issuePrescription_1}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmPrescription_2
+    WHEN
+        grd1: confirmPrescription_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePrescription_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPrescription_2}
+        act2: sender := sender ∪ {confirmPrescription_2 ↦ Patient}
+        act3: receiver := receiver ∪ {confirmPrescription_2 ↦ TeleApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmPrescription_2 ↦ visitValue}
+        act6: currentMessage := {confirmPrescription_2}
+    END
+
+    receiveconfirmPrescription_2
+    WHEN
+        grd1: confirmPrescription_2 ∈ sentMessages
+        grd2: confirmPrescription_2 ↦ Patient ∈ sender
+        grd3: confirmPrescription_2 ↦ TeleApp ∈ receiver
+        grd4: confirmPrescription_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmPrescription_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPrescription_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmPrescription_2 ↦ visitValue}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateVisit_3
+    WHEN
+        grd1: updateVisit_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPrescription_2 ∈ receivedMessages
+        grd4: stepNo < 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateVisit_3}
+        act2: sender := sender ∪ {updateVisit_3 ↦ Patient}
+        act3: receiver := receiver ∪ {updateVisit_3 ↦ TeleApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateVisit_3 ↦ noteRef}
+        act6: currentMessage := {updateVisit_3}
+    END
+
+    receiveupdateVisit_3
+    WHEN
+        grd1: updateVisit_3 ∈ sentMessages
+        grd2: updateVisit_3 ↦ Patient ∈ sender
+        grd3: updateVisit_3 ↦ TeleApp ∈ receiver
+        grd4: updateVisit_3 ∉ receivedMessages
+        grd5: currentMessage = {updateVisit_3}
+        grd6: stepNo < 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateVisit_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateVisit_3 ↦ noteRef}
+        act3: currentMessage := ∅
+    END
+
+    sendschedulePrescription_4
+    WHEN
+        grd1: schedulePrescription_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateVisit_3 ∈ receivedMessages
+        grd4: stepNo < 2
+        grd5: stepNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePrescription_4}
+        act2: sender := sender ∪ {schedulePrescription_4 ↦ Patient}
+        act3: receiver := receiver ∪ {schedulePrescription_4 ↦ TeleApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {schedulePrescription_4 ↦ visitValue}
+        act6: currentMessage := {schedulePrescription_4}
+    END
+
+    receiveschedulePrescription_4
+    WHEN
+        grd1: schedulePrescription_4 ∈ sentMessages
+        grd2: schedulePrescription_4 ↦ Patient ∈ sender
+        grd3: schedulePrescription_4 ↦ TeleApp ∈ receiver
+        grd4: schedulePrescription_4 ∉ receivedMessages
+        grd5: currentMessage = {schedulePrescription_4}
+        grd6: stepNo < 2
+        grd7: stepNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePrescription_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {schedulePrescription_4 ↦ visitValue}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestVisit_5
+    WHEN
+        grd1: requestVisit_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateVisit_3 ∈ receivedMessages
+        grd4: stepNo < 2
+        grd5: stepNo mod 2 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestVisit_5}
+        act2: sender := sender ∪ {requestVisit_5 ↦ TeleApp}
+        act3: receiver := receiver ∪ {requestVisit_5 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestVisit_5 ↦ prescriptionInfo}
+        act6: currentMessage := {requestVisit_5}
+    END
+
+    receiverequestVisit_5
+    WHEN
+        grd1: requestVisit_5 ∈ sentMessages
+        grd2: requestVisit_5 ↦ TeleApp ∈ sender
+        grd3: requestVisit_5 ↦ Patient ∈ receiver
+        grd4: requestVisit_5 ∉ receivedMessages
+        grd5: currentMessage = {requestVisit_5}
+        grd6: stepNo < 2
+        grd7: stepNo mod 2 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestVisit_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestVisit_5 ↦ prescriptionInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncPrescription_6
+    WHEN
+        grd1: syncPrescription_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePrescription_4 ∈ receivedMessages ∨ requestVisit_5 ∈ receivedMessages
+        grd4: stepNo < 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPrescription_6}
+        act2: sender := sender ∪ {syncPrescription_6 ↦ TeleApp}
+        act3: receiver := receiver ∪ {syncPrescription_6 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncPrescription_6 ↦ noteInfo}
+        act6: currentMessage := {syncPrescription_6}
+    END
+
+    receivesyncPrescription_6
+    WHEN
+        grd1: syncPrescription_6 ∈ sentMessages
+        grd2: syncPrescription_6 ↦ TeleApp ∈ sender
+        grd3: syncPrescription_6 ↦ Patient ∈ receiver
+        grd4: syncPrescription_6 ∉ receivedMessages
+        grd5: currentMessage = {syncPrescription_6}
+        grd6: stepNo < 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPrescription_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncPrescription_6 ↦ noteInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendsendNote_7
+    WHEN
+        grd1: sendNote_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncPrescription_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendNote_7}
+        act2: sender := sender ∪ {sendNote_7 ↦ Patient}
+        act3: receiver := receiver ∪ {sendNote_7 ↦ TeleApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendNote_7}
+    END
+
+    receivesendNote_7
+    WHEN
+        grd1: sendNote_7 ∈ sentMessages
+        grd2: sendNote_7 ↦ Patient ∈ sender
+        grd3: sendNote_7 ↦ TeleApp ∈ receiver
+        grd4: sendNote_7 ∉ receivedMessages
+        grd5: currentMessage = {sendNote_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendNote_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    checkloop_updateVisit_3_loop1
+    WHEN
+        grd1: stepNo < 2
+    THEN
+        act1: stepNo := stepNo + 1
+    END
+
+END

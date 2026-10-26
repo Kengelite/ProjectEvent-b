@@ -1,0 +1,426 @@
+CONTEXT ForestFireSensorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FireCenter, FireSensor, LoRaGateway
+    releaseAlert_1, schedulePatrol_2, syncPatrol_3, cancelAlert_4, issueSmoke_5, notifyAlert_6, reserveAlert_7, validateSmoke_8, checkAlert_9, assignAlert_10, scheduleSmoke_11, queryPatrol_12
+    alertData, alertID, alertInfo, patrolID, smokeCode, smokeData, smokeID, smokeRef
+    AUTO, MANUAL
+AXIOMS
+    axm1: partition(Objects, {FireCenter}, {FireSensor}, {LoRaGateway})
+    axm2: partition(Messages, {releaseAlert_1}, {schedulePatrol_2}, {syncPatrol_3}, {cancelAlert_4}, {issueSmoke_5}, {notifyAlert_6}, {reserveAlert_7}, {validateSmoke_8}, {checkAlert_9}, {assignAlert_10}, {scheduleSmoke_11}, {queryPatrol_12})
+    axm3: partition(DataMessages, {alertData}, {alertID}, {alertInfo}, {patrolID}, {smokeCode}, {smokeData}, {smokeID}, {smokeRef})
+    axm4: AUTO = 0
+    axm5: MANUAL = 1
+END
+
+MACHINE ForestFireSensorInteractionMachine_1
+SEES ForestFireSensorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, grade, t_obs, retryNo, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: grade ∈ ℤ
+    inv9: t_obs ∈ ℤ
+    inv10: retryNo ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+    inv23: t_time_9 ∈ ℤ
+    inv24: t_delay_9 ∈ ℤ
+    inv25: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: grade := AUTO
+        act9: t_obs := 0
+        act10: retryNo := 0
+        act11: t_time_2 :∈ 0..10
+        act12: t_delay_2 := 10
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..8
+        act15: t_delay_3 := 3
+        act16: t_success_3 := 0
+        act17: t_time_6 :∈ 30..6
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+        act20: t_time_7 :∈ 5..3
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+        act23: t_time_9 :∈ 0..0
+        act24: t_delay_9 := 3
+        act25: t_success_9 := 0
+    END
+
+
+    sendreleaseAlert_1
+    WHEN
+        grd1: releaseAlert_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseAlert_1}
+        act2: sender := sender ∪ {releaseAlert_1 ↦ FireCenter}
+        act3: receiver := receiver ∪ {releaseAlert_1 ↦ FireSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseAlert_1 ↦ smokeID}
+        act6: currentMessage := {releaseAlert_1}
+    END
+
+    receivereleaseAlert_1
+    WHEN
+        grd1: releaseAlert_1 ∈ sentMessages
+        grd2: releaseAlert_1 ↦ FireCenter ∈ sender
+        grd3: releaseAlert_1 ↦ FireSensor ∈ receiver
+        grd4: releaseAlert_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseAlert_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseAlert_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseAlert_1 ↦ smokeID}
+        act3: currentMessage := ∅
+    END
+
+    sendschedulePatrol_2
+    WHEN
+        grd1: schedulePatrol_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseAlert_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePatrol_2}
+        act2: sender := sender ∪ {schedulePatrol_2 ↦ FireSensor}
+        act3: receiver := receiver ∪ {schedulePatrol_2 ↦ LoRaGateway}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {schedulePatrol_2}
+    END
+
+    receiveschedulePatrol_2
+    WHEN
+        grd1: schedulePatrol_2 ∈ sentMessages
+        grd2: schedulePatrol_2 ↦ FireSensor ∈ sender
+        grd3: schedulePatrol_2 ↦ LoRaGateway ∈ receiver
+        grd4: schedulePatrol_2 ∉ receivedMessages
+        grd5: currentMessage = {schedulePatrol_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePatrol_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsyncPatrol_3
+    WHEN
+        grd1: syncPatrol_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePatrol_2 ∈ receivedMessages
+        grd4: grade = MANUAL
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPatrol_3}
+        act2: sender := sender ∪ {syncPatrol_3 ↦ LoRaGateway}
+        act3: receiver := receiver ∪ {syncPatrol_3 ↦ FireSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncPatrol_3}
+    END
+
+    receivesyncPatrol_3
+    WHEN
+        grd1: syncPatrol_3 ∈ sentMessages
+        grd2: syncPatrol_3 ↦ LoRaGateway ∈ sender
+        grd3: syncPatrol_3 ↦ FireSensor ∈ receiver
+        grd4: syncPatrol_3 ∉ receivedMessages
+        grd5: currentMessage = {syncPatrol_3}
+        grd6: grade = MANUAL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPatrol_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcancelAlert_4
+    WHEN
+        grd1: cancelAlert_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePatrol_2 ∈ receivedMessages
+        grd4: grade = AUTO
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelAlert_4}
+        act2: sender := sender ∪ {cancelAlert_4 ↦ LoRaGateway}
+        act3: receiver := receiver ∪ {cancelAlert_4 ↦ FireCenter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelAlert_4}
+    END
+
+    receivecancelAlert_4
+    WHEN
+        grd1: cancelAlert_4 ∈ sentMessages
+        grd2: cancelAlert_4 ↦ LoRaGateway ∈ sender
+        grd3: cancelAlert_4 ↦ FireCenter ∈ receiver
+        grd4: cancelAlert_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelAlert_4}
+        grd6: grade = AUTO
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelAlert_4}
+        act2: currentMessage := ∅
+    END
+
+    sendissueSmoke_5
+    WHEN
+        grd1: issueSmoke_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncPatrol_3 ∈ receivedMessages ∨ cancelAlert_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSmoke_5}
+        act2: sender := sender ∪ {issueSmoke_5 ↦ FireCenter}
+        act3: receiver := receiver ∪ {issueSmoke_5 ↦ FireSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueSmoke_5 ↦ smokeID}
+        act6: currentMessage := {issueSmoke_5}
+    END
+
+    receiveissueSmoke_5
+    WHEN
+        grd1: issueSmoke_5 ∈ sentMessages
+        grd2: issueSmoke_5 ↦ FireCenter ∈ sender
+        grd3: issueSmoke_5 ↦ FireSensor ∈ receiver
+        grd4: issueSmoke_5 ∉ receivedMessages
+        grd5: currentMessage = {issueSmoke_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSmoke_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueSmoke_5 ↦ smokeID}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyAlert_6
+    WHEN
+        grd1: notifyAlert_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueSmoke_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyAlert_6}
+        act2: sender := sender ∪ {notifyAlert_6 ↦ FireCenter}
+        act3: receiver := receiver ∪ {notifyAlert_6 ↦ FireSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyAlert_6 ↦ smokeRef}
+        act6: currentMessage := {notifyAlert_6}
+    END
+
+    receivenotifyAlert_6
+    WHEN
+        grd1: notifyAlert_6 ∈ sentMessages
+        grd2: notifyAlert_6 ↦ FireCenter ∈ sender
+        grd3: notifyAlert_6 ↦ FireSensor ∈ receiver
+        grd4: notifyAlert_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyAlert_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyAlert_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyAlert_6 ↦ smokeRef}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+        act5: t_obs := t_time_6 + t_delay_6
+    END
+
+    sendreserveAlert_7
+    WHEN
+        grd1: reserveAlert_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyAlert_6 ∈ receivedMessages
+        grd4: t_obs ≤ 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveAlert_7}
+        act2: sender := sender ∪ {reserveAlert_7 ↦ FireCenter}
+        act3: receiver := receiver ∪ {reserveAlert_7 ↦ FireSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveAlert_7 ↦ smokeRef}
+        act6: currentMessage := {reserveAlert_7}
+    END
+
+    receivereserveAlert_7
+    WHEN
+        grd1: reserveAlert_7 ∈ sentMessages
+        grd2: reserveAlert_7 ↦ FireCenter ∈ sender
+        grd3: reserveAlert_7 ↦ FireSensor ∈ receiver
+        grd4: reserveAlert_7 ∉ receivedMessages
+        grd5: currentMessage = {reserveAlert_7}
+        grd6: t_obs ≤ 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveAlert_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveAlert_7 ↦ smokeRef}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendvalidateSmoke_8
+    WHEN
+        grd1: validateSmoke_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveAlert_7 ∈ receivedMessages
+        grd4: t_obs ≤ 3
+        grd5: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSmoke_8}
+        act2: sender := sender ∪ {validateSmoke_8 ↦ FireSensor}
+        act3: receiver := receiver ∪ {validateSmoke_8 ↦ LoRaGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateSmoke_8 ↦ alertInfo, validateSmoke_8 ↦ patrolID}
+        act6: currentMessage := {validateSmoke_8}
+    END
+
+    receivevalidateSmoke_8
+    WHEN
+        grd1: validateSmoke_8 ∈ sentMessages
+        grd2: validateSmoke_8 ↦ FireSensor ∈ sender
+        grd3: validateSmoke_8 ↦ LoRaGateway ∈ receiver
+        grd4: validateSmoke_8 ∉ receivedMessages
+        grd5: currentMessage = {validateSmoke_8}
+        grd6: t_obs ≤ 3
+        grd7: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSmoke_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateSmoke_8 ↦ alertInfo, validateSmoke_8 ↦ patrolID}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckAlert_9
+    WHEN
+        grd1: checkAlert_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateSmoke_8 ∈ receivedMessages
+        grd4: t_obs ≤ 3
+        grd5: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkAlert_9}
+        act2: sender := sender ∪ {checkAlert_9 ↦ LoRaGateway}
+        act3: receiver := receiver ∪ {checkAlert_9 ↦ FireCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkAlert_9 ↦ alertID}
+        act6: currentMessage := {checkAlert_9}
+    END
+
+    receivecheckAlert_9
+    WHEN
+        grd1: checkAlert_9 ∈ sentMessages
+        grd2: checkAlert_9 ↦ LoRaGateway ∈ sender
+        grd3: checkAlert_9 ↦ FireCenter ∈ receiver
+        grd4: checkAlert_9 ∉ receivedMessages
+        grd5: currentMessage = {checkAlert_9}
+        grd6: t_obs ≤ 3
+        grd7: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkAlert_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkAlert_9 ↦ alertID}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendassignAlert_10
+    WHEN
+        grd1: assignAlert_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkAlert_9 ∈ receivedMessages
+        grd4: t_obs ≤ 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignAlert_10}
+        act2: sender := sender ∪ {assignAlert_10 ↦ FireSensor}
+        act3: receiver := receiver ∪ {assignAlert_10 ↦ LoRaGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignAlert_10 ↦ smokeCode, assignAlert_10 ↦ smokeID}
+        act6: currentMessage := {assignAlert_10}
+    END
+
+    receiveassignAlert_10
+    WHEN
+        grd1: assignAlert_10 ∈ sentMessages
+        grd2: assignAlert_10 ↦ FireSensor ∈ sender
+        grd3: assignAlert_10 ↦ LoRaGateway ∈ receiver
+        grd4: assignAlert_10 ∉ receivedMessages
+        grd5: currentMessage = {assignAlert_10}
+        grd6: t_obs ≤ 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignAlert_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignAlert_10 ↦ smokeCode, assignAlert_10 ↦ smokeID}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleSmoke_11
+    WHEN
+        grd1: scheduleSmoke_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyAlert_6 ∈ receivedMessages
+        grd4: t_obs > 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSmoke_11}
+        act2: sender := sender ∪ {scheduleSmoke_11 ↦ FireSensor}
+        act3: receiver := receiver ∪ {scheduleSmoke_11 ↦ FireCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSmoke_11 ↦ alertData}
+        act6: currentMessage := {scheduleSmoke_11}
+    END
+
+    receivescheduleSmoke_11
+    WHEN
+        grd1: scheduleSmoke_11 ∈ sentMessages
+        grd2: scheduleSmoke_11 ↦ FireSensor ∈ sender
+        grd3: scheduleSmoke_11 ↦ FireCenter ∈ receiver
+        grd4: scheduleSmoke_11 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSmoke_11}
+        grd6: t_obs > 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSmoke_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSmoke_11 ↦ alertData}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryPatrol_12
+    WHEN
+        grd1: queryPatrol_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignAlert_10 ∈ receivedMessages ∨ scheduleSmoke_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryPatrol_12}
+        act2: sender := sender ∪ {queryPatrol_12 ↦ FireSensor}
+        act3: receiver := receiver ∪ {queryPatrol_12 ↦ LoRaGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryPatrol_12 ↦ smokeData}
+        act6: currentMessage := {queryPatrol_12}
+    END
+
+    receivequeryPatrol_12
+    WHEN
+        grd1: queryPatrol_12 ∈ sentMessages
+        grd2: queryPatrol_12 ↦ FireSensor ∈ sender
+        grd3: queryPatrol_12 ↦ LoRaGateway ∈ receiver
+        grd4: queryPatrol_12 ∉ receivedMessages
+        grd5: currentMessage = {queryPatrol_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryPatrol_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryPatrol_12 ↦ smokeData}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_validateSmoke_8_loop1
+    WHEN
+        grd1: t_obs ≤ 3
+        grd2: retryNo < 11
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="SmartFridgeInventory" id="smartfridgeinventory">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="loop" vertex="1">
+          <mxGeometry x="20" y="215" width="640" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="45" y="300" width="590" height="205" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="loop" vertex="1">
+          <mxGeometry x="20" y="685" width="640" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="45" y="422" width="590" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+2}" vertex="1">
+          <mxGeometry x="435" y="122" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[attemptNo &lt; 2]" vertex="1">
+          <mxGeometry x="105" y="220" width="135" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[tier == GREEN]" vertex="1">
+          <mxGeometry x="130" y="305" width="135" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t8" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[tier == RED]" vertex="1">
+          <mxGeometry x="130" y="435" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t9" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+3}" vertex="1">
+          <mxGeometry x="310" y="532" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t10" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[stepNo &lt; 11]" vertex="1">
+          <mxGeometry x="105" y="690" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll11" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Fridge" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="815" as="geometry" />
+        </mxCell>
+        <mxCell id="ll12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="HomeApp" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="815" as="geometry" />
+        </mxCell>
+        <mxCell id="ll13" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="GroceryAPI" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="815" as="geometry" />
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="approveOrder(expiryID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="130" as="sourcePoint" />
+            <mxPoint x="590.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="assignExpiry(orderData) {0..15}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="180" as="sourcePoint" />
+            <mxPoint x="590.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendOrder() {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="265" as="sourcePoint" />
+            <mxPoint x="340.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="assignItem(orderValue)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="350" as="sourcePoint" />
+            <mxPoint x="590.0" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="scheduleOrder() {0..8}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="400" as="sourcePoint" />
+            <mxPoint x="340.0" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="logOrder(itemData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="480" as="sourcePoint" />
+            <mxPoint x="590.0" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="approveExpiry(orderRef) {0..8}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="540" as="sourcePoint" />
+            <mxPoint x="590.0" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="queryItem(itemID) {15..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="600" as="sourcePoint" />
+            <mxPoint x="340.0" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="checkOrder()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="650" as="sourcePoint" />
+            <mxPoint x="340.0" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="issueExpiry(orderData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="735" as="sourcePoint" />
+            <mxPoint x="590.0" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="syncOrder() {8..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="795" as="sourcePoint" />
+            <mxPoint x="590.0" y="795" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

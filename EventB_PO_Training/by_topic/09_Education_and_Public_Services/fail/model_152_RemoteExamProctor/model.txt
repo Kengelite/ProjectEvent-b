@@ -1,0 +1,216 @@
+CONTEXT RemoteExamProctorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Candidate, ExamClient
+    ackExam_1, approveExam_2, scheduleSession_3, requestExam_4, confirmFlag_5, notifyFlag_6
+    examData, examRef, sessionID, sessionInfo
+AXIOMS
+    axm1: partition(Objects, {Candidate}, {ExamClient})
+    axm2: partition(Messages, {ackExam_1}, {approveExam_2}, {scheduleSession_3}, {requestExam_4}, {confirmFlag_5}, {notifyFlag_6})
+    axm3: partition(DataMessages, {examData}, {examRef}, {sessionID}, {sessionInfo})
+END
+
+MACHINE RemoteExamProctorInteractionMachine_1
+SEES RemoteExamProctorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..20
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 30..18
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_6 :∈ 15..6
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendackExam_1
+    WHEN
+        grd1: ackExam_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackExam_1}
+        act2: sender := sender ∪ {ackExam_1 ↦ Candidate}
+        act3: receiver := receiver ∪ {ackExam_1 ↦ ExamClient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackExam_1}
+    END
+
+    receiveackExam_1
+    WHEN
+        grd1: ackExam_1 ∈ sentMessages
+        grd2: ackExam_1 ↦ Candidate ∈ sender
+        grd3: ackExam_1 ↦ ExamClient ∈ receiver
+        grd4: ackExam_1 ∉ receivedMessages
+        grd5: currentMessage = {ackExam_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackExam_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendapproveExam_2
+    WHEN
+        grd1: approveExam_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackExam_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveExam_2}
+        act2: sender := sender ∪ {approveExam_2 ↦ ExamClient}
+        act3: receiver := receiver ∪ {approveExam_2 ↦ Candidate}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveExam_2}
+    END
+
+    receiveapproveExam_2
+    WHEN
+        grd1: approveExam_2 ∈ sentMessages
+        grd2: approveExam_2 ↦ ExamClient ∈ sender
+        grd3: approveExam_2 ↦ Candidate ∈ receiver
+        grd4: approveExam_2 ∉ receivedMessages
+        grd5: currentMessage = {approveExam_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveExam_2}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleSession_3
+    WHEN
+        grd1: scheduleSession_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveExam_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSession_3}
+        act2: sender := sender ∪ {scheduleSession_3 ↦ ExamClient}
+        act3: receiver := receiver ∪ {scheduleSession_3 ↦ Candidate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSession_3 ↦ examData, scheduleSession_3 ↦ sessionID}
+        act6: currentMessage := {scheduleSession_3}
+    END
+
+    receivescheduleSession_3
+    WHEN
+        grd1: scheduleSession_3 ∈ sentMessages
+        grd2: scheduleSession_3 ↦ ExamClient ∈ sender
+        grd3: scheduleSession_3 ↦ Candidate ∈ receiver
+        grd4: scheduleSession_3 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSession_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSession_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSession_3 ↦ examData, scheduleSession_3 ↦ sessionID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendrequestExam_4
+    WHEN
+        grd1: requestExam_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSession_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestExam_4}
+        act2: sender := sender ∪ {requestExam_4 ↦ Candidate}
+        act3: receiver := receiver ∪ {requestExam_4 ↦ ExamClient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestExam_4}
+    END
+
+    receiverequestExam_4
+    WHEN
+        grd1: requestExam_4 ∈ sentMessages
+        grd2: requestExam_4 ↦ Candidate ∈ sender
+        grd3: requestExam_4 ↦ ExamClient ∈ receiver
+        grd4: requestExam_4 ∉ receivedMessages
+        grd5: currentMessage = {requestExam_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestExam_4}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmFlag_5
+    WHEN
+        grd1: confirmFlag_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestExam_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmFlag_5}
+        act2: sender := sender ∪ {confirmFlag_5 ↦ ExamClient}
+        act3: receiver := receiver ∪ {confirmFlag_5 ↦ Candidate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmFlag_5 ↦ examRef}
+        act6: currentMessage := {confirmFlag_5}
+    END
+
+    receiveconfirmFlag_5
+    WHEN
+        grd1: confirmFlag_5 ∈ sentMessages
+        grd2: confirmFlag_5 ↦ ExamClient ∈ sender
+        grd3: confirmFlag_5 ↦ Candidate ∈ receiver
+        grd4: confirmFlag_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmFlag_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmFlag_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmFlag_5 ↦ examRef}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyFlag_6
+    WHEN
+        grd1: notifyFlag_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmFlag_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyFlag_6}
+        act2: sender := sender ∪ {notifyFlag_6 ↦ Candidate}
+        act3: receiver := receiver ∪ {notifyFlag_6 ↦ ExamClient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyFlag_6 ↦ sessionInfo}
+        act6: currentMessage := {notifyFlag_6}
+    END
+
+    receivenotifyFlag_6
+    WHEN
+        grd1: notifyFlag_6 ∈ sentMessages
+        grd2: notifyFlag_6 ↦ Candidate ∈ sender
+        grd3: notifyFlag_6 ↦ ExamClient ∈ receiver
+        grd4: notifyFlag_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyFlag_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyFlag_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyFlag_6 ↦ sessionInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

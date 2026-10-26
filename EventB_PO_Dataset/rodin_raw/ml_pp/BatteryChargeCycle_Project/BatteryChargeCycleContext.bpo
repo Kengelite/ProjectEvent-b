@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="fullReport_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="chargeAck_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="targetSoC" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="BatteryPack" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="startCharge_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="currentA" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="stopCharge_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ChargeController" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="chargePulse_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="voltage" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="cellVoltage_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="finalSoC" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/BatteryChargeCycle_Project/BatteryChargeCycleContext.bpo|org.eventb.core.poFile#BatteryChargeCycleContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{BatteryPack},{ChargeController})" org.eventb.core.source="/BatteryChargeCycle_Project/BatteryChargeCycleContext.buc|org.eventb.core.contextFile#BatteryChargeCycleContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{startCharge_1},{chargeAck_2},{chargePulse_3},{cellVoltage_4},{stopCharge_5},{fullReport_6})" org.eventb.core.source="/BatteryChargeCycle_Project/BatteryChargeCycleContext.buc|org.eventb.core.contextFile#BatteryChargeCycleContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{currentA},{finalSoC},{targetSoC},{voltage})" org.eventb.core.source="/BatteryChargeCycle_Project/BatteryChargeCycleContext.buc|org.eventb.core.contextFile#BatteryChargeCycleContext|org.eventb.core.axiom#internal_element18"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

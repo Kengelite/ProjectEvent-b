@@ -1,0 +1,214 @@
+CONTEXT GarageGateControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Car, EntryGate, GarageServer
+    sendTicket_1, assignTicket_2, reserveTicket_3, reserveFee_4, requestSlot_5, assignFee_6
+    slotCode, ticketData, ticketInfo
+AXIOMS
+    axm1: partition(Objects, {Car}, {EntryGate}, {GarageServer})
+    axm2: partition(Messages, {sendTicket_1}, {assignTicket_2}, {reserveTicket_3}, {reserveFee_4}, {requestSlot_5}, {assignFee_6})
+    axm3: partition(DataMessages, {slotCode}, {ticketData}, {ticketInfo})
+END
+
+MACHINE GarageGateControlInteractionMachine_1
+SEES GarageGateControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..15
+        act9: t_delay_2 := 0
+        act10: t_success_2 := 0
+        act11: t_time_3 :∈ 0..1
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..15
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+    END
+
+
+    sendsendTicket_1
+    WHEN
+        grd1: sendTicket_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendTicket_1}
+        act2: sender := sender ∪ {sendTicket_1 ↦ Car}
+        act3: receiver := receiver ∪ {sendTicket_1 ↦ EntryGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendTicket_1 ↦ ticketInfo}
+        act6: currentMessage := {sendTicket_1}
+    END
+
+    receivesendTicket_1
+    WHEN
+        grd1: sendTicket_1 ∈ sentMessages
+        grd2: sendTicket_1 ↦ Car ∈ sender
+        grd3: sendTicket_1 ↦ EntryGate ∈ receiver
+        grd4: sendTicket_1 ∉ receivedMessages
+        grd5: currentMessage = {sendTicket_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendTicket_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendTicket_1 ↦ ticketInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendassignTicket_2
+    WHEN
+        grd1: assignTicket_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendTicket_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignTicket_2}
+        act2: sender := sender ∪ {assignTicket_2 ↦ EntryGate}
+        act3: receiver := receiver ∪ {assignTicket_2 ↦ Car}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignTicket_2}
+    END
+
+    receiveassignTicket_2
+    WHEN
+        grd1: assignTicket_2 ∈ sentMessages
+        grd2: assignTicket_2 ↦ EntryGate ∈ sender
+        grd3: assignTicket_2 ↦ Car ∈ receiver
+        grd4: assignTicket_2 ∉ receivedMessages
+        grd5: currentMessage = {assignTicket_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignTicket_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveTicket_3
+    WHEN
+        grd1: reserveTicket_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignTicket_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTicket_3}
+        act2: sender := sender ∪ {reserveTicket_3 ↦ EntryGate}
+        act3: receiver := receiver ∪ {reserveTicket_3 ↦ GarageServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveTicket_3}
+    END
+
+    receivereserveTicket_3
+    WHEN
+        grd1: reserveTicket_3 ∈ sentMessages
+        grd2: reserveTicket_3 ↦ EntryGate ∈ sender
+        grd3: reserveTicket_3 ↦ GarageServer ∈ receiver
+        grd4: reserveTicket_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveTicket_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTicket_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreserveFee_4
+    WHEN
+        grd1: reserveFee_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveTicket_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveFee_4}
+        act2: sender := sender ∪ {reserveFee_4 ↦ GarageServer}
+        act3: receiver := receiver ∪ {reserveFee_4 ↦ EntryGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveFee_4 ↦ ticketData}
+        act6: currentMessage := {reserveFee_4}
+    END
+
+    receivereserveFee_4
+    WHEN
+        grd1: reserveFee_4 ∈ sentMessages
+        grd2: reserveFee_4 ↦ GarageServer ∈ sender
+        grd3: reserveFee_4 ↦ EntryGate ∈ receiver
+        grd4: reserveFee_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveFee_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveFee_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveFee_4 ↦ ticketData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendrequestSlot_5
+    WHEN
+        grd1: requestSlot_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveFee_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestSlot_5}
+        act2: sender := sender ∪ {requestSlot_5 ↦ Car}
+        act3: receiver := receiver ∪ {requestSlot_5 ↦ GarageServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestSlot_5 ↦ slotCode}
+        act6: currentMessage := {requestSlot_5}
+    END
+
+    receiverequestSlot_5
+    WHEN
+        grd1: requestSlot_5 ∈ sentMessages
+        grd2: requestSlot_5 ↦ Car ∈ sender
+        grd3: requestSlot_5 ↦ GarageServer ∈ receiver
+        grd4: requestSlot_5 ∉ receivedMessages
+        grd5: currentMessage = {requestSlot_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestSlot_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestSlot_5 ↦ slotCode}
+        act3: currentMessage := ∅
+    END
+
+    sendassignFee_6
+    WHEN
+        grd1: assignFee_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestSlot_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignFee_6}
+        act2: sender := sender ∪ {assignFee_6 ↦ EntryGate}
+        act3: receiver := receiver ∪ {assignFee_6 ↦ GarageServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignFee_6}
+    END
+
+    receiveassignFee_6
+    WHEN
+        grd1: assignFee_6 ∈ sentMessages
+        grd2: assignFee_6 ↦ EntryGate ∈ sender
+        grd3: assignFee_6 ↦ GarageServer ∈ receiver
+        grd4: assignFee_6 ∉ receivedMessages
+        grd5: currentMessage = {assignFee_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignFee_6}
+        act2: currentMessage := ∅
+    END
+
+END

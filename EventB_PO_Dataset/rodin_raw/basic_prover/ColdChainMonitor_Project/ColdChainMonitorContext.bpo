@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="logBatch" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="raiseAlert_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Truck" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="closeTrip_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="alertID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="CloudPlatform" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="TempLogger" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="tripID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="dailySummary_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="tempValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="uploadAck_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="QualityTeam" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="logTemperature_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="uploadLog_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="alertAck_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="summary" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/ColdChainMonitor_Project/ColdChainMonitorContext.bpo|org.eventb.core.poFile#ColdChainMonitorContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CloudPlatform},{QualityTeam},{TempLogger},{Truck})" org.eventb.core.source="/ColdChainMonitor_Project/ColdChainMonitorContext.buc|org.eventb.core.contextFile#ColdChainMonitorContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{logTemperature_1},{uploadLog_2},{uploadAck_3},{raiseAlert_4},{alertAck_5},{dailySummary_6},{closeTrip_7})" org.eventb.core.source="/ColdChainMonitor_Project/ColdChainMonitorContext.buc|org.eventb.core.contextFile#ColdChainMonitorContext|org.eventb.core.axiom#internal_element21"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{alertID},{logBatch},{summary},{tempValue},{tripID})" org.eventb.core.source="/ColdChainMonitor_Project/ColdChainMonitorContext.buc|org.eventb.core.contextFile#ColdChainMonitorContext|org.eventb.core.axiom#internal_element22"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

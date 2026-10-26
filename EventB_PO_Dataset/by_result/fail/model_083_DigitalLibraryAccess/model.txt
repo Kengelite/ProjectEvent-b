@@ -1,0 +1,223 @@
+CONTEXT DigitalLibraryAccessContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DRMServer, LibraryPortal, Publisher, Reader
+    syncLoan_1, fetchLoan_2, sendLicense_3, reportLoan_4, releaseLoan_5, checkEbook_6
+    ebookInfo, ebookRef, loanValue
+AXIOMS
+    axm1: partition(Objects, {DRMServer}, {LibraryPortal}, {Publisher}, {Reader})
+    axm2: partition(Messages, {syncLoan_1}, {fetchLoan_2}, {sendLicense_3}, {reportLoan_4}, {releaseLoan_5}, {checkEbook_6})
+    axm3: partition(DataMessages, {ebookInfo}, {ebookRef}, {loanValue})
+END
+
+MACHINE DigitalLibraryAccessInteractionMachine_1
+SEES DigitalLibraryAccessContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 20..11
+        act9: t_delay_3 := 0
+        act10: t_success_3 := 0
+        act11: t_time_4 :∈ 0..30
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+        act14: t_time_5 :∈ 30..12
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+        act17: t_time_6 :∈ 60..9
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+    END
+
+
+    sendsyncLoan_1
+    WHEN
+        grd1: syncLoan_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncLoan_1}
+        act2: sender := sender ∪ {syncLoan_1 ↦ LibraryPortal}
+        act3: receiver := receiver ∪ {syncLoan_1 ↦ Publisher}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncLoan_1}
+    END
+
+    receivesyncLoan_1
+    WHEN
+        grd1: syncLoan_1 ∈ sentMessages
+        grd2: syncLoan_1 ↦ LibraryPortal ∈ sender
+        grd3: syncLoan_1 ↦ Publisher ∈ receiver
+        grd4: syncLoan_1 ∉ receivedMessages
+        grd5: currentMessage = {syncLoan_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncLoan_1}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchLoan_2
+    WHEN
+        grd1: fetchLoan_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncLoan_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchLoan_2}
+        act2: sender := sender ∪ {fetchLoan_2 ↦ Reader}
+        act3: receiver := receiver ∪ {fetchLoan_2 ↦ LibraryPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchLoan_2 ↦ loanValue}
+        act6: currentMessage := {fetchLoan_2}
+    END
+
+    receivefetchLoan_2
+    WHEN
+        grd1: fetchLoan_2 ∈ sentMessages
+        grd2: fetchLoan_2 ↦ Reader ∈ sender
+        grd3: fetchLoan_2 ↦ LibraryPortal ∈ receiver
+        grd4: fetchLoan_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchLoan_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchLoan_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchLoan_2 ↦ loanValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsendLicense_3
+    WHEN
+        grd1: sendLicense_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchLoan_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendLicense_3}
+        act2: sender := sender ∪ {sendLicense_3 ↦ LibraryPortal}
+        act3: receiver := receiver ∪ {sendLicense_3 ↦ DRMServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendLicense_3 ↦ loanValue}
+        act6: currentMessage := {sendLicense_3}
+    END
+
+    receivesendLicense_3
+    WHEN
+        grd1: sendLicense_3 ∈ sentMessages
+        grd2: sendLicense_3 ↦ LibraryPortal ∈ sender
+        grd3: sendLicense_3 ↦ DRMServer ∈ receiver
+        grd4: sendLicense_3 ∉ receivedMessages
+        grd5: currentMessage = {sendLicense_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendLicense_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendLicense_3 ↦ loanValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreportLoan_4
+    WHEN
+        grd1: reportLoan_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendLicense_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportLoan_4}
+        act2: sender := sender ∪ {reportLoan_4 ↦ DRMServer}
+        act3: receiver := receiver ∪ {reportLoan_4 ↦ Publisher}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportLoan_4}
+    END
+
+    receivereportLoan_4
+    WHEN
+        grd1: reportLoan_4 ∈ sentMessages
+        grd2: reportLoan_4 ↦ DRMServer ∈ sender
+        grd3: reportLoan_4 ↦ Publisher ∈ receiver
+        grd4: reportLoan_4 ∉ receivedMessages
+        grd5: currentMessage = {reportLoan_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportLoan_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreleaseLoan_5
+    WHEN
+        grd1: releaseLoan_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportLoan_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLoan_5}
+        act2: sender := sender ∪ {releaseLoan_5 ↦ LibraryPortal}
+        act3: receiver := receiver ∪ {releaseLoan_5 ↦ Reader}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseLoan_5 ↦ ebookInfo}
+        act6: currentMessage := {releaseLoan_5}
+    END
+
+    receivereleaseLoan_5
+    WHEN
+        grd1: releaseLoan_5 ∈ sentMessages
+        grd2: releaseLoan_5 ↦ LibraryPortal ∈ sender
+        grd3: releaseLoan_5 ↦ Reader ∈ receiver
+        grd4: releaseLoan_5 ∉ receivedMessages
+        grd5: currentMessage = {releaseLoan_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLoan_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseLoan_5 ↦ ebookInfo}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcheckEbook_6
+    WHEN
+        grd1: checkEbook_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLoan_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkEbook_6}
+        act2: sender := sender ∪ {checkEbook_6 ↦ Publisher}
+        act3: receiver := receiver ∪ {checkEbook_6 ↦ DRMServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkEbook_6 ↦ ebookRef}
+        act6: currentMessage := {checkEbook_6}
+    END
+
+    receivecheckEbook_6
+    WHEN
+        grd1: checkEbook_6 ∈ sentMessages
+        grd2: checkEbook_6 ↦ Publisher ∈ sender
+        grd3: checkEbook_6 ↦ DRMServer ∈ receiver
+        grd4: checkEbook_6 ∉ receivedMessages
+        grd5: currentMessage = {checkEbook_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkEbook_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkEbook_6 ↦ ebookRef}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

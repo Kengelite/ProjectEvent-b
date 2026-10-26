@@ -1,0 +1,254 @@
+CONTEXT AmbulanceRoutingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AmbulanceUnit, DispatchCenter, ERDesk, Paramedic
+    approveEta_1, ackPatient_2, assignPatient_3, notifyRoute_4, reserveEta_5, requestRoute_6, checkPatient_7
+    etaID, etaInfo, patientID, routeInfo
+AXIOMS
+    axm1: partition(Objects, {AmbulanceUnit}, {DispatchCenter}, {ERDesk}, {Paramedic})
+    axm2: partition(Messages, {approveEta_1}, {ackPatient_2}, {assignPatient_3}, {notifyRoute_4}, {reserveEta_5}, {requestRoute_6}, {checkPatient_7})
+    axm3: partition(DataMessages, {etaID}, {etaInfo}, {patientID}, {routeInfo})
+END
+
+MACHINE AmbulanceRoutingInteractionMachine_1
+SEES AmbulanceRoutingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, needAck, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: needAck ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: needAck := 1
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..10
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_5 :∈ 0..30
+        act17: t_delay_5 := 5
+        act18: t_success_5 := 0
+        act19: t_time_7 :∈ 0..3
+        act20: t_delay_7 := 1
+        act21: t_success_7 := 0
+    END
+
+
+    sendapproveEta_1
+    WHEN
+        grd1: approveEta_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveEta_1}
+        act2: sender := sender ∪ {approveEta_1 ↦ Paramedic}
+        act3: receiver := receiver ∪ {approveEta_1 ↦ DispatchCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveEta_1 ↦ etaID, approveEta_1 ↦ routeInfo}
+        act6: currentMessage := {approveEta_1}
+    END
+
+    receiveapproveEta_1
+    WHEN
+        grd1: approveEta_1 ∈ sentMessages
+        grd2: approveEta_1 ↦ Paramedic ∈ sender
+        grd3: approveEta_1 ↦ DispatchCenter ∈ receiver
+        grd4: approveEta_1 ∉ receivedMessages
+        grd5: currentMessage = {approveEta_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveEta_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveEta_1 ↦ etaID, approveEta_1 ↦ routeInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendackPatient_2
+    WHEN
+        grd1: ackPatient_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveEta_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackPatient_2}
+        act2: sender := sender ∪ {ackPatient_2 ↦ ERDesk}
+        act3: receiver := receiver ∪ {ackPatient_2 ↦ AmbulanceUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackPatient_2}
+    END
+
+    receiveackPatient_2
+    WHEN
+        grd1: ackPatient_2 ∈ sentMessages
+        grd2: ackPatient_2 ↦ ERDesk ∈ sender
+        grd3: ackPatient_2 ↦ AmbulanceUnit ∈ receiver
+        grd4: ackPatient_2 ∉ receivedMessages
+        grd5: currentMessage = {ackPatient_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackPatient_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendassignPatient_3_opt1
+    WHEN
+        grd1: assignPatient_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackPatient_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignPatient_3}
+        act2: sender := sender ∪ {assignPatient_3 ↦ AmbulanceUnit}
+        act3: receiver := receiver ∪ {assignPatient_3 ↦ DispatchCenter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignPatient_3}
+    END
+
+    receiveassignPatient_3_opt1
+    WHEN
+        grd1: assignPatient_3 ∈ sentMessages
+        grd2: assignPatient_3 ↦ AmbulanceUnit ∈ sender
+        grd3: assignPatient_3 ↦ DispatchCenter ∈ receiver
+        grd4: assignPatient_3 ∉ receivedMessages
+        grd5: currentMessage = {assignPatient_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignPatient_3}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyRoute_4
+    WHEN
+        grd1: notifyRoute_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignPatient_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyRoute_4}
+        act2: sender := sender ∪ {notifyRoute_4 ↦ ERDesk}
+        act3: receiver := receiver ∪ {notifyRoute_4 ↦ Paramedic}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyRoute_4 ↦ patientID}
+        act6: currentMessage := {notifyRoute_4}
+    END
+
+    receivenotifyRoute_4
+    WHEN
+        grd1: notifyRoute_4 ∈ sentMessages
+        grd2: notifyRoute_4 ↦ ERDesk ∈ sender
+        grd3: notifyRoute_4 ↦ Paramedic ∈ receiver
+        grd4: notifyRoute_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyRoute_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyRoute_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyRoute_4 ↦ patientID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveEta_5
+    WHEN
+        grd1: reserveEta_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyRoute_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveEta_5}
+        act2: sender := sender ∪ {reserveEta_5 ↦ AmbulanceUnit}
+        act3: receiver := receiver ∪ {reserveEta_5 ↦ ERDesk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveEta_5}
+    END
+
+    receivereserveEta_5
+    WHEN
+        grd1: reserveEta_5 ∈ sentMessages
+        grd2: reserveEta_5 ↦ AmbulanceUnit ∈ sender
+        grd3: reserveEta_5 ↦ ERDesk ∈ receiver
+        grd4: reserveEta_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveEta_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveEta_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrequestRoute_6_opt2
+    WHEN
+        grd1: requestRoute_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveEta_5 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestRoute_6}
+        act2: sender := sender ∪ {requestRoute_6 ↦ DispatchCenter}
+        act3: receiver := receiver ∪ {requestRoute_6 ↦ Paramedic}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestRoute_6 ↦ etaInfo}
+        act6: currentMessage := {requestRoute_6}
+    END
+
+    receiverequestRoute_6_opt2
+    WHEN
+        grd1: requestRoute_6 ∈ sentMessages
+        grd2: requestRoute_6 ↦ DispatchCenter ∈ sender
+        grd3: requestRoute_6 ↦ Paramedic ∈ receiver
+        grd4: requestRoute_6 ∉ receivedMessages
+        grd5: currentMessage = {requestRoute_6}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestRoute_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestRoute_6 ↦ etaInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckPatient_7
+    WHEN
+        grd1: checkPatient_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestRoute_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPatient_7}
+        act2: sender := sender ∪ {checkPatient_7 ↦ AmbulanceUnit}
+        act3: receiver := receiver ∪ {checkPatient_7 ↦ DispatchCenter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkPatient_7}
+    END
+
+    receivecheckPatient_7
+    WHEN
+        grd1: checkPatient_7 ∈ sentMessages
+        grd2: checkPatient_7 ↦ AmbulanceUnit ∈ sender
+        grd3: checkPatient_7 ↦ DispatchCenter ∈ receiver
+        grd4: checkPatient_7 ∉ receivedMessages
+        grd5: currentMessage = {checkPatient_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPatient_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+END

@@ -1,0 +1,227 @@
+CONTEXT CloudBackupJobContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AdminConsole, Agent, BackupServer, StorageNode
+    updateSnapshot_1, confirmSnapshot_2, checkJob_3, requestChunk_4, notifyChunk_5, syncJob_6
+    chunkInfo, chunkRef, jobID, jobValue, snapshotData
+AXIOMS
+    axm1: partition(Objects, {AdminConsole}, {Agent}, {BackupServer}, {StorageNode})
+    axm2: partition(Messages, {updateSnapshot_1}, {confirmSnapshot_2}, {checkJob_3}, {requestChunk_4}, {notifyChunk_5}, {syncJob_6})
+    axm3: partition(DataMessages, {chunkInfo}, {chunkRef}, {jobID}, {jobValue}, {snapshotData})
+END
+
+MACHINE CloudBackupJobInteractionMachine_1
+SEES CloudBackupJobContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_3 ∈ ℤ
+    inv16: t_delay_3 ∈ ℤ
+    inv17: t_success_3 ∈ ℤ
+    inv18: t_time_4 ∈ ℤ
+    inv19: t_delay_4 ∈ ℤ
+    inv20: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..1
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..15
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_3 :∈ 0..0
+        act16: t_delay_3 := 5
+        act17: t_success_3 := 0
+        act18: t_time_4 :∈ 0..20
+        act19: t_delay_4 := 0
+        act20: t_success_4 := 0
+    END
+
+
+    sendupdateSnapshot_1
+    WHEN
+        grd1: updateSnapshot_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateSnapshot_1}
+        act2: sender := sender ∪ {updateSnapshot_1 ↦ AdminConsole}
+        act3: receiver := receiver ∪ {updateSnapshot_1 ↦ BackupServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateSnapshot_1 ↦ chunkRef, updateSnapshot_1 ↦ jobID}
+        act6: currentMessage := {updateSnapshot_1}
+    END
+
+    receiveupdateSnapshot_1
+    WHEN
+        grd1: updateSnapshot_1 ∈ sentMessages
+        grd2: updateSnapshot_1 ↦ AdminConsole ∈ sender
+        grd3: updateSnapshot_1 ↦ BackupServer ∈ receiver
+        grd4: updateSnapshot_1 ∉ receivedMessages
+        grd5: currentMessage = {updateSnapshot_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateSnapshot_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateSnapshot_1 ↦ chunkRef, updateSnapshot_1 ↦ jobID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendconfirmSnapshot_2
+    WHEN
+        grd1: confirmSnapshot_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateSnapshot_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmSnapshot_2}
+        act2: sender := sender ∪ {confirmSnapshot_2 ↦ AdminConsole}
+        act3: receiver := receiver ∪ {confirmSnapshot_2 ↦ Agent}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmSnapshot_2 ↦ jobValue}
+        act6: currentMessage := {confirmSnapshot_2}
+    END
+
+    receiveconfirmSnapshot_2
+    WHEN
+        grd1: confirmSnapshot_2 ∈ sentMessages
+        grd2: confirmSnapshot_2 ↦ AdminConsole ∈ sender
+        grd3: confirmSnapshot_2 ↦ Agent ∈ receiver
+        grd4: confirmSnapshot_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmSnapshot_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmSnapshot_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmSnapshot_2 ↦ jobValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcheckJob_3
+    WHEN
+        grd1: checkJob_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmSnapshot_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkJob_3}
+        act2: sender := sender ∪ {checkJob_3 ↦ BackupServer}
+        act3: receiver := receiver ∪ {checkJob_3 ↦ Agent}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkJob_3 ↦ chunkInfo}
+        act6: currentMessage := {checkJob_3}
+    END
+
+    receivecheckJob_3
+    WHEN
+        grd1: checkJob_3 ∈ sentMessages
+        grd2: checkJob_3 ↦ BackupServer ∈ sender
+        grd3: checkJob_3 ↦ Agent ∈ receiver
+        grd4: checkJob_3 ∉ receivedMessages
+        grd5: currentMessage = {checkJob_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkJob_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkJob_3 ↦ chunkInfo}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendrequestChunk_4
+    WHEN
+        grd1: requestChunk_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkJob_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestChunk_4}
+        act2: sender := sender ∪ {requestChunk_4 ↦ BackupServer}
+        act3: receiver := receiver ∪ {requestChunk_4 ↦ AdminConsole}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestChunk_4 ↦ chunkRef, requestChunk_4 ↦ snapshotData}
+        act6: currentMessage := {requestChunk_4}
+    END
+
+    receiverequestChunk_4
+    WHEN
+        grd1: requestChunk_4 ∈ sentMessages
+        grd2: requestChunk_4 ↦ BackupServer ∈ sender
+        grd3: requestChunk_4 ↦ AdminConsole ∈ receiver
+        grd4: requestChunk_4 ∉ receivedMessages
+        grd5: currentMessage = {requestChunk_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestChunk_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestChunk_4 ↦ chunkRef, requestChunk_4 ↦ snapshotData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyChunk_5
+    WHEN
+        grd1: notifyChunk_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestChunk_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyChunk_5}
+        act2: sender := sender ∪ {notifyChunk_5 ↦ BackupServer}
+        act3: receiver := receiver ∪ {notifyChunk_5 ↦ AdminConsole}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyChunk_5 ↦ chunkInfo}
+        act6: currentMessage := {notifyChunk_5}
+    END
+
+    receivenotifyChunk_5
+    WHEN
+        grd1: notifyChunk_5 ∈ sentMessages
+        grd2: notifyChunk_5 ↦ BackupServer ∈ sender
+        grd3: notifyChunk_5 ↦ AdminConsole ∈ receiver
+        grd4: notifyChunk_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyChunk_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyChunk_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyChunk_5 ↦ chunkInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncJob_6
+    WHEN
+        grd1: syncJob_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyChunk_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncJob_6}
+        act2: sender := sender ∪ {syncJob_6 ↦ StorageNode}
+        act3: receiver := receiver ∪ {syncJob_6 ↦ Agent}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncJob_6}
+    END
+
+    receivesyncJob_6
+    WHEN
+        grd1: syncJob_6 ∈ sentMessages
+        grd2: syncJob_6 ↦ StorageNode ∈ sender
+        grd3: syncJob_6 ↦ Agent ∈ receiver
+        grd4: syncJob_6 ∉ receivedMessages
+        grd5: currentMessage = {syncJob_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncJob_6}
+        act2: currentMessage := ∅
+    END
+
+END

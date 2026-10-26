@@ -1,0 +1,209 @@
+CONTEXT HotelRoomServiceContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Guest, KitchenOrder, RoomTablet, ServiceStaff
+    confirmMeal_1, ackBill_2, validateMeal_3, approveBill_4, requestBill_5, updateBill_6
+    mealInfo, orderData, orderRef, orderValue
+AXIOMS
+    axm1: partition(Objects, {Guest}, {KitchenOrder}, {RoomTablet}, {ServiceStaff})
+    axm2: partition(Messages, {confirmMeal_1}, {ackBill_2}, {validateMeal_3}, {approveBill_4}, {requestBill_5}, {updateBill_6})
+    axm3: partition(DataMessages, {mealInfo}, {orderData}, {orderRef}, {orderValue})
+END
+
+MACHINE HotelRoomServiceInteractionMachine_1
+SEES HotelRoomServiceContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_5 ∈ ℤ
+    inv9: t_delay_5 ∈ ℤ
+    inv10: t_success_5 ∈ ℤ
+    inv11: t_time_6 ∈ ℤ
+    inv12: t_delay_6 ∈ ℤ
+    inv13: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_5 :∈ 0..1
+        act9: t_delay_5 := 0
+        act10: t_success_5 := 0
+        act11: t_time_6 :∈ 0..8
+        act12: t_delay_6 := 0
+        act13: t_success_6 := 0
+    END
+
+
+    sendconfirmMeal_1
+    WHEN
+        grd1: confirmMeal_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmMeal_1}
+        act2: sender := sender ∪ {confirmMeal_1 ↦ ServiceStaff}
+        act3: receiver := receiver ∪ {confirmMeal_1 ↦ Guest}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmMeal_1 ↦ orderRef}
+        act6: currentMessage := {confirmMeal_1}
+    END
+
+    receiveconfirmMeal_1
+    WHEN
+        grd1: confirmMeal_1 ∈ sentMessages
+        grd2: confirmMeal_1 ↦ ServiceStaff ∈ sender
+        grd3: confirmMeal_1 ↦ Guest ∈ receiver
+        grd4: confirmMeal_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmMeal_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmMeal_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmMeal_1 ↦ orderRef}
+        act3: currentMessage := ∅
+    END
+
+    sendackBill_2
+    WHEN
+        grd1: ackBill_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmMeal_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackBill_2}
+        act2: sender := sender ∪ {ackBill_2 ↦ KitchenOrder}
+        act3: receiver := receiver ∪ {ackBill_2 ↦ ServiceStaff}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackBill_2}
+    END
+
+    receiveackBill_2
+    WHEN
+        grd1: ackBill_2 ∈ sentMessages
+        grd2: ackBill_2 ↦ KitchenOrder ∈ sender
+        grd3: ackBill_2 ↦ ServiceStaff ∈ receiver
+        grd4: ackBill_2 ∉ receivedMessages
+        grd5: currentMessage = {ackBill_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackBill_2}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateMeal_3
+    WHEN
+        grd1: validateMeal_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackBill_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateMeal_3}
+        act2: sender := sender ∪ {validateMeal_3 ↦ KitchenOrder}
+        act3: receiver := receiver ∪ {validateMeal_3 ↦ Guest}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateMeal_3 ↦ orderValue}
+        act6: currentMessage := {validateMeal_3}
+    END
+
+    receivevalidateMeal_3
+    WHEN
+        grd1: validateMeal_3 ∈ sentMessages
+        grd2: validateMeal_3 ↦ KitchenOrder ∈ sender
+        grd3: validateMeal_3 ↦ Guest ∈ receiver
+        grd4: validateMeal_3 ∉ receivedMessages
+        grd5: currentMessage = {validateMeal_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateMeal_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateMeal_3 ↦ orderValue}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveBill_4
+    WHEN
+        grd1: approveBill_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateMeal_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveBill_4}
+        act2: sender := sender ∪ {approveBill_4 ↦ ServiceStaff}
+        act3: receiver := receiver ∪ {approveBill_4 ↦ KitchenOrder}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveBill_4 ↦ mealInfo}
+        act6: currentMessage := {approveBill_4}
+    END
+
+    receiveapproveBill_4
+    WHEN
+        grd1: approveBill_4 ∈ sentMessages
+        grd2: approveBill_4 ↦ ServiceStaff ∈ sender
+        grd3: approveBill_4 ↦ KitchenOrder ∈ receiver
+        grd4: approveBill_4 ∉ receivedMessages
+        grd5: currentMessage = {approveBill_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveBill_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveBill_4 ↦ mealInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestBill_5
+    WHEN
+        grd1: requestBill_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveBill_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBill_5}
+        act2: sender := sender ∪ {requestBill_5 ↦ Guest}
+        act3: receiver := receiver ∪ {requestBill_5 ↦ ServiceStaff}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBill_5 ↦ orderData}
+        act6: currentMessage := {requestBill_5}
+    END
+
+    receiverequestBill_5
+    WHEN
+        grd1: requestBill_5 ∈ sentMessages
+        grd2: requestBill_5 ↦ Guest ∈ sender
+        grd3: requestBill_5 ↦ ServiceStaff ∈ receiver
+        grd4: requestBill_5 ∉ receivedMessages
+        grd5: currentMessage = {requestBill_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBill_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBill_5 ↦ orderData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendupdateBill_6
+    WHEN
+        grd1: updateBill_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBill_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateBill_6}
+        act2: sender := sender ∪ {updateBill_6 ↦ ServiceStaff}
+        act3: receiver := receiver ∪ {updateBill_6 ↦ RoomTablet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateBill_6}
+    END
+
+    receiveupdateBill_6
+    WHEN
+        grd1: updateBill_6 ∈ sentMessages
+        grd2: updateBill_6 ↦ ServiceStaff ∈ sender
+        grd3: updateBill_6 ↦ RoomTablet ∈ receiver
+        grd4: updateBill_6 ∉ receivedMessages
+        grd5: currentMessage = {updateBill_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateBill_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

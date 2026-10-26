@@ -1,0 +1,293 @@
+CONTEXT BankBranchQueueContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BranchDisplay, Customer, QueueKiosk, TellerApp
+    queryCounter_1, assignService_2, scheduleService_3, syncTicket_4, fetchTicket_5, ackCounter_6, notifyService_7, queryTicket_8
+    counterID, counterRef, serviceData, serviceInfo, ticketCode
+AXIOMS
+    axm1: partition(Objects, {BranchDisplay}, {Customer}, {QueueKiosk}, {TellerApp})
+    axm2: partition(Messages, {queryCounter_1}, {assignService_2}, {scheduleService_3}, {syncTicket_4}, {fetchTicket_5}, {ackCounter_6}, {notifyService_7}, {queryTicket_8})
+    axm3: partition(DataMessages, {counterID}, {counterRef}, {serviceData}, {serviceInfo}, {ticketCode})
+END
+
+MACHINE BankBranchQueueInteractionMachine_1
+SEES BankBranchQueueContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..30
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..0
+        act14: t_delay_2 := 10
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 0..15
+        act17: t_delay_3 := 0
+        act18: t_success_3 := 0
+    END
+
+
+    sendqueryCounter_1
+    WHEN
+        grd1: queryCounter_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCounter_1}
+        act2: sender := sender ∪ {queryCounter_1 ↦ QueueKiosk}
+        act3: receiver := receiver ∪ {queryCounter_1 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryCounter_1 ↦ ticketCode}
+        act6: currentMessage := {queryCounter_1}
+    END
+
+    receivequeryCounter_1
+    WHEN
+        grd1: queryCounter_1 ∈ sentMessages
+        grd2: queryCounter_1 ↦ QueueKiosk ∈ sender
+        grd3: queryCounter_1 ↦ Customer ∈ receiver
+        grd4: queryCounter_1 ∉ receivedMessages
+        grd5: currentMessage = {queryCounter_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCounter_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryCounter_1 ↦ ticketCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignService_2
+    WHEN
+        grd1: assignService_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryCounter_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignService_2}
+        act2: sender := sender ∪ {assignService_2 ↦ BranchDisplay}
+        act3: receiver := receiver ∪ {assignService_2 ↦ QueueKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignService_2 ↦ serviceInfo}
+        act6: currentMessage := {assignService_2}
+    END
+
+    receiveassignService_2
+    WHEN
+        grd1: assignService_2 ∈ sentMessages
+        grd2: assignService_2 ↦ BranchDisplay ∈ sender
+        grd3: assignService_2 ↦ QueueKiosk ∈ receiver
+        grd4: assignService_2 ∉ receivedMessages
+        grd5: currentMessage = {assignService_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignService_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignService_2 ↦ serviceInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendscheduleService_3
+    WHEN
+        grd1: scheduleService_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignService_2 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleService_3}
+        act2: sender := sender ∪ {scheduleService_3 ↦ TellerApp}
+        act3: receiver := receiver ∪ {scheduleService_3 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleService_3 ↦ ticketCode}
+        act6: currentMessage := {scheduleService_3}
+    END
+
+    receivescheduleService_3
+    WHEN
+        grd1: scheduleService_3 ∈ sentMessages
+        grd2: scheduleService_3 ↦ TellerApp ∈ sender
+        grd3: scheduleService_3 ↦ Customer ∈ receiver
+        grd4: scheduleService_3 ∉ receivedMessages
+        grd5: currentMessage = {scheduleService_3}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleService_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleService_3 ↦ ticketCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendsyncTicket_4
+    WHEN
+        grd1: syncTicket_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleService_3 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncTicket_4}
+        act2: sender := sender ∪ {syncTicket_4 ↦ QueueKiosk}
+        act3: receiver := receiver ∪ {syncTicket_4 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncTicket_4}
+    END
+
+    receivesyncTicket_4
+    WHEN
+        grd1: syncTicket_4 ∈ sentMessages
+        grd2: syncTicket_4 ↦ QueueKiosk ∈ sender
+        grd3: syncTicket_4 ↦ Customer ∈ receiver
+        grd4: syncTicket_4 ∉ receivedMessages
+        grd5: currentMessage = {syncTicket_4}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncTicket_4}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchTicket_5
+    WHEN
+        grd1: fetchTicket_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncTicket_4 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchTicket_5}
+        act2: sender := sender ∪ {fetchTicket_5 ↦ BranchDisplay}
+        act3: receiver := receiver ∪ {fetchTicket_5 ↦ TellerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchTicket_5 ↦ serviceData}
+        act6: currentMessage := {fetchTicket_5}
+    END
+
+    receivefetchTicket_5
+    WHEN
+        grd1: fetchTicket_5 ∈ sentMessages
+        grd2: fetchTicket_5 ↦ BranchDisplay ∈ sender
+        grd3: fetchTicket_5 ↦ TellerApp ∈ receiver
+        grd4: fetchTicket_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchTicket_5}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchTicket_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchTicket_5 ↦ serviceData}
+        act3: currentMessage := ∅
+    END
+
+    sendackCounter_6
+    WHEN
+        grd1: ackCounter_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchTicket_5 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackCounter_6}
+        act2: sender := sender ∪ {ackCounter_6 ↦ TellerApp}
+        act3: receiver := receiver ∪ {ackCounter_6 ↦ QueueKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackCounter_6 ↦ counterRef}
+        act6: currentMessage := {ackCounter_6}
+    END
+
+    receiveackCounter_6
+    WHEN
+        grd1: ackCounter_6 ∈ sentMessages
+        grd2: ackCounter_6 ↦ TellerApp ∈ sender
+        grd3: ackCounter_6 ↦ QueueKiosk ∈ receiver
+        grd4: ackCounter_6 ∉ receivedMessages
+        grd5: currentMessage = {ackCounter_6}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackCounter_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackCounter_6 ↦ counterRef}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyService_7
+    WHEN
+        grd1: notifyService_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackCounter_6 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyService_7}
+        act2: sender := sender ∪ {notifyService_7 ↦ QueueKiosk}
+        act3: receiver := receiver ∪ {notifyService_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyService_7 ↦ counterID}
+        act6: currentMessage := {notifyService_7}
+    END
+
+    receivenotifyService_7
+    WHEN
+        grd1: notifyService_7 ∈ sentMessages
+        grd2: notifyService_7 ↦ QueueKiosk ∈ sender
+        grd3: notifyService_7 ↦ Customer ∈ receiver
+        grd4: notifyService_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyService_7}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyService_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyService_7 ↦ counterID}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryTicket_8
+    WHEN
+        grd1: queryTicket_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyService_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryTicket_8}
+        act2: sender := sender ∪ {queryTicket_8 ↦ Customer}
+        act3: receiver := receiver ∪ {queryTicket_8 ↦ TellerApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryTicket_8 ↦ serviceInfo}
+        act6: currentMessage := {queryTicket_8}
+    END
+
+    receivequeryTicket_8
+    WHEN
+        grd1: queryTicket_8 ∈ sentMessages
+        grd2: queryTicket_8 ↦ Customer ∈ sender
+        grd3: queryTicket_8 ↦ TellerApp ∈ receiver
+        grd4: queryTicket_8 ∉ receivedMessages
+        grd5: currentMessage = {queryTicket_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryTicket_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryTicket_8 ↦ serviceInfo}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_scheduleService_3_loop1
+    WHEN
+        grd1: passNo < 11
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

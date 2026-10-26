@@ -1,0 +1,341 @@
+CONTEXT DormLaundryContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    LaundryApp, PaymentHub, Student, Washer
+    ackCredit_1, confirmCredit_2, reserveMachine_3, notifyCredit_4, releaseCycle_5, fetchCredit_6, sendCredit_7, fetchCycle_8, cancelCycle_9, queryCredit_10
+    cycleCode, cycleInfo, cycleValue, machineCode, machineID, machineInfo, machineValue
+AXIOMS
+    axm1: partition(Objects, {LaundryApp}, {PaymentHub}, {Student}, {Washer})
+    axm2: partition(Messages, {ackCredit_1}, {confirmCredit_2}, {reserveMachine_3}, {notifyCredit_4}, {releaseCycle_5}, {fetchCredit_6}, {sendCredit_7}, {fetchCycle_8}, {cancelCycle_9}, {queryCredit_10})
+    axm3: partition(DataMessages, {cycleCode}, {cycleInfo}, {cycleValue}, {machineCode}, {machineID}, {machineInfo}, {machineValue})
+END
+
+MACHINE DormLaundryInteractionMachine_1
+SEES DormLaundryContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, par_1, t_time_4, t_delay_4, t_success_4, t_time_8, t_delay_8, t_success_8, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_4 ∈ ℤ
+    inv11: t_delay_4 ∈ ℤ
+    inv12: t_success_4 ∈ ℤ
+    inv13: t_time_8 ∈ ℤ
+    inv14: t_delay_8 ∈ ℤ
+    inv15: t_success_8 ∈ ℤ
+    inv16: t_time_10 ∈ ℤ
+    inv17: t_delay_10 ∈ ℤ
+    inv18: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: par_1 := 0
+        act10: t_time_4 :∈ 0..20
+        act11: t_delay_4 := 0
+        act12: t_success_4 := 0
+        act13: t_time_8 :∈ 0..0
+        act14: t_delay_8 := 5
+        act15: t_success_8 := 0
+        act16: t_time_10 :∈ 0..0
+        act17: t_delay_10 := 1
+        act18: t_success_10 := 0
+    END
+
+
+    sendackCredit_1
+    WHEN
+        grd1: ackCredit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackCredit_1}
+        act2: sender := sender ∪ {ackCredit_1 ↦ LaundryApp}
+        act3: receiver := receiver ∪ {ackCredit_1 ↦ PaymentHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackCredit_1 ↦ machineValue}
+        act6: currentMessage := {ackCredit_1}
+    END
+
+    receiveackCredit_1
+    WHEN
+        grd1: ackCredit_1 ∈ sentMessages
+        grd2: ackCredit_1 ↦ LaundryApp ∈ sender
+        grd3: ackCredit_1 ↦ PaymentHub ∈ receiver
+        grd4: ackCredit_1 ∉ receivedMessages
+        grd5: currentMessage = {ackCredit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackCredit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackCredit_1 ↦ machineValue}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmCredit_2
+    WHEN
+        grd1: confirmCredit_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackCredit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCredit_2}
+        act2: sender := sender ∪ {confirmCredit_2 ↦ PaymentHub}
+        act3: receiver := receiver ∪ {confirmCredit_2 ↦ Washer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmCredit_2 ↦ machineID}
+        act6: currentMessage := {confirmCredit_2}
+    END
+
+    receiveconfirmCredit_2
+    WHEN
+        grd1: confirmCredit_2 ∈ sentMessages
+        grd2: confirmCredit_2 ↦ PaymentHub ∈ sender
+        grd3: confirmCredit_2 ↦ Washer ∈ receiver
+        grd4: confirmCredit_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmCredit_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCredit_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmCredit_2 ↦ machineID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveMachine_3
+    WHEN
+        grd1: reserveMachine_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmCredit_2 ∈ receivedMessages
+        grd4: cycleNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveMachine_3}
+        act2: sender := sender ∪ {reserveMachine_3 ↦ LaundryApp}
+        act3: receiver := receiver ∪ {reserveMachine_3 ↦ Washer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveMachine_3}
+    END
+
+    receivereserveMachine_3
+    WHEN
+        grd1: reserveMachine_3 ∈ sentMessages
+        grd2: reserveMachine_3 ↦ LaundryApp ∈ sender
+        grd3: reserveMachine_3 ↦ Washer ∈ receiver
+        grd4: reserveMachine_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveMachine_3}
+        grd6: cycleNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveMachine_3}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyCredit_4
+    WHEN
+        grd1: notifyCredit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveMachine_3 ∈ receivedMessages
+        grd4: cycleNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCredit_4}
+        act2: sender := sender ∪ {notifyCredit_4 ↦ LaundryApp}
+        act3: receiver := receiver ∪ {notifyCredit_4 ↦ Washer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyCredit_4 ↦ cycleCode}
+        act6: currentMessage := {notifyCredit_4}
+    END
+
+    receivenotifyCredit_4
+    WHEN
+        grd1: notifyCredit_4 ∈ sentMessages
+        grd2: notifyCredit_4 ↦ LaundryApp ∈ sender
+        grd3: notifyCredit_4 ↦ Washer ∈ receiver
+        grd4: notifyCredit_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyCredit_4}
+        grd6: cycleNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCredit_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyCredit_4 ↦ cycleCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreleaseCycle_5
+    WHEN
+        grd1: releaseCycle_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyCredit_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseCycle_5}
+        act2: sender := sender ∪ {releaseCycle_5 ↦ Washer}
+        act3: receiver := receiver ∪ {releaseCycle_5 ↦ LaundryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseCycle_5 ↦ machineValue}
+        act6: currentMessage := {releaseCycle_5}
+    END
+
+    receivereleaseCycle_5
+    WHEN
+        grd1: releaseCycle_5 ∈ sentMessages
+        grd2: releaseCycle_5 ↦ Washer ∈ sender
+        grd3: releaseCycle_5 ↦ LaundryApp ∈ receiver
+        grd4: releaseCycle_5 ∉ receivedMessages
+        grd5: currentMessage = {releaseCycle_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseCycle_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseCycle_5 ↦ machineValue}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchCredit_6
+    WHEN
+        grd1: fetchCredit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseCycle_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchCredit_6}
+        act2: sender := sender ∪ {fetchCredit_6 ↦ PaymentHub}
+        act3: receiver := receiver ∪ {fetchCredit_6 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchCredit_6 ↦ cycleValue}
+        act6: currentMessage := {fetchCredit_6}
+    END
+
+    receivefetchCredit_6
+    WHEN
+        grd1: fetchCredit_6 ∈ sentMessages
+        grd2: fetchCredit_6 ↦ PaymentHub ∈ sender
+        grd3: fetchCredit_6 ↦ Student ∈ receiver
+        grd4: fetchCredit_6 ∉ receivedMessages
+        grd5: currentMessage = {fetchCredit_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchCredit_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchCredit_6 ↦ cycleValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsendCredit_7
+    WHEN
+        grd1: sendCredit_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchCredit_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendCredit_7}
+        act2: sender := sender ∪ {sendCredit_7 ↦ Washer}
+        act3: receiver := receiver ∪ {sendCredit_7 ↦ LaundryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendCredit_7 ↦ cycleInfo}
+        act6: currentMessage := {sendCredit_7}
+    END
+
+    receivesendCredit_7
+    WHEN
+        grd1: sendCredit_7 ∈ sentMessages
+        grd2: sendCredit_7 ↦ Washer ∈ sender
+        grd3: sendCredit_7 ↦ LaundryApp ∈ receiver
+        grd4: sendCredit_7 ∉ receivedMessages
+        grd5: currentMessage = {sendCredit_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendCredit_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendCredit_7 ↦ cycleInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchCycle_8
+    WHEN
+        grd1: fetchCycle_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendCredit_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchCycle_8}
+        act2: sender := sender ∪ {fetchCycle_8 ↦ PaymentHub}
+        act3: receiver := receiver ∪ {fetchCycle_8 ↦ LaundryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchCycle_8 ↦ cycleCode}
+        act6: currentMessage := {fetchCycle_8}
+    END
+
+    receivefetchCycle_8
+    WHEN
+        grd1: fetchCycle_8 ∈ sentMessages
+        grd2: fetchCycle_8 ↦ PaymentHub ∈ sender
+        grd3: fetchCycle_8 ↦ LaundryApp ∈ receiver
+        grd4: fetchCycle_8 ∉ receivedMessages
+        grd5: currentMessage = {fetchCycle_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchCycle_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchCycle_8 ↦ cycleCode}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendcancelCycle_9
+    WHEN
+        grd1: cancelCycle_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchCycle_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCycle_9}
+        act2: sender := sender ∪ {cancelCycle_9 ↦ PaymentHub}
+        act3: receiver := receiver ∪ {cancelCycle_9 ↦ Washer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelCycle_9 ↦ machineCode}
+        act6: currentMessage := {cancelCycle_9}
+    END
+
+    receivecancelCycle_9
+    WHEN
+        grd1: cancelCycle_9 ∈ sentMessages
+        grd2: cancelCycle_9 ↦ PaymentHub ∈ sender
+        grd3: cancelCycle_9 ↦ Washer ∈ receiver
+        grd4: cancelCycle_9 ∉ receivedMessages
+        grd5: currentMessage = {cancelCycle_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCycle_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelCycle_9 ↦ machineCode}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryCredit_10
+    WHEN
+        grd1: queryCredit_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelCycle_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCredit_10}
+        act2: sender := sender ∪ {queryCredit_10 ↦ Washer}
+        act3: receiver := receiver ∪ {queryCredit_10 ↦ LaundryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryCredit_10 ↦ machineInfo}
+        act6: currentMessage := {queryCredit_10}
+    END
+
+    receivequeryCredit_10
+    WHEN
+        grd1: queryCredit_10 ∈ sentMessages
+        grd2: queryCredit_10 ↦ Washer ∈ sender
+        grd3: queryCredit_10 ↦ LaundryApp ∈ receiver
+        grd4: queryCredit_10 ∉ receivedMessages
+        grd5: currentMessage = {queryCredit_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCredit_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryCredit_10 ↦ machineInfo}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    checkloop_reserveMachine_3_loop1
+    WHEN
+        grd1: cycleNo < 3
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+END

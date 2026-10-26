@@ -1,0 +1,30 @@
+{
+  "model_id": "model_012",
+  "case": "ConferenceRoomBooking",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "ConferenceRoomBooking_Project",
+  "category": "model_error",
+  "mutation": "dom(receiverdataMessages) ⊆ receivedMessages added, but every send resets receivedMessages to ∅",
+  "operations": {
+    "add_inv": [
+      "dom(receiverdataMessages) ⊆ receivedMessages"
+    ]
+  },
+  "added_invariant_labels": [
+    "inv18"
+  ],
+  "expected_failed_pos": [
+    "sendsearchRoom_1/inv18/INV",
+    "sendavailability_2/inv18/INV",
+    "sendbookRoom_3/inv18/INV",
+    "sendcreateEvent_4/inv18/INV",
+    "sendeventCreated_5/inv18/INV",
+    "sendupdatePanel_6_opt1/inv18/INV",
+    "sendbookingDone_7/inv18/INV"
+  ],
+  "expected_failed_count": 7,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_012",
+  "rodin_raw_dir": "rodin_raw/ml_pp/ConferenceRoomBooking_Project"
+}

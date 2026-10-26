@@ -1,0 +1,379 @@
+CONTEXT CourseAutoGradingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AutoGrader, LMS, Student
+    issueFeedback_1, assignFeedback_2, reserveGrade_3, logGrade_4, checkSubmission_5, ackGrade_6, notifyGrade_7, updateGrade_8, validateSubmission_9, ackSubmission_10, releaseSubmission_11
+    feedbackCode, feedbackData, feedbackValue, gradeData, submissionValue
+    AUTO, MANUAL
+AXIOMS
+    axm1: partition(Objects, {AutoGrader}, {LMS}, {Student})
+    axm2: partition(Messages, {issueFeedback_1}, {assignFeedback_2}, {reserveGrade_3}, {logGrade_4}, {checkSubmission_5}, {ackGrade_6}, {notifyGrade_7}, {updateGrade_8}, {validateSubmission_9}, {ackSubmission_10}, {releaseSubmission_11})
+    axm3: partition(DataMessages, {feedbackCode}, {feedbackData}, {feedbackValue}, {gradeData}, {submissionValue})
+    axm4: AUTO = 0
+    axm5: MANUAL = 1
+END
+
+MACHINE CourseAutoGradingInteractionMachine_1
+SEES CourseAutoGradingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, mode, t_obs, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: mode ∈ ℤ
+    inv9: t_obs ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+    inv22: t_time_8 ∈ ℤ
+    inv23: t_delay_8 ∈ ℤ
+    inv24: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: mode := AUTO
+        act9: t_obs := 0
+        act10: t_time_1 :∈ 0..8
+        act11: t_delay_1 := 3
+        act12: t_success_1 := 0
+        act13: t_time_3 :∈ 0..60
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_6 :∈ 0..20
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+        act19: t_time_7 :∈ 0..30
+        act20: t_delay_7 := 0
+        act21: t_success_7 := 0
+        act22: t_time_8 :∈ 0..15
+        act23: t_delay_8 := 0
+        act24: t_success_8 := 0
+    END
+
+
+    sendissueFeedback_1
+    WHEN
+        grd1: issueFeedback_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueFeedback_1}
+        act2: sender := sender ∪ {issueFeedback_1 ↦ Student}
+        act3: receiver := receiver ∪ {issueFeedback_1 ↦ AutoGrader}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueFeedback_1 ↦ submissionValue}
+        act6: currentMessage := {issueFeedback_1}
+    END
+
+    receiveissueFeedback_1
+    WHEN
+        grd1: issueFeedback_1 ∈ sentMessages
+        grd2: issueFeedback_1 ↦ Student ∈ sender
+        grd3: issueFeedback_1 ↦ AutoGrader ∈ receiver
+        grd4: issueFeedback_1 ∉ receivedMessages
+        grd5: currentMessage = {issueFeedback_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueFeedback_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueFeedback_1 ↦ submissionValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignFeedback_2
+    WHEN
+        grd1: assignFeedback_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueFeedback_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignFeedback_2}
+        act2: sender := sender ∪ {assignFeedback_2 ↦ AutoGrader}
+        act3: receiver := receiver ∪ {assignFeedback_2 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignFeedback_2 ↦ feedbackCode, assignFeedback_2 ↦ feedbackData}
+        act6: currentMessage := {assignFeedback_2}
+    END
+
+    receiveassignFeedback_2
+    WHEN
+        grd1: assignFeedback_2 ∈ sentMessages
+        grd2: assignFeedback_2 ↦ AutoGrader ∈ sender
+        grd3: assignFeedback_2 ↦ Student ∈ receiver
+        grd4: assignFeedback_2 ∉ receivedMessages
+        grd5: currentMessage = {assignFeedback_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignFeedback_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignFeedback_2 ↦ feedbackCode, assignFeedback_2 ↦ feedbackData}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveGrade_3
+    WHEN
+        grd1: reserveGrade_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignFeedback_2 ∈ receivedMessages
+        grd4: mode = MANUAL
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveGrade_3}
+        act2: sender := sender ∪ {reserveGrade_3 ↦ LMS}
+        act3: receiver := receiver ∪ {reserveGrade_3 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveGrade_3 ↦ feedbackValue}
+        act6: currentMessage := {reserveGrade_3}
+    END
+
+    receivereserveGrade_3
+    WHEN
+        grd1: reserveGrade_3 ∈ sentMessages
+        grd2: reserveGrade_3 ↦ LMS ∈ sender
+        grd3: reserveGrade_3 ↦ Student ∈ receiver
+        grd4: reserveGrade_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveGrade_3}
+        grd6: mode = MANUAL
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveGrade_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveGrade_3 ↦ feedbackValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendlogGrade_4
+    WHEN
+        grd1: logGrade_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignFeedback_2 ∈ receivedMessages
+        grd4: mode = AUTO
+    THEN
+        act1: sentMessages := sentMessages ∪ {logGrade_4}
+        act2: sender := sender ∪ {logGrade_4 ↦ LMS}
+        act3: receiver := receiver ∪ {logGrade_4 ↦ AutoGrader}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logGrade_4}
+    END
+
+    receivelogGrade_4
+    WHEN
+        grd1: logGrade_4 ∈ sentMessages
+        grd2: logGrade_4 ↦ LMS ∈ sender
+        grd3: logGrade_4 ↦ AutoGrader ∈ receiver
+        grd4: logGrade_4 ∉ receivedMessages
+        grd5: currentMessage = {logGrade_4}
+        grd6: mode = AUTO
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logGrade_4}
+        act2: currentMessage := ∅
+    END
+
+    sendcheckSubmission_5
+    WHEN
+        grd1: checkSubmission_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logGrade_4 ∈ receivedMessages
+        grd4: mode = AUTO
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkSubmission_5}
+        act2: sender := sender ∪ {checkSubmission_5 ↦ AutoGrader}
+        act3: receiver := receiver ∪ {checkSubmission_5 ↦ LMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkSubmission_5 ↦ gradeData}
+        act6: currentMessage := {checkSubmission_5}
+    END
+
+    receivecheckSubmission_5
+    WHEN
+        grd1: checkSubmission_5 ∈ sentMessages
+        grd2: checkSubmission_5 ↦ AutoGrader ∈ sender
+        grd3: checkSubmission_5 ↦ LMS ∈ receiver
+        grd4: checkSubmission_5 ∉ receivedMessages
+        grd5: currentMessage = {checkSubmission_5}
+        grd6: mode = AUTO
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkSubmission_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkSubmission_5 ↦ gradeData}
+        act3: currentMessage := ∅
+    END
+
+    sendackGrade_6
+    WHEN
+        grd1: ackGrade_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveGrade_3 ∈ receivedMessages ∨ checkSubmission_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackGrade_6}
+        act2: sender := sender ∪ {ackGrade_6 ↦ Student}
+        act3: receiver := receiver ∪ {ackGrade_6 ↦ LMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackGrade_6}
+    END
+
+    receiveackGrade_6
+    WHEN
+        grd1: ackGrade_6 ∈ sentMessages
+        grd2: ackGrade_6 ↦ Student ∈ sender
+        grd3: ackGrade_6 ↦ LMS ∈ receiver
+        grd4: ackGrade_6 ∉ receivedMessages
+        grd5: currentMessage = {ackGrade_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackGrade_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendnotifyGrade_7
+    WHEN
+        grd1: notifyGrade_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackGrade_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyGrade_7}
+        act2: sender := sender ∪ {notifyGrade_7 ↦ LMS}
+        act3: receiver := receiver ∪ {notifyGrade_7 ↦ AutoGrader}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyGrade_7}
+    END
+
+    receivenotifyGrade_7
+    WHEN
+        grd1: notifyGrade_7 ∈ sentMessages
+        grd2: notifyGrade_7 ↦ LMS ∈ sender
+        grd3: notifyGrade_7 ↦ AutoGrader ∈ receiver
+        grd4: notifyGrade_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyGrade_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyGrade_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+        act4: t_obs := t_time_7 + t_delay_7
+    END
+
+    sendupdateGrade_8
+    WHEN
+        grd1: updateGrade_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyGrade_7 ∈ receivedMessages
+        grd4: t_obs ≤ 27
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateGrade_8}
+        act2: sender := sender ∪ {updateGrade_8 ↦ Student}
+        act3: receiver := receiver ∪ {updateGrade_8 ↦ AutoGrader}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateGrade_8 ↦ feedbackData}
+        act6: currentMessage := {updateGrade_8}
+    END
+
+    receiveupdateGrade_8
+    WHEN
+        grd1: updateGrade_8 ∈ sentMessages
+        grd2: updateGrade_8 ↦ Student ∈ sender
+        grd3: updateGrade_8 ↦ AutoGrader ∈ receiver
+        grd4: updateGrade_8 ∉ receivedMessages
+        grd5: currentMessage = {updateGrade_8}
+        grd6: t_obs ≤ 27
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateGrade_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateGrade_8 ↦ feedbackData}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendvalidateSubmission_9
+    WHEN
+        grd1: validateSubmission_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyGrade_7 ∈ receivedMessages
+        grd4: t_obs > 27
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSubmission_9}
+        act2: sender := sender ∪ {validateSubmission_9 ↦ Student}
+        act3: receiver := receiver ∪ {validateSubmission_9 ↦ LMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateSubmission_9}
+    END
+
+    receivevalidateSubmission_9
+    WHEN
+        grd1: validateSubmission_9 ∈ sentMessages
+        grd2: validateSubmission_9 ↦ Student ∈ sender
+        grd3: validateSubmission_9 ↦ LMS ∈ receiver
+        grd4: validateSubmission_9 ∉ receivedMessages
+        grd5: currentMessage = {validateSubmission_9}
+        grd6: t_obs > 27
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSubmission_9}
+        act2: currentMessage := ∅
+    END
+
+    sendackSubmission_10
+    WHEN
+        grd1: ackSubmission_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateSubmission_9 ∈ receivedMessages
+        grd4: t_obs > 27
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackSubmission_10}
+        act2: sender := sender ∪ {ackSubmission_10 ↦ AutoGrader}
+        act3: receiver := receiver ∪ {ackSubmission_10 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackSubmission_10 ↦ feedbackCode}
+        act6: currentMessage := {ackSubmission_10}
+    END
+
+    receiveackSubmission_10
+    WHEN
+        grd1: ackSubmission_10 ∈ sentMessages
+        grd2: ackSubmission_10 ↦ AutoGrader ∈ sender
+        grd3: ackSubmission_10 ↦ Student ∈ receiver
+        grd4: ackSubmission_10 ∉ receivedMessages
+        grd5: currentMessage = {ackSubmission_10}
+        grd6: t_obs > 27
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackSubmission_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackSubmission_10 ↦ feedbackCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseSubmission_11
+    WHEN
+        grd1: releaseSubmission_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateGrade_8 ∈ receivedMessages ∨ ackSubmission_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseSubmission_11}
+        act2: sender := sender ∪ {releaseSubmission_11 ↦ Student}
+        act3: receiver := receiver ∪ {releaseSubmission_11 ↦ LMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseSubmission_11}
+    END
+
+    receivereleaseSubmission_11
+    WHEN
+        grd1: releaseSubmission_11 ∈ sentMessages
+        grd2: releaseSubmission_11 ↦ Student ∈ sender
+        grd3: releaseSubmission_11 ↦ LMS ∈ receiver
+        grd4: releaseSubmission_11 ∉ receivedMessages
+        grd5: currentMessage = {releaseSubmission_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseSubmission_11}
+        act2: currentMessage := ∅
+    END
+
+END

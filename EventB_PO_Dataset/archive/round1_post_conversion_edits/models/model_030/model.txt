@@ -1,0 +1,259 @@
+CONTEXT OnlineAuctionContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AuctionServer, Bidder, Seller
+    placeBid_1, bidAccepted_2, outbidNotice_3, raiseBid_4, closeAuction_5, saleConfirm_6, winnerNotice_7
+    bidAmount, bidRank, invoiceNo, newPrice, winnerID
+AXIOMS
+    axm1: partition(Objects, {AuctionServer}, {Bidder}, {Seller})
+    axm2: partition(Messages, {placeBid_1}, {bidAccepted_2}, {outbidNotice_3}, {raiseBid_4}, {closeAuction_5}, {saleConfirm_6}, {winnerNotice_7})
+    axm3: partition(DataMessages, {bidAmount}, {bidRank}, {invoiceNo}, {newPrice}, {winnerID})
+END
+
+MACHINE OnlineAuctionInteractionMachine_1
+SEES OnlineAuctionContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, t_time_1, t_delay_1, t_success_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_4 ∈ ℤ
+    inv13: t_delay_4 ∈ ℤ
+    inv14: t_success_4 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: t_time_1 :∈ 0..2
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_4 :∈ 0..10
+        act13: t_delay_4 := 0
+        act14: t_success_4 := 0
+        act15: t_time_5 :∈ 0..3
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendplaceBid_1
+    WHEN
+        grd1: placeBid_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {placeBid_1}
+        act2: sender := sender ∪ {placeBid_1 ↦ Bidder}
+        act3: receiver := receiver ∪ {placeBid_1 ↦ AuctionServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {placeBid_1 ↦ bidAmount}
+        act6: currentMessage := {placeBid_1}
+    END
+
+    receiveplaceBid_1
+    WHEN
+        grd1: placeBid_1 ∈ sentMessages
+        grd2: placeBid_1 ↦ Bidder ∈ sender
+        grd3: placeBid_1 ↦ AuctionServer ∈ receiver
+        grd4: placeBid_1 ∉ receivedMessages
+        grd5: currentMessage = {placeBid_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {placeBid_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {placeBid_1 ↦ bidAmount}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendbidAccepted_2
+    WHEN
+        grd1: bidAccepted_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: placeBid_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {bidAccepted_2}
+        act2: sender := sender ∪ {bidAccepted_2 ↦ AuctionServer}
+        act3: receiver := receiver ∪ {bidAccepted_2 ↦ Bidder}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {bidAccepted_2 ↦ bidRank}
+        act6: currentMessage := {bidAccepted_2}
+    END
+
+    receivebidAccepted_2
+    WHEN
+        grd1: bidAccepted_2 ∈ sentMessages
+        grd2: bidAccepted_2 ↦ AuctionServer ∈ sender
+        grd3: bidAccepted_2 ↦ Bidder ∈ receiver
+        grd4: bidAccepted_2 ∉ receivedMessages
+        grd5: currentMessage = {bidAccepted_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {bidAccepted_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {bidAccepted_2 ↦ bidRank}
+        act3: currentMessage := ∅
+    END
+
+    sendoutbidNotice_3
+    WHEN
+        grd1: outbidNotice_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: bidAccepted_2 ∈ receivedMessages
+        grd4: roundNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {outbidNotice_3}
+        act2: sender := sender ∪ {outbidNotice_3 ↦ AuctionServer}
+        act3: receiver := receiver ∪ {outbidNotice_3 ↦ Bidder}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {outbidNotice_3 ↦ newPrice}
+        act6: currentMessage := {outbidNotice_3}
+    END
+
+    receiveoutbidNotice_3
+    WHEN
+        grd1: outbidNotice_3 ∈ sentMessages
+        grd2: outbidNotice_3 ↦ AuctionServer ∈ sender
+        grd3: outbidNotice_3 ↦ Bidder ∈ receiver
+        grd4: outbidNotice_3 ∉ receivedMessages
+        grd5: currentMessage = {outbidNotice_3}
+        grd6: roundNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {outbidNotice_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {outbidNotice_3 ↦ newPrice}
+        act3: currentMessage := ∅
+    END
+
+    sendraiseBid_4
+    WHEN
+        grd1: raiseBid_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: outbidNotice_3 ∈ receivedMessages
+        grd4: roundNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {raiseBid_4}
+        act2: sender := sender ∪ {raiseBid_4 ↦ Bidder}
+        act3: receiver := receiver ∪ {raiseBid_4 ↦ AuctionServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {raiseBid_4 ↦ bidAmount}
+        act6: currentMessage := {raiseBid_4}
+    END
+
+    receiveraiseBid_4
+    WHEN
+        grd1: raiseBid_4 ∈ sentMessages
+        grd2: raiseBid_4 ↦ Bidder ∈ sender
+        grd3: raiseBid_4 ↦ AuctionServer ∈ receiver
+        grd4: raiseBid_4 ∉ receivedMessages
+        grd5: currentMessage = {raiseBid_4}
+        grd6: roundNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {raiseBid_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {raiseBid_4 ↦ bidAmount}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcloseAuction_5
+    WHEN
+        grd1: closeAuction_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: raiseBid_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {closeAuction_5}
+        act2: sender := sender ∪ {closeAuction_5 ↦ AuctionServer}
+        act3: receiver := receiver ∪ {closeAuction_5 ↦ Seller}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {closeAuction_5 ↦ winnerID}
+        act6: currentMessage := {closeAuction_5}
+    END
+
+    receivecloseAuction_5
+    WHEN
+        grd1: closeAuction_5 ∈ sentMessages
+        grd2: closeAuction_5 ↦ AuctionServer ∈ sender
+        grd3: closeAuction_5 ↦ Seller ∈ receiver
+        grd4: closeAuction_5 ∉ receivedMessages
+        grd5: currentMessage = {closeAuction_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {closeAuction_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {closeAuction_5 ↦ winnerID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendsaleConfirm_6
+    WHEN
+        grd1: saleConfirm_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: closeAuction_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {saleConfirm_6}
+        act2: sender := sender ∪ {saleConfirm_6 ↦ Seller}
+        act3: receiver := receiver ∪ {saleConfirm_6 ↦ AuctionServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {saleConfirm_6 ↦ invoiceNo}
+        act6: currentMessage := {saleConfirm_6}
+    END
+
+    receivesaleConfirm_6
+    WHEN
+        grd1: saleConfirm_6 ↦ Seller ∈ sender
+        grd2: saleConfirm_6 ↦ AuctionServer ∈ receiver
+        grd3: saleConfirm_6 ∉ receivedMessages
+        grd4: currentMessage = {saleConfirm_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {saleConfirm_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {saleConfirm_6 ↦ invoiceNo}
+        act3: currentMessage := ∅
+    END
+
+    sendwinnerNotice_7
+    WHEN
+        grd1: winnerNotice_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: saleConfirm_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {winnerNotice_7}
+        act2: sender := sender ∪ {winnerNotice_7 ↦ AuctionServer}
+        act3: receiver := receiver ∪ {winnerNotice_7 ↦ Bidder}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {winnerNotice_7 ↦ invoiceNo}
+        act6: currentMessage := {winnerNotice_7}
+    END
+
+    receivewinnerNotice_7
+    WHEN
+        grd1: winnerNotice_7 ∈ sentMessages
+        grd2: winnerNotice_7 ↦ AuctionServer ∈ sender
+        grd3: winnerNotice_7 ↦ Bidder ∈ receiver
+        grd4: winnerNotice_7 ∉ receivedMessages
+        grd5: currentMessage = {winnerNotice_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {winnerNotice_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {winnerNotice_7 ↦ invoiceNo}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_outbidNotice_3_loop1
+    WHEN
+        grd1: roundNo < 5
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

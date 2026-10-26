@@ -1,0 +1,253 @@
+CONTEXT BankTransferContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CoreBanking, Customer, FraudCheck, MobileBank
+    initiateTransfer_1, checkFraud_2, riskScore_3, postTransfer_4, postingDone_5, holdTransfer_6, transferStatus_7
+    accountNo, balance, riskLevel, statusCode, transferAmt, txnRef
+AXIOMS
+    axm1: partition(Objects, {CoreBanking}, {Customer}, {FraudCheck}, {MobileBank})
+    axm2: partition(Messages, {initiateTransfer_1}, {checkFraud_2}, {riskScore_3}, {postTransfer_4}, {postingDone_5}, {holdTransfer_6}, {transferStatus_7})
+    axm3: partition(DataMessages, {accountNo}, {balance}, {riskLevel}, {statusCode}, {transferAmt}, {txnRef})
+END
+
+MACHINE BankTransferInteractionMachine_1
+SEES BankTransferContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, riskFlag, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: riskFlag ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: riskFlag := 1
+        act9: t_time_1 :∈ 0..3
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..5
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_4 :∈ 0..4
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendinitiateTransfer_1
+    WHEN
+        grd1: initiateTransfer_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {initiateTransfer_1}
+        act2: sender := sender ∪ {initiateTransfer_1 ↦ Customer}
+        act3: receiver := receiver ∪ {initiateTransfer_1 ↦ MobileBank}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {initiateTransfer_1 ↦ accountNo, initiateTransfer_1 ↦ transferAmt}
+        act6: currentMessage := {initiateTransfer_1}
+    END
+
+    receiveinitiateTransfer_1
+    WHEN
+        grd1: initiateTransfer_1 ∈ sentMessages
+        grd2: initiateTransfer_1 ↦ Customer ∈ sender
+        grd3: initiateTransfer_1 ↦ MobileBank ∈ receiver
+        grd4: initiateTransfer_1 ∉ receivedMessages
+        grd5: currentMessage = {initiateTransfer_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {initiateTransfer_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {initiateTransfer_1 ↦ accountNo, initiateTransfer_1 ↦ transferAmt}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendcheckFraud_2
+    WHEN
+        grd1: checkFraud_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: initiateTransfer_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkFraud_2}
+        act2: sender := sender ∪ {checkFraud_2 ↦ MobileBank}
+        act3: receiver := receiver ∪ {checkFraud_2 ↦ FraudCheck}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkFraud_2 ↦ txnRef}
+        act6: currentMessage := {checkFraud_2}
+    END
+
+    receivecheckFraud_2
+    WHEN
+        grd1: checkFraud_2 ∈ sentMessages
+        grd2: checkFraud_2 ↦ MobileBank ∈ sender
+        grd3: checkFraud_2 ↦ FraudCheck ∈ receiver
+        grd4: checkFraud_2 ∉ receivedMessages
+        grd5: currentMessage = {checkFraud_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkFraud_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkFraud_2 ↦ txnRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendriskScore_3
+    WHEN
+        grd1: riskScore_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkFraud_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {riskScore_3}
+        act2: sender := sender ∪ {riskScore_3 ↦ FraudCheck}
+        act3: receiver := receiver ∪ {riskScore_3 ↦ MobileBank}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {riskScore_3 ↦ riskLevel}
+        act6: currentMessage := {riskScore_3}
+    END
+
+    receiveriskScore_3
+    WHEN
+        grd1: riskScore_3 ∈ sentMessages
+        grd2: riskScore_3 ↦ FraudCheck ∈ sender
+        grd3: riskScore_3 ↦ MobileBank ∈ receiver
+        grd4: riskScore_3 ∉ receivedMessages
+        grd5: currentMessage = {riskScore_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {riskScore_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {riskScore_3 ↦ riskLevel}
+        act3: currentMessage := ∅
+    END
+
+    sendpostTransfer_4
+    WHEN
+        grd1: postTransfer_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: riskScore_3 ∈ receivedMessages
+        grd4: riskFlag = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {postTransfer_4}
+        act2: sender := sender ∪ {postTransfer_4 ↦ MobileBank}
+        act3: receiver := receiver ∪ {postTransfer_4 ↦ CoreBanking}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {postTransfer_4 ↦ txnRef}
+        act6: currentMessage := {postTransfer_4}
+    END
+
+    receivepostTransfer_4
+    WHEN
+        grd1: postTransfer_4 ↦ MobileBank ∈ sender
+        grd2: postTransfer_4 ↦ CoreBanking ∈ receiver
+        grd3: postTransfer_4 ∉ receivedMessages
+        grd4: currentMessage = {postTransfer_4}
+        grd5: riskFlag = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {postTransfer_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {postTransfer_4 ↦ txnRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendpostingDone_5
+    WHEN
+        grd1: postingDone_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: postTransfer_4 ∈ receivedMessages
+        grd4: riskFlag = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {postingDone_5}
+        act2: sender := sender ∪ {postingDone_5 ↦ CoreBanking}
+        act3: receiver := receiver ∪ {postingDone_5 ↦ MobileBank}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {postingDone_5 ↦ balance}
+        act6: currentMessage := {postingDone_5}
+    END
+
+    receivepostingDone_5
+    WHEN
+        grd1: postingDone_5 ∈ sentMessages
+        grd2: postingDone_5 ↦ CoreBanking ∈ sender
+        grd3: postingDone_5 ↦ MobileBank ∈ receiver
+        grd4: postingDone_5 ∉ receivedMessages
+        grd5: currentMessage = {postingDone_5}
+        grd6: riskFlag = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {postingDone_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {postingDone_5 ↦ balance}
+        act3: currentMessage := ∅
+    END
+
+    sendholdTransfer_6
+    WHEN
+        grd1: holdTransfer_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: riskScore_3 ∈ receivedMessages
+        grd4: riskFlag = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {holdTransfer_6}
+        act2: sender := sender ∪ {holdTransfer_6 ↦ MobileBank}
+        act3: receiver := receiver ∪ {holdTransfer_6 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {holdTransfer_6 ↦ txnRef}
+        act6: currentMessage := {holdTransfer_6}
+    END
+
+    receiveholdTransfer_6
+    WHEN
+        grd1: holdTransfer_6 ∈ sentMessages
+        grd2: holdTransfer_6 ↦ MobileBank ∈ sender
+        grd3: holdTransfer_6 ↦ Customer ∈ receiver
+        grd4: holdTransfer_6 ∉ receivedMessages
+        grd5: currentMessage = {holdTransfer_6}
+        grd6: riskFlag = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {holdTransfer_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {holdTransfer_6 ↦ txnRef}
+        act3: currentMessage := ∅
+    END
+
+    sendtransferStatus_7
+    WHEN
+        grd1: transferStatus_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: postingDone_5 ∈ receivedMessages ∨ holdTransfer_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {transferStatus_7}
+        act2: sender := sender ∪ {transferStatus_7 ↦ MobileBank}
+        act3: receiver := receiver ∪ {transferStatus_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {transferStatus_7 ↦ statusCode}
+        act6: currentMessage := {transferStatus_7}
+    END
+
+    receivetransferStatus_7
+    WHEN
+        grd1: transferStatus_7 ↦ MobileBank ∈ sender
+        grd2: transferStatus_7 ↦ Customer ∈ receiver
+        grd3: transferStatus_7 ∉ receivedMessages
+        grd4: currentMessage = {transferStatus_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {transferStatus_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {transferStatus_7 ↦ statusCode}
+        act3: currentMessage := ∅
+    END
+
+END

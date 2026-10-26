@@ -1,0 +1,202 @@
+CONTEXT CampusWifiAccessContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AccessPoint, Student
+    cancelSession_1, validateToken_2, sendToken_3, issueSession_4, reserveToken_5, sendSession_6
+    quotaData, quotaInfo, sessionData, tokenCode, tokenID
+AXIOMS
+    axm1: partition(Objects, {AccessPoint}, {Student})
+    axm2: partition(Messages, {cancelSession_1}, {validateToken_2}, {sendToken_3}, {issueSession_4}, {reserveToken_5}, {sendSession_6})
+    axm3: partition(DataMessages, {quotaData}, {quotaInfo}, {sessionData}, {tokenCode}, {tokenID})
+END
+
+MACHINE CampusWifiAccessInteractionMachine_1
+SEES CampusWifiAccessContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_6 ∈ ℤ
+    inv9: t_delay_6 ∈ ℤ
+    inv10: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_6 :∈ 0..15
+        act9: t_delay_6 := 0
+        act10: t_success_6 := 0
+    END
+
+
+    sendcancelSession_1
+    WHEN
+        grd1: cancelSession_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSession_1}
+        act2: sender := sender ∪ {cancelSession_1 ↦ AccessPoint}
+        act3: receiver := receiver ∪ {cancelSession_1 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelSession_1 ↦ tokenCode}
+        act6: currentMessage := {cancelSession_1}
+    END
+
+    receivecancelSession_1
+    WHEN
+        grd1: cancelSession_1 ∈ sentMessages
+        grd2: cancelSession_1 ↦ AccessPoint ∈ sender
+        grd3: cancelSession_1 ↦ Student ∈ receiver
+        grd4: cancelSession_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelSession_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSession_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelSession_1 ↦ tokenCode}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateToken_2
+    WHEN
+        grd1: validateToken_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSession_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateToken_2}
+        act2: sender := sender ∪ {validateToken_2 ↦ Student}
+        act3: receiver := receiver ∪ {validateToken_2 ↦ AccessPoint}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateToken_2 ↦ tokenID}
+        act6: currentMessage := {validateToken_2}
+    END
+
+    receivevalidateToken_2
+    WHEN
+        grd1: validateToken_2 ∈ sentMessages
+        grd2: validateToken_2 ↦ Student ∈ sender
+        grd3: validateToken_2 ↦ AccessPoint ∈ receiver
+        grd4: validateToken_2 ∉ receivedMessages
+        grd5: currentMessage = {validateToken_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateToken_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateToken_2 ↦ tokenID}
+        act3: currentMessage := ∅
+    END
+
+    sendsendToken_3
+    WHEN
+        grd1: sendToken_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateToken_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendToken_3}
+        act2: sender := sender ∪ {sendToken_3 ↦ Student}
+        act3: receiver := receiver ∪ {sendToken_3 ↦ AccessPoint}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendToken_3 ↦ quotaData, sendToken_3 ↦ sessionData}
+        act6: currentMessage := {sendToken_3}
+    END
+
+    receivesendToken_3
+    WHEN
+        grd1: sendToken_3 ∈ sentMessages
+        grd2: sendToken_3 ↦ Student ∈ sender
+        grd3: sendToken_3 ↦ AccessPoint ∈ receiver
+        grd4: sendToken_3 ∉ receivedMessages
+        grd5: currentMessage = {sendToken_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendToken_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendToken_3 ↦ quotaData, sendToken_3 ↦ sessionData}
+        act3: currentMessage := ∅
+    END
+
+    sendissueSession_4
+    WHEN
+        grd1: issueSession_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendToken_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSession_4}
+        act2: sender := sender ∪ {issueSession_4 ↦ Student}
+        act3: receiver := receiver ∪ {issueSession_4 ↦ AccessPoint}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueSession_4 ↦ quotaInfo}
+        act6: currentMessage := {issueSession_4}
+    END
+
+    receiveissueSession_4
+    WHEN
+        grd1: issueSession_4 ∈ sentMessages
+        grd2: issueSession_4 ↦ Student ∈ sender
+        grd3: issueSession_4 ↦ AccessPoint ∈ receiver
+        grd4: issueSession_4 ∉ receivedMessages
+        grd5: currentMessage = {issueSession_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSession_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueSession_4 ↦ quotaInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveToken_5
+    WHEN
+        grd1: reserveToken_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueSession_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveToken_5}
+        act2: sender := sender ∪ {reserveToken_5 ↦ AccessPoint}
+        act3: receiver := receiver ∪ {reserveToken_5 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveToken_5}
+    END
+
+    receivereserveToken_5
+    WHEN
+        grd1: reserveToken_5 ∈ sentMessages
+        grd2: reserveToken_5 ↦ AccessPoint ∈ sender
+        grd3: reserveToken_5 ↦ Student ∈ receiver
+        grd4: reserveToken_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveToken_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveToken_5}
+        act2: currentMessage := ∅
+    END
+
+    sendsendSession_6
+    WHEN
+        grd1: sendSession_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveToken_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSession_6}
+        act2: sender := sender ∪ {sendSession_6 ↦ Student}
+        act3: receiver := receiver ∪ {sendSession_6 ↦ AccessPoint}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendSession_6}
+    END
+
+    receivesendSession_6
+    WHEN
+        grd1: sendSession_6 ∈ sentMessages
+        grd2: sendSession_6 ↦ Student ∈ sender
+        grd3: sendSession_6 ↦ AccessPoint ∈ receiver
+        grd4: sendSession_6 ∉ receivedMessages
+        grd5: currentMessage = {sendSession_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSession_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

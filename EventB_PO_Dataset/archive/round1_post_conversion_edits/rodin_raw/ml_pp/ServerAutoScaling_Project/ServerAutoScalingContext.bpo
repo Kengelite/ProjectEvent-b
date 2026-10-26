@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="vmType" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="stopMonitoring_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Orchestrator" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="policyID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Monitor" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="startMonitoring_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="registerVM_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="vmReady_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cpuLoad" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="VMPool" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="vmID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="reportLoad_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="keepCapacity_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="addVM_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="LoadBalancer" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/ServerAutoScaling_Project/ServerAutoScalingContext.bpo|org.eventb.core.poFile#ServerAutoScalingContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{LoadBalancer},{Monitor},{Orchestrator},{VMPool})" org.eventb.core.source="/ServerAutoScaling_Project/ServerAutoScalingContext.buc|org.eventb.core.contextFile#ServerAutoScalingContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{startMonitoring_1},{reportLoad_2},{addVM_3},{vmReady_4},{registerVM_5},{keepCapacity_6},{stopMonitoring_7})" org.eventb.core.source="/ServerAutoScaling_Project/ServerAutoScalingContext.buc|org.eventb.core.contextFile#ServerAutoScalingContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{cpuLoad},{policyID},{vmID},{vmType})" org.eventb.core.source="/ServerAutoScaling_Project/ServerAutoScalingContext.buc|org.eventb.core.contextFile#ServerAutoScalingContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

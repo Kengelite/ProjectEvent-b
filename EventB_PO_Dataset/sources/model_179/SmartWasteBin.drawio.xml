@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="SmartWasteBin" id="smartwastebin">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="215" width="640" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="490" width="640" height="235" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="287" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="562" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="642" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[hasKey == 1]" vertex="1">
+          <mxGeometry x="105" y="220" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[hasKey == 0]" vertex="1">
+          <mxGeometry x="105" y="300" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t8" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[phase == GOLD]" vertex="1">
+          <mxGeometry x="105" y="495" width="135" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t9" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[phase == SILVER]" vertex="1">
+          <mxGeometry x="105" y="575" width="153" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t10" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[phase == BRONZE]" vertex="1">
+          <mxGeometry x="105" y="655" width="153" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll11" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Bin" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="ll12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Gateway" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="ll13" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="FleetPlanner" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="780" as="geometry" />
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="reserveRoute(fillID) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="130" as="sourcePoint" />
+            <mxPoint x="90.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendRoute()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="180" as="sourcePoint" />
+            <mxPoint x="590.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="assignRoute()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="265" as="sourcePoint" />
+            <mxPoint x="340.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reservePickup(routeRef)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="345" as="sourcePoint" />
+            <mxPoint x="90.0" y="345" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="scheduleFill() {0..60}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="405" as="sourcePoint" />
+            <mxPoint x="590.0" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="updatePickup()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="455" as="sourcePoint" />
+            <mxPoint x="340.0" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="logPickup(fillInfo) {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="540" as="sourcePoint" />
+            <mxPoint x="90.0" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="issueRoute(pickupID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="620" as="sourcePoint" />
+            <mxPoint x="90.0" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="syncPickup(fillID) {0..30}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="700" as="sourcePoint" />
+            <mxPoint x="90.0" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="releaseRoute(routeData) {0..30}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="760" as="sourcePoint" />
+            <mxPoint x="90.0" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

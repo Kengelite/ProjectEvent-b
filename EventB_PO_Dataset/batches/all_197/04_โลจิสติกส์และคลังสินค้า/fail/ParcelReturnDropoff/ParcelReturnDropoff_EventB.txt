@@ -1,0 +1,326 @@
+CONTEXT ParcelReturnDropoffContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, DropBox
+    syncReturn_1, sendRefund_2, notifyReturn_3, scheduleReturn_4, ackReturn_5, reportReturn_6, logRefund_7, approveRefund_8, assignLabel_9, validateRefund_10
+    labelID, labelRef, refundCode, refundData, refundID, refundInfo, returnRef
+AXIOMS
+    axm1: partition(Objects, {Customer}, {DropBox})
+    axm2: partition(Messages, {syncReturn_1}, {sendRefund_2}, {notifyReturn_3}, {scheduleReturn_4}, {ackReturn_5}, {reportReturn_6}, {logRefund_7}, {approveRefund_8}, {assignLabel_9}, {validateRefund_10})
+    axm3: partition(DataMessages, {labelID}, {labelRef}, {refundCode}, {refundData}, {refundID}, {refundInfo}, {returnRef})
+END
+
+MACHINE ParcelReturnDropoffInteractionMachine_1
+SEES ParcelReturnDropoffContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, par_1, t_time_2, t_delay_2, t_success_2, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_7 ∈ ℤ
+    inv14: t_delay_7 ∈ ℤ
+    inv15: t_success_7 ∈ ℤ
+    inv16: t_time_9 ∈ ℤ
+    inv17: t_delay_9 ∈ ℤ
+    inv18: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..2
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_7 :∈ 3..1
+        act14: t_delay_7 := 0
+        act15: t_success_7 := 0
+        act16: t_time_9 :∈ 0..20
+        act17: t_delay_9 := 0
+        act18: t_success_9 := 0
+    END
+
+
+    sendsyncReturn_1
+    WHEN
+        grd1: syncReturn_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncReturn_1}
+        act2: sender := sender ∪ {syncReturn_1 ↦ DropBox}
+        act3: receiver := receiver ∪ {syncReturn_1 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncReturn_1}
+    END
+
+    receivesyncReturn_1
+    WHEN
+        grd1: syncReturn_1 ∈ sentMessages
+        grd2: syncReturn_1 ↦ DropBox ∈ sender
+        grd3: syncReturn_1 ↦ Customer ∈ receiver
+        grd4: syncReturn_1 ∉ receivedMessages
+        grd5: currentMessage = {syncReturn_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncReturn_1}
+        act2: currentMessage := ∅
+    END
+
+    sendsendRefund_2
+    WHEN
+        grd1: sendRefund_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncReturn_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendRefund_2}
+        act2: sender := sender ∪ {sendRefund_2 ↦ DropBox}
+        act3: receiver := receiver ∪ {sendRefund_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendRefund_2 ↦ returnRef}
+        act6: currentMessage := {sendRefund_2}
+    END
+
+    receivesendRefund_2
+    WHEN
+        grd1: sendRefund_2 ∈ sentMessages
+        grd2: sendRefund_2 ↦ DropBox ∈ sender
+        grd3: sendRefund_2 ↦ Customer ∈ receiver
+        grd4: sendRefund_2 ∉ receivedMessages
+        grd5: currentMessage = {sendRefund_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendRefund_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendRefund_2 ↦ returnRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendnotifyReturn_3_opt1
+    WHEN
+        grd1: notifyReturn_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendRefund_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyReturn_3}
+        act2: sender := sender ∪ {notifyReturn_3 ↦ DropBox}
+        act3: receiver := receiver ∪ {notifyReturn_3 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyReturn_3 ↦ refundCode}
+        act6: currentMessage := {notifyReturn_3}
+    END
+
+    receivenotifyReturn_3_opt1
+    WHEN
+        grd1: notifyReturn_3 ∈ sentMessages
+        grd2: notifyReturn_3 ↦ DropBox ∈ sender
+        grd3: notifyReturn_3 ↦ Customer ∈ receiver
+        grd4: notifyReturn_3 ∉ receivedMessages
+        grd5: currentMessage = {notifyReturn_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyReturn_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyReturn_3 ↦ refundCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleReturn_4
+    WHEN
+        grd1: scheduleReturn_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyReturn_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleReturn_4}
+        act2: sender := sender ∪ {scheduleReturn_4 ↦ Customer}
+        act3: receiver := receiver ∪ {scheduleReturn_4 ↦ DropBox}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleReturn_4 ↦ labelRef}
+        act6: currentMessage := {scheduleReturn_4}
+    END
+
+    receivescheduleReturn_4
+    WHEN
+        grd1: scheduleReturn_4 ∈ sentMessages
+        grd2: scheduleReturn_4 ↦ Customer ∈ sender
+        grd3: scheduleReturn_4 ↦ DropBox ∈ receiver
+        grd4: scheduleReturn_4 ∉ receivedMessages
+        grd5: currentMessage = {scheduleReturn_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleReturn_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleReturn_4 ↦ labelRef}
+        act3: currentMessage := ∅
+    END
+
+    sendackReturn_5
+    WHEN
+        grd1: ackReturn_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleReturn_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackReturn_5}
+        act2: sender := sender ∪ {ackReturn_5 ↦ DropBox}
+        act3: receiver := receiver ∪ {ackReturn_5 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackReturn_5 ↦ refundInfo}
+        act6: currentMessage := {ackReturn_5}
+    END
+
+    receiveackReturn_5
+    WHEN
+        grd1: ackReturn_5 ∈ sentMessages
+        grd2: ackReturn_5 ↦ DropBox ∈ sender
+        grd3: ackReturn_5 ↦ Customer ∈ receiver
+        grd4: ackReturn_5 ∉ receivedMessages
+        grd5: currentMessage = {ackReturn_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackReturn_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackReturn_5 ↦ refundInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreportReturn_6
+    WHEN
+        grd1: reportReturn_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackReturn_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportReturn_6}
+        act2: sender := sender ∪ {reportReturn_6 ↦ DropBox}
+        act3: receiver := receiver ∪ {reportReturn_6 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportReturn_6}
+    END
+
+    receivereportReturn_6
+    WHEN
+        grd1: reportReturn_6 ∈ sentMessages
+        grd2: reportReturn_6 ↦ DropBox ∈ sender
+        grd3: reportReturn_6 ↦ Customer ∈ receiver
+        grd4: reportReturn_6 ∉ receivedMessages
+        grd5: currentMessage = {reportReturn_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportReturn_6}
+        act2: currentMessage := ∅
+    END
+
+    sendlogRefund_7
+    WHEN
+        grd1: logRefund_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportReturn_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logRefund_7}
+        act2: sender := sender ∪ {logRefund_7 ↦ Customer}
+        act3: receiver := receiver ∪ {logRefund_7 ↦ DropBox}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logRefund_7 ↦ refundID}
+        act6: currentMessage := {logRefund_7}
+    END
+
+    receivelogRefund_7
+    WHEN
+        grd1: logRefund_7 ∈ sentMessages
+        grd2: logRefund_7 ↦ Customer ∈ sender
+        grd3: logRefund_7 ↦ DropBox ∈ receiver
+        grd4: logRefund_7 ∉ receivedMessages
+        grd5: currentMessage = {logRefund_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logRefund_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logRefund_7 ↦ refundID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendapproveRefund_8
+    WHEN
+        grd1: approveRefund_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logRefund_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveRefund_8}
+        act2: sender := sender ∪ {approveRefund_8 ↦ DropBox}
+        act3: receiver := receiver ∪ {approveRefund_8 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveRefund_8}
+    END
+
+    receiveapproveRefund_8
+    WHEN
+        grd1: approveRefund_8 ∈ sentMessages
+        grd2: approveRefund_8 ↦ DropBox ∈ sender
+        grd3: approveRefund_8 ↦ Customer ∈ receiver
+        grd4: approveRefund_8 ∉ receivedMessages
+        grd5: currentMessage = {approveRefund_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveRefund_8}
+        act2: currentMessage := ∅
+    END
+
+    sendassignLabel_9
+    WHEN
+        grd1: assignLabel_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveRefund_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignLabel_9}
+        act2: sender := sender ∪ {assignLabel_9 ↦ DropBox}
+        act3: receiver := receiver ∪ {assignLabel_9 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignLabel_9}
+    END
+
+    receiveassignLabel_9
+    WHEN
+        grd1: assignLabel_9 ∈ sentMessages
+        grd2: assignLabel_9 ↦ DropBox ∈ sender
+        grd3: assignLabel_9 ↦ Customer ∈ receiver
+        grd4: assignLabel_9 ∉ receivedMessages
+        grd5: currentMessage = {assignLabel_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignLabel_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendvalidateRefund_10
+    WHEN
+        grd1: validateRefund_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignLabel_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateRefund_10}
+        act2: sender := sender ∪ {validateRefund_10 ↦ DropBox}
+        act3: receiver := receiver ∪ {validateRefund_10 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateRefund_10 ↦ labelID, validateRefund_10 ↦ refundData}
+        act6: currentMessage := {validateRefund_10}
+    END
+
+    receivevalidateRefund_10
+    WHEN
+        grd1: validateRefund_10 ∈ sentMessages
+        grd2: validateRefund_10 ↦ DropBox ∈ sender
+        grd3: validateRefund_10 ↦ Customer ∈ receiver
+        grd4: validateRefund_10 ∉ receivedMessages
+        grd5: currentMessage = {validateRefund_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateRefund_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateRefund_10 ↦ labelID, validateRefund_10 ↦ refundData}
+        act3: currentMessage := ∅
+    END
+
+END

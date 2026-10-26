@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="CareServer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="doseID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="doseTime" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="logDose_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="logAck_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="scheduleDose_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="patientID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="escalateMissed_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="pillCount" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Patient" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="Dispenser" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="doseAlert_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmIntake_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="refillCheck_7" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/MedicationDispenser_Project/MedicationDispenserContext.bpo|org.eventb.core.poFile#MedicationDispenserContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CareServer},{Dispenser},{Patient})" org.eventb.core.source="/MedicationDispenser_Project/MedicationDispenserContext.buc|org.eventb.core.contextFile#MedicationDispenserContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{scheduleDose_1},{doseAlert_2},{confirmIntake_3},{logDose_4},{logAck_5},{escalateMissed_6},{refillCheck_7})" org.eventb.core.source="/MedicationDispenser_Project/MedicationDispenserContext.buc|org.eventb.core.contextFile#MedicationDispenserContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{doseID},{doseTime},{patientID},{pillCount})" org.eventb.core.source="/MedicationDispenser_Project/MedicationDispenserContext.buc|org.eventb.core.contextFile#MedicationDispenserContext|org.eventb.core.axiom#internal_element20"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

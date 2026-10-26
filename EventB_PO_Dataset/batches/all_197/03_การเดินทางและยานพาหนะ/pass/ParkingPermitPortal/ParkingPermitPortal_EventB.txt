@@ -1,0 +1,217 @@
+CONTEXT ParkingPermitPortalContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CityDB, PermitPortal, Resident
+    fetchPermit_1, approvePlate_2, queryFine_3, confirmPlate_4, fetchPlate_5, reservePermit_6
+    fineID, permitCode, permitInfo, plateInfo
+AXIOMS
+    axm1: partition(Objects, {CityDB}, {PermitPortal}, {Resident})
+    axm2: partition(Messages, {fetchPermit_1}, {approvePlate_2}, {queryFine_3}, {confirmPlate_4}, {fetchPlate_5}, {reservePermit_6})
+    axm3: partition(DataMessages, {fineID}, {permitCode}, {permitInfo}, {plateInfo})
+END
+
+MACHINE ParkingPermitPortalInteractionMachine_1
+SEES ParkingPermitPortalContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, t_time_2, t_delay_2, t_success_2
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: t_time_2 :∈ 0..8
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+    END
+
+
+    sendfetchPermit_1
+    WHEN
+        grd1: fetchPermit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPermit_1}
+        act2: sender := sender ∪ {fetchPermit_1 ↦ Resident}
+        act3: receiver := receiver ∪ {fetchPermit_1 ↦ CityDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchPermit_1 ↦ permitInfo}
+        act6: currentMessage := {fetchPermit_1}
+    END
+
+    receivefetchPermit_1
+    WHEN
+        grd1: fetchPermit_1 ∈ sentMessages
+        grd2: fetchPermit_1 ↦ Resident ∈ sender
+        grd3: fetchPermit_1 ↦ CityDB ∈ receiver
+        grd4: fetchPermit_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchPermit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPermit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchPermit_1 ↦ permitInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendapprovePlate_2
+    WHEN
+        grd1: approvePlate_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPermit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvePlate_2}
+        act2: sender := sender ∪ {approvePlate_2 ↦ CityDB}
+        act3: receiver := receiver ∪ {approvePlate_2 ↦ Resident}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approvePlate_2 ↦ fineID}
+        act6: currentMessage := {approvePlate_2}
+    END
+
+    receiveapprovePlate_2
+    WHEN
+        grd1: approvePlate_2 ∈ sentMessages
+        grd2: approvePlate_2 ↦ CityDB ∈ sender
+        grd3: approvePlate_2 ↦ Resident ∈ receiver
+        grd4: approvePlate_2 ∉ receivedMessages
+        grd5: currentMessage = {approvePlate_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvePlate_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approvePlate_2 ↦ fineID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendqueryFine_3
+    WHEN
+        grd1: queryFine_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvePlate_2 ∈ receivedMessages
+        grd4: retryNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryFine_3}
+        act2: sender := sender ∪ {queryFine_3 ↦ PermitPortal}
+        act3: receiver := receiver ∪ {queryFine_3 ↦ CityDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryFine_3 ↦ plateInfo}
+        act6: currentMessage := {queryFine_3}
+    END
+
+    receivequeryFine_3
+    WHEN
+        grd1: queryFine_3 ∈ sentMessages
+        grd2: queryFine_3 ↦ PermitPortal ∈ sender
+        grd3: queryFine_3 ↦ CityDB ∈ receiver
+        grd4: queryFine_3 ∉ receivedMessages
+        grd5: currentMessage = {queryFine_3}
+        grd6: retryNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryFine_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryFine_3 ↦ plateInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmPlate_4
+    WHEN
+        grd1: confirmPlate_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryFine_3 ∈ receivedMessages
+        grd4: retryNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPlate_4}
+        act2: sender := sender ∪ {confirmPlate_4 ↦ Resident}
+        act3: receiver := receiver ∪ {confirmPlate_4 ↦ CityDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmPlate_4}
+    END
+
+    receiveconfirmPlate_4
+    WHEN
+        grd1: confirmPlate_4 ∈ sentMessages
+        grd2: confirmPlate_4 ↦ Resident ∈ sender
+        grd3: confirmPlate_4 ↦ CityDB ∈ receiver
+        grd4: confirmPlate_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmPlate_4}
+        grd6: retryNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPlate_4}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchPlate_5
+    WHEN
+        grd1: fetchPlate_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPlate_4 ∈ receivedMessages
+        grd4: retryNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPlate_5}
+        act2: sender := sender ∪ {fetchPlate_5 ↦ CityDB}
+        act3: receiver := receiver ∪ {fetchPlate_5 ↦ PermitPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchPlate_5 ↦ permitCode}
+        act6: currentMessage := {fetchPlate_5}
+    END
+
+    receivefetchPlate_5
+    WHEN
+        grd1: fetchPlate_5 ∈ sentMessages
+        grd2: fetchPlate_5 ↦ CityDB ∈ sender
+        grd3: fetchPlate_5 ↦ PermitPortal ∈ receiver
+        grd4: fetchPlate_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchPlate_5}
+        grd6: retryNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPlate_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchPlate_5 ↦ permitCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreservePermit_6
+    WHEN
+        grd1: reservePermit_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPlate_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePermit_6}
+        act2: sender := sender ∪ {reservePermit_6 ↦ PermitPortal}
+        act3: receiver := receiver ∪ {reservePermit_6 ↦ Resident}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reservePermit_6}
+    END
+
+    receivereservePermit_6
+    WHEN
+        grd1: reservePermit_6 ∈ sentMessages
+        grd2: reservePermit_6 ↦ PermitPortal ∈ sender
+        grd3: reservePermit_6 ↦ Resident ∈ receiver
+        grd4: reservePermit_6 ∉ receivedMessages
+        grd5: currentMessage = {reservePermit_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePermit_6}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_queryFine_3_loop1
+    WHEN
+        grd1: retryNo < 9
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

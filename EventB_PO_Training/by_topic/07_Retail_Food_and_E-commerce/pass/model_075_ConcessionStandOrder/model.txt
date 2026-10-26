@@ -1,0 +1,370 @@
+CONTEXT ConcessionStandOrderContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ConcessionApp, Customer, KitchenScreen, Runner
+    syncPickup_1, reportPickup_2, confirmOrder_3, approveSnack_4, assignOrder_5, scheduleSnack_6, notifySnack_7, notifyPickup_8, schedulePickup_9, updatePickup_10
+    orderID, pickupInfo, pickupRef, snackInfo, snackValue
+AXIOMS
+    axm1: partition(Objects, {ConcessionApp}, {Customer}, {KitchenScreen}, {Runner})
+    axm2: partition(Messages, {syncPickup_1}, {reportPickup_2}, {confirmOrder_3}, {approveSnack_4}, {assignOrder_5}, {scheduleSnack_6}, {notifySnack_7}, {notifyPickup_8}, {schedulePickup_9}, {updatePickup_10})
+    axm3: partition(DataMessages, {orderID}, {pickupInfo}, {pickupRef}, {snackInfo}, {snackValue})
+END
+
+MACHINE ConcessionStandOrderInteractionMachine_1
+SEES ConcessionStandOrderContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, roundNo, pollNo, t_time_1, t_delay_1, t_success_1, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: roundNo ∈ ℤ
+    inv10: pollNo ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+    inv23: t_time_10 ∈ ℤ
+    inv24: t_delay_10 ∈ ℤ
+    inv25: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: roundNo := 0
+        act10: pollNo := 0
+        act11: t_time_1 :∈ 0..3
+        act12: t_delay_1 := 0
+        act13: t_success_1 := 0
+        act14: t_time_5 :∈ 0..1
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+        act17: t_time_6 :∈ 0..15
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+        act20: t_time_7 :∈ 0..60
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+        act23: t_time_10 :∈ 0..10
+        act24: t_delay_10 := 0
+        act25: t_success_10 := 0
+    END
+
+
+    sendsyncPickup_1
+    WHEN
+        grd1: syncPickup_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPickup_1}
+        act2: sender := sender ∪ {syncPickup_1 ↦ Runner}
+        act3: receiver := receiver ∪ {syncPickup_1 ↦ KitchenScreen}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncPickup_1}
+    END
+
+    receivesyncPickup_1
+    WHEN
+        grd1: syncPickup_1 ∈ sentMessages
+        grd2: syncPickup_1 ↦ Runner ∈ sender
+        grd3: syncPickup_1 ↦ KitchenScreen ∈ receiver
+        grd4: syncPickup_1 ∉ receivedMessages
+        grd5: currentMessage = {syncPickup_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPickup_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendreportPickup_2
+    WHEN
+        grd1: reportPickup_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncPickup_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportPickup_2}
+        act2: sender := sender ∪ {reportPickup_2 ↦ ConcessionApp}
+        act3: receiver := receiver ∪ {reportPickup_2 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportPickup_2 ↦ snackInfo}
+        act6: currentMessage := {reportPickup_2}
+    END
+
+    receivereportPickup_2
+    WHEN
+        grd1: reportPickup_2 ∈ sentMessages
+        grd2: reportPickup_2 ↦ ConcessionApp ∈ sender
+        grd3: reportPickup_2 ↦ Runner ∈ receiver
+        grd4: reportPickup_2 ∉ receivedMessages
+        grd5: currentMessage = {reportPickup_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportPickup_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportPickup_2 ↦ snackInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmOrder_3
+    WHEN
+        grd1: confirmOrder_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportPickup_2 ∈ receivedMessages
+        grd4: retryNo < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmOrder_3}
+        act2: sender := sender ∪ {confirmOrder_3 ↦ ConcessionApp}
+        act3: receiver := receiver ∪ {confirmOrder_3 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmOrder_3 ↦ orderID, confirmOrder_3 ↦ pickupRef}
+        act6: currentMessage := {confirmOrder_3}
+    END
+
+    receiveconfirmOrder_3
+    WHEN
+        grd1: confirmOrder_3 ∈ sentMessages
+        grd2: confirmOrder_3 ↦ ConcessionApp ∈ sender
+        grd3: confirmOrder_3 ↦ Customer ∈ receiver
+        grd4: confirmOrder_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmOrder_3}
+        grd6: retryNo < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmOrder_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmOrder_3 ↦ orderID, confirmOrder_3 ↦ pickupRef}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveSnack_4
+    WHEN
+        grd1: approveSnack_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmOrder_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveSnack_4}
+        act2: sender := sender ∪ {approveSnack_4 ↦ Runner}
+        act3: receiver := receiver ∪ {approveSnack_4 ↦ KitchenScreen}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveSnack_4}
+    END
+
+    receiveapproveSnack_4
+    WHEN
+        grd1: approveSnack_4 ∈ sentMessages
+        grd2: approveSnack_4 ↦ Runner ∈ sender
+        grd3: approveSnack_4 ↦ KitchenScreen ∈ receiver
+        grd4: approveSnack_4 ∉ receivedMessages
+        grd5: currentMessage = {approveSnack_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveSnack_4}
+        act2: currentMessage := ∅
+    END
+
+    sendassignOrder_5
+    WHEN
+        grd1: assignOrder_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveSnack_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignOrder_5}
+        act2: sender := sender ∪ {assignOrder_5 ↦ ConcessionApp}
+        act3: receiver := receiver ∪ {assignOrder_5 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignOrder_5}
+    END
+
+    receiveassignOrder_5
+    WHEN
+        grd1: assignOrder_5 ∈ sentMessages
+        grd2: assignOrder_5 ↦ ConcessionApp ∈ sender
+        grd3: assignOrder_5 ↦ Customer ∈ receiver
+        grd4: assignOrder_5 ∉ receivedMessages
+        grd5: currentMessage = {assignOrder_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignOrder_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendscheduleSnack_6
+    WHEN
+        grd1: scheduleSnack_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignOrder_5 ∈ receivedMessages
+        grd4: roundNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSnack_6}
+        act2: sender := sender ∪ {scheduleSnack_6 ↦ Runner}
+        act3: receiver := receiver ∪ {scheduleSnack_6 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleSnack_6}
+    END
+
+    receivescheduleSnack_6
+    WHEN
+        grd1: scheduleSnack_6 ∈ sentMessages
+        grd2: scheduleSnack_6 ↦ Runner ∈ sender
+        grd3: scheduleSnack_6 ↦ Customer ∈ receiver
+        grd4: scheduleSnack_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSnack_6}
+        grd6: roundNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSnack_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendnotifySnack_7
+    WHEN
+        grd1: notifySnack_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSnack_6 ∈ receivedMessages
+        grd4: roundNo < 6
+        grd5: pollNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifySnack_7}
+        act2: sender := sender ∪ {notifySnack_7 ↦ Customer}
+        act3: receiver := receiver ∪ {notifySnack_7 ↦ KitchenScreen}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifySnack_7}
+    END
+
+    receivenotifySnack_7
+    WHEN
+        grd1: notifySnack_7 ∈ sentMessages
+        grd2: notifySnack_7 ↦ Customer ∈ sender
+        grd3: notifySnack_7 ↦ KitchenScreen ∈ receiver
+        grd4: notifySnack_7 ∉ receivedMessages
+        grd5: currentMessage = {notifySnack_7}
+        grd6: roundNo < 6
+        grd7: pollNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifySnack_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendnotifyPickup_8
+    WHEN
+        grd1: notifyPickup_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifySnack_7 ∈ receivedMessages
+        grd4: roundNo < 6
+        grd5: pollNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyPickup_8}
+        act2: sender := sender ∪ {notifyPickup_8 ↦ KitchenScreen}
+        act3: receiver := receiver ∪ {notifyPickup_8 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyPickup_8}
+    END
+
+    receivenotifyPickup_8
+    WHEN
+        grd1: notifyPickup_8 ∈ sentMessages
+        grd2: notifyPickup_8 ↦ KitchenScreen ∈ sender
+        grd3: notifyPickup_8 ↦ Runner ∈ receiver
+        grd4: notifyPickup_8 ∉ receivedMessages
+        grd5: currentMessage = {notifyPickup_8}
+        grd6: roundNo < 6
+        grd7: pollNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyPickup_8}
+        act2: currentMessage := ∅
+    END
+
+    sendschedulePickup_9
+    WHEN
+        grd1: schedulePickup_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyPickup_8 ∈ receivedMessages
+        grd4: roundNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePickup_9}
+        act2: sender := sender ∪ {schedulePickup_9 ↦ Runner}
+        act3: receiver := receiver ∪ {schedulePickup_9 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {schedulePickup_9}
+    END
+
+    receiveschedulePickup_9
+    WHEN
+        grd1: schedulePickup_9 ∈ sentMessages
+        grd2: schedulePickup_9 ↦ Runner ∈ sender
+        grd3: schedulePickup_9 ↦ Customer ∈ receiver
+        grd4: schedulePickup_9 ∉ receivedMessages
+        grd5: currentMessage = {schedulePickup_9}
+        grd6: roundNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePickup_9}
+        act2: currentMessage := ∅
+    END
+
+    sendupdatePickup_10
+    WHEN
+        grd1: updatePickup_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePickup_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updatePickup_10}
+        act2: sender := sender ∪ {updatePickup_10 ↦ ConcessionApp}
+        act3: receiver := receiver ∪ {updatePickup_10 ↦ Runner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updatePickup_10 ↦ pickupInfo, updatePickup_10 ↦ snackValue}
+        act6: currentMessage := {updatePickup_10}
+    END
+
+    receiveupdatePickup_10
+    WHEN
+        grd1: updatePickup_10 ∈ sentMessages
+        grd2: updatePickup_10 ↦ ConcessionApp ∈ sender
+        grd3: updatePickup_10 ↦ Runner ∈ receiver
+        grd4: updatePickup_10 ∉ receivedMessages
+        grd5: currentMessage = {updatePickup_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updatePickup_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updatePickup_10 ↦ pickupInfo, updatePickup_10 ↦ snackValue}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    checkloop_confirmOrder_3_loop1
+    WHEN
+        grd1: retryNo < 8
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+    checkloop_scheduleSnack_6_loop2
+    WHEN
+        grd1: roundNo < 6
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+    checkloop_notifySnack_7_loop3
+    WHEN
+        grd1: roundNo < 6
+        grd2: pollNo < 11
+    THEN
+        act1: pollNo := pollNo + 1
+    END
+
+END

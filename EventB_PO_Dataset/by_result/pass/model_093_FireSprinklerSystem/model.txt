@@ -1,0 +1,220 @@
+CONTEXT FireSprinklerSystemContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FireDept, FirePanel, SmokeDetector, SprinklerValve
+    checkValve_1, logValve_2, sendAlarm_3, updateFire_4, notifyFire_5, confirmFire_6
+    alarmCode, valveData, valveValue
+AXIOMS
+    axm1: partition(Objects, {FireDept}, {FirePanel}, {SmokeDetector}, {SprinklerValve})
+    axm2: partition(Messages, {checkValve_1}, {logValve_2}, {sendAlarm_3}, {updateFire_4}, {notifyFire_5}, {confirmFire_6})
+    axm3: partition(DataMessages, {alarmCode}, {valveData}, {valveValue})
+END
+
+MACHINE FireSprinklerSystemInteractionMachine_1
+SEES FireSprinklerSystemContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, optIn, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: optIn ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: optIn := 1
+        act9: t_time_2 :∈ 0..2
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..5
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..0
+        act16: t_delay_4 := 3
+        act17: t_success_4 := 0
+    END
+
+
+    sendcheckValve_1
+    WHEN
+        grd1: checkValve_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkValve_1}
+        act2: sender := sender ∪ {checkValve_1 ↦ FireDept}
+        act3: receiver := receiver ∪ {checkValve_1 ↦ SmokeDetector}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkValve_1}
+    END
+
+    receivecheckValve_1
+    WHEN
+        grd1: checkValve_1 ∈ sentMessages
+        grd2: checkValve_1 ↦ FireDept ∈ sender
+        grd3: checkValve_1 ↦ SmokeDetector ∈ receiver
+        grd4: checkValve_1 ∉ receivedMessages
+        grd5: currentMessage = {checkValve_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkValve_1}
+        act2: currentMessage := ∅
+    END
+
+    sendlogValve_2
+    WHEN
+        grd1: logValve_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkValve_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logValve_2}
+        act2: sender := sender ∪ {logValve_2 ↦ SmokeDetector}
+        act3: receiver := receiver ∪ {logValve_2 ↦ FirePanel}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logValve_2 ↦ valveValue}
+        act6: currentMessage := {logValve_2}
+    END
+
+    receivelogValve_2
+    WHEN
+        grd1: logValve_2 ∈ sentMessages
+        grd2: logValve_2 ↦ SmokeDetector ∈ sender
+        grd3: logValve_2 ↦ FirePanel ∈ receiver
+        grd4: logValve_2 ∉ receivedMessages
+        grd5: currentMessage = {logValve_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logValve_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logValve_2 ↦ valveValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendAlarm_3_opt1
+    WHEN
+        grd1: sendAlarm_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logValve_2 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAlarm_3}
+        act2: sender := sender ∪ {sendAlarm_3 ↦ SprinklerValve}
+        act3: receiver := receiver ∪ {sendAlarm_3 ↦ FirePanel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendAlarm_3}
+    END
+
+    receivesendAlarm_3_opt1
+    WHEN
+        grd1: sendAlarm_3 ∈ sentMessages
+        grd2: sendAlarm_3 ↦ SprinklerValve ∈ sender
+        grd3: sendAlarm_3 ↦ FirePanel ∈ receiver
+        grd4: sendAlarm_3 ∉ receivedMessages
+        grd5: currentMessage = {sendAlarm_3}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAlarm_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendupdateFire_4_opt1
+    WHEN
+        grd1: updateFire_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAlarm_3 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateFire_4}
+        act2: sender := sender ∪ {updateFire_4 ↦ FirePanel}
+        act3: receiver := receiver ∪ {updateFire_4 ↦ SprinklerValve}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateFire_4 ↦ alarmCode}
+        act6: currentMessage := {updateFire_4}
+    END
+
+    receiveupdateFire_4_opt1
+    WHEN
+        grd1: updateFire_4 ∈ sentMessages
+        grd2: updateFire_4 ↦ FirePanel ∈ sender
+        grd3: updateFire_4 ↦ SprinklerValve ∈ receiver
+        grd4: updateFire_4 ∉ receivedMessages
+        grd5: currentMessage = {updateFire_4}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateFire_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateFire_4 ↦ alarmCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyFire_5
+    WHEN
+        grd1: notifyFire_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateFire_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyFire_5}
+        act2: sender := sender ∪ {notifyFire_5 ↦ FirePanel}
+        act3: receiver := receiver ∪ {notifyFire_5 ↦ FireDept}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyFire_5}
+    END
+
+    receivenotifyFire_5
+    WHEN
+        grd1: notifyFire_5 ∈ sentMessages
+        grd2: notifyFire_5 ↦ FirePanel ∈ sender
+        grd3: notifyFire_5 ↦ FireDept ∈ receiver
+        grd4: notifyFire_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyFire_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyFire_5}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmFire_6
+    WHEN
+        grd1: confirmFire_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyFire_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmFire_6}
+        act2: sender := sender ∪ {confirmFire_6 ↦ FireDept}
+        act3: receiver := receiver ∪ {confirmFire_6 ↦ FirePanel}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmFire_6 ↦ valveData}
+        act6: currentMessage := {confirmFire_6}
+    END
+
+    receiveconfirmFire_6
+    WHEN
+        grd1: confirmFire_6 ∈ sentMessages
+        grd2: confirmFire_6 ↦ FireDept ∈ sender
+        grd3: confirmFire_6 ↦ FirePanel ∈ receiver
+        grd4: confirmFire_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmFire_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmFire_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmFire_6 ↦ valveData}
+        act3: currentMessage := ∅
+    END
+
+END

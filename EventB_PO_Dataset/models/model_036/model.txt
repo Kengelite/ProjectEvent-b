@@ -1,0 +1,272 @@
+CONTEXT ServerAutoScalingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    LoadBalancer, Monitor, Orchestrator, VMPool
+    startMonitoring_1, reportLoad_2, addVM_3, vmReady_4, registerVM_5, keepCapacity_6, stopMonitoring_7
+    cpuLoad, policyID, vmID, vmType
+AXIOMS
+    axm1: partition(Objects, {LoadBalancer}, {Monitor}, {Orchestrator}, {VMPool})
+    axm2: partition(Messages, {startMonitoring_1}, {reportLoad_2}, {addVM_3}, {vmReady_4}, {registerVM_5}, {keepCapacity_6}, {stopMonitoring_7})
+    axm3: partition(DataMessages, {cpuLoad}, {policyID}, {vmID}, {vmType})
+END
+
+MACHINE ServerAutoScalingInteractionMachine_1
+SEES ServerAutoScalingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, checkNo, cpu, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: checkNo ∈ ℤ
+    inv9: cpu ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: checkNo := 0
+        act9: cpu :∈ ℤ
+        act10: t_time_2 :∈ 0..5
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..120
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_5 :∈ 0..5
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+    END
+
+
+    sendstartMonitoring_1
+    WHEN
+        grd1: startMonitoring_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {startMonitoring_1}
+        act2: sender := sender ∪ {startMonitoring_1 ↦ Monitor}
+        act3: receiver := receiver ∪ {startMonitoring_1 ↦ Orchestrator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startMonitoring_1 ↦ policyID}
+        act6: currentMessage := {startMonitoring_1}
+    END
+
+    receivestartMonitoring_1
+    WHEN
+        grd1: startMonitoring_1 ∈ sentMessages
+        grd2: startMonitoring_1 ↦ Monitor ∈ sender
+        grd3: startMonitoring_1 ↦ Orchestrator ∈ receiver
+        grd4: startMonitoring_1 ∉ receivedMessages
+        grd5: currentMessage = {startMonitoring_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startMonitoring_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startMonitoring_1 ↦ policyID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportLoad_2
+    WHEN
+        grd1: reportLoad_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startMonitoring_1 ∈ receivedMessages
+        grd4: checkNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportLoad_2}
+        act2: sender := sender ∪ {reportLoad_2 ↦ Monitor}
+        act3: receiver := receiver ∪ {reportLoad_2 ↦ Orchestrator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportLoad_2 ↦ cpuLoad}
+        act6: currentMessage := {reportLoad_2}
+    END
+
+    receivereportLoad_2
+    WHEN
+        grd1: reportLoad_2 ∈ sentMessages
+        grd2: reportLoad_2 ↦ Monitor ∈ sender
+        grd3: reportLoad_2 ↦ Orchestrator ∈ receiver
+        grd4: reportLoad_2 ∉ receivedMessages
+        grd5: currentMessage = {reportLoad_2}
+        grd6: checkNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportLoad_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportLoad_2 ↦ cpuLoad}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendaddVM_3
+    WHEN
+        grd1: addVM_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportLoad_2 ∈ receivedMessages
+        grd4: checkNo < 12
+        grd5: cpu > 80
+    THEN
+        act1: sentMessages := sentMessages ∪ {addVM_3}
+        act2: sender := sender ∪ {addVM_3 ↦ Orchestrator}
+        act3: receiver := receiver ∪ {addVM_3 ↦ VMPool}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {addVM_3 ↦ vmType}
+        act6: currentMessage := {addVM_3}
+    END
+
+    receiveaddVM_3
+    WHEN
+        grd1: addVM_3 ∈ sentMessages
+        grd2: addVM_3 ↦ Orchestrator ∈ sender
+        grd3: addVM_3 ↦ VMPool ∈ receiver
+        grd4: addVM_3 ∉ receivedMessages
+        grd5: currentMessage = {addVM_3}
+        grd6: checkNo < 12
+        grd7: cpu > 80
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {addVM_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {addVM_3 ↦ vmType}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendvmReady_4
+    WHEN
+        grd1: vmReady_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: addVM_3 ∈ receivedMessages
+        grd4: checkNo < 12
+        grd5: cpu > 80
+    THEN
+        act1: sentMessages := sentMessages ∪ {vmReady_4}
+        act2: sender := sender ∪ {vmReady_4 ↦ VMPool}
+        act3: receiver := receiver ∪ {vmReady_4 ↦ Orchestrator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {vmReady_4 ↦ vmID}
+        act6: currentMessage := {vmReady_4}
+    END
+
+    receivevmReady_4
+    WHEN
+        grd1: vmReady_4 ∈ sentMessages
+        grd2: vmReady_4 ↦ VMPool ∈ sender
+        grd3: vmReady_4 ↦ Orchestrator ∈ receiver
+        grd4: vmReady_4 ∉ receivedMessages
+        grd5: currentMessage = {vmReady_4}
+        grd6: checkNo < 12
+        grd7: cpu > 80
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {vmReady_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {vmReady_4 ↦ vmID}
+        act3: currentMessage := ∅
+    END
+
+    sendregisterVM_5
+    WHEN
+        grd1: registerVM_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: vmReady_4 ∈ receivedMessages
+        grd4: checkNo < 12
+        grd5: cpu > 80
+    THEN
+        act1: sentMessages := sentMessages ∪ {registerVM_5}
+        act2: sender := sender ∪ {registerVM_5 ↦ Orchestrator}
+        act3: receiver := receiver ∪ {registerVM_5 ↦ LoadBalancer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {registerVM_5 ↦ vmID}
+        act6: currentMessage := {registerVM_5}
+    END
+
+    receiveregisterVM_5
+    WHEN
+        grd1: registerVM_5 ∈ sentMessages
+        grd2: registerVM_5 ↦ Orchestrator ∈ sender
+        grd3: registerVM_5 ↦ LoadBalancer ∈ receiver
+        grd4: registerVM_5 ∉ receivedMessages
+        grd5: currentMessage = {registerVM_5}
+        grd6: checkNo < 12
+        grd7: cpu > 80
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {registerVM_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {registerVM_5 ↦ vmID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendkeepCapacity_6
+    WHEN
+        grd1: keepCapacity_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportLoad_2 ∈ receivedMessages
+        grd4: checkNo < 12
+        grd5: cpu ≤ 80
+    THEN
+        act1: sentMessages := sentMessages ∪ {keepCapacity_6}
+        act2: sender := sender ∪ {keepCapacity_6 ↦ Orchestrator}
+        act3: receiver := receiver ∪ {keepCapacity_6 ↦ Monitor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {keepCapacity_6}
+    END
+
+    receivekeepCapacity_6
+    WHEN
+        grd1: keepCapacity_6 ∈ sentMessages
+        grd2: keepCapacity_6 ↦ Orchestrator ∈ sender
+        grd3: keepCapacity_6 ↦ Monitor ∈ receiver
+        grd4: keepCapacity_6 ∉ receivedMessages
+        grd5: currentMessage = {keepCapacity_6}
+        grd6: checkNo < 12
+        grd7: cpu ≤ 80
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {keepCapacity_6}
+        act2: currentMessage := ∅
+    END
+
+    sendstopMonitoring_7
+    WHEN
+        grd1: stopMonitoring_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: registerVM_5 ∈ receivedMessages ∨ keepCapacity_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {stopMonitoring_7}
+        act2: sender := sender ∪ {stopMonitoring_7 ↦ Monitor}
+        act3: receiver := receiver ∪ {stopMonitoring_7 ↦ Orchestrator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {stopMonitoring_7}
+    END
+
+    receivestopMonitoring_7
+    WHEN
+        grd1: stopMonitoring_7 ∈ sentMessages
+        grd2: stopMonitoring_7 ↦ Monitor ∈ sender
+        grd3: stopMonitoring_7 ↦ Orchestrator ∈ receiver
+        grd4: stopMonitoring_7 ∉ receivedMessages
+        grd5: currentMessage = {stopMonitoring_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {stopMonitoring_7}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_reportLoad_2_loop1
+    WHEN
+        grd1: checkNo < 12
+    THEN
+        act1: checkNo := checkNo + 1
+    END
+
+END

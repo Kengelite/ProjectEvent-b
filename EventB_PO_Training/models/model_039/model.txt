@@ -1,0 +1,242 @@
+CONTEXT SmartMeterBillingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, SmartMeter, UtilityServer
+    sendUsage_1, usageAck_2, generateBill_3, payBill_4, setAutoPay_5, autoPayOK_6, receiptIssued_7
+    billAmount, cardToken, kwhReading, paymentRef, receiptNo
+AXIOMS
+    axm1: partition(Objects, {Customer}, {SmartMeter}, {UtilityServer})
+    axm2: partition(Messages, {sendUsage_1}, {usageAck_2}, {generateBill_3}, {payBill_4}, {setAutoPay_5}, {autoPayOK_6}, {receiptIssued_7})
+    axm3: partition(DataMessages, {billAmount}, {cardToken}, {kwhReading}, {paymentRef}, {receiptNo})
+END
+
+MACHINE SmartMeterBillingInteractionMachine_1
+SEES SmartMeterBillingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, autoPay, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: autoPay ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: autoPay := 1
+        act9: t_time_1 :∈ 5..1
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 10..4
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+    END
+
+
+    sendsendUsage_1
+    WHEN
+        grd1: sendUsage_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendUsage_1}
+        act2: sender := sender ∪ {sendUsage_1 ↦ SmartMeter}
+        act3: receiver := receiver ∪ {sendUsage_1 ↦ UtilityServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendUsage_1 ↦ kwhReading}
+        act6: currentMessage := {sendUsage_1}
+    END
+
+    receivesendUsage_1
+    WHEN
+        grd1: sendUsage_1 ∈ sentMessages
+        grd2: sendUsage_1 ↦ SmartMeter ∈ sender
+        grd3: sendUsage_1 ↦ UtilityServer ∈ receiver
+        grd4: sendUsage_1 ∉ receivedMessages
+        grd5: currentMessage = {sendUsage_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendUsage_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendUsage_1 ↦ kwhReading}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendusageAck_2
+    WHEN
+        grd1: usageAck_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendUsage_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {usageAck_2}
+        act2: sender := sender ∪ {usageAck_2 ↦ UtilityServer}
+        act3: receiver := receiver ∪ {usageAck_2 ↦ SmartMeter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {usageAck_2}
+    END
+
+    receiveusageAck_2
+    WHEN
+        grd1: usageAck_2 ∈ sentMessages
+        grd2: usageAck_2 ↦ UtilityServer ∈ sender
+        grd3: usageAck_2 ↦ SmartMeter ∈ receiver
+        grd4: usageAck_2 ∉ receivedMessages
+        grd5: currentMessage = {usageAck_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {usageAck_2}
+        act2: currentMessage := ∅
+    END
+
+    sendgenerateBill_3
+    WHEN
+        grd1: generateBill_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: usageAck_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {generateBill_3}
+        act2: sender := sender ∪ {generateBill_3 ↦ UtilityServer}
+        act3: receiver := receiver ∪ {generateBill_3 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {generateBill_3 ↦ billAmount}
+        act6: currentMessage := {generateBill_3}
+    END
+
+    receivegenerateBill_3
+    WHEN
+        grd1: generateBill_3 ∈ sentMessages
+        grd2: generateBill_3 ↦ UtilityServer ∈ sender
+        grd3: generateBill_3 ↦ Customer ∈ receiver
+        grd4: generateBill_3 ∉ receivedMessages
+        grd5: currentMessage = {generateBill_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {generateBill_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {generateBill_3 ↦ billAmount}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendpayBill_4
+    WHEN
+        grd1: payBill_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: generateBill_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {payBill_4}
+        act2: sender := sender ∪ {payBill_4 ↦ Customer}
+        act3: receiver := receiver ∪ {payBill_4 ↦ UtilityServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {payBill_4 ↦ paymentRef}
+        act6: currentMessage := {payBill_4}
+    END
+
+    receivepayBill_4
+    WHEN
+        grd1: payBill_4 ∈ sentMessages
+        grd2: payBill_4 ↦ Customer ∈ sender
+        grd3: payBill_4 ↦ UtilityServer ∈ receiver
+        grd4: payBill_4 ∉ receivedMessages
+        grd5: currentMessage = {payBill_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {payBill_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {payBill_4 ↦ paymentRef}
+        act3: currentMessage := ∅
+    END
+
+    sendsetAutoPay_5_opt1
+    WHEN
+        grd1: setAutoPay_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: payBill_4 ∈ receivedMessages
+        grd4: autoPay = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {setAutoPay_5}
+        act2: sender := sender ∪ {setAutoPay_5 ↦ Customer}
+        act3: receiver := receiver ∪ {setAutoPay_5 ↦ UtilityServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {setAutoPay_5 ↦ cardToken}
+        act6: currentMessage := {setAutoPay_5}
+    END
+
+    receivesetAutoPay_5_opt1
+    WHEN
+        grd1: setAutoPay_5 ∈ sentMessages
+        grd2: setAutoPay_5 ↦ Customer ∈ sender
+        grd3: setAutoPay_5 ↦ UtilityServer ∈ receiver
+        grd4: setAutoPay_5 ∉ receivedMessages
+        grd5: currentMessage = {setAutoPay_5}
+        grd6: autoPay = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {setAutoPay_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {setAutoPay_5 ↦ cardToken}
+        act3: currentMessage := ∅
+    END
+
+    sendautoPayOK_6_opt1
+    WHEN
+        grd1: autoPayOK_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: setAutoPay_5 ∈ receivedMessages
+        grd4: autoPay = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {autoPayOK_6}
+        act2: sender := sender ∪ {autoPayOK_6 ↦ UtilityServer}
+        act3: receiver := receiver ∪ {autoPayOK_6 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {autoPayOK_6}
+    END
+
+    receiveautoPayOK_6_opt1
+    WHEN
+        grd1: autoPayOK_6 ∈ sentMessages
+        grd2: autoPayOK_6 ↦ UtilityServer ∈ sender
+        grd3: autoPayOK_6 ↦ Customer ∈ receiver
+        grd4: autoPayOK_6 ∉ receivedMessages
+        grd5: currentMessage = {autoPayOK_6}
+        grd6: autoPay = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {autoPayOK_6}
+        act2: currentMessage := ∅
+    END
+
+    sendreceiptIssued_7
+    WHEN
+        grd1: receiptIssued_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: autoPayOK_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {receiptIssued_7}
+        act2: sender := sender ∪ {receiptIssued_7 ↦ UtilityServer}
+        act3: receiver := receiver ∪ {receiptIssued_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {receiptIssued_7 ↦ receiptNo}
+        act6: currentMessage := {receiptIssued_7}
+    END
+
+    receivereceiptIssued_7
+    WHEN
+        grd1: receiptIssued_7 ∈ sentMessages
+        grd2: receiptIssued_7 ↦ UtilityServer ∈ sender
+        grd3: receiptIssued_7 ↦ Customer ∈ receiver
+        grd4: receiptIssued_7 ∉ receivedMessages
+        grd5: currentMessage = {receiptIssued_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {receiptIssued_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {receiptIssued_7 ↦ receiptNo}
+        act3: currentMessage := ∅
+    END
+
+END

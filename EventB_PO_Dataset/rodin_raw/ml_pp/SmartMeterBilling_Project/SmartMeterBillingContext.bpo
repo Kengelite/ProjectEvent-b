@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="cardToken" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="paymentRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="payBill_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="usageAck_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="receiptIssued_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="billAmount" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="sendUsage_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="generateBill_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Customer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="autoPayOK_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="SmartMeter" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="setAutoPay_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="UtilityServer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="receiptNo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="kwhReading" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/SmartMeterBilling_Project/SmartMeterBillingContext.bpo|org.eventb.core.poFile#SmartMeterBillingContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Customer},{SmartMeter},{UtilityServer})" org.eventb.core.source="/SmartMeterBilling_Project/SmartMeterBillingContext.buc|org.eventb.core.contextFile#SmartMeterBillingContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{sendUsage_1},{usageAck_2},{generateBill_3},{payBill_4},{setAutoPay_5},{autoPayOK_6},{receiptIssued_7})" org.eventb.core.source="/SmartMeterBilling_Project/SmartMeterBillingContext.buc|org.eventb.core.contextFile#SmartMeterBillingContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{billAmount},{cardToken},{kwhReading},{paymentRef},{receiptNo})" org.eventb.core.source="/SmartMeterBilling_Project/SmartMeterBillingContext.buc|org.eventb.core.contextFile#SmartMeterBillingContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

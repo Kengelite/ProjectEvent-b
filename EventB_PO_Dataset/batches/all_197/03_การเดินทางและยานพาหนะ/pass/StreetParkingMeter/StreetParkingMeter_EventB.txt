@@ -1,0 +1,207 @@
+CONTEXT StreetParkingMeterContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CityPayAPI, Driver, ParkingMeter
+    reserveFee_1, logFee_2, reportFee_3, reserveSession_4, queryFine_5, issueSession_6
+    feeID, fineRef, sessionInfo
+AXIOMS
+    axm1: partition(Objects, {CityPayAPI}, {Driver}, {ParkingMeter})
+    axm2: partition(Messages, {reserveFee_1}, {logFee_2}, {reportFee_3}, {reserveSession_4}, {queryFine_5}, {issueSession_6})
+    axm3: partition(DataMessages, {feeID}, {fineRef}, {sessionInfo})
+END
+
+MACHINE StreetParkingMeterInteractionMachine_1
+SEES StreetParkingMeterContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_3 ∈ ℤ
+    inv9: t_delay_3 ∈ ℤ
+    inv10: t_success_3 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_3 :∈ 0..20
+        act9: t_delay_3 := 0
+        act10: t_success_3 := 0
+        act11: t_time_4 :∈ 0..20
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+    END
+
+
+    sendreserveFee_1
+    WHEN
+        grd1: reserveFee_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveFee_1}
+        act2: sender := sender ∪ {reserveFee_1 ↦ CityPayAPI}
+        act3: receiver := receiver ∪ {reserveFee_1 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveFee_1 ↦ sessionInfo}
+        act6: currentMessage := {reserveFee_1}
+    END
+
+    receivereserveFee_1
+    WHEN
+        grd1: reserveFee_1 ∈ sentMessages
+        grd2: reserveFee_1 ↦ CityPayAPI ∈ sender
+        grd3: reserveFee_1 ↦ Driver ∈ receiver
+        grd4: reserveFee_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveFee_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveFee_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveFee_1 ↦ sessionInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendlogFee_2
+    WHEN
+        grd1: logFee_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveFee_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logFee_2}
+        act2: sender := sender ∪ {logFee_2 ↦ CityPayAPI}
+        act3: receiver := receiver ∪ {logFee_2 ↦ Driver}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logFee_2 ↦ feeID}
+        act6: currentMessage := {logFee_2}
+    END
+
+    receivelogFee_2
+    WHEN
+        grd1: logFee_2 ∈ sentMessages
+        grd2: logFee_2 ↦ CityPayAPI ∈ sender
+        grd3: logFee_2 ↦ Driver ∈ receiver
+        grd4: logFee_2 ∉ receivedMessages
+        grd5: currentMessage = {logFee_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logFee_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logFee_2 ↦ feeID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportFee_3
+    WHEN
+        grd1: reportFee_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logFee_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportFee_3}
+        act2: sender := sender ∪ {reportFee_3 ↦ Driver}
+        act3: receiver := receiver ∪ {reportFee_3 ↦ ParkingMeter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportFee_3 ↦ fineRef}
+        act6: currentMessage := {reportFee_3}
+    END
+
+    receivereportFee_3
+    WHEN
+        grd1: reportFee_3 ∈ sentMessages
+        grd2: reportFee_3 ↦ Driver ∈ sender
+        grd3: reportFee_3 ↦ ParkingMeter ∈ receiver
+        grd4: reportFee_3 ∉ receivedMessages
+        grd5: currentMessage = {reportFee_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportFee_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportFee_3 ↦ fineRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreserveSession_4
+    WHEN
+        grd1: reserveSession_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportFee_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSession_4}
+        act2: sender := sender ∪ {reserveSession_4 ↦ ParkingMeter}
+        act3: receiver := receiver ∪ {reserveSession_4 ↦ CityPayAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveSession_4}
+    END
+
+    receivereserveSession_4
+    WHEN
+        grd1: reserveSession_4 ∈ sentMessages
+        grd2: reserveSession_4 ↦ ParkingMeter ∈ sender
+        grd3: reserveSession_4 ↦ CityPayAPI ∈ receiver
+        grd4: reserveSession_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveSession_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSession_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendqueryFine_5
+    WHEN
+        grd1: queryFine_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSession_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryFine_5}
+        act2: sender := sender ∪ {queryFine_5 ↦ Driver}
+        act3: receiver := receiver ∪ {queryFine_5 ↦ ParkingMeter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryFine_5}
+    END
+
+    receivequeryFine_5
+    WHEN
+        grd1: queryFine_5 ∈ sentMessages
+        grd2: queryFine_5 ↦ Driver ∈ sender
+        grd3: queryFine_5 ↦ ParkingMeter ∈ receiver
+        grd4: queryFine_5 ∉ receivedMessages
+        grd5: currentMessage = {queryFine_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryFine_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueSession_6
+    WHEN
+        grd1: issueSession_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryFine_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSession_6}
+        act2: sender := sender ∪ {issueSession_6 ↦ ParkingMeter}
+        act3: receiver := receiver ∪ {issueSession_6 ↦ CityPayAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueSession_6}
+    END
+
+    receiveissueSession_6
+    WHEN
+        grd1: issueSession_6 ∈ sentMessages
+        grd2: issueSession_6 ↦ ParkingMeter ∈ sender
+        grd3: issueSession_6 ↦ CityPayAPI ∈ receiver
+        grd4: issueSession_6 ∉ receivedMessages
+        grd5: currentMessage = {issueSession_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSession_6}
+        act2: currentMessage := ∅
+    END
+
+END

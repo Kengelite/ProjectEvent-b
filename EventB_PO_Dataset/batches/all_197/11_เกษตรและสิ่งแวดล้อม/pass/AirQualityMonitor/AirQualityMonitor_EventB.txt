@@ -1,0 +1,462 @@
+CONTEXT AirQualityMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AQSensor, CityPortal, Gateway
+    cancelFan_1, releaseAlert_2, sendAlert_3, fetchFan_4, logFan_5, queryAlert_6, notifyAlert_7, reservePm_8, approveFan_9, reportFan_10, requestPm_11, fetchPm_12, cancelAlert_13, validateFan_14
+    alertData, alertInfo, alertValue, fanID, fanInfo, pmCode, pmData
+AXIOMS
+    axm1: partition(Objects, {AQSensor}, {CityPortal}, {Gateway})
+    axm2: partition(Messages, {cancelFan_1}, {releaseAlert_2}, {sendAlert_3}, {fetchFan_4}, {logFan_5}, {queryAlert_6}, {notifyAlert_7}, {reservePm_8}, {approveFan_9}, {reportFan_10}, {requestPm_11}, {fetchPm_12}, {cancelAlert_13}, {validateFan_14})
+    axm3: partition(DataMessages, {alertData}, {alertInfo}, {alertValue}, {fanID}, {fanInfo}, {pmCode}, {pmData})
+END
+
+MACHINE AirQualityMonitorInteractionMachine_1
+SEES AirQualityMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, online, par_1, t_time_2, t_delay_2, t_success_2, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: online ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_6 ∈ ℤ
+    inv15: t_delay_6 ∈ ℤ
+    inv16: t_success_6 ∈ ℤ
+    inv17: t_time_7 ∈ ℤ
+    inv18: t_delay_7 ∈ ℤ
+    inv19: t_success_7 ∈ ℤ
+    inv20: t_time_9 ∈ ℤ
+    inv21: t_delay_9 ∈ ℤ
+    inv22: t_success_9 ∈ ℤ
+    inv23: t_time_11 ∈ ℤ
+    inv24: t_delay_11 ∈ ℤ
+    inv25: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: online := 0
+        act10: par_1 := 0
+        act11: t_time_2 :∈ 0..2
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_6 :∈ 0..1
+        act15: t_delay_6 := 0
+        act16: t_success_6 := 0
+        act17: t_time_7 :∈ 0..8
+        act18: t_delay_7 := 5
+        act19: t_success_7 := 0
+        act20: t_time_9 :∈ 0..60
+        act21: t_delay_9 := 0
+        act22: t_success_9 := 0
+        act23: t_time_11 :∈ 0..0
+        act24: t_delay_11 := 1
+        act25: t_success_11 := 0
+    END
+
+
+    sendcancelFan_1
+    WHEN
+        grd1: cancelFan_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelFan_1}
+        act2: sender := sender ∪ {cancelFan_1 ↦ CityPortal}
+        act3: receiver := receiver ∪ {cancelFan_1 ↦ AQSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelFan_1 ↦ alertData}
+        act6: currentMessage := {cancelFan_1}
+    END
+
+    receivecancelFan_1
+    WHEN
+        grd1: cancelFan_1 ∈ sentMessages
+        grd2: cancelFan_1 ↦ CityPortal ∈ sender
+        grd3: cancelFan_1 ↦ AQSensor ∈ receiver
+        grd4: cancelFan_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelFan_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelFan_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelFan_1 ↦ alertData}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseAlert_2
+    WHEN
+        grd1: releaseAlert_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelFan_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseAlert_2}
+        act2: sender := sender ∪ {releaseAlert_2 ↦ AQSensor}
+        act3: receiver := receiver ∪ {releaseAlert_2 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseAlert_2}
+    END
+
+    receivereleaseAlert_2
+    WHEN
+        grd1: releaseAlert_2 ∈ sentMessages
+        grd2: releaseAlert_2 ↦ AQSensor ∈ sender
+        grd3: releaseAlert_2 ↦ Gateway ∈ receiver
+        grd4: releaseAlert_2 ∉ receivedMessages
+        grd5: currentMessage = {releaseAlert_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseAlert_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendAlert_3_opt1
+    WHEN
+        grd1: sendAlert_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseAlert_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAlert_3}
+        act2: sender := sender ∪ {sendAlert_3 ↦ CityPortal}
+        act3: receiver := receiver ∪ {sendAlert_3 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendAlert_3}
+    END
+
+    receivesendAlert_3_opt1
+    WHEN
+        grd1: sendAlert_3 ∈ sentMessages
+        grd2: sendAlert_3 ↦ CityPortal ∈ sender
+        grd3: sendAlert_3 ↦ Gateway ∈ receiver
+        grd4: sendAlert_3 ∉ receivedMessages
+        grd5: currentMessage = {sendAlert_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAlert_3}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchFan_4
+    WHEN
+        grd1: fetchFan_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAlert_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchFan_4}
+        act2: sender := sender ∪ {fetchFan_4 ↦ AQSensor}
+        act3: receiver := receiver ∪ {fetchFan_4 ↦ CityPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchFan_4 ↦ pmCode}
+        act6: currentMessage := {fetchFan_4}
+    END
+
+    receivefetchFan_4
+    WHEN
+        grd1: fetchFan_4 ∈ sentMessages
+        grd2: fetchFan_4 ↦ AQSensor ∈ sender
+        grd3: fetchFan_4 ↦ CityPortal ∈ receiver
+        grd4: fetchFan_4 ∉ receivedMessages
+        grd5: currentMessage = {fetchFan_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchFan_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchFan_4 ↦ pmCode}
+        act3: currentMessage := ∅
+    END
+
+    sendlogFan_5
+    WHEN
+        grd1: logFan_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchFan_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logFan_5}
+        act2: sender := sender ∪ {logFan_5 ↦ CityPortal}
+        act3: receiver := receiver ∪ {logFan_5 ↦ AQSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logFan_5}
+    END
+
+    receivelogFan_5
+    WHEN
+        grd1: logFan_5 ∈ sentMessages
+        grd2: logFan_5 ↦ CityPortal ∈ sender
+        grd3: logFan_5 ↦ AQSensor ∈ receiver
+        grd4: logFan_5 ∉ receivedMessages
+        grd5: currentMessage = {logFan_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logFan_5}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryAlert_6
+    WHEN
+        grd1: queryAlert_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logFan_5 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryAlert_6}
+        act2: sender := sender ∪ {queryAlert_6 ↦ CityPortal}
+        act3: receiver := receiver ∪ {queryAlert_6 ↦ AQSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryAlert_6 ↦ pmData}
+        act6: currentMessage := {queryAlert_6}
+    END
+
+    receivequeryAlert_6
+    WHEN
+        grd1: queryAlert_6 ∈ sentMessages
+        grd2: queryAlert_6 ↦ CityPortal ∈ sender
+        grd3: queryAlert_6 ↦ AQSensor ∈ receiver
+        grd4: queryAlert_6 ∉ receivedMessages
+        grd5: currentMessage = {queryAlert_6}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryAlert_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryAlert_6 ↦ pmData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendnotifyAlert_7
+    WHEN
+        grd1: notifyAlert_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryAlert_6 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyAlert_7}
+        act2: sender := sender ∪ {notifyAlert_7 ↦ CityPortal}
+        act3: receiver := receiver ∪ {notifyAlert_7 ↦ AQSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyAlert_7}
+    END
+
+    receivenotifyAlert_7
+    WHEN
+        grd1: notifyAlert_7 ∈ sentMessages
+        grd2: notifyAlert_7 ↦ CityPortal ∈ sender
+        grd3: notifyAlert_7 ↦ AQSensor ∈ receiver
+        grd4: notifyAlert_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyAlert_7}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyAlert_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreservePm_8
+    WHEN
+        grd1: reservePm_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyAlert_7 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePm_8}
+        act2: sender := sender ∪ {reservePm_8 ↦ Gateway}
+        act3: receiver := receiver ∪ {reservePm_8 ↦ AQSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePm_8 ↦ alertData}
+        act6: currentMessage := {reservePm_8}
+    END
+
+    receivereservePm_8
+    WHEN
+        grd1: reservePm_8 ∈ sentMessages
+        grd2: reservePm_8 ↦ Gateway ∈ sender
+        grd3: reservePm_8 ↦ AQSensor ∈ receiver
+        grd4: reservePm_8 ∉ receivedMessages
+        grd5: currentMessage = {reservePm_8}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePm_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePm_8 ↦ alertData}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveFan_9
+    WHEN
+        grd1: approveFan_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservePm_8 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveFan_9}
+        act2: sender := sender ∪ {approveFan_9 ↦ AQSensor}
+        act3: receiver := receiver ∪ {approveFan_9 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveFan_9 ↦ alertInfo}
+        act6: currentMessage := {approveFan_9}
+    END
+
+    receiveapproveFan_9
+    WHEN
+        grd1: approveFan_9 ∈ sentMessages
+        grd2: approveFan_9 ↦ AQSensor ∈ sender
+        grd3: approveFan_9 ↦ Gateway ∈ receiver
+        grd4: approveFan_9 ∉ receivedMessages
+        grd5: currentMessage = {approveFan_9}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveFan_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveFan_9 ↦ alertInfo}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendreportFan_10
+    WHEN
+        grd1: reportFan_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveFan_9 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportFan_10}
+        act2: sender := sender ∪ {reportFan_10 ↦ AQSensor}
+        act3: receiver := receiver ∪ {reportFan_10 ↦ CityPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportFan_10 ↦ fanID}
+        act6: currentMessage := {reportFan_10}
+    END
+
+    receivereportFan_10
+    WHEN
+        grd1: reportFan_10 ∈ sentMessages
+        grd2: reportFan_10 ↦ AQSensor ∈ sender
+        grd3: reportFan_10 ↦ CityPortal ∈ receiver
+        grd4: reportFan_10 ∉ receivedMessages
+        grd5: currentMessage = {reportFan_10}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportFan_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportFan_10 ↦ fanID}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestPm_11
+    WHEN
+        grd1: requestPm_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportFan_10 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestPm_11}
+        act2: sender := sender ∪ {requestPm_11 ↦ Gateway}
+        act3: receiver := receiver ∪ {requestPm_11 ↦ CityPortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestPm_11}
+    END
+
+    receiverequestPm_11
+    WHEN
+        grd1: requestPm_11 ∈ sentMessages
+        grd2: requestPm_11 ↦ Gateway ∈ sender
+        grd3: requestPm_11 ↦ CityPortal ∈ receiver
+        grd4: requestPm_11 ∉ receivedMessages
+        grd5: currentMessage = {requestPm_11}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestPm_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendfetchPm_12
+    WHEN
+        grd1: fetchPm_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestPm_11 ∈ receivedMessages
+        grd4: online = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPm_12}
+        act2: sender := sender ∪ {fetchPm_12 ↦ AQSensor}
+        act3: receiver := receiver ∪ {fetchPm_12 ↦ CityPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchPm_12 ↦ alertValue, fetchPm_12 ↦ fanInfo}
+        act6: currentMessage := {fetchPm_12}
+    END
+
+    receivefetchPm_12
+    WHEN
+        grd1: fetchPm_12 ∈ sentMessages
+        grd2: fetchPm_12 ↦ AQSensor ∈ sender
+        grd3: fetchPm_12 ↦ CityPortal ∈ receiver
+        grd4: fetchPm_12 ∉ receivedMessages
+        grd5: currentMessage = {fetchPm_12}
+        grd6: online = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPm_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchPm_12 ↦ alertValue, fetchPm_12 ↦ fanInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelAlert_13
+    WHEN
+        grd1: cancelAlert_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logFan_5 ∈ receivedMessages
+        grd4: online = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelAlert_13}
+        act2: sender := sender ∪ {cancelAlert_13 ↦ Gateway}
+        act3: receiver := receiver ∪ {cancelAlert_13 ↦ CityPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelAlert_13 ↦ pmData}
+        act6: currentMessage := {cancelAlert_13}
+    END
+
+    receivecancelAlert_13
+    WHEN
+        grd1: cancelAlert_13 ∈ sentMessages
+        grd2: cancelAlert_13 ↦ Gateway ∈ sender
+        grd3: cancelAlert_13 ↦ CityPortal ∈ receiver
+        grd4: cancelAlert_13 ∉ receivedMessages
+        grd5: currentMessage = {cancelAlert_13}
+        grd6: online = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelAlert_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelAlert_13 ↦ pmData}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateFan_14
+    WHEN
+        grd1: validateFan_14 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPm_12 ∈ receivedMessages ∨ cancelAlert_13 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateFan_14}
+        act2: sender := sender ∪ {validateFan_14 ↦ CityPortal}
+        act3: receiver := receiver ∪ {validateFan_14 ↦ AQSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateFan_14}
+    END
+
+    receivevalidateFan_14
+    WHEN
+        grd1: validateFan_14 ∈ sentMessages
+        grd2: validateFan_14 ↦ CityPortal ∈ sender
+        grd3: validateFan_14 ↦ AQSensor ∈ receiver
+        grd4: validateFan_14 ∉ receivedMessages
+        grd5: currentMessage = {validateFan_14}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateFan_14}
+        act2: currentMessage := ∅
+    END
+
+END

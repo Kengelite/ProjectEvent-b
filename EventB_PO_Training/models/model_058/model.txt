@@ -1,0 +1,256 @@
+CONTEXT BloodDonationDriveContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BloodCenter, Donor, DonorApp, LabTech
+    ackScreening_1, logSlot_2, syncSlot_3, notifyDonation_4, validateScreening_5, logDonation_6, fetchScreening_7
+    donationCode, donationInfo, screeningInfo, slotRef
+AXIOMS
+    axm1: partition(Objects, {BloodCenter}, {Donor}, {DonorApp}, {LabTech})
+    axm2: partition(Messages, {ackScreening_1}, {logSlot_2}, {syncSlot_3}, {notifyDonation_4}, {validateScreening_5}, {logDonation_6}, {fetchScreening_7})
+    axm3: partition(DataMessages, {donationCode}, {donationInfo}, {screeningInfo}, {slotRef})
+END
+
+MACHINE BloodDonationDriveInteractionMachine_1
+SEES BloodDonationDriveContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, withExtra, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: withExtra ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_7 ∈ ℤ
+    inv17: t_delay_7 ∈ ℤ
+    inv18: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: withExtra := 1
+        act10: t_time_1 :∈ 5..4
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..60
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_7 :∈ 0..1
+        act17: t_delay_7 := 0
+        act18: t_success_7 := 0
+    END
+
+
+    sendackScreening_1
+    WHEN
+        grd1: ackScreening_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackScreening_1}
+        act2: sender := sender ∪ {ackScreening_1 ↦ LabTech}
+        act3: receiver := receiver ∪ {ackScreening_1 ↦ Donor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackScreening_1 ↦ donationInfo}
+        act6: currentMessage := {ackScreening_1}
+    END
+
+    receiveackScreening_1
+    WHEN
+        grd1: ackScreening_1 ∈ sentMessages
+        grd2: ackScreening_1 ↦ LabTech ∈ sender
+        grd3: ackScreening_1 ↦ Donor ∈ receiver
+        grd4: ackScreening_1 ∉ receivedMessages
+        grd5: currentMessage = {ackScreening_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackScreening_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackScreening_1 ↦ donationInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendlogSlot_2
+    WHEN
+        grd1: logSlot_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackScreening_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logSlot_2}
+        act2: sender := sender ∪ {logSlot_2 ↦ DonorApp}
+        act3: receiver := receiver ∪ {logSlot_2 ↦ Donor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logSlot_2}
+    END
+
+    receivelogSlot_2
+    WHEN
+        grd1: logSlot_2 ∈ sentMessages
+        grd2: logSlot_2 ↦ DonorApp ∈ sender
+        grd3: logSlot_2 ↦ Donor ∈ receiver
+        grd4: logSlot_2 ∉ receivedMessages
+        grd5: currentMessage = {logSlot_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logSlot_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+        act4: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendsyncSlot_3
+    WHEN
+        grd1: syncSlot_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logSlot_2 ∈ receivedMessages
+        grd4: t_obs ≤ 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncSlot_3}
+        act2: sender := sender ∪ {syncSlot_3 ↦ BloodCenter}
+        act3: receiver := receiver ∪ {syncSlot_3 ↦ Donor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncSlot_3 ↦ screeningInfo}
+        act6: currentMessage := {syncSlot_3}
+    END
+
+    receivesyncSlot_3
+    WHEN
+        grd1: syncSlot_3 ∈ sentMessages
+        grd2: syncSlot_3 ↦ BloodCenter ∈ sender
+        grd3: syncSlot_3 ↦ Donor ∈ receiver
+        grd4: syncSlot_3 ∉ receivedMessages
+        grd5: currentMessage = {syncSlot_3}
+        grd6: t_obs ≤ 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncSlot_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncSlot_3 ↦ screeningInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyDonation_4_opt1
+    WHEN
+        grd1: notifyDonation_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncSlot_3 ∈ receivedMessages
+        grd4: t_obs ≤ 8
+        grd5: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyDonation_4}
+        act2: sender := sender ∪ {notifyDonation_4 ↦ DonorApp}
+        act3: receiver := receiver ∪ {notifyDonation_4 ↦ BloodCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyDonation_4 ↦ slotRef}
+        act6: currentMessage := {notifyDonation_4}
+    END
+
+    receivenotifyDonation_4_opt1
+    WHEN
+        grd1: notifyDonation_4 ∈ sentMessages
+        grd2: notifyDonation_4 ↦ DonorApp ∈ sender
+        grd3: notifyDonation_4 ↦ BloodCenter ∈ receiver
+        grd4: notifyDonation_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyDonation_4}
+        grd6: t_obs ≤ 8
+        grd7: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyDonation_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyDonation_4 ↦ slotRef}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateScreening_5
+    WHEN
+        grd1: validateScreening_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyDonation_4 ∈ receivedMessages
+        grd4: t_obs ≤ 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateScreening_5}
+        act2: sender := sender ∪ {validateScreening_5 ↦ LabTech}
+        act3: receiver := receiver ∪ {validateScreening_5 ↦ DonorApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateScreening_5 ↦ donationCode}
+        act6: currentMessage := {validateScreening_5}
+    END
+
+    receivevalidateScreening_5
+    WHEN
+        grd1: validateScreening_5 ∈ sentMessages
+        grd2: validateScreening_5 ↦ LabTech ∈ sender
+        grd3: validateScreening_5 ↦ DonorApp ∈ receiver
+        grd4: validateScreening_5 ∉ receivedMessages
+        grd5: currentMessage = {validateScreening_5}
+        grd6: t_obs ≤ 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateScreening_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateScreening_5 ↦ donationCode}
+        act3: currentMessage := ∅
+    END
+
+    sendlogDonation_6
+    WHEN
+        grd1: logDonation_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logSlot_2 ∈ receivedMessages
+        grd4: t_obs > 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {logDonation_6}
+        act2: sender := sender ∪ {logDonation_6 ↦ BloodCenter}
+        act3: receiver := receiver ∪ {logDonation_6 ↦ LabTech}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logDonation_6}
+    END
+
+    receivelogDonation_6
+    WHEN
+        grd1: logDonation_6 ∈ sentMessages
+        grd2: logDonation_6 ↦ BloodCenter ∈ sender
+        grd3: logDonation_6 ↦ LabTech ∈ receiver
+        grd4: logDonation_6 ∉ receivedMessages
+        grd5: currentMessage = {logDonation_6}
+        grd6: t_obs > 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logDonation_6}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchScreening_7
+    WHEN
+        grd1: fetchScreening_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateScreening_5 ∈ receivedMessages ∨ logDonation_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchScreening_7}
+        act2: sender := sender ∪ {fetchScreening_7 ↦ Donor}
+        act3: receiver := receiver ∪ {fetchScreening_7 ↦ BloodCenter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchScreening_7}
+    END
+
+    receivefetchScreening_7
+    WHEN
+        grd1: fetchScreening_7 ∈ sentMessages
+        grd2: fetchScreening_7 ↦ Donor ∈ sender
+        grd3: fetchScreening_7 ↦ BloodCenter ∈ receiver
+        grd4: fetchScreening_7 ∉ receivedMessages
+        grd5: currentMessage = {fetchScreening_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchScreening_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+END

@@ -1,0 +1,285 @@
+CONTEXT BikeSharingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BikeApp, Rider
+    fetchRide_1, confirmBike_2, syncFee_3, fetchBike_4, reserveBike_5, approveBike_6, validateFee_7, notifyFee_8
+    feeCode, feeID, feeValue
+AXIOMS
+    axm1: partition(Objects, {BikeApp}, {Rider})
+    axm2: partition(Messages, {fetchRide_1}, {confirmBike_2}, {syncFee_3}, {fetchBike_4}, {reserveBike_5}, {approveBike_6}, {validateFee_7}, {notifyFee_8})
+    axm3: partition(DataMessages, {feeCode}, {feeID}, {feeValue})
+END
+
+MACHINE BikeSharingInteractionMachine_1
+SEES BikeSharingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, useCache, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: useCache ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: useCache := 1
+        act10: t_time_2 :∈ 0..10
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..3
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_4 :∈ 0..30
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+    END
+
+
+    sendfetchRide_1
+    WHEN
+        grd1: fetchRide_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchRide_1}
+        act2: sender := sender ∪ {fetchRide_1 ↦ Rider}
+        act3: receiver := receiver ∪ {fetchRide_1 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchRide_1}
+    END
+
+    receivefetchRide_1
+    WHEN
+        grd1: fetchRide_1 ∈ sentMessages
+        grd2: fetchRide_1 ↦ Rider ∈ sender
+        grd3: fetchRide_1 ↦ BikeApp ∈ receiver
+        grd4: fetchRide_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchRide_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchRide_1}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmBike_2
+    WHEN
+        grd1: confirmBike_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchRide_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBike_2}
+        act2: sender := sender ∪ {confirmBike_2 ↦ Rider}
+        act3: receiver := receiver ∪ {confirmBike_2 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmBike_2 ↦ feeCode}
+        act6: currentMessage := {confirmBike_2}
+    END
+
+    receiveconfirmBike_2
+    WHEN
+        grd1: confirmBike_2 ∈ sentMessages
+        grd2: confirmBike_2 ↦ Rider ∈ sender
+        grd3: confirmBike_2 ↦ BikeApp ∈ receiver
+        grd4: confirmBike_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmBike_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBike_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmBike_2 ↦ feeCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+        act5: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendsyncFee_3
+    WHEN
+        grd1: syncFee_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmBike_2 ∈ receivedMessages
+        grd4: t_obs ≤ 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncFee_3}
+        act2: sender := sender ∪ {syncFee_3 ↦ Rider}
+        act3: receiver := receiver ∪ {syncFee_3 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncFee_3}
+    END
+
+    receivesyncFee_3
+    WHEN
+        grd1: syncFee_3 ∈ sentMessages
+        grd2: syncFee_3 ↦ Rider ∈ sender
+        grd3: syncFee_3 ↦ BikeApp ∈ receiver
+        grd4: syncFee_3 ∉ receivedMessages
+        grd5: currentMessage = {syncFee_3}
+        grd6: t_obs ≤ 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncFee_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendfetchBike_4_opt1
+    WHEN
+        grd1: fetchBike_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncFee_3 ∈ receivedMessages
+        grd4: t_obs ≤ 6
+        grd5: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchBike_4}
+        act2: sender := sender ∪ {fetchBike_4 ↦ Rider}
+        act3: receiver := receiver ∪ {fetchBike_4 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchBike_4 ↦ feeID}
+        act6: currentMessage := {fetchBike_4}
+    END
+
+    receivefetchBike_4_opt1
+    WHEN
+        grd1: fetchBike_4 ∈ sentMessages
+        grd2: fetchBike_4 ↦ Rider ∈ sender
+        grd3: fetchBike_4 ↦ BikeApp ∈ receiver
+        grd4: fetchBike_4 ∉ receivedMessages
+        grd5: currentMessage = {fetchBike_4}
+        grd6: t_obs ≤ 6
+        grd7: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchBike_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchBike_4 ↦ feeID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreserveBike_5_opt1
+    WHEN
+        grd1: reserveBike_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchBike_4 ∈ receivedMessages
+        grd4: t_obs ≤ 6
+        grd5: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveBike_5}
+        act2: sender := sender ∪ {reserveBike_5 ↦ BikeApp}
+        act3: receiver := receiver ∪ {reserveBike_5 ↦ Rider}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveBike_5 ↦ feeValue}
+        act6: currentMessage := {reserveBike_5}
+    END
+
+    receivereserveBike_5_opt1
+    WHEN
+        grd1: reserveBike_5 ∈ sentMessages
+        grd2: reserveBike_5 ↦ BikeApp ∈ sender
+        grd3: reserveBike_5 ↦ Rider ∈ receiver
+        grd4: reserveBike_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveBike_5}
+        grd6: t_obs ≤ 6
+        grd7: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveBike_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveBike_5 ↦ feeValue}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveBike_6
+    WHEN
+        grd1: approveBike_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveBike_5 ∈ receivedMessages
+        grd4: t_obs ≤ 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveBike_6}
+        act2: sender := sender ∪ {approveBike_6 ↦ Rider}
+        act3: receiver := receiver ∪ {approveBike_6 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveBike_6}
+    END
+
+    receiveapproveBike_6
+    WHEN
+        grd1: approveBike_6 ∈ sentMessages
+        grd2: approveBike_6 ↦ Rider ∈ sender
+        grd3: approveBike_6 ↦ BikeApp ∈ receiver
+        grd4: approveBike_6 ∉ receivedMessages
+        grd5: currentMessage = {approveBike_6}
+        grd6: t_obs ≤ 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveBike_6}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateFee_7
+    WHEN
+        grd1: validateFee_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmBike_2 ∈ receivedMessages
+        grd4: t_obs > 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateFee_7}
+        act2: sender := sender ∪ {validateFee_7 ↦ Rider}
+        act3: receiver := receiver ∪ {validateFee_7 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateFee_7}
+    END
+
+    receivevalidateFee_7
+    WHEN
+        grd1: validateFee_7 ∈ sentMessages
+        grd2: validateFee_7 ↦ Rider ∈ sender
+        grd3: validateFee_7 ↦ BikeApp ∈ receiver
+        grd4: validateFee_7 ∉ receivedMessages
+        grd5: currentMessage = {validateFee_7}
+        grd6: t_obs > 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateFee_7}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyFee_8
+    WHEN
+        grd1: notifyFee_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveBike_6 ∈ receivedMessages ∨ validateFee_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyFee_8}
+        act2: sender := sender ∪ {notifyFee_8 ↦ Rider}
+        act3: receiver := receiver ∪ {notifyFee_8 ↦ BikeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyFee_8 ↦ feeID}
+        act6: currentMessage := {notifyFee_8}
+    END
+
+    receivenotifyFee_8
+    WHEN
+        grd1: notifyFee_8 ∈ sentMessages
+        grd2: notifyFee_8 ↦ Rider ∈ sender
+        grd3: notifyFee_8 ↦ BikeApp ∈ receiver
+        grd4: notifyFee_8 ∉ receivedMessages
+        grd5: currentMessage = {notifyFee_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyFee_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyFee_8 ↦ feeID}
+        act3: currentMessage := ∅
+    END
+
+END

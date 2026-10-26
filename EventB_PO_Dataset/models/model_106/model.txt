@@ -1,0 +1,267 @@
+CONTEXT HomeOxygenConcentratorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Concentrator, HomeHub, Patient, RespiratoryTeam
+    reserveFlow_1, updateAlert_2, reserveAlert_3, notifyAlert_4, syncAlert_5, requestFlow_6, logFlow_7, schedulePurity_8
+    alertCode, alertID, purityID
+AXIOMS
+    axm1: partition(Objects, {Concentrator}, {HomeHub}, {Patient}, {RespiratoryTeam})
+    axm2: partition(Messages, {reserveFlow_1}, {updateAlert_2}, {reserveAlert_3}, {notifyAlert_4}, {syncAlert_5}, {requestFlow_6}, {logFlow_7}, {schedulePurity_8})
+    axm3: partition(DataMessages, {alertCode}, {alertID}, {purityID})
+END
+
+MACHINE HomeOxygenConcentratorInteractionMachine_1
+SEES HomeOxygenConcentratorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, withExtra, needAck, t_time_4, t_delay_4, t_success_4, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: withExtra ∈ ℤ
+    inv9: needAck ∈ ℤ
+    inv10: t_time_4 ∈ ℤ
+    inv11: t_delay_4 ∈ ℤ
+    inv12: t_success_4 ∈ ℤ
+    inv13: t_time_7 ∈ ℤ
+    inv14: t_delay_7 ∈ ℤ
+    inv15: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: withExtra := 1
+        act9: needAck := 1
+        act10: t_time_4 :∈ 0..1
+        act11: t_delay_4 := 0
+        act12: t_success_4 := 0
+        act13: t_time_7 :∈ 0..15
+        act14: t_delay_7 := 0
+        act15: t_success_7 := 0
+    END
+
+
+    sendreserveFlow_1
+    WHEN
+        grd1: reserveFlow_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveFlow_1}
+        act2: sender := sender ∪ {reserveFlow_1 ↦ RespiratoryTeam}
+        act3: receiver := receiver ∪ {reserveFlow_1 ↦ Concentrator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveFlow_1 ↦ alertCode}
+        act6: currentMessage := {reserveFlow_1}
+    END
+
+    receivereserveFlow_1
+    WHEN
+        grd1: reserveFlow_1 ∈ sentMessages
+        grd2: reserveFlow_1 ↦ RespiratoryTeam ∈ sender
+        grd3: reserveFlow_1 ↦ Concentrator ∈ receiver
+        grd4: reserveFlow_1 ∉ receivedMessages
+        grd5: currentMessage = {reserveFlow_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveFlow_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveFlow_1 ↦ alertCode}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateAlert_2
+    WHEN
+        grd1: updateAlert_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveFlow_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateAlert_2}
+        act2: sender := sender ∪ {updateAlert_2 ↦ HomeHub}
+        act3: receiver := receiver ∪ {updateAlert_2 ↦ Concentrator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateAlert_2}
+    END
+
+    receiveupdateAlert_2
+    WHEN
+        grd1: updateAlert_2 ∈ sentMessages
+        grd2: updateAlert_2 ↦ HomeHub ∈ sender
+        grd3: updateAlert_2 ↦ Concentrator ∈ receiver
+        grd4: updateAlert_2 ∉ receivedMessages
+        grd5: currentMessage = {updateAlert_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateAlert_2}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveAlert_3_opt1
+    WHEN
+        grd1: reserveAlert_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateAlert_2 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveAlert_3}
+        act2: sender := sender ∪ {reserveAlert_3 ↦ Concentrator}
+        act3: receiver := receiver ∪ {reserveAlert_3 ↦ RespiratoryTeam}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveAlert_3}
+    END
+
+    receivereserveAlert_3_opt1
+    WHEN
+        grd1: reserveAlert_3 ∈ sentMessages
+        grd2: reserveAlert_3 ↦ Concentrator ∈ sender
+        grd3: reserveAlert_3 ↦ RespiratoryTeam ∈ receiver
+        grd4: reserveAlert_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveAlert_3}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveAlert_3}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyAlert_4
+    WHEN
+        grd1: notifyAlert_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveAlert_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyAlert_4}
+        act2: sender := sender ∪ {notifyAlert_4 ↦ HomeHub}
+        act3: receiver := receiver ∪ {notifyAlert_4 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyAlert_4}
+    END
+
+    receivenotifyAlert_4
+    WHEN
+        grd1: notifyAlert_4 ∈ sentMessages
+        grd2: notifyAlert_4 ↦ HomeHub ∈ sender
+        grd3: notifyAlert_4 ↦ Patient ∈ receiver
+        grd4: notifyAlert_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyAlert_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyAlert_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsyncAlert_5
+    WHEN
+        grd1: syncAlert_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyAlert_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncAlert_5}
+        act2: sender := sender ∪ {syncAlert_5 ↦ HomeHub}
+        act3: receiver := receiver ∪ {syncAlert_5 ↦ RespiratoryTeam}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncAlert_5 ↦ alertID, syncAlert_5 ↦ purityID}
+        act6: currentMessage := {syncAlert_5}
+    END
+
+    receivesyncAlert_5
+    WHEN
+        grd1: syncAlert_5 ∈ sentMessages
+        grd2: syncAlert_5 ↦ HomeHub ∈ sender
+        grd3: syncAlert_5 ↦ RespiratoryTeam ∈ receiver
+        grd4: syncAlert_5 ∉ receivedMessages
+        grd5: currentMessage = {syncAlert_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncAlert_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncAlert_5 ↦ alertID, syncAlert_5 ↦ purityID}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestFlow_6_opt2
+    WHEN
+        grd1: requestFlow_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncAlert_5 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestFlow_6}
+        act2: sender := sender ∪ {requestFlow_6 ↦ RespiratoryTeam}
+        act3: receiver := receiver ∪ {requestFlow_6 ↦ Concentrator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestFlow_6 ↦ purityID}
+        act6: currentMessage := {requestFlow_6}
+    END
+
+    receiverequestFlow_6_opt2
+    WHEN
+        grd1: requestFlow_6 ∈ sentMessages
+        grd2: requestFlow_6 ↦ RespiratoryTeam ∈ sender
+        grd3: requestFlow_6 ↦ Concentrator ∈ receiver
+        grd4: requestFlow_6 ∉ receivedMessages
+        grd5: currentMessage = {requestFlow_6}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestFlow_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestFlow_6 ↦ purityID}
+        act3: currentMessage := ∅
+    END
+
+    sendlogFlow_7_opt2
+    WHEN
+        grd1: logFlow_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestFlow_6 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {logFlow_7}
+        act2: sender := sender ∪ {logFlow_7 ↦ Patient}
+        act3: receiver := receiver ∪ {logFlow_7 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logFlow_7}
+    END
+
+    receivelogFlow_7_opt2
+    WHEN
+        grd1: logFlow_7 ∈ sentMessages
+        grd2: logFlow_7 ↦ Patient ∈ sender
+        grd3: logFlow_7 ↦ HomeHub ∈ receiver
+        grd4: logFlow_7 ∉ receivedMessages
+        grd5: currentMessage = {logFlow_7}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logFlow_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendschedulePurity_8
+    WHEN
+        grd1: schedulePurity_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logFlow_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePurity_8}
+        act2: sender := sender ∪ {schedulePurity_8 ↦ Concentrator}
+        act3: receiver := receiver ∪ {schedulePurity_8 ↦ Patient}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {schedulePurity_8}
+    END
+
+    receiveschedulePurity_8
+    WHEN
+        grd1: schedulePurity_8 ∈ sentMessages
+        grd2: schedulePurity_8 ↦ Concentrator ∈ sender
+        grd3: schedulePurity_8 ↦ Patient ∈ receiver
+        grd4: schedulePurity_8 ∉ receivedMessages
+        grd5: currentMessage = {schedulePurity_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePurity_8}
+        act2: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,406 @@
+CONTEXT SmartBabyMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BabyCam, CloudAI, HomeHub, ParentApp
+    queryClimate_1, confirmCry_2, reserveCry_3, checkAlert_4, approveCry_5, reserveAlert_6, validateAlert_7, updateClimate_8, scheduleAlert_9, syncCry_10, cancelCry_11
+    alertData, alertInfo, alertValue, climateInfo, climateRef, climateValue, cryCode, cryData
+AXIOMS
+    axm1: partition(Objects, {BabyCam}, {CloudAI}, {HomeHub}, {ParentApp})
+    axm2: partition(Messages, {queryClimate_1}, {confirmCry_2}, {reserveCry_3}, {checkAlert_4}, {approveCry_5}, {reserveAlert_6}, {validateAlert_7}, {updateClimate_8}, {scheduleAlert_9}, {syncCry_10}, {cancelCry_11})
+    axm3: partition(DataMessages, {alertData}, {alertInfo}, {alertValue}, {climateInfo}, {climateRef}, {climateValue}, {cryCode}, {cryData})
+END
+
+MACHINE SmartBabyMonitorInteractionMachine_1
+SEES SmartBabyMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, score, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: score ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+    inv23: t_time_9 ∈ ℤ
+    inv24: t_delay_9 ∈ ℤ
+    inv25: t_success_9 ∈ ℤ
+    inv26: t_time_10 ∈ ℤ
+    inv27: t_delay_10 ∈ ℤ
+    inv28: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: score :∈ ℤ
+        act10: par_1 := 0
+        act11: t_time_2 :∈ 0..10
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..0
+        act15: t_delay_3 := 5
+        act16: t_success_3 := 0
+        act17: t_time_6 :∈ 0..5
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+        act20: t_time_7 :∈ 0..3
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+        act23: t_time_9 :∈ 0..30
+        act24: t_delay_9 := 1
+        act25: t_success_9 := 0
+        act26: t_time_10 :∈ 0..1
+        act27: t_delay_10 := 0
+        act28: t_success_10 := 0
+    END
+
+
+    sendqueryClimate_1
+    WHEN
+        grd1: queryClimate_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryClimate_1}
+        act2: sender := sender ∪ {queryClimate_1 ↦ CloudAI}
+        act3: receiver := receiver ∪ {queryClimate_1 ↦ ParentApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryClimate_1 ↦ climateRef}
+        act6: currentMessage := {queryClimate_1}
+    END
+
+    receivequeryClimate_1
+    WHEN
+        grd1: queryClimate_1 ∈ sentMessages
+        grd2: queryClimate_1 ↦ CloudAI ∈ sender
+        grd3: queryClimate_1 ↦ ParentApp ∈ receiver
+        grd4: queryClimate_1 ∉ receivedMessages
+        grd5: currentMessage = {queryClimate_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryClimate_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryClimate_1 ↦ climateRef}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmCry_2
+    WHEN
+        grd1: confirmCry_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryClimate_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCry_2}
+        act2: sender := sender ∪ {confirmCry_2 ↦ HomeHub}
+        act3: receiver := receiver ∪ {confirmCry_2 ↦ CloudAI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmCry_2}
+    END
+
+    receiveconfirmCry_2
+    WHEN
+        grd1: confirmCry_2 ∈ sentMessages
+        grd2: confirmCry_2 ↦ HomeHub ∈ sender
+        grd3: confirmCry_2 ↦ CloudAI ∈ receiver
+        grd4: confirmCry_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmCry_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCry_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveCry_3_opt1
+    WHEN
+        grd1: reserveCry_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmCry_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveCry_3}
+        act2: sender := sender ∪ {reserveCry_3 ↦ ParentApp}
+        act3: receiver := receiver ∪ {reserveCry_3 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveCry_3}
+    END
+
+    receivereserveCry_3_opt1
+    WHEN
+        grd1: reserveCry_3 ∈ sentMessages
+        grd2: reserveCry_3 ↦ ParentApp ∈ sender
+        grd3: reserveCry_3 ↦ HomeHub ∈ receiver
+        grd4: reserveCry_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveCry_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveCry_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckAlert_4_opt1
+    WHEN
+        grd1: checkAlert_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveCry_3 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkAlert_4}
+        act2: sender := sender ∪ {checkAlert_4 ↦ CloudAI}
+        act3: receiver := receiver ∪ {checkAlert_4 ↦ ParentApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkAlert_4 ↦ cryData}
+        act6: currentMessage := {checkAlert_4}
+    END
+
+    receivecheckAlert_4_opt1
+    WHEN
+        grd1: checkAlert_4 ∈ sentMessages
+        grd2: checkAlert_4 ↦ CloudAI ∈ sender
+        grd3: checkAlert_4 ↦ ParentApp ∈ receiver
+        grd4: checkAlert_4 ∉ receivedMessages
+        grd5: currentMessage = {checkAlert_4}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkAlert_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkAlert_4 ↦ cryData}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveCry_5_opt1
+    WHEN
+        grd1: approveCry_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkAlert_4 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveCry_5}
+        act2: sender := sender ∪ {approveCry_5 ↦ BabyCam}
+        act3: receiver := receiver ∪ {approveCry_5 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveCry_5 ↦ alertInfo}
+        act6: currentMessage := {approveCry_5}
+    END
+
+    receiveapproveCry_5_opt1
+    WHEN
+        grd1: approveCry_5 ∈ sentMessages
+        grd2: approveCry_5 ↦ BabyCam ∈ sender
+        grd3: approveCry_5 ↦ HomeHub ∈ receiver
+        grd4: approveCry_5 ∉ receivedMessages
+        grd5: currentMessage = {approveCry_5}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveCry_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveCry_5 ↦ alertInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveAlert_6_opt1
+    WHEN
+        grd1: reserveAlert_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveCry_5 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveAlert_6}
+        act2: sender := sender ∪ {reserveAlert_6 ↦ BabyCam}
+        act3: receiver := receiver ∪ {reserveAlert_6 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveAlert_6 ↦ climateInfo}
+        act6: currentMessage := {reserveAlert_6}
+    END
+
+    receivereserveAlert_6_opt1
+    WHEN
+        grd1: reserveAlert_6 ∈ sentMessages
+        grd2: reserveAlert_6 ↦ BabyCam ∈ sender
+        grd3: reserveAlert_6 ↦ HomeHub ∈ receiver
+        grd4: reserveAlert_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveAlert_6}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveAlert_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveAlert_6 ↦ climateInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendvalidateAlert_7_opt1
+    WHEN
+        grd1: validateAlert_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveAlert_6 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateAlert_7}
+        act2: sender := sender ∪ {validateAlert_7 ↦ BabyCam}
+        act3: receiver := receiver ∪ {validateAlert_7 ↦ CloudAI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateAlert_7 ↦ climateValue}
+        act6: currentMessage := {validateAlert_7}
+    END
+
+    receivevalidateAlert_7_opt1
+    WHEN
+        grd1: validateAlert_7 ∈ sentMessages
+        grd2: validateAlert_7 ↦ BabyCam ∈ sender
+        grd3: validateAlert_7 ↦ CloudAI ∈ receiver
+        grd4: validateAlert_7 ∉ receivedMessages
+        grd5: currentMessage = {validateAlert_7}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateAlert_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateAlert_7 ↦ climateValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendupdateClimate_8_opt1
+    WHEN
+        grd1: updateClimate_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateAlert_7 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateClimate_8}
+        act2: sender := sender ∪ {updateClimate_8 ↦ ParentApp}
+        act3: receiver := receiver ∪ {updateClimate_8 ↦ CloudAI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateClimate_8 ↦ alertValue, updateClimate_8 ↦ cryCode}
+        act6: currentMessage := {updateClimate_8}
+    END
+
+    receiveupdateClimate_8_opt1
+    WHEN
+        grd1: updateClimate_8 ∈ sentMessages
+        grd2: updateClimate_8 ↦ ParentApp ∈ sender
+        grd3: updateClimate_8 ↦ CloudAI ∈ receiver
+        grd4: updateClimate_8 ∉ receivedMessages
+        grd5: currentMessage = {updateClimate_8}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateClimate_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateClimate_8 ↦ alertValue, updateClimate_8 ↦ cryCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleAlert_9_opt1
+    WHEN
+        grd1: scheduleAlert_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveCry_3 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score ≥ 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleAlert_9}
+        act2: sender := sender ∪ {scheduleAlert_9 ↦ CloudAI}
+        act3: receiver := receiver ∪ {scheduleAlert_9 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleAlert_9 ↦ alertData, scheduleAlert_9 ↦ cryCode}
+        act6: currentMessage := {scheduleAlert_9}
+    END
+
+    receivescheduleAlert_9_opt1
+    WHEN
+        grd1: scheduleAlert_9 ∈ sentMessages
+        grd2: scheduleAlert_9 ↦ CloudAI ∈ sender
+        grd3: scheduleAlert_9 ↦ HomeHub ∈ receiver
+        grd4: scheduleAlert_9 ∉ receivedMessages
+        grd5: currentMessage = {scheduleAlert_9}
+        grd6: useCache = 1
+        grd7: score ≥ 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleAlert_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleAlert_9 ↦ alertData, scheduleAlert_9 ↦ cryCode}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendsyncCry_10_opt1
+    WHEN
+        grd1: syncCry_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateClimate_8 ∈ receivedMessages ∨ scheduleAlert_9 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncCry_10}
+        act2: sender := sender ∪ {syncCry_10 ↦ BabyCam}
+        act3: receiver := receiver ∪ {syncCry_10 ↦ CloudAI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncCry_10 ↦ cryData}
+        act6: currentMessage := {syncCry_10}
+    END
+
+    receivesyncCry_10_opt1
+    WHEN
+        grd1: syncCry_10 ∈ sentMessages
+        grd2: syncCry_10 ↦ BabyCam ∈ sender
+        grd3: syncCry_10 ↦ CloudAI ∈ receiver
+        grd4: syncCry_10 ∉ receivedMessages
+        grd5: currentMessage = {syncCry_10}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncCry_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncCry_10 ↦ cryData}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendcancelCry_11
+    WHEN
+        grd1: cancelCry_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncCry_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCry_11}
+        act2: sender := sender ∪ {cancelCry_11 ↦ HomeHub}
+        act3: receiver := receiver ∪ {cancelCry_11 ↦ BabyCam}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelCry_11 ↦ cryData}
+        act6: currentMessage := {cancelCry_11}
+    END
+
+    receivecancelCry_11
+    WHEN
+        grd1: cancelCry_11 ∈ sentMessages
+        grd2: cancelCry_11 ↦ HomeHub ∈ sender
+        grd3: cancelCry_11 ↦ BabyCam ∈ receiver
+        grd4: cancelCry_11 ∉ receivedMessages
+        grd5: currentMessage = {cancelCry_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCry_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelCry_11 ↦ cryData}
+        act3: currentMessage := ∅
+    END
+
+END

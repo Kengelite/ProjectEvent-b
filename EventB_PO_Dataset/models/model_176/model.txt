@@ -1,0 +1,398 @@
+CONTEXT SmartStreetLightContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CityCMS, Gateway, LampNode, MotionSensor
+    cancelDim_1, queryDim_2, requestFault_3, releaseLamp_4, sendDim_5, logLamp_6, confirmDim_7, confirmFault_8, notifyDim_9, approveDim_10, ackFault_11
+    dimData, dimID, dimRef, faultCode, faultValue, lampID, lampInfo, lampRef, lampValue
+AXIOMS
+    axm1: partition(Objects, {CityCMS}, {Gateway}, {LampNode}, {MotionSensor})
+    axm2: partition(Messages, {cancelDim_1}, {queryDim_2}, {requestFault_3}, {releaseLamp_4}, {sendDim_5}, {logLamp_6}, {confirmDim_7}, {confirmFault_8}, {notifyDim_9}, {approveDim_10}, {ackFault_11})
+    axm3: partition(DataMessages, {dimData}, {dimID}, {dimRef}, {faultCode}, {faultValue}, {lampID}, {lampInfo}, {lampRef}, {lampValue})
+END
+
+MACHINE SmartStreetLightInteractionMachine_1
+SEES SmartStreetLightContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, urgent, par_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: urgent ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_6 ∈ ℤ
+    inv20: t_delay_6 ∈ ℤ
+    inv21: t_success_6 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+    inv25: t_time_8 ∈ ℤ
+    inv26: t_delay_8 ∈ ℤ
+    inv27: t_success_8 ∈ ℤ
+    inv28: t_time_9 ∈ ℤ
+    inv29: t_delay_9 ∈ ℤ
+    inv30: t_success_9 ∈ ℤ
+    inv31: t_time_10 ∈ ℤ
+    inv32: t_delay_10 ∈ ℤ
+    inv33: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: urgent := 0
+        act9: par_1 := 0
+        act10: t_time_3 :∈ 0..0
+        act11: t_delay_3 := 3
+        act12: t_success_3 := 0
+        act13: t_time_4 :∈ 0..1
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..8
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_6 :∈ 0..60
+        act20: t_delay_6 := 0
+        act21: t_success_6 := 0
+        act22: t_time_7 :∈ 0..2
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+        act25: t_time_8 :∈ 0..1
+        act26: t_delay_8 := 0
+        act27: t_success_8 := 0
+        act28: t_time_9 :∈ 5..1
+        act29: t_delay_9 := 0
+        act30: t_success_9 := 0
+        act31: t_time_10 :∈ 5..1
+        act32: t_delay_10 := 0
+        act33: t_success_10 := 0
+    END
+
+
+    sendcancelDim_1
+    WHEN
+        grd1: cancelDim_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelDim_1}
+        act2: sender := sender ∪ {cancelDim_1 ↦ LampNode}
+        act3: receiver := receiver ∪ {cancelDim_1 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelDim_1 ↦ faultCode}
+        act6: currentMessage := {cancelDim_1}
+    END
+
+    receivecancelDim_1
+    WHEN
+        grd1: cancelDim_1 ∈ sentMessages
+        grd2: cancelDim_1 ↦ LampNode ∈ sender
+        grd3: cancelDim_1 ↦ Gateway ∈ receiver
+        grd4: cancelDim_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelDim_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelDim_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelDim_1 ↦ faultCode}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryDim_2
+    WHEN
+        grd1: queryDim_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelDim_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryDim_2}
+        act2: sender := sender ∪ {queryDim_2 ↦ CityCMS}
+        act3: receiver := receiver ∪ {queryDim_2 ↦ LampNode}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryDim_2 ↦ faultCode, queryDim_2 ↦ faultValue}
+        act6: currentMessage := {queryDim_2}
+    END
+
+    receivequeryDim_2
+    WHEN
+        grd1: queryDim_2 ∈ sentMessages
+        grd2: queryDim_2 ↦ CityCMS ∈ sender
+        grd3: queryDim_2 ↦ LampNode ∈ receiver
+        grd4: queryDim_2 ∉ receivedMessages
+        grd5: currentMessage = {queryDim_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryDim_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryDim_2 ↦ faultCode, queryDim_2 ↦ faultValue}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestFault_3
+    WHEN
+        grd1: requestFault_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryDim_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestFault_3}
+        act2: sender := sender ∪ {requestFault_3 ↦ MotionSensor}
+        act3: receiver := receiver ∪ {requestFault_3 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestFault_3 ↦ lampRef}
+        act6: currentMessage := {requestFault_3}
+    END
+
+    receiverequestFault_3
+    WHEN
+        grd1: requestFault_3 ∈ sentMessages
+        grd2: requestFault_3 ↦ MotionSensor ∈ sender
+        grd3: requestFault_3 ↦ Gateway ∈ receiver
+        grd4: requestFault_3 ∉ receivedMessages
+        grd5: currentMessage = {requestFault_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestFault_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestFault_3 ↦ lampRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreleaseLamp_4
+    WHEN
+        grd1: releaseLamp_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestFault_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLamp_4}
+        act2: sender := sender ∪ {releaseLamp_4 ↦ LampNode}
+        act3: receiver := receiver ∪ {releaseLamp_4 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseLamp_4 ↦ dimID}
+        act6: currentMessage := {releaseLamp_4}
+    END
+
+    receivereleaseLamp_4
+    WHEN
+        grd1: releaseLamp_4 ∈ sentMessages
+        grd2: releaseLamp_4 ↦ LampNode ∈ sender
+        grd3: releaseLamp_4 ↦ Gateway ∈ receiver
+        grd4: releaseLamp_4 ∉ receivedMessages
+        grd5: currentMessage = {releaseLamp_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLamp_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseLamp_4 ↦ dimID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsendDim_5
+    WHEN
+        grd1: sendDim_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLamp_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendDim_5}
+        act2: sender := sender ∪ {sendDim_5 ↦ CityCMS}
+        act3: receiver := receiver ∪ {sendDim_5 ↦ MotionSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendDim_5 ↦ dimData}
+        act6: currentMessage := {sendDim_5}
+    END
+
+    receivesendDim_5
+    WHEN
+        grd1: sendDim_5 ∈ sentMessages
+        grd2: sendDim_5 ↦ CityCMS ∈ sender
+        grd3: sendDim_5 ↦ MotionSensor ∈ receiver
+        grd4: sendDim_5 ∉ receivedMessages
+        grd5: currentMessage = {sendDim_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendDim_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendDim_5 ↦ dimData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendlogLamp_6
+    WHEN
+        grd1: logLamp_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendDim_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logLamp_6}
+        act2: sender := sender ∪ {logLamp_6 ↦ LampNode}
+        act3: receiver := receiver ∪ {logLamp_6 ↦ CityCMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logLamp_6 ↦ lampInfo}
+        act6: currentMessage := {logLamp_6}
+    END
+
+    receivelogLamp_6
+    WHEN
+        grd1: logLamp_6 ∈ sentMessages
+        grd2: logLamp_6 ↦ LampNode ∈ sender
+        grd3: logLamp_6 ↦ CityCMS ∈ receiver
+        grd4: logLamp_6 ∉ receivedMessages
+        grd5: currentMessage = {logLamp_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logLamp_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logLamp_6 ↦ lampInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendconfirmDim_7
+    WHEN
+        grd1: confirmDim_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logLamp_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmDim_7}
+        act2: sender := sender ∪ {confirmDim_7 ↦ LampNode}
+        act3: receiver := receiver ∪ {confirmDim_7 ↦ CityCMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmDim_7 ↦ lampValue}
+        act6: currentMessage := {confirmDim_7}
+    END
+
+    receiveconfirmDim_7
+    WHEN
+        grd1: confirmDim_7 ∈ sentMessages
+        grd2: confirmDim_7 ↦ LampNode ∈ sender
+        grd3: confirmDim_7 ↦ CityCMS ∈ receiver
+        grd4: confirmDim_7 ∉ receivedMessages
+        grd5: currentMessage = {confirmDim_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmDim_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmDim_7 ↦ lampValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendconfirmFault_8
+    WHEN
+        grd1: confirmFault_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmDim_7 ∈ receivedMessages
+        grd4: urgent = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmFault_8}
+        act2: sender := sender ∪ {confirmFault_8 ↦ CityCMS}
+        act3: receiver := receiver ∪ {confirmFault_8 ↦ LampNode}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmFault_8 ↦ dimRef}
+        act6: currentMessage := {confirmFault_8}
+    END
+
+    receiveconfirmFault_8
+    WHEN
+        grd1: confirmFault_8 ∈ sentMessages
+        grd2: confirmFault_8 ↦ CityCMS ∈ sender
+        grd3: confirmFault_8 ↦ LampNode ∈ receiver
+        grd4: confirmFault_8 ∉ receivedMessages
+        grd5: currentMessage = {confirmFault_8}
+        grd6: urgent = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmFault_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmFault_8 ↦ dimRef}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendnotifyDim_9
+    WHEN
+        grd1: notifyDim_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmFault_8 ∈ receivedMessages
+        grd4: urgent = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyDim_9}
+        act2: sender := sender ∪ {notifyDim_9 ↦ MotionSensor}
+        act3: receiver := receiver ∪ {notifyDim_9 ↦ CityCMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyDim_9 ↦ faultValue}
+        act6: currentMessage := {notifyDim_9}
+    END
+
+    receivenotifyDim_9
+    WHEN
+        grd1: notifyDim_9 ∈ sentMessages
+        grd2: notifyDim_9 ↦ MotionSensor ∈ sender
+        grd3: notifyDim_9 ↦ CityCMS ∈ receiver
+        grd4: notifyDim_9 ∉ receivedMessages
+        grd5: currentMessage = {notifyDim_9}
+        grd6: urgent = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyDim_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyDim_9 ↦ faultValue}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendapproveDim_10
+    WHEN
+        grd1: approveDim_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmDim_7 ∈ receivedMessages
+        grd4: urgent = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveDim_10}
+        act2: sender := sender ∪ {approveDim_10 ↦ Gateway}
+        act3: receiver := receiver ∪ {approveDim_10 ↦ LampNode}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveDim_10}
+    END
+
+    receiveapproveDim_10
+    WHEN
+        grd1: approveDim_10 ∈ sentMessages
+        grd2: approveDim_10 ↦ Gateway ∈ sender
+        grd3: approveDim_10 ↦ LampNode ∈ receiver
+        grd4: approveDim_10 ∉ receivedMessages
+        grd5: currentMessage = {approveDim_10}
+        grd6: urgent = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveDim_10}
+        act2: currentMessage := ∅
+        act3: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendackFault_11
+    WHEN
+        grd1: ackFault_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyDim_9 ∈ receivedMessages ∨ approveDim_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackFault_11}
+        act2: sender := sender ∪ {ackFault_11 ↦ Gateway}
+        act3: receiver := receiver ∪ {ackFault_11 ↦ MotionSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackFault_11 ↦ dimID, ackFault_11 ↦ lampID}
+        act6: currentMessage := {ackFault_11}
+    END
+
+    receiveackFault_11
+    WHEN
+        grd1: ackFault_11 ∈ sentMessages
+        grd2: ackFault_11 ↦ Gateway ∈ sender
+        grd3: ackFault_11 ↦ MotionSensor ∈ receiver
+        grd4: ackFault_11 ∉ receivedMessages
+        grd5: currentMessage = {ackFault_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackFault_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackFault_11 ↦ dimID, ackFault_11 ↦ lampID}
+        act3: currentMessage := ∅
+    END
+
+END

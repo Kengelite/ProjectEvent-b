@@ -1,0 +1,220 @@
+CONTEXT SmartPlugControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    HomeApp, SmartPlug
+    queryState_1, plugState_2, turnOff_3, offAck_4, turnOn_5, energyReport_6
+    kwhUsed, powerStatus
+AXIOMS
+    axm1: partition(Objects, {HomeApp}, {SmartPlug})
+    axm2: partition(Messages, {queryState_1}, {plugState_2}, {turnOff_3}, {offAck_4}, {turnOn_5}, {energyReport_6})
+    axm3: partition(DataMessages, {kwhUsed}, {powerStatus})
+END
+
+MACHINE SmartPlugControlInteractionMachine_1
+SEES SmartPlugControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, relayOn, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: relayOn ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: relayOn := 0
+        act9: t_time_2 :∈ 0..2
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..1
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..1
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendqueryState_1
+    WHEN
+        grd1: queryState_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryState_1}
+        act2: sender := sender ∪ {queryState_1 ↦ HomeApp}
+        act3: receiver := receiver ∪ {queryState_1 ↦ SmartPlug}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryState_1}
+    END
+
+    receivequeryState_1
+    WHEN
+        grd1: queryState_1 ∈ sentMessages
+        grd2: queryState_1 ↦ HomeApp ∈ sender
+        grd3: queryState_1 ↦ SmartPlug ∈ receiver
+        grd4: queryState_1 ∉ receivedMessages
+        grd5: currentMessage = {queryState_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryState_1}
+        act2: currentMessage := ∅
+    END
+
+    sendplugState_2
+    WHEN
+        grd1: plugState_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryState_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {plugState_2}
+        act2: sender := sender ∪ {plugState_2 ↦ SmartPlug}
+        act3: receiver := receiver ∪ {plugState_2 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {plugState_2 ↦ powerStatus}
+        act6: currentMessage := {plugState_2}
+    END
+
+    receiveplugState_2
+    WHEN
+        grd1: plugState_2 ∈ sentMessages
+        grd2: plugState_2 ↦ SmartPlug ∈ sender
+        grd3: plugState_2 ↦ HomeApp ∈ receiver
+        grd4: plugState_2 ∉ receivedMessages
+        grd5: currentMessage = {plugState_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {plugState_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {plugState_2 ↦ powerStatus}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendturnOff_3
+    WHEN
+        grd1: turnOff_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: plugState_2 ∈ receivedMessages
+        grd4: relayOn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {turnOff_3}
+        act2: sender := sender ∪ {turnOff_3 ↦ HomeApp}
+        act3: receiver := receiver ∪ {turnOff_3 ↦ SmartPlug}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {turnOff_3}
+    END
+
+    receiveturnOff_3
+    WHEN
+        grd1: turnOff_3 ∈ sentMessages
+        grd2: turnOff_3 ↦ HomeApp ∈ sender
+        grd3: turnOff_3 ↦ SmartPlug ∈ receiver
+        grd4: turnOff_3 ∉ receivedMessages
+        grd5: currentMessage = {turnOff_3}
+        grd6: relayOn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {turnOn_5}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendoffAck_4
+    WHEN
+        grd1: offAck_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: turnOff_3 ∈ receivedMessages
+        grd4: relayOn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {offAck_4}
+        act2: sender := sender ∪ {offAck_4 ↦ SmartPlug}
+        act3: receiver := receiver ∪ {offAck_4 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {offAck_4}
+    END
+
+    receiveoffAck_4
+    WHEN
+        grd1: offAck_4 ∈ sentMessages
+        grd2: offAck_4 ↦ SmartPlug ∈ sender
+        grd3: offAck_4 ↦ HomeApp ∈ receiver
+        grd4: offAck_4 ∉ receivedMessages
+        grd5: currentMessage = {offAck_4}
+        grd6: relayOn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {offAck_4}
+        act2: currentMessage := ∅
+    END
+
+    sendturnOn_5
+    WHEN
+        grd1: turnOn_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: plugState_2 ∈ receivedMessages
+        grd4: relayOn = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {turnOn_5}
+        act2: sender := sender ∪ {turnOn_5 ↦ HomeApp}
+        act3: receiver := receiver ∪ {turnOn_5 ↦ SmartPlug}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {turnOn_5}
+    END
+
+    receiveturnOn_5
+    WHEN
+        grd1: turnOn_5 ∈ sentMessages
+        grd2: turnOn_5 ↦ HomeApp ∈ sender
+        grd3: turnOn_5 ↦ SmartPlug ∈ receiver
+        grd4: turnOn_5 ∉ receivedMessages
+        grd5: currentMessage = {turnOn_5}
+        grd6: relayOn = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {turnOn_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendenergyReport_6
+    WHEN
+        grd1: energyReport_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: offAck_4 ∈ receivedMessages ∨ turnOn_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {energyReport_6}
+        act2: sender := sender ∪ {energyReport_6 ↦ SmartPlug}
+        act3: receiver := receiver ∪ {energyReport_6 ↦ HomeApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {energyReport_6 ↦ kwhUsed}
+        act6: currentMessage := {energyReport_6}
+    END
+
+    receiveenergyReport_6
+    WHEN
+        grd1: energyReport_6 ∈ sentMessages
+        grd2: energyReport_6 ↦ SmartPlug ∈ sender
+        grd3: energyReport_6 ↦ HomeApp ∈ receiver
+        grd4: energyReport_6 ∉ receivedMessages
+        grd5: currentMessage = {energyReport_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {energyReport_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {energyReport_6 ↦ kwhUsed}
+        act3: currentMessage := ∅
+    END
+
+END

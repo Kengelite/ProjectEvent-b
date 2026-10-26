@@ -1,0 +1,232 @@
+CONTEXT SchoolBusTrackingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BusApp, Parent
+    updateArrival_1, confirmStop_2, reportBus_3, cancelStop_4, syncBus_5, checkBus_6
+    arrivalRef, busCode, busID, stopData, stopRef
+AXIOMS
+    axm1: partition(Objects, {BusApp}, {Parent})
+    axm2: partition(Messages, {updateArrival_1}, {confirmStop_2}, {reportBus_3}, {cancelStop_4}, {syncBus_5}, {checkBus_6})
+    axm3: partition(DataMessages, {arrivalRef}, {busCode}, {busID}, {stopData}, {stopRef})
+END
+
+MACHINE SchoolBusTrackingInteractionMachine_1
+SEES SchoolBusTrackingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: t_time_2 :∈ 0..10
+        act10: t_delay_2 := 3
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..30
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..60
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+        act18: t_time_6 :∈ 0..0
+        act19: t_delay_6 := 2
+        act20: t_success_6 := 0
+    END
+
+
+    sendupdateArrival_1
+    WHEN
+        grd1: updateArrival_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateArrival_1}
+        act2: sender := sender ∪ {updateArrival_1 ↦ BusApp}
+        act3: receiver := receiver ∪ {updateArrival_1 ↦ Parent}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateArrival_1}
+    END
+
+    receiveupdateArrival_1
+    WHEN
+        grd1: updateArrival_1 ∈ sentMessages
+        grd2: updateArrival_1 ↦ BusApp ∈ sender
+        grd3: updateArrival_1 ↦ Parent ∈ receiver
+        grd4: updateArrival_1 ∉ receivedMessages
+        grd5: currentMessage = {updateArrival_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateArrival_1}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmStop_2
+    WHEN
+        grd1: confirmStop_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateArrival_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmStop_2}
+        act2: sender := sender ∪ {confirmStop_2 ↦ Parent}
+        act3: receiver := receiver ∪ {confirmStop_2 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmStop_2 ↦ busCode}
+        act6: currentMessage := {confirmStop_2}
+    END
+
+    receiveconfirmStop_2
+    WHEN
+        grd1: confirmStop_2 ∈ sentMessages
+        grd2: confirmStop_2 ↦ Parent ∈ sender
+        grd3: confirmStop_2 ↦ BusApp ∈ receiver
+        grd4: confirmStop_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmStop_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmStop_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmStop_2 ↦ busCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+        act5: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendreportBus_3
+    WHEN
+        grd1: reportBus_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmStop_2 ∈ receivedMessages
+        grd4: t_obs ≤ 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportBus_3}
+        act2: sender := sender ∪ {reportBus_3 ↦ Parent}
+        act3: receiver := receiver ∪ {reportBus_3 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportBus_3}
+    END
+
+    receivereportBus_3
+    WHEN
+        grd1: reportBus_3 ∈ sentMessages
+        grd2: reportBus_3 ↦ Parent ∈ sender
+        grd3: reportBus_3 ↦ BusApp ∈ receiver
+        grd4: reportBus_3 ∉ receivedMessages
+        grd5: currentMessage = {reportBus_3}
+        grd6: t_obs ≤ 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportBus_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcancelStop_4
+    WHEN
+        grd1: cancelStop_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportBus_3 ∈ receivedMessages
+        grd4: t_obs ≤ 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelStop_4}
+        act2: sender := sender ∪ {cancelStop_4 ↦ Parent}
+        act3: receiver := receiver ∪ {cancelStop_4 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelStop_4 ↦ busID, cancelStop_4 ↦ stopRef}
+        act6: currentMessage := {cancelStop_4}
+    END
+
+    receivecancelStop_4
+    WHEN
+        grd1: cancelStop_4 ∈ sentMessages
+        grd2: cancelStop_4 ↦ Parent ∈ sender
+        grd3: cancelStop_4 ↦ BusApp ∈ receiver
+        grd4: cancelStop_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelStop_4}
+        grd6: t_obs ≤ 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelStop_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelStop_4 ↦ busID, cancelStop_4 ↦ stopRef}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncBus_5
+    WHEN
+        grd1: syncBus_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmStop_2 ∈ receivedMessages
+        grd4: t_obs > 2
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncBus_5}
+        act2: sender := sender ∪ {syncBus_5 ↦ Parent}
+        act3: receiver := receiver ∪ {syncBus_5 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncBus_5 ↦ arrivalRef}
+        act6: currentMessage := {syncBus_5}
+    END
+
+    receivesyncBus_5
+    WHEN
+        grd1: syncBus_5 ∈ sentMessages
+        grd2: syncBus_5 ↦ Parent ∈ sender
+        grd3: syncBus_5 ↦ BusApp ∈ receiver
+        grd4: syncBus_5 ∉ receivedMessages
+        grd5: currentMessage = {syncBus_5}
+        grd6: t_obs > 2
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncBus_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncBus_5 ↦ arrivalRef}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcheckBus_6
+    WHEN
+        grd1: checkBus_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelStop_4 ∈ receivedMessages ∨ syncBus_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkBus_6}
+        act2: sender := sender ∪ {checkBus_6 ↦ BusApp}
+        act3: receiver := receiver ∪ {checkBus_6 ↦ Parent}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkBus_6 ↦ stopData}
+        act6: currentMessage := {checkBus_6}
+    END
+
+    receivecheckBus_6
+    WHEN
+        grd1: checkBus_6 ∈ sentMessages
+        grd2: checkBus_6 ↦ BusApp ∈ sender
+        grd3: checkBus_6 ↦ Parent ∈ receiver
+        grd4: checkBus_6 ∉ receivedMessages
+        grd5: currentMessage = {checkBus_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkBus_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkBus_6 ↦ stopData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

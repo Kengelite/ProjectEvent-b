@@ -1,0 +1,206 @@
+CONTEXT ArtGalleryTicketingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    GalleryApp, TicketDesk, Visitor
+    validateEntry_1, approveEntry_2, logEntry_3, requestEntry_4, fetchEntry_5, notifyEntry_6
+    entryInfo, ticketData, ticketValue, tourID
+AXIOMS
+    axm1: partition(Objects, {GalleryApp}, {TicketDesk}, {Visitor})
+    axm2: partition(Messages, {validateEntry_1}, {approveEntry_2}, {logEntry_3}, {requestEntry_4}, {fetchEntry_5}, {notifyEntry_6})
+    axm3: partition(DataMessages, {entryInfo}, {ticketData}, {ticketValue}, {tourID})
+END
+
+MACHINE ArtGalleryTicketingInteractionMachine_1
+SEES ArtGalleryTicketingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..3
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+    END
+
+
+    sendvalidateEntry_1
+    WHEN
+        grd1: validateEntry_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateEntry_1}
+        act2: sender := sender ∪ {validateEntry_1 ↦ GalleryApp}
+        act3: receiver := receiver ∪ {validateEntry_1 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateEntry_1 ↦ tourID}
+        act6: currentMessage := {validateEntry_1}
+    END
+
+    receivevalidateEntry_1
+    WHEN
+        grd1: validateEntry_1 ∈ sentMessages
+        grd2: validateEntry_1 ↦ GalleryApp ∈ sender
+        grd3: validateEntry_1 ↦ Visitor ∈ receiver
+        grd4: validateEntry_1 ∉ receivedMessages
+        grd5: currentMessage = {validateEntry_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateEntry_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateEntry_1 ↦ tourID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendapproveEntry_2
+    WHEN
+        grd1: approveEntry_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateEntry_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveEntry_2}
+        act2: sender := sender ∪ {approveEntry_2 ↦ Visitor}
+        act3: receiver := receiver ∪ {approveEntry_2 ↦ GalleryApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveEntry_2}
+    END
+
+    receiveapproveEntry_2
+    WHEN
+        grd1: approveEntry_2 ∈ sentMessages
+        grd2: approveEntry_2 ↦ Visitor ∈ sender
+        grd3: approveEntry_2 ↦ GalleryApp ∈ receiver
+        grd4: approveEntry_2 ∉ receivedMessages
+        grd5: currentMessage = {approveEntry_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveEntry_2}
+        act2: currentMessage := ∅
+    END
+
+    sendlogEntry_3
+    WHEN
+        grd1: logEntry_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveEntry_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logEntry_3}
+        act2: sender := sender ∪ {logEntry_3 ↦ GalleryApp}
+        act3: receiver := receiver ∪ {logEntry_3 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logEntry_3 ↦ entryInfo}
+        act6: currentMessage := {logEntry_3}
+    END
+
+    receivelogEntry_3
+    WHEN
+        grd1: logEntry_3 ∈ sentMessages
+        grd2: logEntry_3 ↦ GalleryApp ∈ sender
+        grd3: logEntry_3 ↦ Visitor ∈ receiver
+        grd4: logEntry_3 ∉ receivedMessages
+        grd5: currentMessage = {logEntry_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logEntry_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logEntry_3 ↦ entryInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestEntry_4
+    WHEN
+        grd1: requestEntry_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logEntry_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestEntry_4}
+        act2: sender := sender ∪ {requestEntry_4 ↦ Visitor}
+        act3: receiver := receiver ∪ {requestEntry_4 ↦ TicketDesk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestEntry_4 ↦ ticketData}
+        act6: currentMessage := {requestEntry_4}
+    END
+
+    receiverequestEntry_4
+    WHEN
+        grd1: requestEntry_4 ∈ sentMessages
+        grd2: requestEntry_4 ↦ Visitor ∈ sender
+        grd3: requestEntry_4 ↦ TicketDesk ∈ receiver
+        grd4: requestEntry_4 ∉ receivedMessages
+        grd5: currentMessage = {requestEntry_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestEntry_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestEntry_4 ↦ ticketData}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchEntry_5
+    WHEN
+        grd1: fetchEntry_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestEntry_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchEntry_5}
+        act2: sender := sender ∪ {fetchEntry_5 ↦ Visitor}
+        act3: receiver := receiver ∪ {fetchEntry_5 ↦ TicketDesk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchEntry_5 ↦ ticketValue}
+        act6: currentMessage := {fetchEntry_5}
+    END
+
+    receivefetchEntry_5
+    WHEN
+        grd1: fetchEntry_5 ∈ sentMessages
+        grd2: fetchEntry_5 ↦ Visitor ∈ sender
+        grd3: fetchEntry_5 ↦ TicketDesk ∈ receiver
+        grd4: fetchEntry_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchEntry_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchEntry_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchEntry_5 ↦ ticketValue}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyEntry_6
+    WHEN
+        grd1: notifyEntry_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchEntry_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyEntry_6}
+        act2: sender := sender ∪ {notifyEntry_6 ↦ Visitor}
+        act3: receiver := receiver ∪ {notifyEntry_6 ↦ GalleryApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyEntry_6 ↦ entryInfo}
+        act6: currentMessage := {notifyEntry_6}
+    END
+
+    receivenotifyEntry_6
+    WHEN
+        grd1: notifyEntry_6 ∈ sentMessages
+        grd2: notifyEntry_6 ↦ Visitor ∈ sender
+        grd3: notifyEntry_6 ↦ GalleryApp ∈ receiver
+        grd4: notifyEntry_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyEntry_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyEntry_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyEntry_6 ↦ entryInfo}
+        act3: currentMessage := ∅
+    END
+
+END

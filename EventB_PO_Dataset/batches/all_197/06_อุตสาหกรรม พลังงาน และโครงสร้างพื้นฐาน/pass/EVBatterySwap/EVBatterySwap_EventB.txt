@@ -1,0 +1,391 @@
+CONTEXT EVBatterySwapContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BatteryCloud, Rider, SwapStation, Technician
+    reportCredit_1, issueCredit_2, reserveSwap_3, notifyCredit_4, reportBattery_5, issueSwap_6, checkCredit_7, scheduleSwap_8, logBattery_9, fetchSwap_10, confirmBattery_11
+    batteryCode, batteryData, creditRef, swapCode, swapID, swapInfo, swapValue
+AXIOMS
+    axm1: partition(Objects, {BatteryCloud}, {Rider}, {SwapStation}, {Technician})
+    axm2: partition(Messages, {reportCredit_1}, {issueCredit_2}, {reserveSwap_3}, {notifyCredit_4}, {reportBattery_5}, {issueSwap_6}, {checkCredit_7}, {scheduleSwap_8}, {logBattery_9}, {fetchSwap_10}, {confirmBattery_11})
+    axm3: partition(DataMessages, {batteryCode}, {batteryData}, {creditRef}, {swapCode}, {swapID}, {swapInfo}, {swapValue})
+END
+
+MACHINE EVBatterySwapInteractionMachine_1
+SEES EVBatterySwapContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, optIn, retryNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: optIn ∈ ℤ
+    inv10: retryNo ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_2 ∈ ℤ
+    inv15: t_delay_2 ∈ ℤ
+    inv16: t_success_2 ∈ ℤ
+    inv17: t_time_4 ∈ ℤ
+    inv18: t_delay_4 ∈ ℤ
+    inv19: t_success_4 ∈ ℤ
+    inv20: t_time_9 ∈ ℤ
+    inv21: t_delay_9 ∈ ℤ
+    inv22: t_success_9 ∈ ℤ
+    inv23: t_time_10 ∈ ℤ
+    inv24: t_delay_10 ∈ ℤ
+    inv25: t_success_10 ∈ ℤ
+    inv26: t_time_11 ∈ ℤ
+    inv27: t_delay_11 ∈ ℤ
+    inv28: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: optIn := 1
+        act10: retryNo := 0
+        act11: t_time_1 :∈ 0..1
+        act12: t_delay_1 := 3
+        act13: t_success_1 := 0
+        act14: t_time_2 :∈ 0..8
+        act15: t_delay_2 := 0
+        act16: t_success_2 := 0
+        act17: t_time_4 :∈ 0..30
+        act18: t_delay_4 := 5
+        act19: t_success_4 := 0
+        act20: t_time_9 :∈ 0..15
+        act21: t_delay_9 := 0
+        act22: t_success_9 := 0
+        act23: t_time_10 :∈ 0..0
+        act24: t_delay_10 := 2
+        act25: t_success_10 := 0
+        act26: t_time_11 :∈ 0..0
+        act27: t_delay_11 := 5
+        act28: t_success_11 := 0
+    END
+
+
+    sendreportCredit_1
+    WHEN
+        grd1: reportCredit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportCredit_1}
+        act2: sender := sender ∪ {reportCredit_1 ↦ Technician}
+        act3: receiver := receiver ∪ {reportCredit_1 ↦ Rider}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportCredit_1 ↦ swapCode}
+        act6: currentMessage := {reportCredit_1}
+    END
+
+    receivereportCredit_1
+    WHEN
+        grd1: reportCredit_1 ∈ sentMessages
+        grd2: reportCredit_1 ↦ Technician ∈ sender
+        grd3: reportCredit_1 ↦ Rider ∈ receiver
+        grd4: reportCredit_1 ∉ receivedMessages
+        grd5: currentMessage = {reportCredit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportCredit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportCredit_1 ↦ swapCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendissueCredit_2
+    WHEN
+        grd1: issueCredit_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCredit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueCredit_2}
+        act2: sender := sender ∪ {issueCredit_2 ↦ BatteryCloud}
+        act3: receiver := receiver ∪ {issueCredit_2 ↦ Rider}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueCredit_2 ↦ swapInfo}
+        act6: currentMessage := {issueCredit_2}
+    END
+
+    receiveissueCredit_2
+    WHEN
+        grd1: issueCredit_2 ∈ sentMessages
+        grd2: issueCredit_2 ↦ BatteryCloud ∈ sender
+        grd3: issueCredit_2 ↦ Rider ∈ receiver
+        grd4: issueCredit_2 ∉ receivedMessages
+        grd5: currentMessage = {issueCredit_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueCredit_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueCredit_2 ↦ swapInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveSwap_3_opt1
+    WHEN
+        grd1: reserveSwap_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueCredit_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSwap_3}
+        act2: sender := sender ∪ {reserveSwap_3 ↦ SwapStation}
+        act3: receiver := receiver ∪ {reserveSwap_3 ↦ BatteryCloud}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveSwap_3 ↦ batteryCode}
+        act6: currentMessage := {reserveSwap_3}
+    END
+
+    receivereserveSwap_3_opt1
+    WHEN
+        grd1: reserveSwap_3 ∈ sentMessages
+        grd2: reserveSwap_3 ↦ SwapStation ∈ sender
+        grd3: reserveSwap_3 ↦ BatteryCloud ∈ receiver
+        grd4: reserveSwap_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveSwap_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSwap_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveSwap_3 ↦ batteryCode}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyCredit_4
+    WHEN
+        grd1: notifyCredit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSwap_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCredit_4}
+        act2: sender := sender ∪ {notifyCredit_4 ↦ SwapStation}
+        act3: receiver := receiver ∪ {notifyCredit_4 ↦ BatteryCloud}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyCredit_4 ↦ swapID}
+        act6: currentMessage := {notifyCredit_4}
+    END
+
+    receivenotifyCredit_4
+    WHEN
+        grd1: notifyCredit_4 ∈ sentMessages
+        grd2: notifyCredit_4 ↦ SwapStation ∈ sender
+        grd3: notifyCredit_4 ↦ BatteryCloud ∈ receiver
+        grd4: notifyCredit_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyCredit_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCredit_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyCredit_4 ↦ swapID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreportBattery_5
+    WHEN
+        grd1: reportBattery_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyCredit_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportBattery_5}
+        act2: sender := sender ∪ {reportBattery_5 ↦ SwapStation}
+        act3: receiver := receiver ∪ {reportBattery_5 ↦ BatteryCloud}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportBattery_5}
+    END
+
+    receivereportBattery_5
+    WHEN
+        grd1: reportBattery_5 ∈ sentMessages
+        grd2: reportBattery_5 ↦ SwapStation ∈ sender
+        grd3: reportBattery_5 ↦ BatteryCloud ∈ receiver
+        grd4: reportBattery_5 ∉ receivedMessages
+        grd5: currentMessage = {reportBattery_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportBattery_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueSwap_6_opt2
+    WHEN
+        grd1: issueSwap_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportBattery_5 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSwap_6}
+        act2: sender := sender ∪ {issueSwap_6 ↦ SwapStation}
+        act3: receiver := receiver ∪ {issueSwap_6 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueSwap_6 ↦ swapCode}
+        act6: currentMessage := {issueSwap_6}
+    END
+
+    receiveissueSwap_6_opt2
+    WHEN
+        grd1: issueSwap_6 ∈ sentMessages
+        grd2: issueSwap_6 ↦ SwapStation ∈ sender
+        grd3: issueSwap_6 ↦ Technician ∈ receiver
+        grd4: issueSwap_6 ∉ receivedMessages
+        grd5: currentMessage = {issueSwap_6}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSwap_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueSwap_6 ↦ swapCode}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckCredit_7
+    WHEN
+        grd1: checkCredit_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueSwap_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkCredit_7}
+        act2: sender := sender ∪ {checkCredit_7 ↦ Rider}
+        act3: receiver := receiver ∪ {checkCredit_7 ↦ SwapStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkCredit_7 ↦ swapValue}
+        act6: currentMessage := {checkCredit_7}
+    END
+
+    receivecheckCredit_7
+    WHEN
+        grd1: checkCredit_7 ∈ sentMessages
+        grd2: checkCredit_7 ↦ Rider ∈ sender
+        grd3: checkCredit_7 ↦ SwapStation ∈ receiver
+        grd4: checkCredit_7 ∉ receivedMessages
+        grd5: currentMessage = {checkCredit_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkCredit_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkCredit_7 ↦ swapValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleSwap_8
+    WHEN
+        grd1: scheduleSwap_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkCredit_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSwap_8}
+        act2: sender := sender ∪ {scheduleSwap_8 ↦ Rider}
+        act3: receiver := receiver ∪ {scheduleSwap_8 ↦ SwapStation}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleSwap_8}
+    END
+
+    receivescheduleSwap_8
+    WHEN
+        grd1: scheduleSwap_8 ∈ sentMessages
+        grd2: scheduleSwap_8 ↦ Rider ∈ sender
+        grd3: scheduleSwap_8 ↦ SwapStation ∈ receiver
+        grd4: scheduleSwap_8 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSwap_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSwap_8}
+        act2: currentMessage := ∅
+    END
+
+    sendlogBattery_9
+    WHEN
+        grd1: logBattery_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSwap_8 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {logBattery_9}
+        act2: sender := sender ∪ {logBattery_9 ↦ BatteryCloud}
+        act3: receiver := receiver ∪ {logBattery_9 ↦ SwapStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logBattery_9 ↦ creditRef}
+        act6: currentMessage := {logBattery_9}
+    END
+
+    receivelogBattery_9
+    WHEN
+        grd1: logBattery_9 ∈ sentMessages
+        grd2: logBattery_9 ↦ BatteryCloud ∈ sender
+        grd3: logBattery_9 ↦ SwapStation ∈ receiver
+        grd4: logBattery_9 ∉ receivedMessages
+        grd5: currentMessage = {logBattery_9}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logBattery_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logBattery_9 ↦ creditRef}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendfetchSwap_10
+    WHEN
+        grd1: fetchSwap_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logBattery_9 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchSwap_10}
+        act2: sender := sender ∪ {fetchSwap_10 ↦ SwapStation}
+        act3: receiver := receiver ∪ {fetchSwap_10 ↦ Technician}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchSwap_10}
+    END
+
+    receivefetchSwap_10
+    WHEN
+        grd1: fetchSwap_10 ∈ sentMessages
+        grd2: fetchSwap_10 ↦ SwapStation ∈ sender
+        grd3: fetchSwap_10 ↦ Technician ∈ receiver
+        grd4: fetchSwap_10 ∉ receivedMessages
+        grd5: currentMessage = {fetchSwap_10}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchSwap_10}
+        act2: currentMessage := ∅
+        act3: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendconfirmBattery_11
+    WHEN
+        grd1: confirmBattery_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchSwap_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBattery_11}
+        act2: sender := sender ∪ {confirmBattery_11 ↦ Technician}
+        act3: receiver := receiver ∪ {confirmBattery_11 ↦ SwapStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmBattery_11 ↦ batteryData}
+        act6: currentMessage := {confirmBattery_11}
+    END
+
+    receiveconfirmBattery_11
+    WHEN
+        grd1: confirmBattery_11 ∈ sentMessages
+        grd2: confirmBattery_11 ↦ Technician ∈ sender
+        grd3: confirmBattery_11 ↦ SwapStation ∈ receiver
+        grd4: confirmBattery_11 ∉ receivedMessages
+        grd5: currentMessage = {confirmBattery_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBattery_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmBattery_11 ↦ batteryData}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_logBattery_9_loop1
+    WHEN
+        grd1: retryNo < 11
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

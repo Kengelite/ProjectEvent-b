@@ -1,0 +1,222 @@
+CONTEXT SeaportPilotBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    PilotPortal, PilotStation, ShipAgent
+    notifyArrival_1, reserveArrival_2, sendBerth_3, logPilot_4, requestBerth_5, checkArrival_6
+    arrivalData, arrivalInfo, arrivalRef, pilotData, pilotRef, pilotValue
+AXIOMS
+    axm1: partition(Objects, {PilotPortal}, {PilotStation}, {ShipAgent})
+    axm2: partition(Messages, {notifyArrival_1}, {reserveArrival_2}, {sendBerth_3}, {logPilot_4}, {requestBerth_5}, {checkArrival_6})
+    axm3: partition(DataMessages, {arrivalData}, {arrivalInfo}, {arrivalRef}, {pilotData}, {pilotRef}, {pilotValue})
+END
+
+MACHINE SeaportPilotBookingInteractionMachine_1
+SEES SeaportPilotBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: t_time_2 :∈ 0..10
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_5 :∈ 0..1
+        act13: t_delay_5 := 0
+        act14: t_success_5 := 0
+        act15: t_time_6 :∈ 0..60
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendnotifyArrival_1
+    WHEN
+        grd1: notifyArrival_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyArrival_1}
+        act2: sender := sender ∪ {notifyArrival_1 ↦ PilotPortal}
+        act3: receiver := receiver ∪ {notifyArrival_1 ↦ PilotStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyArrival_1 ↦ pilotRef}
+        act6: currentMessage := {notifyArrival_1}
+    END
+
+    receivenotifyArrival_1
+    WHEN
+        grd1: notifyArrival_1 ∈ sentMessages
+        grd2: notifyArrival_1 ↦ PilotPortal ∈ sender
+        grd3: notifyArrival_1 ↦ PilotStation ∈ receiver
+        grd4: notifyArrival_1 ∉ receivedMessages
+        grd5: currentMessage = {notifyArrival_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyArrival_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyArrival_1 ↦ pilotRef}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveArrival_2
+    WHEN
+        grd1: reserveArrival_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyArrival_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveArrival_2}
+        act2: sender := sender ∪ {reserveArrival_2 ↦ ShipAgent}
+        act3: receiver := receiver ∪ {reserveArrival_2 ↦ PilotStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveArrival_2 ↦ pilotValue}
+        act6: currentMessage := {reserveArrival_2}
+    END
+
+    receivereserveArrival_2
+    WHEN
+        grd1: reserveArrival_2 ∈ sentMessages
+        grd2: reserveArrival_2 ↦ ShipAgent ∈ sender
+        grd3: reserveArrival_2 ↦ PilotStation ∈ receiver
+        grd4: reserveArrival_2 ∉ receivedMessages
+        grd5: currentMessage = {reserveArrival_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveArrival_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveArrival_2 ↦ pilotValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsendBerth_3_opt1
+    WHEN
+        grd1: sendBerth_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveArrival_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendBerth_3}
+        act2: sender := sender ∪ {sendBerth_3 ↦ ShipAgent}
+        act3: receiver := receiver ∪ {sendBerth_3 ↦ PilotPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendBerth_3 ↦ arrivalInfo, sendBerth_3 ↦ arrivalRef}
+        act6: currentMessage := {sendBerth_3}
+    END
+
+    receivesendBerth_3_opt1
+    WHEN
+        grd1: sendBerth_3 ∈ sentMessages
+        grd2: sendBerth_3 ↦ ShipAgent ∈ sender
+        grd3: sendBerth_3 ↦ PilotPortal ∈ receiver
+        grd4: sendBerth_3 ∉ receivedMessages
+        grd5: currentMessage = {sendBerth_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendBerth_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendBerth_3 ↦ arrivalInfo, sendBerth_3 ↦ arrivalRef}
+        act3: currentMessage := ∅
+    END
+
+    sendlogPilot_4
+    WHEN
+        grd1: logPilot_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendBerth_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logPilot_4}
+        act2: sender := sender ∪ {logPilot_4 ↦ PilotPortal}
+        act3: receiver := receiver ∪ {logPilot_4 ↦ ShipAgent}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logPilot_4 ↦ pilotData}
+        act6: currentMessage := {logPilot_4}
+    END
+
+    receivelogPilot_4
+    WHEN
+        grd1: logPilot_4 ∈ sentMessages
+        grd2: logPilot_4 ↦ PilotPortal ∈ sender
+        grd3: logPilot_4 ↦ ShipAgent ∈ receiver
+        grd4: logPilot_4 ∉ receivedMessages
+        grd5: currentMessage = {logPilot_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logPilot_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logPilot_4 ↦ pilotData}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestBerth_5
+    WHEN
+        grd1: requestBerth_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logPilot_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestBerth_5}
+        act2: sender := sender ∪ {requestBerth_5 ↦ PilotPortal}
+        act3: receiver := receiver ∪ {requestBerth_5 ↦ PilotStation}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestBerth_5 ↦ arrivalData}
+        act6: currentMessage := {requestBerth_5}
+    END
+
+    receiverequestBerth_5
+    WHEN
+        grd1: requestBerth_5 ∈ sentMessages
+        grd2: requestBerth_5 ↦ PilotPortal ∈ sender
+        grd3: requestBerth_5 ↦ PilotStation ∈ receiver
+        grd4: requestBerth_5 ∉ receivedMessages
+        grd5: currentMessage = {requestBerth_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestBerth_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestBerth_5 ↦ arrivalData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcheckArrival_6
+    WHEN
+        grd1: checkArrival_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestBerth_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkArrival_6}
+        act2: sender := sender ∪ {checkArrival_6 ↦ PilotPortal}
+        act3: receiver := receiver ∪ {checkArrival_6 ↦ ShipAgent}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkArrival_6}
+    END
+
+    receivecheckArrival_6
+    WHEN
+        grd1: checkArrival_6 ∈ sentMessages
+        grd2: checkArrival_6 ↦ PilotPortal ∈ sender
+        grd3: checkArrival_6 ↦ ShipAgent ∈ receiver
+        grd4: checkArrival_6 ∉ receivedMessages
+        grd5: currentMessage = {checkArrival_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkArrival_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

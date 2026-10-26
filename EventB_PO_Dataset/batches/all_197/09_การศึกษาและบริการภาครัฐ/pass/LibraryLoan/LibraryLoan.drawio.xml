@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="LibraryLoan" id="libraryloan">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="270" width="890" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="45" y="405" width="840" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="518" width="890" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[fine &lt;= 100]" vertex="1">
+          <mxGeometry x="105" y="275" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[wantReminder == 1]" vertex="1">
+          <mxGeometry x="130" y="410" width="171" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[fine &gt; 100]" vertex="1">
+          <mxGeometry x="105" y="530" width="108" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Member" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="ll8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Kiosk" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="ll9" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="LibraryDB" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="ll10" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="NotifySvc" vertex="1">
+          <mxGeometry x="790" y="40" width="100" height="670" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="scanCard(memberID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="340.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="checkMember(memberID) {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="180" as="sourcePoint" />
+            <mxPoint x="590.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="memberInfo(fineAmount)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="230" as="sourcePoint" />
+            <mxPoint x="590.0" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="borrowBook(bookID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="320" as="sourcePoint" />
+            <mxPoint x="340.0" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="recordLoan(bookID) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="370" as="sourcePoint" />
+            <mxPoint x="590.0" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="setReminder(dueDate) {0..5}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="455" as="sourcePoint" />
+            <mxPoint x="840.0" y="455" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="rejectLoan(fineAmount)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="570" as="sourcePoint" />
+            <mxPoint x="90.0" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="logout()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="650" as="sourcePoint" />
+            <mxPoint x="340.0" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

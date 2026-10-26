@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="MobileTopUp" id="mobiletopup">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="215" width="640" height="255" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="337" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="t_obs = now" vertex="1">
+          <mxGeometry x="310" y="188" width="99" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[t_obs &lt;= 13]" vertex="1">
+          <mxGeometry x="105" y="220" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+2}" vertex="1">
+          <mxGeometry x="310" y="307" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[t_obs &gt; 13]" vertex="1">
+          <mxGeometry x="105" y="350" width="108" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+5}" vertex="1">
+          <mxGeometry x="310" y="387" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Subscriber" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="525" as="geometry" />
+        </mxCell>
+        <mxCell id="ll9" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="TopUpApp" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="525" as="geometry" />
+        </mxCell>
+        <mxCell id="ll10" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="TelcoGW" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="525" as="geometry" />
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="notifyCredit() {10..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="130" as="sourcePoint" />
+            <mxPoint x="590.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="confirmBundle() {30..24}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="180" as="sourcePoint" />
+            <mxPoint x="590.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="reportBundle(bundleID, creditID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="265" as="sourcePoint" />
+            <mxPoint x="340.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="ackCredit() {10..8}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="315" as="sourcePoint" />
+            <mxPoint x="590.0" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="checkBundle(topupInfo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="395" as="sourcePoint" />
+            <mxPoint x="90.0" y="395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="assignCredit(topupData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="445" as="sourcePoint" />
+            <mxPoint x="340.0" y="445" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="releaseTopup(bundleID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="505" as="sourcePoint" />
+            <mxPoint x="90.0" y="505" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

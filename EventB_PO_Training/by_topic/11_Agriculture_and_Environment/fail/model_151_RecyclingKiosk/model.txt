@@ -1,0 +1,353 @@
+CONTEXT RecyclingKioskContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Compactor, Customer, RecycleKiosk, RewardAPI
+    confirmCredit_1, fetchVoucher_2, syncCredit_3, notifyCredit_4, confirmBottle_5, confirmVoucher_6, ackVoucher_7, assignBottle_8, scheduleVoucher_9, queryCredit_10
+    bottleID, bottleRef, creditData, creditID, creditValue, voucherInfo, voucherValue
+AXIOMS
+    axm1: partition(Objects, {Compactor}, {Customer}, {RecycleKiosk}, {RewardAPI})
+    axm2: partition(Messages, {confirmCredit_1}, {fetchVoucher_2}, {syncCredit_3}, {notifyCredit_4}, {confirmBottle_5}, {confirmVoucher_6}, {ackVoucher_7}, {assignBottle_8}, {scheduleVoucher_9}, {queryCredit_10})
+    axm3: partition(DataMessages, {bottleID}, {bottleRef}, {creditData}, {creditID}, {creditValue}, {voucherInfo}, {voucherValue})
+END
+
+MACHINE RecyclingKioskInteractionMachine_1
+SEES RecyclingKioskContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, express, roundNo, urgent, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: express ∈ ℤ
+    inv9: roundNo ∈ ℤ
+    inv10: urgent ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+    inv14: t_time_6 ∈ ℤ
+    inv15: t_delay_6 ∈ ℤ
+    inv16: t_success_6 ∈ ℤ
+    inv17: t_time_9 ∈ ℤ
+    inv18: t_delay_9 ∈ ℤ
+    inv19: t_success_9 ∈ ℤ
+    inv20: t_time_10 ∈ ℤ
+    inv21: t_delay_10 ∈ ℤ
+    inv22: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: express := 1
+        act9: roundNo := 0
+        act10: urgent := 0
+        act11: t_time_4 :∈ 0..1
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+        act14: t_time_6 :∈ 0..20
+        act15: t_delay_6 := 0
+        act16: t_success_6 := 0
+        act17: t_time_9 :∈ 60..31
+        act18: t_delay_9 := 0
+        act19: t_success_9 := 0
+        act20: t_time_10 :∈ 5..4
+        act21: t_delay_10 := 0
+        act22: t_success_10 := 0
+    END
+
+
+    sendconfirmCredit_1
+    WHEN
+        grd1: confirmCredit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCredit_1}
+        act2: sender := sender ∪ {confirmCredit_1 ↦ RecycleKiosk}
+        act3: receiver := receiver ∪ {confirmCredit_1 ↦ RewardAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmCredit_1 ↦ creditID}
+        act6: currentMessage := {confirmCredit_1}
+    END
+
+    receiveconfirmCredit_1
+    WHEN
+        grd1: confirmCredit_1 ∈ sentMessages
+        grd2: confirmCredit_1 ↦ RecycleKiosk ∈ sender
+        grd3: confirmCredit_1 ↦ RewardAPI ∈ receiver
+        grd4: confirmCredit_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmCredit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCredit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmCredit_1 ↦ creditID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchVoucher_2
+    WHEN
+        grd1: fetchVoucher_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmCredit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchVoucher_2}
+        act2: sender := sender ∪ {fetchVoucher_2 ↦ RecycleKiosk}
+        act3: receiver := receiver ∪ {fetchVoucher_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchVoucher_2 ↦ voucherValue}
+        act6: currentMessage := {fetchVoucher_2}
+    END
+
+    receivefetchVoucher_2
+    WHEN
+        grd1: fetchVoucher_2 ∈ sentMessages
+        grd2: fetchVoucher_2 ↦ RecycleKiosk ∈ sender
+        grd3: fetchVoucher_2 ↦ Customer ∈ receiver
+        grd4: fetchVoucher_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchVoucher_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchVoucher_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchVoucher_2 ↦ voucherValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncCredit_3_opt1
+    WHEN
+        grd1: syncCredit_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchVoucher_2 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncCredit_3}
+        act2: sender := sender ∪ {syncCredit_3 ↦ Customer}
+        act3: receiver := receiver ∪ {syncCredit_3 ↦ Compactor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncCredit_3 ↦ bottleRef}
+        act6: currentMessage := {syncCredit_3}
+    END
+
+    receivesyncCredit_3_opt1
+    WHEN
+        grd1: syncCredit_3 ∈ sentMessages
+        grd2: syncCredit_3 ↦ Customer ∈ sender
+        grd3: syncCredit_3 ↦ Compactor ∈ receiver
+        grd4: syncCredit_3 ∉ receivedMessages
+        grd5: currentMessage = {syncCredit_3}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncCredit_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncCredit_3 ↦ bottleRef}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyCredit_4_opt1
+    WHEN
+        grd1: notifyCredit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncCredit_3 ∈ receivedMessages
+        grd4: express = 1
+        grd5: roundNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCredit_4}
+        act2: sender := sender ∪ {notifyCredit_4 ↦ RecycleKiosk}
+        act3: receiver := receiver ∪ {notifyCredit_4 ↦ Compactor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyCredit_4 ↦ bottleID, notifyCredit_4 ↦ creditValue}
+        act6: currentMessage := {notifyCredit_4}
+    END
+
+    receivenotifyCredit_4_opt1
+    WHEN
+        grd1: notifyCredit_4 ∈ sentMessages
+        grd2: notifyCredit_4 ↦ RecycleKiosk ∈ sender
+        grd3: notifyCredit_4 ↦ Compactor ∈ receiver
+        grd4: notifyCredit_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyCredit_4}
+        grd6: express = 1
+        grd7: roundNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCredit_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyCredit_4 ↦ bottleID, notifyCredit_4 ↦ creditValue}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendconfirmBottle_5_opt1
+    WHEN
+        grd1: confirmBottle_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyCredit_4 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmBottle_5}
+        act2: sender := sender ∪ {confirmBottle_5 ↦ Compactor}
+        act3: receiver := receiver ∪ {confirmBottle_5 ↦ RewardAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmBottle_5}
+    END
+
+    receiveconfirmBottle_5_opt1
+    WHEN
+        grd1: confirmBottle_5 ∈ sentMessages
+        grd2: confirmBottle_5 ↦ Compactor ∈ sender
+        grd3: confirmBottle_5 ↦ RewardAPI ∈ receiver
+        grd4: confirmBottle_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmBottle_5}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmBottle_5}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmVoucher_6
+    WHEN
+        grd1: confirmVoucher_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmBottle_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmVoucher_6}
+        act2: sender := sender ∪ {confirmVoucher_6 ↦ RewardAPI}
+        act3: receiver := receiver ∪ {confirmVoucher_6 ↦ RecycleKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmVoucher_6 ↦ creditData}
+        act6: currentMessage := {confirmVoucher_6}
+    END
+
+    receiveconfirmVoucher_6
+    WHEN
+        grd1: confirmVoucher_6 ∈ sentMessages
+        grd2: confirmVoucher_6 ↦ RewardAPI ∈ sender
+        grd3: confirmVoucher_6 ↦ RecycleKiosk ∈ receiver
+        grd4: confirmVoucher_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmVoucher_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmVoucher_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmVoucher_6 ↦ creditData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendackVoucher_7
+    WHEN
+        grd1: ackVoucher_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmVoucher_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackVoucher_7}
+        act2: sender := sender ∪ {ackVoucher_7 ↦ Compactor}
+        act3: receiver := receiver ∪ {ackVoucher_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackVoucher_7}
+    END
+
+    receiveackVoucher_7
+    WHEN
+        grd1: ackVoucher_7 ∈ sentMessages
+        grd2: ackVoucher_7 ↦ Compactor ∈ sender
+        grd3: ackVoucher_7 ↦ Customer ∈ receiver
+        grd4: ackVoucher_7 ∉ receivedMessages
+        grd5: currentMessage = {ackVoucher_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackVoucher_7}
+        act2: currentMessage := ∅
+    END
+
+    sendassignBottle_8
+    WHEN
+        grd1: assignBottle_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackVoucher_7 ∈ receivedMessages
+        grd4: urgent = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignBottle_8}
+        act2: sender := sender ∪ {assignBottle_8 ↦ RewardAPI}
+        act3: receiver := receiver ∪ {assignBottle_8 ↦ RecycleKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignBottle_8}
+    END
+
+    receiveassignBottle_8
+    WHEN
+        grd1: assignBottle_8 ∈ sentMessages
+        grd2: assignBottle_8 ↦ RewardAPI ∈ sender
+        grd3: assignBottle_8 ↦ RecycleKiosk ∈ receiver
+        grd4: assignBottle_8 ∉ receivedMessages
+        grd5: currentMessage = {assignBottle_8}
+        grd6: urgent = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignBottle_8}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleVoucher_9
+    WHEN
+        grd1: scheduleVoucher_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackVoucher_7 ∈ receivedMessages
+        grd4: urgent = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleVoucher_9}
+        act2: sender := sender ∪ {scheduleVoucher_9 ↦ Customer}
+        act3: receiver := receiver ∪ {scheduleVoucher_9 ↦ RewardAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleVoucher_9}
+    END
+
+    receivescheduleVoucher_9
+    WHEN
+        grd1: scheduleVoucher_9 ∈ sentMessages
+        grd2: scheduleVoucher_9 ↦ Customer ∈ sender
+        grd3: scheduleVoucher_9 ↦ RewardAPI ∈ receiver
+        grd4: scheduleVoucher_9 ∉ receivedMessages
+        grd5: currentMessage = {scheduleVoucher_9}
+        grd6: urgent = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleVoucher_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendqueryCredit_10
+    WHEN
+        grd1: queryCredit_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignBottle_8 ∈ receivedMessages ∨ scheduleVoucher_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCredit_10}
+        act2: sender := sender ∪ {queryCredit_10 ↦ RecycleKiosk}
+        act3: receiver := receiver ∪ {queryCredit_10 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryCredit_10 ↦ voucherInfo}
+        act6: currentMessage := {queryCredit_10}
+    END
+
+    receivequeryCredit_10
+    WHEN
+        grd1: queryCredit_10 ∈ sentMessages
+        grd2: queryCredit_10 ↦ RecycleKiosk ∈ sender
+        grd3: queryCredit_10 ↦ Customer ∈ receiver
+        grd4: queryCredit_10 ∉ receivedMessages
+        grd5: currentMessage = {queryCredit_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCredit_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryCredit_10 ↦ voucherInfo}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    checkloop_notifyCredit_4_loop1
+    WHEN
+        grd1: express = 1
+        grd2: roundNo < 6
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

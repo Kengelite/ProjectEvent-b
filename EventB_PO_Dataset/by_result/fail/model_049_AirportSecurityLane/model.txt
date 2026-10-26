@@ -1,0 +1,226 @@
+CONTEXT AirportSecurityLaneContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Passenger, ScannerLane
+    cancelTray_1, validateTray_2, requestScan_3, releaseScan_4, updateTray_5, reserveTray_6
+    alertData, alertID, alertValue, scanCode, scanData, trayID
+AXIOMS
+    axm1: partition(Objects, {Passenger}, {ScannerLane})
+    axm2: partition(Messages, {cancelTray_1}, {validateTray_2}, {requestScan_3}, {releaseScan_4}, {updateTray_5}, {reserveTray_6})
+    axm3: partition(DataMessages, {alertData}, {alertID}, {alertValue}, {scanCode}, {scanData}, {trayID})
+END
+
+MACHINE AirportSecurityLaneInteractionMachine_1
+SEES AirportSecurityLaneContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, usage, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: usage ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: usage :∈ ℤ
+        act9: t_time_1 :∈ 0..0
+        act10: t_delay_1 := 5
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 2..1
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_5 :∈ 3..0
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendcancelTray_1
+    WHEN
+        grd1: cancelTray_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelTray_1}
+        act2: sender := sender ∪ {cancelTray_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {cancelTray_1 ↦ ScannerLane}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelTray_1 ↦ scanData}
+        act6: currentMessage := {cancelTray_1}
+    END
+
+    receivecancelTray_1
+    WHEN
+        grd1: cancelTray_1 ∈ sentMessages
+        grd2: cancelTray_1 ↦ Passenger ∈ sender
+        grd3: cancelTray_1 ↦ ScannerLane ∈ receiver
+        grd4: cancelTray_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelTray_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelTray_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelTray_1 ↦ scanData}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidateTray_2
+    WHEN
+        grd1: validateTray_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelTray_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateTray_2}
+        act2: sender := sender ∪ {validateTray_2 ↦ Passenger}
+        act3: receiver := receiver ∪ {validateTray_2 ↦ ScannerLane}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateTray_2}
+    END
+
+    receivevalidateTray_2
+    WHEN
+        grd1: validateTray_2 ∈ sentMessages
+        grd2: validateTray_2 ↦ Passenger ∈ sender
+        grd3: validateTray_2 ↦ ScannerLane ∈ receiver
+        grd4: validateTray_2 ∉ receivedMessages
+        grd5: currentMessage = {validateTray_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateTray_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendrequestScan_3
+    WHEN
+        grd1: requestScan_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateTray_2 ∈ receivedMessages
+        grd4: usage < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestScan_3}
+        act2: sender := sender ∪ {requestScan_3 ↦ Passenger}
+        act3: receiver := receiver ∪ {requestScan_3 ↦ ScannerLane}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestScan_3 ↦ alertID}
+        act6: currentMessage := {requestScan_3}
+    END
+
+    receiverequestScan_3
+    WHEN
+        grd1: requestScan_3 ∈ sentMessages
+        grd2: requestScan_3 ↦ Passenger ∈ sender
+        grd3: requestScan_3 ↦ ScannerLane ∈ receiver
+        grd4: requestScan_3 ∉ receivedMessages
+        grd5: currentMessage = {requestScan_3}
+        grd6: usage < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestScan_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestScan_3 ↦ alertID}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseScan_4
+    WHEN
+        grd1: releaseScan_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateTray_2 ∈ receivedMessages
+        grd4: usage ≥ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseScan_4}
+        act2: sender := sender ∪ {releaseScan_4 ↦ ScannerLane}
+        act3: receiver := receiver ∪ {releaseScan_4 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseScan_4 ↦ trayID}
+        act6: currentMessage := {releaseScan_4}
+    END
+
+    receivereleaseScan_4
+    WHEN
+        grd1: releaseScan_4 ∈ sentMessages
+        grd2: releaseScan_4 ↦ ScannerLane ∈ sender
+        grd3: releaseScan_4 ↦ Passenger ∈ receiver
+        grd4: releaseScan_4 ∉ receivedMessages
+        grd5: currentMessage = {releaseScan_4}
+        grd6: usage ≥ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseScan_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseScan_4 ↦ trayID}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateTray_5
+    WHEN
+        grd1: updateTray_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseScan_4 ∈ receivedMessages
+        grd4: usage ≥ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateTray_5}
+        act2: sender := sender ∪ {updateTray_5 ↦ Passenger}
+        act3: receiver := receiver ∪ {updateTray_5 ↦ ScannerLane}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateTray_5 ↦ alertData, updateTray_5 ↦ alertValue}
+        act6: currentMessage := {updateTray_5}
+    END
+
+    receiveupdateTray_5
+    WHEN
+        grd1: updateTray_5 ∈ sentMessages
+        grd2: updateTray_5 ↦ Passenger ∈ sender
+        grd3: updateTray_5 ↦ ScannerLane ∈ receiver
+        grd4: updateTray_5 ∉ receivedMessages
+        grd5: currentMessage = {updateTray_5}
+        grd6: usage ≥ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateTray_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateTray_5 ↦ alertData, updateTray_5 ↦ alertValue}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreserveTray_6
+    WHEN
+        grd1: reserveTray_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestScan_3 ∈ receivedMessages ∨ updateTray_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTray_6}
+        act2: sender := sender ∪ {reserveTray_6 ↦ Passenger}
+        act3: receiver := receiver ∪ {reserveTray_6 ↦ ScannerLane}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveTray_6 ↦ scanCode}
+        act6: currentMessage := {reserveTray_6}
+    END
+
+    receivereserveTray_6
+    WHEN
+        grd1: reserveTray_6 ∈ sentMessages
+        grd2: reserveTray_6 ↦ Passenger ∈ sender
+        grd3: reserveTray_6 ↦ ScannerLane ∈ receiver
+        grd4: reserveTray_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveTray_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTray_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveTray_6 ↦ scanCode}
+        act3: currentMessage := ∅
+    END
+
+END

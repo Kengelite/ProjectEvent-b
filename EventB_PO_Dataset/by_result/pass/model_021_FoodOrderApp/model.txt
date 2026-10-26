@@ -1,0 +1,278 @@
+CONTEXT FoodOrderAppContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    App, Customer, Restaurant
+    browseMenu_1, menuList_2, applyCoupon_3, discountApplied_4, submitOrder_5, forwardOrder_6, orderReady_7, notifyCustomer_8
+    couponCode, discount, menu, orderID
+AXIOMS
+    axm1: partition(Objects, {App}, {Customer}, {Restaurant})
+    axm2: partition(Messages, {browseMenu_1}, {menuList_2}, {applyCoupon_3}, {discountApplied_4}, {submitOrder_5}, {forwardOrder_6}, {orderReady_7}, {notifyCustomer_8})
+    axm3: partition(DataMessages, {couponCode}, {discount}, {menu}, {orderID})
+END
+
+MACHINE FoodOrderAppInteractionMachine_1
+SEES FoodOrderAppContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, hasCoupon, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: hasCoupon ∈ ℤ
+    inv9: t_time_6 ∈ ℤ
+    inv10: t_delay_6 ∈ ℤ
+    inv11: t_success_6 ∈ ℤ
+    inv12: t_time_7 ∈ ℤ
+    inv13: t_delay_7 ∈ ℤ
+    inv14: t_success_7 ∈ ℤ
+    inv15: t_time_8 ∈ ℤ
+    inv16: t_delay_8 ∈ ℤ
+    inv17: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: hasCoupon := 1
+        act9: t_time_6 :∈ 0..3
+        act10: t_delay_6 := 0
+        act11: t_success_6 := 0
+        act12: t_time_7 :∈ 0..40
+        act13: t_delay_7 := 5
+        act14: t_success_7 := 0
+        act15: t_time_8 :∈ 0..1
+        act16: t_delay_8 := 0
+        act17: t_success_8 := 0
+    END
+
+
+    sendbrowseMenu_1
+    WHEN
+        grd1: browseMenu_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {browseMenu_1}
+        act2: sender := sender ∪ {browseMenu_1 ↦ Customer}
+        act3: receiver := receiver ∪ {browseMenu_1 ↦ App}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {browseMenu_1}
+    END
+
+    receivebrowseMenu_1
+    WHEN
+        grd1: browseMenu_1 ∈ sentMessages
+        grd2: browseMenu_1 ↦ Customer ∈ sender
+        grd3: browseMenu_1 ↦ App ∈ receiver
+        grd4: browseMenu_1 ∉ receivedMessages
+        grd5: currentMessage = {browseMenu_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {browseMenu_1}
+        act2: currentMessage := ∅
+    END
+
+    sendmenuList_2
+    WHEN
+        grd1: menuList_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: browseMenu_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {menuList_2}
+        act2: sender := sender ∪ {menuList_2 ↦ App}
+        act3: receiver := receiver ∪ {menuList_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {menuList_2 ↦ menu}
+        act6: currentMessage := {menuList_2}
+    END
+
+    receivemenuList_2
+    WHEN
+        grd1: menuList_2 ∈ sentMessages
+        grd2: menuList_2 ↦ App ∈ sender
+        grd3: menuList_2 ↦ Customer ∈ receiver
+        grd4: menuList_2 ∉ receivedMessages
+        grd5: currentMessage = {menuList_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {menuList_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {menuList_2 ↦ menu}
+        act3: currentMessage := ∅
+    END
+
+    sendapplyCoupon_3_opt1
+    WHEN
+        grd1: applyCoupon_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: menuList_2 ∈ receivedMessages
+        grd4: hasCoupon = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {applyCoupon_3}
+        act2: sender := sender ∪ {applyCoupon_3 ↦ Customer}
+        act3: receiver := receiver ∪ {applyCoupon_3 ↦ App}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {applyCoupon_3 ↦ couponCode}
+        act6: currentMessage := {applyCoupon_3}
+    END
+
+    receiveapplyCoupon_3_opt1
+    WHEN
+        grd1: applyCoupon_3 ∈ sentMessages
+        grd2: applyCoupon_3 ↦ Customer ∈ sender
+        grd3: applyCoupon_3 ↦ App ∈ receiver
+        grd4: applyCoupon_3 ∉ receivedMessages
+        grd5: currentMessage = {applyCoupon_3}
+        grd6: hasCoupon = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {applyCoupon_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {applyCoupon_3 ↦ couponCode}
+        act3: currentMessage := ∅
+    END
+
+    senddiscountApplied_4_opt1
+    WHEN
+        grd1: discountApplied_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: applyCoupon_3 ∈ receivedMessages
+        grd4: hasCoupon = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {discountApplied_4}
+        act2: sender := sender ∪ {discountApplied_4 ↦ App}
+        act3: receiver := receiver ∪ {discountApplied_4 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {discountApplied_4 ↦ discount}
+        act6: currentMessage := {discountApplied_4}
+    END
+
+    receivediscountApplied_4_opt1
+    WHEN
+        grd1: discountApplied_4 ∈ sentMessages
+        grd2: discountApplied_4 ↦ App ∈ sender
+        grd3: discountApplied_4 ↦ Customer ∈ receiver
+        grd4: discountApplied_4 ∉ receivedMessages
+        grd5: currentMessage = {discountApplied_4}
+        grd6: hasCoupon = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {discountApplied_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {discountApplied_4 ↦ discount}
+        act3: currentMessage := ∅
+    END
+
+    sendsubmitOrder_5
+    WHEN
+        grd1: submitOrder_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: discountApplied_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {submitOrder_5}
+        act2: sender := sender ∪ {submitOrder_5 ↦ Customer}
+        act3: receiver := receiver ∪ {submitOrder_5 ↦ App}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {submitOrder_5 ↦ orderID}
+        act6: currentMessage := {submitOrder_5}
+    END
+
+    receivesubmitOrder_5
+    WHEN
+        grd1: submitOrder_5 ∈ sentMessages
+        grd2: submitOrder_5 ↦ Customer ∈ sender
+        grd3: submitOrder_5 ↦ App ∈ receiver
+        grd4: submitOrder_5 ∉ receivedMessages
+        grd5: currentMessage = {submitOrder_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {submitOrder_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {submitOrder_5 ↦ orderID}
+        act3: currentMessage := ∅
+    END
+
+    sendforwardOrder_6
+    WHEN
+        grd1: forwardOrder_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: submitOrder_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {forwardOrder_6}
+        act2: sender := sender ∪ {forwardOrder_6 ↦ App}
+        act3: receiver := receiver ∪ {forwardOrder_6 ↦ Restaurant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {forwardOrder_6 ↦ orderID}
+        act6: currentMessage := {forwardOrder_6}
+    END
+
+    receiveforwardOrder_6
+    WHEN
+        grd1: forwardOrder_6 ∈ sentMessages
+        grd2: forwardOrder_6 ↦ App ∈ sender
+        grd3: forwardOrder_6 ↦ Restaurant ∈ receiver
+        grd4: forwardOrder_6 ∉ receivedMessages
+        grd5: currentMessage = {forwardOrder_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {forwardOrder_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {forwardOrder_6 ↦ orderID}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendorderReady_7
+    WHEN
+        grd1: orderReady_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: forwardOrder_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {orderReady_7}
+        act2: sender := sender ∪ {orderReady_7 ↦ Restaurant}
+        act3: receiver := receiver ∪ {orderReady_7 ↦ App}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {orderReady_7 ↦ orderID}
+        act6: currentMessage := {orderReady_7}
+    END
+
+    receiveorderReady_7
+    WHEN
+        grd1: orderReady_7 ∈ sentMessages
+        grd2: orderReady_7 ↦ Restaurant ∈ sender
+        grd3: orderReady_7 ↦ App ∈ receiver
+        grd4: orderReady_7 ∉ receivedMessages
+        grd5: currentMessage = {orderReady_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {orderReady_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {orderReady_7 ↦ orderID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendnotifyCustomer_8
+    WHEN
+        grd1: notifyCustomer_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: orderReady_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCustomer_8}
+        act2: sender := sender ∪ {notifyCustomer_8 ↦ App}
+        act3: receiver := receiver ∪ {notifyCustomer_8 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyCustomer_8 ↦ orderID}
+        act6: currentMessage := {notifyCustomer_8}
+    END
+
+    receivenotifyCustomer_8
+    WHEN
+        grd1: notifyCustomer_8 ∈ sentMessages
+        grd2: notifyCustomer_8 ↦ App ∈ sender
+        grd3: notifyCustomer_8 ↦ Customer ∈ receiver
+        grd4: notifyCustomer_8 ∉ receivedMessages
+        grd5: currentMessage = {notifyCustomer_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCustomer_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyCustomer_8 ↦ orderID}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+END

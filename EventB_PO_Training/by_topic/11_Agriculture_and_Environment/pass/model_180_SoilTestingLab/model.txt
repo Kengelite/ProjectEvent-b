@@ -1,0 +1,229 @@
+CONTEXT SoilTestingLabContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Agronomist, Farmer, LabLIMS, SampleKiosk
+    assignReport_1, sendNutrient_2, releaseReport_3, cancelNutrient_4, querySample_5, notifyReport_6
+    nutrientRef, reportInfo, reportRef, reportValue, sampleInfo
+AXIOMS
+    axm1: partition(Objects, {Agronomist}, {Farmer}, {LabLIMS}, {SampleKiosk})
+    axm2: partition(Messages, {assignReport_1}, {sendNutrient_2}, {releaseReport_3}, {cancelNutrient_4}, {querySample_5}, {notifyReport_6})
+    axm3: partition(DataMessages, {nutrientRef}, {reportInfo}, {reportRef}, {reportValue}, {sampleInfo})
+END
+
+MACHINE SoilTestingLabInteractionMachine_1
+SEES SoilTestingLabContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: t_time_2 :∈ 0..5
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..10
+        act13: t_delay_3 := 5
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..2
+        act16: t_delay_4 := 10
+        act17: t_success_4 := 0
+    END
+
+
+    sendassignReport_1
+    WHEN
+        grd1: assignReport_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignReport_1}
+        act2: sender := sender ∪ {assignReport_1 ↦ Agronomist}
+        act3: receiver := receiver ∪ {assignReport_1 ↦ Farmer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignReport_1 ↦ reportRef, assignReport_1 ↦ reportValue}
+        act6: currentMessage := {assignReport_1}
+    END
+
+    receiveassignReport_1
+    WHEN
+        grd1: assignReport_1 ∈ sentMessages
+        grd2: assignReport_1 ↦ Agronomist ∈ sender
+        grd3: assignReport_1 ↦ Farmer ∈ receiver
+        grd4: assignReport_1 ∉ receivedMessages
+        grd5: currentMessage = {assignReport_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignReport_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignReport_1 ↦ reportRef, assignReport_1 ↦ reportValue}
+        act3: currentMessage := ∅
+    END
+
+    sendsendNutrient_2
+    WHEN
+        grd1: sendNutrient_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignReport_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendNutrient_2}
+        act2: sender := sender ∪ {sendNutrient_2 ↦ LabLIMS}
+        act3: receiver := receiver ∪ {sendNutrient_2 ↦ Farmer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendNutrient_2}
+    END
+
+    receivesendNutrient_2
+    WHEN
+        grd1: sendNutrient_2 ∈ sentMessages
+        grd2: sendNutrient_2 ↦ LabLIMS ∈ sender
+        grd3: sendNutrient_2 ↦ Farmer ∈ receiver
+        grd4: sendNutrient_2 ∉ receivedMessages
+        grd5: currentMessage = {sendNutrient_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendNutrient_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreleaseReport_3
+    WHEN
+        grd1: releaseReport_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendNutrient_2 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseReport_3}
+        act2: sender := sender ∪ {releaseReport_3 ↦ Agronomist}
+        act3: receiver := receiver ∪ {releaseReport_3 ↦ LabLIMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseReport_3 ↦ nutrientRef}
+        act6: currentMessage := {releaseReport_3}
+    END
+
+    receivereleaseReport_3
+    WHEN
+        grd1: releaseReport_3 ∈ sentMessages
+        grd2: releaseReport_3 ↦ Agronomist ∈ sender
+        grd3: releaseReport_3 ↦ LabLIMS ∈ receiver
+        grd4: releaseReport_3 ∉ receivedMessages
+        grd5: currentMessage = {releaseReport_3}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseReport_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseReport_3 ↦ nutrientRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcancelNutrient_4
+    WHEN
+        grd1: cancelNutrient_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseReport_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelNutrient_4}
+        act2: sender := sender ∪ {cancelNutrient_4 ↦ SampleKiosk}
+        act3: receiver := receiver ∪ {cancelNutrient_4 ↦ Agronomist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelNutrient_4 ↦ sampleInfo}
+        act6: currentMessage := {cancelNutrient_4}
+    END
+
+    receivecancelNutrient_4
+    WHEN
+        grd1: cancelNutrient_4 ∈ sentMessages
+        grd2: cancelNutrient_4 ↦ SampleKiosk ∈ sender
+        grd3: cancelNutrient_4 ↦ Agronomist ∈ receiver
+        grd4: cancelNutrient_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelNutrient_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelNutrient_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelNutrient_4 ↦ sampleInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendquerySample_5
+    WHEN
+        grd1: querySample_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelNutrient_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {querySample_5}
+        act2: sender := sender ∪ {querySample_5 ↦ LabLIMS}
+        act3: receiver := receiver ∪ {querySample_5 ↦ Agronomist}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {querySample_5 ↦ reportInfo}
+        act6: currentMessage := {querySample_5}
+    END
+
+    receivequerySample_5
+    WHEN
+        grd1: querySample_5 ∈ sentMessages
+        grd2: querySample_5 ↦ LabLIMS ∈ sender
+        grd3: querySample_5 ↦ Agronomist ∈ receiver
+        grd4: querySample_5 ∉ receivedMessages
+        grd5: currentMessage = {querySample_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {querySample_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {querySample_5 ↦ reportInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyReport_6
+    WHEN
+        grd1: notifyReport_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: querySample_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyReport_6}
+        act2: sender := sender ∪ {notifyReport_6 ↦ LabLIMS}
+        act3: receiver := receiver ∪ {notifyReport_6 ↦ SampleKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyReport_6 ↦ reportRef}
+        act6: currentMessage := {notifyReport_6}
+    END
+
+    receivenotifyReport_6
+    WHEN
+        grd1: notifyReport_6 ∈ sentMessages
+        grd2: notifyReport_6 ↦ LabLIMS ∈ sender
+        grd3: notifyReport_6 ↦ SampleKiosk ∈ receiver
+        grd4: notifyReport_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyReport_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyReport_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyReport_6 ↦ reportRef}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_releaseReport_3_loop1
+    WHEN
+        grd1: roundNo < 12
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

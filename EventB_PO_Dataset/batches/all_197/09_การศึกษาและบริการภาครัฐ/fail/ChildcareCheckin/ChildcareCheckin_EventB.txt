@@ -1,0 +1,316 @@
+CONTEXT ChildcareCheckinContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CheckinTablet, DaycareDB, Parent, Teacher
+    issuePickup_1, schedulePickup_2, queryNote_3, ackPickup_4, reserveNote_5, scheduleChild_6, validateNote_7, checkChild_8, cancelChild_9
+    childCode, childRef, noteID, noteInfo, noteRef, pickupCode, pickupID, pickupRef, pickupValue
+AXIOMS
+    axm1: partition(Objects, {CheckinTablet}, {DaycareDB}, {Parent}, {Teacher})
+    axm2: partition(Messages, {issuePickup_1}, {schedulePickup_2}, {queryNote_3}, {ackPickup_4}, {reserveNote_5}, {scheduleChild_6}, {validateNote_7}, {checkChild_8}, {cancelChild_9})
+    axm3: partition(DataMessages, {childCode}, {childRef}, {noteID}, {noteInfo}, {noteRef}, {pickupCode}, {pickupID}, {pickupRef}, {pickupValue})
+END
+
+MACHINE ChildcareCheckinInteractionMachine_1
+SEES ChildcareCheckinContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, approved, retryNo, t_time_2, t_delay_2, t_success_2, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: approved ∈ ℤ
+    inv9: retryNo ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_8 ∈ ℤ
+    inv14: t_delay_8 ∈ ℤ
+    inv15: t_success_8 ∈ ℤ
+    inv16: t_time_9 ∈ ℤ
+    inv17: t_delay_9 ∈ ℤ
+    inv18: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: approved := 0
+        act9: retryNo := 0
+        act10: t_time_2 :∈ 0..30
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_8 :∈ 0..1
+        act14: t_delay_8 := 0
+        act15: t_success_8 := 0
+        act16: t_time_9 :∈ 5..4
+        act17: t_delay_9 := 0
+        act18: t_success_9 := 0
+    END
+
+
+    sendissuePickup_1
+    WHEN
+        grd1: issuePickup_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {issuePickup_1}
+        act2: sender := sender ∪ {issuePickup_1 ↦ DaycareDB}
+        act3: receiver := receiver ∪ {issuePickup_1 ↦ Teacher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issuePickup_1 ↦ pickupRef}
+        act6: currentMessage := {issuePickup_1}
+    END
+
+    receiveissuePickup_1
+    WHEN
+        grd1: issuePickup_1 ∈ sentMessages
+        grd2: issuePickup_1 ↦ DaycareDB ∈ sender
+        grd3: issuePickup_1 ↦ Teacher ∈ receiver
+        grd4: issuePickup_1 ∉ receivedMessages
+        grd5: currentMessage = {issuePickup_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issuePickup_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issuePickup_1 ↦ pickupRef}
+        act3: currentMessage := ∅
+    END
+
+    sendschedulePickup_2
+    WHEN
+        grd1: schedulePickup_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issuePickup_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePickup_2}
+        act2: sender := sender ∪ {schedulePickup_2 ↦ Parent}
+        act3: receiver := receiver ∪ {schedulePickup_2 ↦ Teacher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {schedulePickup_2 ↦ childCode, schedulePickup_2 ↦ noteID}
+        act6: currentMessage := {schedulePickup_2}
+    END
+
+    receiveschedulePickup_2
+    WHEN
+        grd1: schedulePickup_2 ∈ sentMessages
+        grd2: schedulePickup_2 ↦ Parent ∈ sender
+        grd3: schedulePickup_2 ↦ Teacher ∈ receiver
+        grd4: schedulePickup_2 ∉ receivedMessages
+        grd5: currentMessage = {schedulePickup_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePickup_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {schedulePickup_2 ↦ childCode, schedulePickup_2 ↦ noteID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendqueryNote_3
+    WHEN
+        grd1: queryNote_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePickup_2 ∈ receivedMessages
+        grd4: approved = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryNote_3}
+        act2: sender := sender ∪ {queryNote_3 ↦ Parent}
+        act3: receiver := receiver ∪ {queryNote_3 ↦ Teacher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryNote_3 ↦ childRef}
+        act6: currentMessage := {queryNote_3}
+    END
+
+    receivequeryNote_3
+    WHEN
+        grd1: queryNote_3 ∈ sentMessages
+        grd2: queryNote_3 ↦ Parent ∈ sender
+        grd3: queryNote_3 ↦ Teacher ∈ receiver
+        grd4: queryNote_3 ∉ receivedMessages
+        grd5: currentMessage = {queryNote_3}
+        grd6: approved = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryNote_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryNote_3 ↦ childRef}
+        act3: currentMessage := ∅
+    END
+
+    sendackPickup_4
+    WHEN
+        grd1: ackPickup_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryNote_3 ∈ receivedMessages
+        grd4: approved = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackPickup_4}
+        act2: sender := sender ∪ {ackPickup_4 ↦ CheckinTablet}
+        act3: receiver := receiver ∪ {ackPickup_4 ↦ DaycareDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackPickup_4}
+    END
+
+    receiveackPickup_4
+    WHEN
+        grd1: ackPickup_4 ∈ sentMessages
+        grd2: ackPickup_4 ↦ CheckinTablet ∈ sender
+        grd3: ackPickup_4 ↦ DaycareDB ∈ receiver
+        grd4: ackPickup_4 ∉ receivedMessages
+        grd5: currentMessage = {ackPickup_4}
+        grd6: approved = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackPickup_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreserveNote_5
+    WHEN
+        grd1: reserveNote_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePickup_2 ∈ receivedMessages
+        grd4: approved = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveNote_5}
+        act2: sender := sender ∪ {reserveNote_5 ↦ CheckinTablet}
+        act3: receiver := receiver ∪ {reserveNote_5 ↦ DaycareDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveNote_5 ↦ noteRef, reserveNote_5 ↦ pickupCode}
+        act6: currentMessage := {reserveNote_5}
+    END
+
+    receivereserveNote_5
+    WHEN
+        grd1: reserveNote_5 ∈ sentMessages
+        grd2: reserveNote_5 ↦ CheckinTablet ∈ sender
+        grd3: reserveNote_5 ↦ DaycareDB ∈ receiver
+        grd4: reserveNote_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveNote_5}
+        grd6: approved = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveNote_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveNote_5 ↦ noteRef, reserveNote_5 ↦ pickupCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleChild_6
+    WHEN
+        grd1: scheduleChild_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackPickup_4 ∈ receivedMessages ∨ reserveNote_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleChild_6}
+        act2: sender := sender ∪ {scheduleChild_6 ↦ DaycareDB}
+        act3: receiver := receiver ∪ {scheduleChild_6 ↦ Parent}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleChild_6}
+    END
+
+    receivescheduleChild_6
+    WHEN
+        grd1: scheduleChild_6 ∈ sentMessages
+        grd2: scheduleChild_6 ↦ DaycareDB ∈ sender
+        grd3: scheduleChild_6 ↦ Parent ∈ receiver
+        grd4: scheduleChild_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleChild_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleChild_6}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateNote_7
+    WHEN
+        grd1: validateNote_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleChild_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateNote_7}
+        act2: sender := sender ∪ {validateNote_7 ↦ CheckinTablet}
+        act3: receiver := receiver ∪ {validateNote_7 ↦ DaycareDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateNote_7 ↦ noteInfo}
+        act6: currentMessage := {validateNote_7}
+    END
+
+    receivevalidateNote_7
+    WHEN
+        grd1: validateNote_7 ∈ sentMessages
+        grd2: validateNote_7 ↦ CheckinTablet ∈ sender
+        grd3: validateNote_7 ↦ DaycareDB ∈ receiver
+        grd4: validateNote_7 ∉ receivedMessages
+        grd5: currentMessage = {validateNote_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateNote_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateNote_7 ↦ noteInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckChild_8
+    WHEN
+        grd1: checkChild_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateNote_7 ∈ receivedMessages
+        grd4: retryNo < 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkChild_8}
+        act2: sender := sender ∪ {checkChild_8 ↦ DaycareDB}
+        act3: receiver := receiver ∪ {checkChild_8 ↦ Teacher}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkChild_8 ↦ pickupCode, checkChild_8 ↦ pickupID}
+        act6: currentMessage := {checkChild_8}
+    END
+
+    receivecheckChild_8
+    WHEN
+        grd1: checkChild_8 ∈ sentMessages
+        grd2: checkChild_8 ↦ DaycareDB ∈ sender
+        grd3: checkChild_8 ↦ Teacher ∈ receiver
+        grd4: checkChild_8 ∉ receivedMessages
+        grd5: currentMessage = {checkChild_8}
+        grd6: retryNo < 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkChild_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkChild_8 ↦ pickupCode, checkChild_8 ↦ pickupID}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendcancelChild_9
+    WHEN
+        grd1: cancelChild_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkChild_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelChild_9}
+        act2: sender := sender ∪ {cancelChild_9 ↦ CheckinTablet}
+        act3: receiver := receiver ∪ {cancelChild_9 ↦ Parent}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelChild_9 ↦ pickupValue}
+        act6: currentMessage := {cancelChild_9}
+    END
+
+    receivecancelChild_9
+    WHEN
+        grd1: cancelChild_9 ∈ sentMessages
+        grd2: cancelChild_9 ↦ CheckinTablet ∈ sender
+        grd3: cancelChild_9 ↦ Parent ∈ receiver
+        grd4: cancelChild_9 ∉ receivedMessages
+        grd5: currentMessage = {cancelChild_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelChild_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelChild_9 ↦ pickupValue}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    checkloop_checkChild_8_loop1
+    WHEN
+        grd1: retryNo < 4
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="bookID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="dueDate" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Kiosk" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="scanCard_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="checkMember_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="borrowBook_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="fineAmount" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="rejectLoan_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="memberID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="LibraryDB" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="recordLoan_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="logout_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="NotifySvc" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="setReminder_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Member" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="memberInfo_3" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/LibraryLoan_Project/LibraryLoanContext.bpo|org.eventb.core.poFile#LibraryLoanContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Kiosk},{LibraryDB},{Member},{NotifySvc})" org.eventb.core.source="/LibraryLoan_Project/LibraryLoanContext.buc|org.eventb.core.contextFile#LibraryLoanContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{scanCard_1},{checkMember_2},{memberInfo_3},{borrowBook_4},{recordLoan_5},{setReminder_6},{rejectLoan_7},{logout_8})" org.eventb.core.source="/LibraryLoan_Project/LibraryLoanContext.buc|org.eventb.core.contextFile#LibraryLoanContext|org.eventb.core.axiom#internal_element21"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{bookID},{dueDate},{fineAmount},{memberID})" org.eventb.core.source="/LibraryLoan_Project/LibraryLoanContext.buc|org.eventb.core.contextFile#LibraryLoanContext|org.eventb.core.axiom#internal_element22"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

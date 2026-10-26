@@ -1,0 +1,188 @@
+CONTEXT CoffeeOrderKioskContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, Kiosk
+    chooseDrink_1, showPrice_2, addExtraShot_3, payCash_4, serveDrink_5
+    cashAmount, drinkCode, price
+AXIOMS
+    axm1: partition(Objects, {Customer}, {Kiosk})
+    axm2: partition(Messages, {chooseDrink_1}, {showPrice_2}, {addExtraShot_3}, {payCash_4}, {serveDrink_5})
+    axm3: partition(DataMessages, {cashAmount}, {drinkCode}, {price})
+END
+
+MACHINE CoffeeOrderKioskInteractionMachine_1
+SEES CoffeeOrderKioskContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, addShot, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: addShot ∈ ℤ
+    inv9: t_time_4 ∈ ℤ
+    inv10: t_delay_4 ∈ ℤ
+    inv11: t_success_4 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: addShot := 1
+        act9: t_time_4 :∈ 0..20
+        act10: t_delay_4 := 0
+        act11: t_success_4 := 0
+        act12: t_time_5 :∈ 0..90
+        act13: t_delay_5 := 0
+        act14: t_success_5 := 0
+    END
+
+
+    sendchooseDrink_1
+    WHEN
+        grd1: chooseDrink_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {chooseDrink_1}
+        act2: sender := sender ∪ {chooseDrink_1 ↦ Customer}
+        act3: receiver := receiver ∪ {chooseDrink_1 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {chooseDrink_1 ↦ drinkCode}
+        act6: currentMessage := {chooseDrink_1}
+    END
+
+    receivechooseDrink_1
+    WHEN
+        grd1: chooseDrink_1 ∈ sentMessages
+        grd2: chooseDrink_1 ↦ Customer ∈ sender
+        grd3: chooseDrink_1 ↦ Kiosk ∈ receiver
+        grd4: chooseDrink_1 ∉ receivedMessages
+        grd5: currentMessage = {chooseDrink_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {chooseDrink_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {chooseDrink_1 ↦ drinkCode}
+        act3: currentMessage := ∅
+    END
+
+    sendshowPrice_2
+    WHEN
+        grd1: showPrice_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: chooseDrink_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {showPrice_2}
+        act2: sender := sender ∪ {showPrice_2 ↦ Kiosk}
+        act3: receiver := receiver ∪ {showPrice_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {showPrice_2 ↦ price}
+        act6: currentMessage := {showPrice_2}
+    END
+
+    receiveshowPrice_2
+    WHEN
+        grd1: showPrice_2 ∈ sentMessages
+        grd2: showPrice_2 ↦ Kiosk ∈ sender
+        grd3: showPrice_2 ↦ Customer ∈ receiver
+        grd4: showPrice_2 ∉ receivedMessages
+        grd5: currentMessage = {showPrice_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {showPrice_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {showPrice_2 ↦ price}
+        act3: currentMessage := ∅
+    END
+
+    sendaddExtraShot_3_opt1
+    WHEN
+        grd1: addExtraShot_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: showPrice_2 ∈ receivedMessages
+        grd4: addShot = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {addExtraShot_3}
+        act2: sender := sender ∪ {addExtraShot_3 ↦ Customer}
+        act3: receiver := receiver ∪ {addExtraShot_3 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {addExtraShot_3}
+    END
+
+    receiveaddExtraShot_3_opt1
+    WHEN
+        grd1: addExtraShot_3 ∈ sentMessages
+        grd2: addExtraShot_3 ↦ Customer ∈ sender
+        grd3: addExtraShot_3 ↦ Kiosk ∈ receiver
+        grd4: addExtraShot_3 ∉ receivedMessages
+        grd5: currentMessage = {addExtraShot_3}
+        grd6: addShot = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {addExtraShot_3}
+        act2: currentMessage := ∅
+    END
+
+    sendpayCash_4
+    WHEN
+        grd1: payCash_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: addExtraShot_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {payCash_4}
+        act2: sender := sender ∪ {payCash_4 ↦ Customer}
+        act3: receiver := receiver ∪ {payCash_4 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {payCash_4 ↦ cashAmount}
+        act6: currentMessage := {payCash_4}
+    END
+
+    receivepayCash_4
+    WHEN
+        grd1: payCash_4 ∈ sentMessages
+        grd2: payCash_4 ↦ Customer ∈ sender
+        grd3: payCash_4 ↦ Kiosk ∈ receiver
+        grd4: payCash_4 ∉ receivedMessages
+        grd5: currentMessage = {payCash_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {payCash_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {payCash_4 ↦ cashAmount}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendserveDrink_5
+    WHEN
+        grd1: serveDrink_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: payCash_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {serveDrink_5}
+        act2: sender := sender ∪ {serveDrink_5 ↦ Kiosk}
+        act3: receiver := receiver ∪ {serveDrink_5 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {serveDrink_5 ↦ drinkCode}
+        act6: currentMessage := {serveDrink_5}
+    END
+
+    receiveserveDrink_5
+    WHEN
+        grd1: serveDrink_5 ∈ sentMessages
+        grd2: serveDrink_5 ↦ Kiosk ∈ sender
+        grd3: serveDrink_5 ↦ Customer ∈ receiver
+        grd4: serveDrink_5 ∉ receivedMessages
+        grd5: currentMessage = {serveDrink_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {serveDrink_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {serveDrink_5 ↦ drinkCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+END

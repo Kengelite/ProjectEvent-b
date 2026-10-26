@@ -1,0 +1,223 @@
+CONTEXT SmartTrashCompactorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CityGateway, Collector, Compactor, WasteDepot
+    checkRoute_1, assignLevel_2, scheduleRoute_3, scheduleLevel_4, notifyLevel_5, ackService_6
+    levelCode, levelID, routeData, serviceRef
+AXIOMS
+    axm1: partition(Objects, {CityGateway}, {Collector}, {Compactor}, {WasteDepot})
+    axm2: partition(Messages, {checkRoute_1}, {assignLevel_2}, {scheduleRoute_3}, {scheduleLevel_4}, {notifyLevel_5}, {ackService_6})
+    axm3: partition(DataMessages, {levelCode}, {levelID}, {routeData}, {serviceRef})
+END
+
+MACHINE SmartTrashCompactorInteractionMachine_1
+SEES SmartTrashCompactorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..1
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..0
+        act12: t_delay_3 := 1
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..10
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 0..10
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+    END
+
+
+    sendcheckRoute_1
+    WHEN
+        grd1: checkRoute_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkRoute_1}
+        act2: sender := sender ∪ {checkRoute_1 ↦ WasteDepot}
+        act3: receiver := receiver ∪ {checkRoute_1 ↦ Collector}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkRoute_1}
+    END
+
+    receivecheckRoute_1
+    WHEN
+        grd1: checkRoute_1 ∈ sentMessages
+        grd2: checkRoute_1 ↦ WasteDepot ∈ sender
+        grd3: checkRoute_1 ↦ Collector ∈ receiver
+        grd4: checkRoute_1 ∉ receivedMessages
+        grd5: currentMessage = {checkRoute_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkRoute_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignLevel_2
+    WHEN
+        grd1: assignLevel_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkRoute_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignLevel_2}
+        act2: sender := sender ∪ {assignLevel_2 ↦ Compactor}
+        act3: receiver := receiver ∪ {assignLevel_2 ↦ CityGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignLevel_2 ↦ levelCode}
+        act6: currentMessage := {assignLevel_2}
+    END
+
+    receiveassignLevel_2
+    WHEN
+        grd1: assignLevel_2 ∈ sentMessages
+        grd2: assignLevel_2 ↦ Compactor ∈ sender
+        grd3: assignLevel_2 ↦ CityGateway ∈ receiver
+        grd4: assignLevel_2 ∉ receivedMessages
+        grd5: currentMessage = {assignLevel_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignLevel_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignLevel_2 ↦ levelCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleRoute_3
+    WHEN
+        grd1: scheduleRoute_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignLevel_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleRoute_3}
+        act2: sender := sender ∪ {scheduleRoute_3 ↦ Collector}
+        act3: receiver := receiver ∪ {scheduleRoute_3 ↦ WasteDepot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleRoute_3 ↦ serviceRef}
+        act6: currentMessage := {scheduleRoute_3}
+    END
+
+    receivescheduleRoute_3
+    WHEN
+        grd1: scheduleRoute_3 ∈ sentMessages
+        grd2: scheduleRoute_3 ↦ Collector ∈ sender
+        grd3: scheduleRoute_3 ↦ WasteDepot ∈ receiver
+        grd4: scheduleRoute_3 ∉ receivedMessages
+        grd5: currentMessage = {scheduleRoute_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleRoute_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleRoute_3 ↦ serviceRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendscheduleLevel_4
+    WHEN
+        grd1: scheduleLevel_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleRoute_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleLevel_4}
+        act2: sender := sender ∪ {scheduleLevel_4 ↦ CityGateway}
+        act3: receiver := receiver ∪ {scheduleLevel_4 ↦ WasteDepot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleLevel_4 ↦ routeData}
+        act6: currentMessage := {scheduleLevel_4}
+    END
+
+    receivescheduleLevel_4
+    WHEN
+        grd1: scheduleLevel_4 ∈ sentMessages
+        grd2: scheduleLevel_4 ↦ CityGateway ∈ sender
+        grd3: scheduleLevel_4 ↦ WasteDepot ∈ receiver
+        grd4: scheduleLevel_4 ∉ receivedMessages
+        grd5: currentMessage = {scheduleLevel_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleLevel_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleLevel_4 ↦ routeData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyLevel_5
+    WHEN
+        grd1: notifyLevel_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleLevel_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyLevel_5}
+        act2: sender := sender ∪ {notifyLevel_5 ↦ WasteDepot}
+        act3: receiver := receiver ∪ {notifyLevel_5 ↦ Collector}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyLevel_5 ↦ levelID}
+        act6: currentMessage := {notifyLevel_5}
+    END
+
+    receivenotifyLevel_5
+    WHEN
+        grd1: notifyLevel_5 ∈ sentMessages
+        grd2: notifyLevel_5 ↦ WasteDepot ∈ sender
+        grd3: notifyLevel_5 ↦ Collector ∈ receiver
+        grd4: notifyLevel_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyLevel_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyLevel_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyLevel_5 ↦ levelID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendackService_6
+    WHEN
+        grd1: ackService_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyLevel_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackService_6}
+        act2: sender := sender ∪ {ackService_6 ↦ Collector}
+        act3: receiver := receiver ∪ {ackService_6 ↦ Compactor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackService_6}
+    END
+
+    receiveackService_6
+    WHEN
+        grd1: ackService_6 ∈ sentMessages
+        grd2: ackService_6 ↦ Collector ∈ sender
+        grd3: ackService_6 ↦ Compactor ∈ receiver
+        grd4: ackService_6 ∉ receivedMessages
+        grd5: currentMessage = {ackService_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackService_6}
+        act2: currentMessage := ∅
+    END
+
+END

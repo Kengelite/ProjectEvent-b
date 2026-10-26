@@ -1,0 +1,228 @@
+CONTEXT TrafficLightControllerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Controller, SignalHead
+    setGreen_1, greenAck_2, setYellow_3, setRed_4, phaseDone_5, shutdown_6
+    greenTime, phaseID
+AXIOMS
+    axm1: partition(Objects, {Controller}, {SignalHead})
+    axm2: partition(Messages, {setGreen_1}, {greenAck_2}, {setYellow_3}, {setRed_4}, {phaseDone_5}, {shutdown_6})
+    axm3: partition(DataMessages, {greenTime}, {phaseID})
+END
+
+MACHINE TrafficLightControllerInteractionMachine_1
+SEES TrafficLightControllerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleCount, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleCount ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_success_1 ≤ 20
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleCount := 0
+        act9: t_time_1 :∈ 0..30
+        act10: t_delay_1 := 5
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..4
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..60
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendsetGreen_1
+    WHEN
+        grd1: setGreen_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {setGreen_1}
+        act2: sender := sender ∪ {setGreen_1 ↦ Controller}
+        act3: receiver := receiver ∪ {setGreen_1 ↦ SignalHead}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {setGreen_1 ↦ greenTime}
+        act6: currentMessage := {setGreen_1}
+    END
+
+    receivesetGreen_1
+    WHEN
+        grd1: setGreen_1 ∈ sentMessages
+        grd2: setGreen_1 ↦ Controller ∈ sender
+        grd3: setGreen_1 ↦ SignalHead ∈ receiver
+        grd4: setGreen_1 ∉ receivedMessages
+        grd5: currentMessage = {setGreen_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {setGreen_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {setGreen_1 ↦ greenTime}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendgreenAck_2
+    WHEN
+        grd1: greenAck_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: setGreen_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {greenAck_2}
+        act2: sender := sender ∪ {greenAck_2 ↦ SignalHead}
+        act3: receiver := receiver ∪ {greenAck_2 ↦ Controller}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {greenAck_2}
+    END
+
+    receivegreenAck_2
+    WHEN
+        grd1: greenAck_2 ∈ sentMessages
+        grd2: greenAck_2 ↦ SignalHead ∈ sender
+        grd3: greenAck_2 ↦ Controller ∈ receiver
+        grd4: greenAck_2 ∉ receivedMessages
+        grd5: currentMessage = {greenAck_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {greenAck_2}
+        act2: currentMessage := ∅
+    END
+
+    sendsetYellow_3
+    WHEN
+        grd1: setYellow_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: greenAck_2 ∈ receivedMessages
+        grd4: cycleCount < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {setYellow_3}
+        act2: sender := sender ∪ {setYellow_3 ↦ Controller}
+        act3: receiver := receiver ∪ {setYellow_3 ↦ SignalHead}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {setYellow_3}
+    END
+
+    receivesetYellow_3
+    WHEN
+        grd1: setYellow_3 ∈ sentMessages
+        grd2: setYellow_3 ↦ Controller ∈ sender
+        grd3: setYellow_3 ↦ SignalHead ∈ receiver
+        grd4: setYellow_3 ∉ receivedMessages
+        grd5: currentMessage = {setYellow_3}
+        grd6: cycleCount < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {setYellow_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendsetRed_4
+    WHEN
+        grd1: setRed_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: setYellow_3 ∈ receivedMessages
+        grd4: cycleCount < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {setRed_4}
+        act2: sender := sender ∪ {setRed_4 ↦ Controller}
+        act3: receiver := receiver ∪ {setRed_4 ↦ SignalHead}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {setRed_4}
+    END
+
+    receivesetRed_4
+    WHEN
+        grd1: setRed_4 ∈ sentMessages
+        grd2: setRed_4 ↦ Controller ∈ sender
+        grd3: setRed_4 ↦ SignalHead ∈ receiver
+        grd4: setRed_4 ∉ receivedMessages
+        grd5: currentMessage = {setRed_4}
+        grd6: cycleCount < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {setRed_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendphaseDone_5
+    WHEN
+        grd1: phaseDone_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: setRed_4 ∈ receivedMessages
+        grd4: cycleCount < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {phaseDone_5}
+        act2: sender := sender ∪ {phaseDone_5 ↦ SignalHead}
+        act3: receiver := receiver ∪ {phaseDone_5 ↦ Controller}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {phaseDone_5 ↦ phaseID}
+        act6: currentMessage := {phaseDone_5}
+    END
+
+    receivephaseDone_5
+    WHEN
+        grd1: phaseDone_5 ∈ sentMessages
+        grd2: phaseDone_5 ↦ SignalHead ∈ sender
+        grd3: phaseDone_5 ↦ Controller ∈ receiver
+        grd4: phaseDone_5 ∉ receivedMessages
+        grd5: currentMessage = {phaseDone_5}
+        grd6: cycleCount < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {phaseDone_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {phaseDone_5 ↦ phaseID}
+        act3: currentMessage := ∅
+    END
+
+    sendshutdown_6
+    WHEN
+        grd1: shutdown_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: phaseDone_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {shutdown_6}
+        act2: sender := sender ∪ {shutdown_6 ↦ Controller}
+        act3: receiver := receiver ∪ {shutdown_6 ↦ SignalHead}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {shutdown_6}
+    END
+
+    receiveshutdown_6
+    WHEN
+        grd1: shutdown_6 ∈ sentMessages
+        grd2: shutdown_6 ↦ Controller ∈ sender
+        grd3: shutdown_6 ↦ SignalHead ∈ receiver
+        grd4: shutdown_6 ∉ receivedMessages
+        grd5: currentMessage = {shutdown_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {shutdown_6}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_setYellow_3_loop1
+    WHEN
+        grd1: cycleCount < 10
+    THEN
+        act1: cycleCount := cycleCount + 1
+    END
+
+END

@@ -1,0 +1,401 @@
+CONTEXT PublicWifiHotspotContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CaptivePortal, Hotspot, User
+    scheduleQuota_1, scheduleVoucher_2, validateQuota_3, updateSession_4, validateSession_5, reserveVoucher_6, updateQuota_7, approveQuota_8, queryVoucher_9, sendSession_10, issueSession_11, issueQuota_12
+    quotaCode, quotaData, quotaID, quotaValue, sessionCode, sessionID, voucherRef
+AXIOMS
+    axm1: partition(Objects, {CaptivePortal}, {Hotspot}, {User})
+    axm2: partition(Messages, {scheduleQuota_1}, {scheduleVoucher_2}, {validateQuota_3}, {updateSession_4}, {validateSession_5}, {reserveVoucher_6}, {updateQuota_7}, {approveQuota_8}, {queryVoucher_9}, {sendSession_10}, {issueSession_11}, {issueQuota_12})
+    axm3: partition(DataMessages, {quotaCode}, {quotaData}, {quotaID}, {quotaValue}, {sessionCode}, {sessionID}, {voucherRef})
+END
+
+MACHINE PublicWifiHotspotInteractionMachine_1
+SEES PublicWifiHotspotContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, optIn, load, par_1, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: optIn ∈ ℤ
+    inv9: load ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_5 ∈ ℤ
+    inv12: t_delay_5 ∈ ℤ
+    inv13: t_success_5 ∈ ℤ
+    inv14: t_time_6 ∈ ℤ
+    inv15: t_delay_6 ∈ ℤ
+    inv16: t_success_6 ∈ ℤ
+    inv17: t_time_11 ∈ ℤ
+    inv18: t_delay_11 ∈ ℤ
+    inv19: t_success_11 ∈ ℤ
+    inv20: t_time_12 ∈ ℤ
+    inv21: t_delay_12 ∈ ℤ
+    inv22: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: optIn := 1
+        act9: load :∈ ℤ
+        act10: par_1 := 0
+        act11: t_time_5 :∈ 0..3
+        act12: t_delay_5 := 0
+        act13: t_success_5 := 0
+        act14: t_time_6 :∈ 0..20
+        act15: t_delay_6 := 1
+        act16: t_success_6 := 0
+        act17: t_time_11 :∈ 15..6
+        act18: t_delay_11 := 0
+        act19: t_success_11 := 0
+        act20: t_time_12 :∈ 0..20
+        act21: t_delay_12 := 0
+        act22: t_success_12 := 0
+    END
+
+
+    sendscheduleQuota_1
+    WHEN
+        grd1: scheduleQuota_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleQuota_1}
+        act2: sender := sender ∪ {scheduleQuota_1 ↦ User}
+        act3: receiver := receiver ∪ {scheduleQuota_1 ↦ CaptivePortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleQuota_1 ↦ sessionCode}
+        act6: currentMessage := {scheduleQuota_1}
+    END
+
+    receivescheduleQuota_1
+    WHEN
+        grd1: scheduleQuota_1 ∈ sentMessages
+        grd2: scheduleQuota_1 ↦ User ∈ sender
+        grd3: scheduleQuota_1 ↦ CaptivePortal ∈ receiver
+        grd4: scheduleQuota_1 ∉ receivedMessages
+        grd5: currentMessage = {scheduleQuota_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleQuota_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleQuota_1 ↦ sessionCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleVoucher_2
+    WHEN
+        grd1: scheduleVoucher_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleQuota_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleVoucher_2}
+        act2: sender := sender ∪ {scheduleVoucher_2 ↦ Hotspot}
+        act3: receiver := receiver ∪ {scheduleVoucher_2 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleVoucher_2 ↦ voucherRef}
+        act6: currentMessage := {scheduleVoucher_2}
+    END
+
+    receivescheduleVoucher_2
+    WHEN
+        grd1: scheduleVoucher_2 ∈ sentMessages
+        grd2: scheduleVoucher_2 ↦ Hotspot ∈ sender
+        grd3: scheduleVoucher_2 ↦ User ∈ receiver
+        grd4: scheduleVoucher_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleVoucher_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleVoucher_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleVoucher_2 ↦ voucherRef}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateQuota_3
+    WHEN
+        grd1: validateQuota_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleVoucher_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateQuota_3}
+        act2: sender := sender ∪ {validateQuota_3 ↦ User}
+        act3: receiver := receiver ∪ {validateQuota_3 ↦ Hotspot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateQuota_3}
+    END
+
+    receivevalidateQuota_3
+    WHEN
+        grd1: validateQuota_3 ∈ sentMessages
+        grd2: validateQuota_3 ↦ User ∈ sender
+        grd3: validateQuota_3 ↦ Hotspot ∈ receiver
+        grd4: validateQuota_3 ∉ receivedMessages
+        grd5: currentMessage = {validateQuota_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateQuota_3}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateSession_4
+    WHEN
+        grd1: updateSession_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateQuota_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateSession_4}
+        act2: sender := sender ∪ {updateSession_4 ↦ CaptivePortal}
+        act3: receiver := receiver ∪ {updateSession_4 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateSession_4 ↦ quotaValue}
+        act6: currentMessage := {updateSession_4}
+    END
+
+    receiveupdateSession_4
+    WHEN
+        grd1: updateSession_4 ∈ sentMessages
+        grd2: updateSession_4 ↦ CaptivePortal ∈ sender
+        grd3: updateSession_4 ↦ User ∈ receiver
+        grd4: updateSession_4 ∉ receivedMessages
+        grd5: currentMessage = {updateSession_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateSession_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateSession_4 ↦ quotaValue}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateSession_5
+    WHEN
+        grd1: validateSession_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateSession_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSession_5}
+        act2: sender := sender ∪ {validateSession_5 ↦ User}
+        act3: receiver := receiver ∪ {validateSession_5 ↦ Hotspot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateSession_5}
+    END
+
+    receivevalidateSession_5
+    WHEN
+        grd1: validateSession_5 ∈ sentMessages
+        grd2: validateSession_5 ↦ User ∈ sender
+        grd3: validateSession_5 ↦ Hotspot ∈ receiver
+        grd4: validateSession_5 ∉ receivedMessages
+        grd5: currentMessage = {validateSession_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSession_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreserveVoucher_6
+    WHEN
+        grd1: reserveVoucher_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateSession_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveVoucher_6}
+        act2: sender := sender ∪ {reserveVoucher_6 ↦ Hotspot}
+        act3: receiver := receiver ∪ {reserveVoucher_6 ↦ CaptivePortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveVoucher_6 ↦ quotaData}
+        act6: currentMessage := {reserveVoucher_6}
+    END
+
+    receivereserveVoucher_6
+    WHEN
+        grd1: reserveVoucher_6 ∈ sentMessages
+        grd2: reserveVoucher_6 ↦ Hotspot ∈ sender
+        grd3: reserveVoucher_6 ↦ CaptivePortal ∈ receiver
+        grd4: reserveVoucher_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveVoucher_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveVoucher_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveVoucher_6 ↦ quotaData}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendupdateQuota_7_opt1
+    WHEN
+        grd1: updateQuota_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveVoucher_6 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateQuota_7}
+        act2: sender := sender ∪ {updateQuota_7 ↦ User}
+        act3: receiver := receiver ∪ {updateQuota_7 ↦ CaptivePortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateQuota_7 ↦ quotaValue}
+        act6: currentMessage := {updateQuota_7}
+    END
+
+    receiveupdateQuota_7_opt1
+    WHEN
+        grd1: updateQuota_7 ∈ sentMessages
+        grd2: updateQuota_7 ↦ User ∈ sender
+        grd3: updateQuota_7 ↦ CaptivePortal ∈ receiver
+        grd4: updateQuota_7 ∉ receivedMessages
+        grd5: currentMessage = {updateQuota_7}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateQuota_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateQuota_7 ↦ quotaValue}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveQuota_8_opt1
+    WHEN
+        grd1: approveQuota_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateQuota_7 ∈ receivedMessages
+        grd4: optIn = 1
+        grd5: load < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveQuota_8}
+        act2: sender := sender ∪ {approveQuota_8 ↦ CaptivePortal}
+        act3: receiver := receiver ∪ {approveQuota_8 ↦ Hotspot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveQuota_8}
+    END
+
+    receiveapproveQuota_8_opt1
+    WHEN
+        grd1: approveQuota_8 ∈ sentMessages
+        grd2: approveQuota_8 ↦ CaptivePortal ∈ sender
+        grd3: approveQuota_8 ↦ Hotspot ∈ receiver
+        grd4: approveQuota_8 ∉ receivedMessages
+        grd5: currentMessage = {approveQuota_8}
+        grd6: optIn = 1
+        grd7: load < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveQuota_8}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryVoucher_9_opt1
+    WHEN
+        grd1: queryVoucher_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveQuota_8 ∈ receivedMessages
+        grd4: optIn = 1
+        grd5: load < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryVoucher_9}
+        act2: sender := sender ∪ {queryVoucher_9 ↦ CaptivePortal}
+        act3: receiver := receiver ∪ {queryVoucher_9 ↦ Hotspot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryVoucher_9 ↦ sessionID}
+        act6: currentMessage := {queryVoucher_9}
+    END
+
+    receivequeryVoucher_9_opt1
+    WHEN
+        grd1: queryVoucher_9 ∈ sentMessages
+        grd2: queryVoucher_9 ↦ CaptivePortal ∈ sender
+        grd3: queryVoucher_9 ↦ Hotspot ∈ receiver
+        grd4: queryVoucher_9 ∉ receivedMessages
+        grd5: currentMessage = {queryVoucher_9}
+        grd6: optIn = 1
+        grd7: load < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryVoucher_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryVoucher_9 ↦ sessionID}
+        act3: currentMessage := ∅
+    END
+
+    sendsendSession_10_opt1
+    WHEN
+        grd1: sendSession_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateQuota_7 ∈ receivedMessages
+        grd4: optIn = 1
+        grd5: load ≥ 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSession_10}
+        act2: sender := sender ∪ {sendSession_10 ↦ CaptivePortal}
+        act3: receiver := receiver ∪ {sendSession_10 ↦ Hotspot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendSession_10}
+    END
+
+    receivesendSession_10_opt1
+    WHEN
+        grd1: sendSession_10 ∈ sentMessages
+        grd2: sendSession_10 ↦ CaptivePortal ∈ sender
+        grd3: sendSession_10 ↦ Hotspot ∈ receiver
+        grd4: sendSession_10 ∉ receivedMessages
+        grd5: currentMessage = {sendSession_10}
+        grd6: optIn = 1
+        grd7: load ≥ 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSession_10}
+        act2: currentMessage := ∅
+    END
+
+    sendissueSession_11_opt1
+    WHEN
+        grd1: issueSession_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryVoucher_9 ∈ receivedMessages ∨ sendSession_10 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSession_11}
+        act2: sender := sender ∪ {issueSession_11 ↦ User}
+        act3: receiver := receiver ∪ {issueSession_11 ↦ CaptivePortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueSession_11}
+    END
+
+    receiveissueSession_11_opt1
+    WHEN
+        grd1: issueSession_11 ∈ sentMessages
+        grd2: issueSession_11 ↦ User ∈ sender
+        grd3: issueSession_11 ↦ CaptivePortal ∈ receiver
+        grd4: issueSession_11 ∉ receivedMessages
+        grd5: currentMessage = {issueSession_11}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSession_11}
+        act2: currentMessage := ∅
+        act3: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendissueQuota_12
+    WHEN
+        grd1: issueQuota_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueSession_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueQuota_12}
+        act2: sender := sender ∪ {issueQuota_12 ↦ Hotspot}
+        act3: receiver := receiver ∪ {issueQuota_12 ↦ CaptivePortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueQuota_12 ↦ quotaCode, issueQuota_12 ↦ quotaID}
+        act6: currentMessage := {issueQuota_12}
+    END
+
+    receiveissueQuota_12
+    WHEN
+        grd1: issueQuota_12 ∈ sentMessages
+        grd2: issueQuota_12 ↦ Hotspot ∈ sender
+        grd3: issueQuota_12 ↦ CaptivePortal ∈ receiver
+        grd4: issueQuota_12 ∉ receivedMessages
+        grd5: currentMessage = {issueQuota_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueQuota_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueQuota_12 ↦ quotaCode, issueQuota_12 ↦ quotaID}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+END

@@ -1,0 +1,274 @@
+CONTEXT CourseEnrollmentContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Advisor, Portal, Registrar, Student
+    browseCourses_1, courseList_2, enrollRequest_3, checkPrereq_4, prereqOK_5, requestApproval_6, approved_7, enrollConfirm_8
+    courseID, courses, enrollID
+AXIOMS
+    axm1: partition(Objects, {Advisor}, {Portal}, {Registrar}, {Student})
+    axm2: partition(Messages, {browseCourses_1}, {courseList_2}, {enrollRequest_3}, {checkPrereq_4}, {prereqOK_5}, {requestApproval_6}, {approved_7}, {enrollConfirm_8})
+    axm3: partition(DataMessages, {courseID}, {courses}, {enrollID})
+END
+
+MACHINE CourseEnrollmentInteractionMachine_1
+SEES CourseEnrollmentContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needsApproval, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needsApproval ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_4 ∈ ℤ
+    inv13: t_delay_4 ∈ ℤ
+    inv14: t_success_4 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needsApproval := 1
+        act9: t_time_3 :∈ 0..2
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+        act12: t_time_4 :∈ 5..2
+        act13: t_delay_4 := 0
+        act14: t_success_4 := 0
+        act15: t_time_6 :∈ 48..18
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendbrowseCourses_1
+    WHEN
+        grd1: browseCourses_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {browseCourses_1}
+        act2: sender := sender ∪ {browseCourses_1 ↦ Student}
+        act3: receiver := receiver ∪ {browseCourses_1 ↦ Portal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {browseCourses_1}
+    END
+
+    receivebrowseCourses_1
+    WHEN
+        grd1: browseCourses_1 ∈ sentMessages
+        grd2: browseCourses_1 ↦ Student ∈ sender
+        grd3: browseCourses_1 ↦ Portal ∈ receiver
+        grd4: browseCourses_1 ∉ receivedMessages
+        grd5: currentMessage = {browseCourses_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {browseCourses_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcourseList_2
+    WHEN
+        grd1: courseList_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: browseCourses_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {courseList_2}
+        act2: sender := sender ∪ {courseList_2 ↦ Portal}
+        act3: receiver := receiver ∪ {courseList_2 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {courseList_2 ↦ courses}
+        act6: currentMessage := {courseList_2}
+    END
+
+    receivecourseList_2
+    WHEN
+        grd1: courseList_2 ∈ sentMessages
+        grd2: courseList_2 ↦ Portal ∈ sender
+        grd3: courseList_2 ↦ Student ∈ receiver
+        grd4: courseList_2 ∉ receivedMessages
+        grd5: currentMessage = {courseList_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {courseList_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {courseList_2 ↦ courses}
+        act3: currentMessage := ∅
+    END
+
+    sendenrollRequest_3
+    WHEN
+        grd1: enrollRequest_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: courseList_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {enrollRequest_3}
+        act2: sender := sender ∪ {enrollRequest_3 ↦ Student}
+        act3: receiver := receiver ∪ {enrollRequest_3 ↦ Portal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {enrollRequest_3 ↦ courseID}
+        act6: currentMessage := {enrollRequest_3}
+    END
+
+    receiveenrollRequest_3
+    WHEN
+        grd1: enrollRequest_3 ∈ sentMessages
+        grd2: enrollRequest_3 ↦ Student ∈ sender
+        grd3: enrollRequest_3 ↦ Portal ∈ receiver
+        grd4: enrollRequest_3 ∉ receivedMessages
+        grd5: currentMessage = {enrollRequest_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {enrollRequest_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {enrollRequest_3 ↦ courseID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckPrereq_4
+    WHEN
+        grd1: checkPrereq_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: enrollRequest_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPrereq_4}
+        act2: sender := sender ∪ {checkPrereq_4 ↦ Portal}
+        act3: receiver := receiver ∪ {checkPrereq_4 ↦ Registrar}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkPrereq_4 ↦ courseID}
+        act6: currentMessage := {checkPrereq_4}
+    END
+
+    receivecheckPrereq_4
+    WHEN
+        grd1: checkPrereq_4 ∈ sentMessages
+        grd2: checkPrereq_4 ↦ Portal ∈ sender
+        grd3: checkPrereq_4 ↦ Registrar ∈ receiver
+        grd4: checkPrereq_4 ∉ receivedMessages
+        grd5: currentMessage = {checkPrereq_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPrereq_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkPrereq_4 ↦ courseID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendprereqOK_5
+    WHEN
+        grd1: prereqOK_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkPrereq_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {prereqOK_5}
+        act2: sender := sender ∪ {prereqOK_5 ↦ Registrar}
+        act3: receiver := receiver ∪ {prereqOK_5 ↦ Portal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {prereqOK_5}
+    END
+
+    receiveprereqOK_5
+    WHEN
+        grd1: prereqOK_5 ∈ sentMessages
+        grd2: prereqOK_5 ↦ Registrar ∈ sender
+        grd3: prereqOK_5 ↦ Portal ∈ receiver
+        grd4: prereqOK_5 ∉ receivedMessages
+        grd5: currentMessage = {prereqOK_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {prereqOK_5}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestApproval_6_opt1
+    WHEN
+        grd1: requestApproval_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: prereqOK_5 ∈ receivedMessages
+        grd4: needsApproval = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestApproval_6}
+        act2: sender := sender ∪ {requestApproval_6 ↦ Portal}
+        act3: receiver := receiver ∪ {requestApproval_6 ↦ Advisor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestApproval_6 ↦ courseID}
+        act6: currentMessage := {requestApproval_6}
+    END
+
+    receiverequestApproval_6_opt1
+    WHEN
+        grd1: requestApproval_6 ∈ sentMessages
+        grd2: requestApproval_6 ↦ Portal ∈ sender
+        grd3: requestApproval_6 ↦ Advisor ∈ receiver
+        grd4: requestApproval_6 ∉ receivedMessages
+        grd5: currentMessage = {requestApproval_6}
+        grd6: needsApproval = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestApproval_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestApproval_6 ↦ courseID}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendapproved_7_opt1
+    WHEN
+        grd1: approved_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestApproval_6 ∈ receivedMessages
+        grd4: needsApproval = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approved_7}
+        act2: sender := sender ∪ {approved_7 ↦ Advisor}
+        act3: receiver := receiver ∪ {approved_7 ↦ Portal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approved_7}
+    END
+
+    receiveapproved_7_opt1
+    WHEN
+        grd1: approved_7 ∈ sentMessages
+        grd2: approved_7 ↦ Advisor ∈ sender
+        grd3: approved_7 ↦ Portal ∈ receiver
+        grd4: approved_7 ∉ receivedMessages
+        grd5: currentMessage = {approved_7}
+        grd6: needsApproval = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approved_7}
+        act2: currentMessage := ∅
+    END
+
+    sendenrollConfirm_8
+    WHEN
+        grd1: enrollConfirm_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approved_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {enrollConfirm_8}
+        act2: sender := sender ∪ {enrollConfirm_8 ↦ Portal}
+        act3: receiver := receiver ∪ {enrollConfirm_8 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {enrollConfirm_8 ↦ enrollID}
+        act6: currentMessage := {enrollConfirm_8}
+    END
+
+    receiveenrollConfirm_8
+    WHEN
+        grd1: enrollConfirm_8 ∈ sentMessages
+        grd2: enrollConfirm_8 ↦ Portal ∈ sender
+        grd3: enrollConfirm_8 ↦ Student ∈ receiver
+        grd4: enrollConfirm_8 ∉ receivedMessages
+        grd5: currentMessage = {enrollConfirm_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {enrollConfirm_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {enrollConfirm_8 ↦ enrollID}
+        act3: currentMessage := ∅
+    END
+
+END

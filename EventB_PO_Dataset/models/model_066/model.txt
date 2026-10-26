@@ -1,0 +1,426 @@
+CONTEXT CanteenPaymentContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CanteenPOS, Student, WalletAPI
+    updateBalance_1, logTopup_2, requestTopup_3, assignBalance_4, checkTopup_5, releaseMeal_6, reportMeal_7, updateTopup_8, scheduleMeal_9, sendBalance_10, scheduleBalance_11, validateMeal_12, confirmTopup_13
+    balanceRef, balanceValue, mealCode, mealData, mealID, mealRef, mealValue, topupID
+AXIOMS
+    axm1: partition(Objects, {CanteenPOS}, {Student}, {WalletAPI})
+    axm2: partition(Messages, {updateBalance_1}, {logTopup_2}, {requestTopup_3}, {assignBalance_4}, {checkTopup_5}, {releaseMeal_6}, {reportMeal_7}, {updateTopup_8}, {scheduleMeal_9}, {sendBalance_10}, {scheduleBalance_11}, {validateMeal_12}, {confirmTopup_13})
+    axm3: partition(DataMessages, {balanceRef}, {balanceValue}, {mealCode}, {mealData}, {mealID}, {mealRef}, {mealValue}, {topupID})
+END
+
+MACHINE CanteenPaymentInteractionMachine_1
+SEES CanteenPaymentContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, par_2, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: par_2 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+    inv19: t_time_4 ∈ ℤ
+    inv20: t_delay_4 ∈ ℤ
+    inv21: t_success_4 ∈ ℤ
+    inv22: t_time_5 ∈ ℤ
+    inv23: t_delay_5 ∈ ℤ
+    inv24: t_success_5 ∈ ℤ
+    inv25: t_time_9 ∈ ℤ
+    inv26: t_delay_9 ∈ ℤ
+    inv27: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: par_2 := 0
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..20
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 0..20
+        act17: t_delay_3 := 0
+        act18: t_success_3 := 0
+        act19: t_time_4 :∈ 0..30
+        act20: t_delay_4 := 5
+        act21: t_success_4 := 0
+        act22: t_time_5 :∈ 0..0
+        act23: t_delay_5 := 5
+        act24: t_success_5 := 0
+        act25: t_time_9 :∈ 0..30
+        act26: t_delay_9 := 0
+        act27: t_success_9 := 0
+    END
+
+
+    sendupdateBalance_1
+    WHEN
+        grd1: updateBalance_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateBalance_1}
+        act2: sender := sender ∪ {updateBalance_1 ↦ CanteenPOS}
+        act3: receiver := receiver ∪ {updateBalance_1 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateBalance_1}
+    END
+
+    receiveupdateBalance_1
+    WHEN
+        grd1: updateBalance_1 ∈ sentMessages
+        grd2: updateBalance_1 ↦ CanteenPOS ∈ sender
+        grd3: updateBalance_1 ↦ Student ∈ receiver
+        grd4: updateBalance_1 ∉ receivedMessages
+        grd5: currentMessage = {updateBalance_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateBalance_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendlogTopup_2
+    WHEN
+        grd1: logTopup_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateBalance_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logTopup_2}
+        act2: sender := sender ∪ {logTopup_2 ↦ CanteenPOS}
+        act3: receiver := receiver ∪ {logTopup_2 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logTopup_2 ↦ topupID}
+        act6: currentMessage := {logTopup_2}
+    END
+
+    receivelogTopup_2
+    WHEN
+        grd1: logTopup_2 ∈ sentMessages
+        grd2: logTopup_2 ↦ CanteenPOS ∈ sender
+        grd3: logTopup_2 ↦ Student ∈ receiver
+        grd4: logTopup_2 ∉ receivedMessages
+        grd5: currentMessage = {logTopup_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logTopup_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logTopup_2 ↦ topupID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendrequestTopup_3
+    WHEN
+        grd1: requestTopup_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logTopup_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestTopup_3}
+        act2: sender := sender ∪ {requestTopup_3 ↦ WalletAPI}
+        act3: receiver := receiver ∪ {requestTopup_3 ↦ CanteenPOS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestTopup_3 ↦ mealValue}
+        act6: currentMessage := {requestTopup_3}
+    END
+
+    receiverequestTopup_3
+    WHEN
+        grd1: requestTopup_3 ∈ sentMessages
+        grd2: requestTopup_3 ↦ WalletAPI ∈ sender
+        grd3: requestTopup_3 ↦ CanteenPOS ∈ receiver
+        grd4: requestTopup_3 ∉ receivedMessages
+        grd5: currentMessage = {requestTopup_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestTopup_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestTopup_3 ↦ mealValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendassignBalance_4
+    WHEN
+        grd1: assignBalance_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestTopup_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignBalance_4}
+        act2: sender := sender ∪ {assignBalance_4 ↦ Student}
+        act3: receiver := receiver ∪ {assignBalance_4 ↦ WalletAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignBalance_4}
+    END
+
+    receiveassignBalance_4
+    WHEN
+        grd1: assignBalance_4 ∈ sentMessages
+        grd2: assignBalance_4 ↦ Student ∈ sender
+        grd3: assignBalance_4 ↦ WalletAPI ∈ receiver
+        grd4: assignBalance_4 ∉ receivedMessages
+        grd5: currentMessage = {assignBalance_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignBalance_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcheckTopup_5
+    WHEN
+        grd1: checkTopup_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignBalance_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkTopup_5}
+        act2: sender := sender ∪ {checkTopup_5 ↦ WalletAPI}
+        act3: receiver := receiver ∪ {checkTopup_5 ↦ CanteenPOS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkTopup_5 ↦ mealID}
+        act6: currentMessage := {checkTopup_5}
+    END
+
+    receivecheckTopup_5
+    WHEN
+        grd1: checkTopup_5 ∈ sentMessages
+        grd2: checkTopup_5 ↦ WalletAPI ∈ sender
+        grd3: checkTopup_5 ↦ CanteenPOS ∈ receiver
+        grd4: checkTopup_5 ∉ receivedMessages
+        grd5: currentMessage = {checkTopup_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkTopup_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkTopup_5 ↦ mealID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseMeal_6
+    WHEN
+        grd1: releaseMeal_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkTopup_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseMeal_6}
+        act2: sender := sender ∪ {releaseMeal_6 ↦ Student}
+        act3: receiver := receiver ∪ {releaseMeal_6 ↦ WalletAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseMeal_6 ↦ mealID}
+        act6: currentMessage := {releaseMeal_6}
+    END
+
+    receivereleaseMeal_6
+    WHEN
+        grd1: releaseMeal_6 ∈ sentMessages
+        grd2: releaseMeal_6 ↦ Student ∈ sender
+        grd3: releaseMeal_6 ↦ WalletAPI ∈ receiver
+        grd4: releaseMeal_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseMeal_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseMeal_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseMeal_6 ↦ mealID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportMeal_7
+    WHEN
+        grd1: reportMeal_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseMeal_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportMeal_7}
+        act2: sender := sender ∪ {reportMeal_7 ↦ Student}
+        act3: receiver := receiver ∪ {reportMeal_7 ↦ CanteenPOS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportMeal_7}
+    END
+
+    receivereportMeal_7
+    WHEN
+        grd1: reportMeal_7 ∈ sentMessages
+        grd2: reportMeal_7 ↦ Student ∈ sender
+        grd3: reportMeal_7 ↦ CanteenPOS ∈ receiver
+        grd4: reportMeal_7 ∉ receivedMessages
+        grd5: currentMessage = {reportMeal_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportMeal_7}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateTopup_8
+    WHEN
+        grd1: updateTopup_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportMeal_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateTopup_8}
+        act2: sender := sender ∪ {updateTopup_8 ↦ CanteenPOS}
+        act3: receiver := receiver ∪ {updateTopup_8 ↦ WalletAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateTopup_8 ↦ mealCode}
+        act6: currentMessage := {updateTopup_8}
+    END
+
+    receiveupdateTopup_8
+    WHEN
+        grd1: updateTopup_8 ∈ sentMessages
+        grd2: updateTopup_8 ↦ CanteenPOS ∈ sender
+        grd3: updateTopup_8 ↦ WalletAPI ∈ receiver
+        grd4: updateTopup_8 ∉ receivedMessages
+        grd5: currentMessage = {updateTopup_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateTopup_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateTopup_8 ↦ mealCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleMeal_9
+    WHEN
+        grd1: scheduleMeal_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateTopup_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleMeal_9}
+        act2: sender := sender ∪ {scheduleMeal_9 ↦ WalletAPI}
+        act3: receiver := receiver ∪ {scheduleMeal_9 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleMeal_9 ↦ mealRef}
+        act6: currentMessage := {scheduleMeal_9}
+    END
+
+    receivescheduleMeal_9
+    WHEN
+        grd1: scheduleMeal_9 ∈ sentMessages
+        grd2: scheduleMeal_9 ↦ WalletAPI ∈ sender
+        grd3: scheduleMeal_9 ↦ Student ∈ receiver
+        grd4: scheduleMeal_9 ∉ receivedMessages
+        grd5: currentMessage = {scheduleMeal_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleMeal_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleMeal_9 ↦ mealRef}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendsendBalance_10
+    WHEN
+        grd1: sendBalance_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleMeal_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendBalance_10}
+        act2: sender := sender ∪ {sendBalance_10 ↦ Student}
+        act3: receiver := receiver ∪ {sendBalance_10 ↦ CanteenPOS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendBalance_10 ↦ balanceValue}
+        act6: currentMessage := {sendBalance_10}
+    END
+
+    receivesendBalance_10
+    WHEN
+        grd1: sendBalance_10 ∈ sentMessages
+        grd2: sendBalance_10 ↦ Student ∈ sender
+        grd3: sendBalance_10 ↦ CanteenPOS ∈ receiver
+        grd4: sendBalance_10 ∉ receivedMessages
+        grd5: currentMessage = {sendBalance_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendBalance_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendBalance_10 ↦ balanceValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleBalance_11
+    WHEN
+        grd1: scheduleBalance_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendBalance_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleBalance_11}
+        act2: sender := sender ∪ {scheduleBalance_11 ↦ CanteenPOS}
+        act3: receiver := receiver ∪ {scheduleBalance_11 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleBalance_11}
+    END
+
+    receivescheduleBalance_11
+    WHEN
+        grd1: scheduleBalance_11 ∈ sentMessages
+        grd2: scheduleBalance_11 ↦ CanteenPOS ∈ sender
+        grd3: scheduleBalance_11 ↦ Student ∈ receiver
+        grd4: scheduleBalance_11 ∉ receivedMessages
+        grd5: currentMessage = {scheduleBalance_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleBalance_11}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidateMeal_12
+    WHEN
+        grd1: validateMeal_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleBalance_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateMeal_12}
+        act2: sender := sender ∪ {validateMeal_12 ↦ CanteenPOS}
+        act3: receiver := receiver ∪ {validateMeal_12 ↦ WalletAPI}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateMeal_12 ↦ balanceRef}
+        act6: currentMessage := {validateMeal_12}
+    END
+
+    receivevalidateMeal_12
+    WHEN
+        grd1: validateMeal_12 ∈ sentMessages
+        grd2: validateMeal_12 ↦ CanteenPOS ∈ sender
+        grd3: validateMeal_12 ↦ WalletAPI ∈ receiver
+        grd4: validateMeal_12 ∉ receivedMessages
+        grd5: currentMessage = {validateMeal_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateMeal_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateMeal_12 ↦ balanceRef}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmTopup_13
+    WHEN
+        grd1: confirmTopup_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateMeal_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmTopup_13}
+        act2: sender := sender ∪ {confirmTopup_13 ↦ Student}
+        act3: receiver := receiver ∪ {confirmTopup_13 ↦ CanteenPOS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmTopup_13 ↦ mealData}
+        act6: currentMessage := {confirmTopup_13}
+    END
+
+    receiveconfirmTopup_13
+    WHEN
+        grd1: confirmTopup_13 ∈ sentMessages
+        grd2: confirmTopup_13 ↦ Student ∈ sender
+        grd3: confirmTopup_13 ↦ CanteenPOS ∈ receiver
+        grd4: confirmTopup_13 ∉ receivedMessages
+        grd5: currentMessage = {confirmTopup_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmTopup_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmTopup_13 ↦ mealData}
+        act3: currentMessage := ∅
+    END
+
+END

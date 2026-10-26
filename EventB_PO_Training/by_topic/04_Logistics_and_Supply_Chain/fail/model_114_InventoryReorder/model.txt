@@ -1,0 +1,389 @@
+CONTEXT InventoryReorderContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Shelf, StockSystem
+    checkInvoice_1, reportInvoice_2, sendInvoice_3, ackInvoice_4, logStock_5, requestInvoice_6, scheduleStock_7, scheduleOrder_8, updateInvoice_9, issueOrder_10, fetchOrder_11
+    invoiceData, invoiceInfo, invoiceValue, orderCode, orderInfo, orderValue, stockCode
+AXIOMS
+    axm1: partition(Objects, {Shelf}, {StockSystem})
+    axm2: partition(Messages, {checkInvoice_1}, {reportInvoice_2}, {sendInvoice_3}, {ackInvoice_4}, {logStock_5}, {requestInvoice_6}, {scheduleStock_7}, {scheduleOrder_8}, {updateInvoice_9}, {issueOrder_10}, {fetchOrder_11})
+    axm3: partition(DataMessages, {invoiceData}, {invoiceInfo}, {invoiceValue}, {orderCode}, {orderInfo}, {orderValue}, {stockCode})
+END
+
+MACHINE InventoryReorderInteractionMachine_1
+SEES InventoryReorderContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, express, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_10, t_delay_10, t_success_10, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: express ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_10 ∈ ℤ
+    inv17: t_delay_10 ∈ ℤ
+    inv18: t_success_10 ∈ ℤ
+    inv19: t_time_11 ∈ ℤ
+    inv20: t_delay_11 ∈ ℤ
+    inv21: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: express := 1
+        act10: t_time_3 :∈ 0..20
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_5 :∈ 0..0
+        act14: t_delay_5 := 3
+        act15: t_success_5 := 0
+        act16: t_time_10 :∈ 0..0
+        act17: t_delay_10 := 3
+        act18: t_success_10 := 0
+        act19: t_time_11 :∈ 0..0
+        act20: t_delay_11 := 1
+        act21: t_success_11 := 0
+    END
+
+
+    sendcheckInvoice_1
+    WHEN
+        grd1: checkInvoice_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkInvoice_1}
+        act2: sender := sender ∪ {checkInvoice_1 ↦ StockSystem}
+        act3: receiver := receiver ∪ {checkInvoice_1 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkInvoice_1}
+    END
+
+    receivecheckInvoice_1
+    WHEN
+        grd1: checkInvoice_1 ∈ sentMessages
+        grd2: checkInvoice_1 ↦ StockSystem ∈ sender
+        grd3: checkInvoice_1 ↦ Shelf ∈ receiver
+        grd4: checkInvoice_1 ∉ receivedMessages
+        grd5: currentMessage = {checkInvoice_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkInvoice_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreportInvoice_2
+    WHEN
+        grd1: reportInvoice_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkInvoice_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportInvoice_2}
+        act2: sender := sender ∪ {reportInvoice_2 ↦ Shelf}
+        act3: receiver := receiver ∪ {reportInvoice_2 ↦ StockSystem}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportInvoice_2}
+    END
+
+    receivereportInvoice_2
+    WHEN
+        grd1: reportInvoice_2 ∈ sentMessages
+        grd2: reportInvoice_2 ↦ Shelf ∈ sender
+        grd3: reportInvoice_2 ↦ StockSystem ∈ receiver
+        grd4: reportInvoice_2 ∉ receivedMessages
+        grd5: currentMessage = {reportInvoice_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportInvoice_2}
+        act2: currentMessage := ∅
+    END
+
+    sendsendInvoice_3
+    WHEN
+        grd1: sendInvoice_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportInvoice_2 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendInvoice_3}
+        act2: sender := sender ∪ {sendInvoice_3 ↦ StockSystem}
+        act3: receiver := receiver ∪ {sendInvoice_3 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendInvoice_3 ↦ invoiceData}
+        act6: currentMessage := {sendInvoice_3}
+    END
+
+    receivesendInvoice_3
+    WHEN
+        grd1: sendInvoice_3 ∈ sentMessages
+        grd2: sendInvoice_3 ↦ StockSystem ∈ sender
+        grd3: sendInvoice_3 ↦ Shelf ∈ receiver
+        grd4: sendInvoice_3 ∉ receivedMessages
+        grd5: currentMessage = {sendInvoice_3}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendInvoice_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendInvoice_3 ↦ invoiceData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendackInvoice_4_opt1
+    WHEN
+        grd1: ackInvoice_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendInvoice_3 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackInvoice_4}
+        act2: sender := sender ∪ {ackInvoice_4 ↦ StockSystem}
+        act3: receiver := receiver ∪ {ackInvoice_4 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackInvoice_4 ↦ orderCode}
+        act6: currentMessage := {ackInvoice_4}
+    END
+
+    receiveackInvoice_4_opt1
+    WHEN
+        grd1: ackInvoice_4 ∈ sentMessages
+        grd2: ackInvoice_4 ↦ StockSystem ∈ sender
+        grd3: ackInvoice_4 ↦ Shelf ∈ receiver
+        grd4: ackInvoice_4 ∉ receivedMessages
+        grd5: currentMessage = {ackInvoice_4}
+        grd6: retryNo < 12
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackInvoice_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackInvoice_4 ↦ orderCode}
+        act3: currentMessage := ∅
+    END
+
+    sendlogStock_5_opt1
+    WHEN
+        grd1: logStock_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackInvoice_4 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {logStock_5}
+        act2: sender := sender ∪ {logStock_5 ↦ StockSystem}
+        act3: receiver := receiver ∪ {logStock_5 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logStock_5}
+    END
+
+    receivelogStock_5_opt1
+    WHEN
+        grd1: logStock_5 ∈ sentMessages
+        grd2: logStock_5 ↦ StockSystem ∈ sender
+        grd3: logStock_5 ↦ Shelf ∈ receiver
+        grd4: logStock_5 ∉ receivedMessages
+        grd5: currentMessage = {logStock_5}
+        grd6: retryNo < 12
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logStock_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrequestInvoice_6
+    WHEN
+        grd1: requestInvoice_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logStock_5 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestInvoice_6}
+        act2: sender := sender ∪ {requestInvoice_6 ↦ StockSystem}
+        act3: receiver := receiver ∪ {requestInvoice_6 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestInvoice_6}
+    END
+
+    receiverequestInvoice_6
+    WHEN
+        grd1: requestInvoice_6 ∈ sentMessages
+        grd2: requestInvoice_6 ↦ StockSystem ∈ sender
+        grd3: requestInvoice_6 ↦ Shelf ∈ receiver
+        grd4: requestInvoice_6 ∉ receivedMessages
+        grd5: currentMessage = {requestInvoice_6}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestInvoice_6}
+        act2: currentMessage := ∅
+    END
+
+    sendscheduleStock_7_opt2
+    WHEN
+        grd1: scheduleStock_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestInvoice_6 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleStock_7}
+        act2: sender := sender ∪ {scheduleStock_7 ↦ StockSystem}
+        act3: receiver := receiver ∪ {scheduleStock_7 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleStock_7 ↦ invoiceValue}
+        act6: currentMessage := {scheduleStock_7}
+    END
+
+    receivescheduleStock_7_opt2
+    WHEN
+        grd1: scheduleStock_7 ∈ sentMessages
+        grd2: scheduleStock_7 ↦ StockSystem ∈ sender
+        grd3: scheduleStock_7 ↦ Shelf ∈ receiver
+        grd4: scheduleStock_7 ∉ receivedMessages
+        grd5: currentMessage = {scheduleStock_7}
+        grd6: retryNo < 12
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleStock_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleStock_7 ↦ invoiceValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleOrder_8_opt2
+    WHEN
+        grd1: scheduleOrder_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleStock_7 ∈ receivedMessages
+        grd4: retryNo < 12
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleOrder_8}
+        act2: sender := sender ∪ {scheduleOrder_8 ↦ StockSystem}
+        act3: receiver := receiver ∪ {scheduleOrder_8 ↦ Shelf}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleOrder_8 ↦ invoiceInfo, scheduleOrder_8 ↦ orderValue}
+        act6: currentMessage := {scheduleOrder_8}
+    END
+
+    receivescheduleOrder_8_opt2
+    WHEN
+        grd1: scheduleOrder_8 ∈ sentMessages
+        grd2: scheduleOrder_8 ↦ StockSystem ∈ sender
+        grd3: scheduleOrder_8 ↦ Shelf ∈ receiver
+        grd4: scheduleOrder_8 ∉ receivedMessages
+        grd5: currentMessage = {scheduleOrder_8}
+        grd6: retryNo < 12
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleOrder_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleOrder_8 ↦ invoiceInfo, scheduleOrder_8 ↦ orderValue}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateInvoice_9
+    WHEN
+        grd1: updateInvoice_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleOrder_8 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateInvoice_9}
+        act2: sender := sender ∪ {updateInvoice_9 ↦ Shelf}
+        act3: receiver := receiver ∪ {updateInvoice_9 ↦ StockSystem}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateInvoice_9 ↦ stockCode}
+        act6: currentMessage := {updateInvoice_9}
+    END
+
+    receiveupdateInvoice_9
+    WHEN
+        grd1: updateInvoice_9 ∈ sentMessages
+        grd2: updateInvoice_9 ↦ Shelf ∈ sender
+        grd3: updateInvoice_9 ↦ StockSystem ∈ receiver
+        grd4: updateInvoice_9 ∉ receivedMessages
+        grd5: currentMessage = {updateInvoice_9}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateInvoice_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateInvoice_9 ↦ stockCode}
+        act3: currentMessage := ∅
+    END
+
+    sendissueOrder_10
+    WHEN
+        grd1: issueOrder_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateInvoice_9 ∈ receivedMessages
+        grd4: retryNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueOrder_10}
+        act2: sender := sender ∪ {issueOrder_10 ↦ Shelf}
+        act3: receiver := receiver ∪ {issueOrder_10 ↦ StockSystem}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueOrder_10 ↦ invoiceInfo}
+        act6: currentMessage := {issueOrder_10}
+    END
+
+    receiveissueOrder_10
+    WHEN
+        grd1: issueOrder_10 ∈ sentMessages
+        grd2: issueOrder_10 ↦ Shelf ∈ sender
+        grd3: issueOrder_10 ↦ StockSystem ∈ receiver
+        grd4: issueOrder_10 ∉ receivedMessages
+        grd5: currentMessage = {issueOrder_10}
+        grd6: retryNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueOrder_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueOrder_10 ↦ invoiceInfo}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendfetchOrder_11
+    WHEN
+        grd1: fetchOrder_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueOrder_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchOrder_11}
+        act2: sender := sender ∪ {fetchOrder_11 ↦ Shelf}
+        act3: receiver := receiver ∪ {fetchOrder_11 ↦ StockSystem}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchOrder_11 ↦ orderInfo}
+        act6: currentMessage := {fetchOrder_11}
+    END
+
+    receivefetchOrder_11
+    WHEN
+        grd1: fetchOrder_11 ∈ sentMessages
+        grd2: fetchOrder_11 ↦ Shelf ∈ sender
+        grd3: fetchOrder_11 ↦ StockSystem ∈ receiver
+        grd4: fetchOrder_11 ∉ receivedMessages
+        grd5: currentMessage = {fetchOrder_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchOrder_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchOrder_11 ↦ orderInfo}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_sendInvoice_3_loop1
+    WHEN
+        grd1: retryNo < 12
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

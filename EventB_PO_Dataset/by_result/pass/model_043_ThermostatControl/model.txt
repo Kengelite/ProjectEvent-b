@@ -1,0 +1,269 @@
+CONTEXT ThermostatControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Heater, Thermostat
+    startHeating_1, heatingAck_2, queryTemp_3, tempReport_4, reducePower_5, keepPower_6, stopHeating_7
+    currentTemp, powerLevel, targetTemp
+AXIOMS
+    axm1: partition(Objects, {Heater}, {Thermostat})
+    axm2: partition(Messages, {startHeating_1}, {heatingAck_2}, {queryTemp_3}, {tempReport_4}, {reducePower_5}, {keepPower_6}, {stopHeating_7})
+    axm3: partition(DataMessages, {currentTemp}, {powerLevel}, {targetTemp})
+END
+
+MACHINE ThermostatControlInteractionMachine_1
+SEES ThermostatControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycle, overheat, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycle ∈ ℤ
+    inv9: overheat ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycle := 0
+        act9: overheat := 0
+        act10: t_time_2 :∈ 0..3
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_4 :∈ 0..2
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..1
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_7 :∈ 0..0
+        act20: t_delay_7 := 2
+        act21: t_success_7 := 0
+    END
+
+
+    sendstartHeating_1
+    WHEN
+        grd1: startHeating_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {startHeating_1}
+        act2: sender := sender ∪ {startHeating_1 ↦ Thermostat}
+        act3: receiver := receiver ∪ {startHeating_1 ↦ Heater}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startHeating_1 ↦ targetTemp}
+        act6: currentMessage := {startHeating_1}
+    END
+
+    receivestartHeating_1
+    WHEN
+        grd1: startHeating_1 ∈ sentMessages
+        grd2: startHeating_1 ↦ Thermostat ∈ sender
+        grd3: startHeating_1 ↦ Heater ∈ receiver
+        grd4: startHeating_1 ∉ receivedMessages
+        grd5: currentMessage = {startHeating_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startHeating_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startHeating_1 ↦ targetTemp}
+        act3: currentMessage := ∅
+    END
+
+    sendheatingAck_2
+    WHEN
+        grd1: heatingAck_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startHeating_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {heatingAck_2}
+        act2: sender := sender ∪ {heatingAck_2 ↦ Heater}
+        act3: receiver := receiver ∪ {heatingAck_2 ↦ Thermostat}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {heatingAck_2}
+    END
+
+    receiveheatingAck_2
+    WHEN
+        grd1: heatingAck_2 ∈ sentMessages
+        grd2: heatingAck_2 ↦ Heater ∈ sender
+        grd3: heatingAck_2 ↦ Thermostat ∈ receiver
+        grd4: heatingAck_2 ∉ receivedMessages
+        grd5: currentMessage = {heatingAck_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {heatingAck_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendqueryTemp_3
+    WHEN
+        grd1: queryTemp_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: heatingAck_2 ∈ receivedMessages
+        grd4: cycle < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryTemp_3}
+        act2: sender := sender ∪ {queryTemp_3 ↦ Thermostat}
+        act3: receiver := receiver ∪ {queryTemp_3 ↦ Heater}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryTemp_3}
+    END
+
+    receivequeryTemp_3
+    WHEN
+        grd1: queryTemp_3 ∈ sentMessages
+        grd2: queryTemp_3 ↦ Thermostat ∈ sender
+        grd3: queryTemp_3 ↦ Heater ∈ receiver
+        grd4: queryTemp_3 ∉ receivedMessages
+        grd5: currentMessage = {queryTemp_3}
+        grd6: cycle < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryTemp_3}
+        act2: currentMessage := ∅
+    END
+
+    sendtempReport_4
+    WHEN
+        grd1: tempReport_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryTemp_3 ∈ receivedMessages
+        grd4: cycle < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {tempReport_4}
+        act2: sender := sender ∪ {tempReport_4 ↦ Heater}
+        act3: receiver := receiver ∪ {tempReport_4 ↦ Thermostat}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {tempReport_4 ↦ currentTemp}
+        act6: currentMessage := {tempReport_4}
+    END
+
+    receivetempReport_4
+    WHEN
+        grd1: tempReport_4 ∈ sentMessages
+        grd2: tempReport_4 ↦ Heater ∈ sender
+        grd3: tempReport_4 ↦ Thermostat ∈ receiver
+        grd4: tempReport_4 ∉ receivedMessages
+        grd5: currentMessage = {tempReport_4}
+        grd6: cycle < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {tempReport_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {tempReport_4 ↦ currentTemp}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreducePower_5
+    WHEN
+        grd1: reducePower_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: tempReport_4 ∈ receivedMessages
+        grd4: cycle < 5
+        grd5: overheat = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reducePower_5}
+        act2: sender := sender ∪ {reducePower_5 ↦ Thermostat}
+        act3: receiver := receiver ∪ {reducePower_5 ↦ Heater}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reducePower_5 ↦ powerLevel}
+        act6: currentMessage := {reducePower_5}
+    END
+
+    receivereducePower_5
+    WHEN
+        grd1: reducePower_5 ∈ sentMessages
+        grd2: reducePower_5 ↦ Thermostat ∈ sender
+        grd3: reducePower_5 ↦ Heater ∈ receiver
+        grd4: reducePower_5 ∉ receivedMessages
+        grd5: currentMessage = {reducePower_5}
+        grd6: cycle < 5
+        grd7: overheat = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reducePower_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reducePower_5 ↦ powerLevel}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendkeepPower_6
+    WHEN
+        grd1: keepPower_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: tempReport_4 ∈ receivedMessages
+        grd4: cycle < 5
+        grd5: overheat = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {keepPower_6}
+        act2: sender := sender ∪ {keepPower_6 ↦ Thermostat}
+        act3: receiver := receiver ∪ {keepPower_6 ↦ Heater}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {keepPower_6}
+    END
+
+    receivekeepPower_6
+    WHEN
+        grd1: keepPower_6 ∈ sentMessages
+        grd2: keepPower_6 ↦ Thermostat ∈ sender
+        grd3: keepPower_6 ↦ Heater ∈ receiver
+        grd4: keepPower_6 ∉ receivedMessages
+        grd5: currentMessage = {keepPower_6}
+        grd6: cycle < 5
+        grd7: overheat = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {keepPower_6}
+        act2: currentMessage := ∅
+    END
+
+    sendstopHeating_7
+    WHEN
+        grd1: stopHeating_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reducePower_5 ∈ receivedMessages ∨ keepPower_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {stopHeating_7}
+        act2: sender := sender ∪ {stopHeating_7 ↦ Thermostat}
+        act3: receiver := receiver ∪ {stopHeating_7 ↦ Heater}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {stopHeating_7}
+    END
+
+    receivestopHeating_7
+    WHEN
+        grd1: stopHeating_7 ∈ sentMessages
+        grd2: stopHeating_7 ↦ Thermostat ∈ sender
+        grd3: stopHeating_7 ↦ Heater ∈ receiver
+        grd4: stopHeating_7 ∉ receivedMessages
+        grd5: currentMessage = {stopHeating_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {stopHeating_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    checkloop_queryTemp_3_loop1
+    WHEN
+        grd1: cycle < 5
+    THEN
+        act1: cycle := cycle + 1
+    END
+
+END

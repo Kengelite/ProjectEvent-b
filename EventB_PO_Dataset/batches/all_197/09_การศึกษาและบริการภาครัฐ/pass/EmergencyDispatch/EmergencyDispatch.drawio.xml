@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="EmergencyDispatch" id="emergencydispatch">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="270" width="890" height="450" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="loop" vertex="1">
+          <mxGeometry x="45" y="355" width="840" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="70" y="440" width="790" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="622" width="890" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t5" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[priority == HIGH]" vertex="1">
+          <mxGeometry x="105" y="275" width="162" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t6" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[updateCount &lt; 4]" vertex="1">
+          <mxGeometry x="130" y="360" width="153" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[trafficJam == 1]" vertex="1">
+          <mxGeometry x="155" y="445" width="153" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t8" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[priority == LOW]" vertex="1">
+          <mxGeometry x="105" y="635" width="153" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll9" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Caller" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="790" as="geometry" />
+        </mxCell>
+        <mxCell id="ll10" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="CallCenter" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="790" as="geometry" />
+        </mxCell>
+        <mxCell id="ll11" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Ambulance" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="790" as="geometry" />
+        </mxCell>
+        <mxCell id="ll12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Hospital" vertex="1">
+          <mxGeometry x="790" y="40" width="100" height="790" as="geometry" />
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reportEmergency(location) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="340.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="askDetails()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="180" as="sourcePoint" />
+            <mxPoint x="90.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="provideDetails(severityCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="230" as="sourcePoint" />
+            <mxPoint x="340.0" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="dispatchAmbulance(caseID) {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="320" as="sourcePoint" />
+            <mxPoint x="590.0" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendLocation(gpsPos) {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="405" as="sourcePoint" />
+            <mxPoint x="340.0" y="405" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="rerouteRequest(route)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="485" as="sourcePoint" />
+            <mxPoint x="590.0" y="485" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="notifyHospital(caseID) {0..5}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="590" as="sourcePoint" />
+            <mxPoint x="840.0" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="scheduleCallback(callbackTime)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="680" as="sourcePoint" />
+            <mxPoint x="90.0" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="closeCase(caseID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="770" as="sourcePoint" />
+            <mxPoint x="90.0" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

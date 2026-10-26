@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="syncTransfer_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="logTransfer_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="transferInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="transferValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="transferID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Porter" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="releasePatient_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="bedRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="bedID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="AdmissionDesk" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="assignBed_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="scheduleBed_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendBed_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Ward" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="BedManager" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/HospitalBedAllocation_Project/HospitalBedAllocationContext.bpo|org.eventb.core.poFile#HospitalBedAllocationContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{AdmissionDesk},{BedManager},{Porter},{Ward})" org.eventb.core.source="/HospitalBedAllocation_Project/HospitalBedAllocationContext.buc|org.eventb.core.contextFile#HospitalBedAllocationContext|org.eventb.core.axiom#internal_element19"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{sendBed_1},{assignBed_2},{syncTransfer_3},{scheduleBed_4},{logTransfer_5},{releasePatient_6})" org.eventb.core.source="/HospitalBedAllocation_Project/HospitalBedAllocationContext.buc|org.eventb.core.contextFile#HospitalBedAllocationContext|org.eventb.core.axiom#internal_element20"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{bedID},{bedRef},{transferID},{transferInfo},{transferValue})" org.eventb.core.source="/HospitalBedAllocation_Project/HospitalBedAllocationContext.buc|org.eventb.core.contextFile#HospitalBedAllocationContext|org.eventb.core.axiom#internal_element21"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

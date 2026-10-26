@@ -1,0 +1,377 @@
+CONTEXT PackageTrackingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Carrier, Hub, Recipient, Shipper
+    createShipment_1, pickupConfirm_2, arriveHub_3, scanIn_4, customsHold_5, dispatchOut_6, deliver_7, signReceipt_8, leaveNotice_9, closeShipment_10, rateService_11
+    declaration, finalStatus, noticeID, pickupTime, rating, scanID, signature, trackingNo, weight
+    NO, YES
+AXIOMS
+    axm1: partition(Objects, {Carrier}, {Hub}, {Recipient}, {Shipper})
+    axm2: partition(Messages, {createShipment_1}, {pickupConfirm_2}, {arriveHub_3}, {scanIn_4}, {customsHold_5}, {dispatchOut_6}, {deliver_7}, {signReceipt_8}, {leaveNotice_9}, {closeShipment_10}, {rateService_11})
+    axm3: partition(DataMessages, {declaration}, {finalStatus}, {noticeID}, {pickupTime}, {rating}, {scanID}, {signature}, {trackingNo}, {weight})
+    axm4: NO = 0
+    axm5: YES = 1
+END
+
+MACHINE PackageTrackingInteractionMachine_1
+SEES PackageTrackingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, customsCheck, delivered, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: customsCheck ∈ ℤ
+    inv9: delivered ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: customsCheck := 1
+        act9: delivered := NO
+        act10: t_time_2 :∈ 0..24
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..48
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_6 :∈ 0..12
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+        act19: t_time_7 :∈ 0..8
+        act20: t_delay_7 := 0
+        act21: t_success_7 := 0
+    END
+
+
+    sendcreateShipment_1
+    WHEN
+        grd1: createShipment_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {createShipment_1}
+        act2: sender := sender ∪ {createShipment_1 ↦ Shipper}
+        act3: receiver := receiver ∪ {createShipment_1 ↦ Carrier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {createShipment_1 ↦ trackingNo, createShipment_1 ↦ weight}
+        act6: currentMessage := {createShipment_1}
+    END
+
+    receivecreateShipment_1
+    WHEN
+        grd1: createShipment_1 ∈ sentMessages
+        grd2: createShipment_1 ↦ Shipper ∈ sender
+        grd3: createShipment_1 ↦ Carrier ∈ receiver
+        grd4: createShipment_1 ∉ receivedMessages
+        grd5: currentMessage = {createShipment_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {createShipment_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {createShipment_1 ↦ trackingNo, createShipment_1 ↦ weight}
+        act3: currentMessage := ∅
+    END
+
+    sendpickupConfirm_2
+    WHEN
+        grd1: pickupConfirm_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: createShipment_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {pickupConfirm_2}
+        act2: sender := sender ∪ {pickupConfirm_2 ↦ Carrier}
+        act3: receiver := receiver ∪ {pickupConfirm_2 ↦ Shipper}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {pickupConfirm_2 ↦ pickupTime}
+        act6: currentMessage := {pickupConfirm_2}
+    END
+
+    receivepickupConfirm_2
+    WHEN
+        grd1: pickupConfirm_2 ∈ sentMessages
+        grd2: pickupConfirm_2 ↦ Carrier ∈ sender
+        grd3: pickupConfirm_2 ↦ Shipper ∈ receiver
+        grd4: pickupConfirm_2 ∉ receivedMessages
+        grd5: currentMessage = {pickupConfirm_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pickupConfirm_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {pickupConfirm_2 ↦ pickupTime}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendarriveHub_3
+    WHEN
+        grd1: arriveHub_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pickupConfirm_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {arriveHub_3}
+        act2: sender := sender ∪ {arriveHub_3 ↦ Carrier}
+        act3: receiver := receiver ∪ {arriveHub_3 ↦ Hub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {arriveHub_3 ↦ trackingNo}
+        act6: currentMessage := {arriveHub_3}
+    END
+
+    receivearriveHub_3
+    WHEN
+        grd1: arriveHub_3 ∈ sentMessages
+        grd2: arriveHub_3 ↦ Carrier ∈ sender
+        grd3: arriveHub_3 ↦ Hub ∈ receiver
+        grd4: arriveHub_3 ∉ receivedMessages
+        grd5: currentMessage = {arriveHub_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {arriveHub_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {arriveHub_3 ↦ trackingNo}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendscanIn_4
+    WHEN
+        grd1: scanIn_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: arriveHub_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scanIn_4}
+        act2: sender := sender ∪ {scanIn_4 ↦ Hub}
+        act3: receiver := receiver ∪ {scanIn_4 ↦ Carrier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scanIn_4 ↦ scanID}
+        act6: currentMessage := {scanIn_4}
+    END
+
+    receivescanIn_4
+    WHEN
+        grd1: scanIn_4 ∈ sentMessages
+        grd2: scanIn_4 ↦ Hub ∈ sender
+        grd3: scanIn_4 ↦ Carrier ∈ receiver
+        grd4: scanIn_4 ∉ receivedMessages
+        grd5: currentMessage = {scanIn_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scanIn_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scanIn_4 ↦ scanID}
+        act3: currentMessage := ∅
+    END
+
+    sendcustomsHold_5_opt1
+    WHEN
+        grd1: customsHold_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scanIn_4 ∈ receivedMessages
+        grd4: customsCheck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {customsHold_5}
+        act2: sender := sender ∪ {customsHold_5 ↦ Hub}
+        act3: receiver := receiver ∪ {customsHold_5 ↦ Carrier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {customsHold_5 ↦ declaration}
+        act6: currentMessage := {customsHold_5}
+    END
+
+    receivecustomsHold_5_opt1
+    WHEN
+        grd1: customsHold_5 ∈ sentMessages
+        grd2: customsHold_5 ↦ Hub ∈ sender
+        grd3: customsHold_5 ↦ Carrier ∈ receiver
+        grd4: customsHold_5 ∉ receivedMessages
+        grd5: currentMessage = {customsHold_5}
+        grd6: customsCheck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {customsHold_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {customsHold_5 ↦ declaration}
+        act3: currentMessage := ∅
+    END
+
+    senddispatchOut_6
+    WHEN
+        grd1: dispatchOut_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: customsHold_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {dispatchOut_6}
+        act2: sender := sender ∪ {dispatchOut_6 ↦ Hub}
+        act3: receiver := receiver ∪ {dispatchOut_6 ↦ Carrier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {dispatchOut_6 ↦ trackingNo}
+        act6: currentMessage := {dispatchOut_6}
+    END
+
+    receivedispatchOut_6
+    WHEN
+        grd1: dispatchOut_6 ∈ sentMessages
+        grd2: dispatchOut_6 ↦ Hub ∈ sender
+        grd3: dispatchOut_6 ↦ Carrier ∈ receiver
+        grd4: dispatchOut_6 ∉ receivedMessages
+        grd5: currentMessage = {dispatchOut_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dispatchOut_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {dispatchOut_6 ↦ trackingNo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    senddeliver_7
+    WHEN
+        grd1: deliver_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: dispatchOut_6 ∈ receivedMessages
+        grd4: delivered = YES
+    THEN
+        act1: sentMessages := sentMessages ∪ {deliver_7}
+        act2: sender := sender ∪ {deliver_7 ↦ Carrier}
+        act3: receiver := receiver ∪ {deliver_7 ↦ Recipient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {deliver_7 ↦ trackingNo}
+        act6: currentMessage := {deliver_7}
+    END
+
+    receivedeliver_7
+    WHEN
+        grd1: deliver_7 ∈ sentMessages
+        grd2: deliver_7 ↦ Carrier ∈ sender
+        grd3: deliver_7 ↦ Recipient ∈ receiver
+        grd4: deliver_7 ∉ receivedMessages
+        grd5: currentMessage = {deliver_7}
+        grd6: delivered = YES
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {deliver_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {deliver_7 ↦ trackingNo}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendsignReceipt_8
+    WHEN
+        grd1: signReceipt_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: deliver_7 ∈ receivedMessages
+        grd4: delivered = YES
+    THEN
+        act1: sentMessages := sentMessages ∪ {signReceipt_8}
+        act2: sender := sender ∪ {signReceipt_8 ↦ Recipient}
+        act3: receiver := receiver ∪ {signReceipt_8 ↦ Carrier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {signReceipt_8 ↦ signature}
+        act6: currentMessage := {signReceipt_8}
+    END
+
+    receivesignReceipt_8
+    WHEN
+        grd1: signReceipt_8 ∈ sentMessages
+        grd2: signReceipt_8 ↦ Recipient ∈ sender
+        grd3: signReceipt_8 ↦ Carrier ∈ receiver
+        grd4: signReceipt_8 ∉ receivedMessages
+        grd5: currentMessage = {signReceipt_8}
+        grd6: delivered = YES
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {signReceipt_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {signReceipt_8 ↦ signature}
+        act3: currentMessage := ∅
+    END
+
+    sendleaveNotice_9
+    WHEN
+        grd1: leaveNotice_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: dispatchOut_6 ∈ receivedMessages
+        grd4: delivered = NO
+    THEN
+        act1: sentMessages := sentMessages ∪ {leaveNotice_9}
+        act2: sender := sender ∪ {leaveNotice_9 ↦ Carrier}
+        act3: receiver := receiver ∪ {leaveNotice_9 ↦ Recipient}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {leaveNotice_9 ↦ noticeID}
+        act6: currentMessage := {leaveNotice_9}
+    END
+
+    receiveleaveNotice_9
+    WHEN
+        grd1: leaveNotice_9 ∈ sentMessages
+        grd2: leaveNotice_9 ↦ Carrier ∈ sender
+        grd3: leaveNotice_9 ↦ Recipient ∈ receiver
+        grd4: leaveNotice_9 ∉ receivedMessages
+        grd5: currentMessage = {leaveNotice_9}
+        grd6: delivered = NO
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {leaveNotice_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {leaveNotice_9 ↦ noticeID}
+        act3: currentMessage := ∅
+    END
+
+    sendcloseShipment_10
+    WHEN
+        grd1: closeShipment_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: signReceipt_8 ∈ receivedMessages ∨ leaveNotice_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {closeShipment_10}
+        act2: sender := sender ∪ {closeShipment_10 ↦ Carrier}
+        act3: receiver := receiver ∪ {closeShipment_10 ↦ Shipper}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {closeShipment_10 ↦ finalStatus}
+        act6: currentMessage := {closeShipment_10}
+    END
+
+    receivecloseShipment_10
+    WHEN
+        grd1: closeShipment_10 ∈ sentMessages
+        grd2: closeShipment_10 ↦ Carrier ∈ sender
+        grd3: closeShipment_10 ↦ Shipper ∈ receiver
+        grd4: closeShipment_10 ∉ receivedMessages
+        grd5: currentMessage = {closeShipment_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {closeShipment_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {closeShipment_10 ↦ finalStatus}
+        act3: currentMessage := ∅
+    END
+
+    sendrateService_11
+    WHEN
+        grd1: rateService_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: closeShipment_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {rateService_11}
+        act2: sender := sender ∪ {rateService_11 ↦ Recipient}
+        act3: receiver := receiver ∪ {rateService_11 ↦ Carrier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {rateService_11 ↦ rating}
+        act6: currentMessage := {rateService_11}
+    END
+
+    receiverateService_11
+    WHEN
+        grd1: rateService_11 ∈ sentMessages
+        grd2: rateService_11 ↦ Recipient ∈ sender
+        grd3: rateService_11 ↦ Carrier ∈ receiver
+        grd4: rateService_11 ∉ receivedMessages
+        grd5: currentMessage = {rateService_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {rateService_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {rateService_11 ↦ rating}
+        act3: currentMessage := ∅
+    END
+
+END

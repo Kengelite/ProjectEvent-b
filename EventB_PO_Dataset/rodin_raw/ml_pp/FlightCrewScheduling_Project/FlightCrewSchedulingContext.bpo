@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="queryRoster_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmSwap_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ackDuty_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cancelDuty_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="CrewPortal" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="ackSwap_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Scheduler" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="dutyData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="OpsCenter" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="assignSwap_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="CrewMember" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="swapCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="dutyID" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/FlightCrewScheduling_Project/FlightCrewSchedulingContext.bpo|org.eventb.core.poFile#FlightCrewSchedulingContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CrewMember},{CrewPortal},{OpsCenter},{Scheduler})" org.eventb.core.source="/FlightCrewScheduling_Project/FlightCrewSchedulingContext.buc|org.eventb.core.contextFile#FlightCrewSchedulingContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{cancelDuty_1},{ackDuty_2},{assignSwap_3},{confirmSwap_4},{ackSwap_5},{queryRoster_6})" org.eventb.core.source="/FlightCrewScheduling_Project/FlightCrewSchedulingContext.buc|org.eventb.core.contextFile#FlightCrewSchedulingContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{dutyData},{dutyID},{swapCode})" org.eventb.core.source="/FlightCrewScheduling_Project/FlightCrewSchedulingContext.buc|org.eventb.core.contextFile#FlightCrewSchedulingContext|org.eventb.core.axiom#internal_element19"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

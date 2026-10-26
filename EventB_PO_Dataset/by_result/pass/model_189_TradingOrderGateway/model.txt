@@ -1,0 +1,223 @@
+CONTEXT TradingOrderGatewayContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Exchange, OrderGateway, RiskEngine, Trader
+    checkFill_1, assignOrder_2, scheduleFill_3, scheduleOrder_4, notifyOrder_5, ackMargin_6
+    fillData, marginRef, orderCode, orderID
+AXIOMS
+    axm1: partition(Objects, {Exchange}, {OrderGateway}, {RiskEngine}, {Trader})
+    axm2: partition(Messages, {checkFill_1}, {assignOrder_2}, {scheduleFill_3}, {scheduleOrder_4}, {notifyOrder_5}, {ackMargin_6})
+    axm3: partition(DataMessages, {fillData}, {marginRef}, {orderCode}, {orderID})
+END
+
+MACHINE TradingOrderGatewayInteractionMachine_1
+SEES TradingOrderGatewayContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..1
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 0..0
+        act12: t_delay_3 := 1
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..10
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 0..10
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+    END
+
+
+    sendcheckFill_1
+    WHEN
+        grd1: checkFill_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkFill_1}
+        act2: sender := sender ∪ {checkFill_1 ↦ Exchange}
+        act3: receiver := receiver ∪ {checkFill_1 ↦ RiskEngine}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkFill_1}
+    END
+
+    receivecheckFill_1
+    WHEN
+        grd1: checkFill_1 ∈ sentMessages
+        grd2: checkFill_1 ↦ Exchange ∈ sender
+        grd3: checkFill_1 ↦ RiskEngine ∈ receiver
+        grd4: checkFill_1 ∉ receivedMessages
+        grd5: currentMessage = {checkFill_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkFill_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignOrder_2
+    WHEN
+        grd1: assignOrder_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkFill_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignOrder_2}
+        act2: sender := sender ∪ {assignOrder_2 ↦ Trader}
+        act3: receiver := receiver ∪ {assignOrder_2 ↦ OrderGateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignOrder_2 ↦ orderCode}
+        act6: currentMessage := {assignOrder_2}
+    END
+
+    receiveassignOrder_2
+    WHEN
+        grd1: assignOrder_2 ∈ sentMessages
+        grd2: assignOrder_2 ↦ Trader ∈ sender
+        grd3: assignOrder_2 ↦ OrderGateway ∈ receiver
+        grd4: assignOrder_2 ∉ receivedMessages
+        grd5: currentMessage = {assignOrder_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignOrder_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignOrder_2 ↦ orderCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleFill_3
+    WHEN
+        grd1: scheduleFill_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignOrder_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleFill_3}
+        act2: sender := sender ∪ {scheduleFill_3 ↦ RiskEngine}
+        act3: receiver := receiver ∪ {scheduleFill_3 ↦ Exchange}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleFill_3 ↦ marginRef}
+        act6: currentMessage := {scheduleFill_3}
+    END
+
+    receivescheduleFill_3
+    WHEN
+        grd1: scheduleFill_3 ∈ sentMessages
+        grd2: scheduleFill_3 ↦ RiskEngine ∈ sender
+        grd3: scheduleFill_3 ↦ Exchange ∈ receiver
+        grd4: scheduleFill_3 ∉ receivedMessages
+        grd5: currentMessage = {scheduleFill_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleFill_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleFill_3 ↦ marginRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendscheduleOrder_4
+    WHEN
+        grd1: scheduleOrder_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleFill_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleOrder_4}
+        act2: sender := sender ∪ {scheduleOrder_4 ↦ OrderGateway}
+        act3: receiver := receiver ∪ {scheduleOrder_4 ↦ Exchange}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleOrder_4 ↦ fillData}
+        act6: currentMessage := {scheduleOrder_4}
+    END
+
+    receivescheduleOrder_4
+    WHEN
+        grd1: scheduleOrder_4 ∈ sentMessages
+        grd2: scheduleOrder_4 ↦ OrderGateway ∈ sender
+        grd3: scheduleOrder_4 ↦ Exchange ∈ receiver
+        grd4: scheduleOrder_4 ∉ receivedMessages
+        grd5: currentMessage = {scheduleOrder_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleOrder_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleOrder_4 ↦ fillData}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendnotifyOrder_5
+    WHEN
+        grd1: notifyOrder_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleOrder_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyOrder_5}
+        act2: sender := sender ∪ {notifyOrder_5 ↦ Exchange}
+        act3: receiver := receiver ∪ {notifyOrder_5 ↦ RiskEngine}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyOrder_5 ↦ orderID}
+        act6: currentMessage := {notifyOrder_5}
+    END
+
+    receivenotifyOrder_5
+    WHEN
+        grd1: notifyOrder_5 ∈ sentMessages
+        grd2: notifyOrder_5 ↦ Exchange ∈ sender
+        grd3: notifyOrder_5 ↦ RiskEngine ∈ receiver
+        grd4: notifyOrder_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyOrder_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyOrder_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyOrder_5 ↦ orderID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendackMargin_6
+    WHEN
+        grd1: ackMargin_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyOrder_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackMargin_6}
+        act2: sender := sender ∪ {ackMargin_6 ↦ RiskEngine}
+        act3: receiver := receiver ∪ {ackMargin_6 ↦ Trader}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackMargin_6}
+    END
+
+    receiveackMargin_6
+    WHEN
+        grd1: ackMargin_6 ∈ sentMessages
+        grd2: ackMargin_6 ↦ RiskEngine ∈ sender
+        grd3: ackMargin_6 ↦ Trader ∈ receiver
+        grd4: ackMargin_6 ∉ receivedMessages
+        grd5: currentMessage = {ackMargin_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackMargin_6}
+        act2: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,228 @@
+CONTEXT VaccineColdBoxContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ColdBox, Gateway, HealthHub
+    releaseAlarm_1, ackVaccine_2, syncReading_3, syncAlarm_4, approveAlarm_5, sendVaccine_6
+    alarmValue, readingValue, vaccineRef
+AXIOMS
+    axm1: partition(Objects, {ColdBox}, {Gateway}, {HealthHub})
+    axm2: partition(Messages, {releaseAlarm_1}, {ackVaccine_2}, {syncReading_3}, {syncAlarm_4}, {approveAlarm_5}, {sendVaccine_6})
+    axm3: partition(DataMessages, {alarmValue}, {readingValue}, {vaccineRef})
+END
+
+MACHINE VaccineColdBoxInteractionMachine_1
+SEES VaccineColdBoxContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_6 ∈ ℤ
+    inv21: t_delay_6 ∈ ℤ
+    inv22: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..30
+        act9: t_delay_2 := 0
+        act10: t_success_2 := 0
+        act11: t_time_3 :∈ 10..1
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 0..1
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+        act17: t_time_5 :∈ 10..6
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+        act20: t_time_6 :∈ 30..13
+        act21: t_delay_6 := 0
+        act22: t_success_6 := 0
+    END
+
+
+    sendreleaseAlarm_1
+    WHEN
+        grd1: releaseAlarm_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseAlarm_1}
+        act2: sender := sender ∪ {releaseAlarm_1 ↦ Gateway}
+        act3: receiver := receiver ∪ {releaseAlarm_1 ↦ HealthHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseAlarm_1}
+    END
+
+    receivereleaseAlarm_1
+    WHEN
+        grd1: releaseAlarm_1 ∈ sentMessages
+        grd2: releaseAlarm_1 ↦ Gateway ∈ sender
+        grd3: releaseAlarm_1 ↦ HealthHub ∈ receiver
+        grd4: releaseAlarm_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseAlarm_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseAlarm_1}
+        act2: currentMessage := ∅
+    END
+
+    sendackVaccine_2
+    WHEN
+        grd1: ackVaccine_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseAlarm_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackVaccine_2}
+        act2: sender := sender ∪ {ackVaccine_2 ↦ HealthHub}
+        act3: receiver := receiver ∪ {ackVaccine_2 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackVaccine_2 ↦ readingValue}
+        act6: currentMessage := {ackVaccine_2}
+    END
+
+    receiveackVaccine_2
+    WHEN
+        grd1: ackVaccine_2 ∈ sentMessages
+        grd2: ackVaccine_2 ↦ HealthHub ∈ sender
+        grd3: ackVaccine_2 ↦ Gateway ∈ receiver
+        grd4: ackVaccine_2 ∉ receivedMessages
+        grd5: currentMessage = {ackVaccine_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackVaccine_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackVaccine_2 ↦ readingValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsyncReading_3
+    WHEN
+        grd1: syncReading_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackVaccine_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncReading_3}
+        act2: sender := sender ∪ {syncReading_3 ↦ HealthHub}
+        act3: receiver := receiver ∪ {syncReading_3 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncReading_3 ↦ alarmValue}
+        act6: currentMessage := {syncReading_3}
+    END
+
+    receivesyncReading_3
+    WHEN
+        grd1: syncReading_3 ∈ sentMessages
+        grd2: syncReading_3 ↦ HealthHub ∈ sender
+        grd3: syncReading_3 ↦ Gateway ∈ receiver
+        grd4: syncReading_3 ∉ receivedMessages
+        grd5: currentMessage = {syncReading_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncReading_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncReading_3 ↦ alarmValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendsyncAlarm_4
+    WHEN
+        grd1: syncAlarm_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncReading_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncAlarm_4}
+        act2: sender := sender ∪ {syncAlarm_4 ↦ Gateway}
+        act3: receiver := receiver ∪ {syncAlarm_4 ↦ ColdBox}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncAlarm_4}
+    END
+
+    receivesyncAlarm_4
+    WHEN
+        grd1: syncAlarm_4 ∈ sentMessages
+        grd2: syncAlarm_4 ↦ Gateway ∈ sender
+        grd3: syncAlarm_4 ↦ ColdBox ∈ receiver
+        grd4: syncAlarm_4 ∉ receivedMessages
+        grd5: currentMessage = {syncAlarm_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncAlarm_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendapproveAlarm_5
+    WHEN
+        grd1: approveAlarm_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncAlarm_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveAlarm_5}
+        act2: sender := sender ∪ {approveAlarm_5 ↦ ColdBox}
+        act3: receiver := receiver ∪ {approveAlarm_5 ↦ Gateway}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveAlarm_5 ↦ vaccineRef}
+        act6: currentMessage := {approveAlarm_5}
+    END
+
+    receiveapproveAlarm_5
+    WHEN
+        grd1: approveAlarm_5 ∈ sentMessages
+        grd2: approveAlarm_5 ↦ ColdBox ∈ sender
+        grd3: approveAlarm_5 ↦ Gateway ∈ receiver
+        grd4: approveAlarm_5 ∉ receivedMessages
+        grd5: currentMessage = {approveAlarm_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveAlarm_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveAlarm_5 ↦ vaccineRef}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendsendVaccine_6
+    WHEN
+        grd1: sendVaccine_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveAlarm_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendVaccine_6}
+        act2: sender := sender ∪ {sendVaccine_6 ↦ Gateway}
+        act3: receiver := receiver ∪ {sendVaccine_6 ↦ HealthHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendVaccine_6}
+    END
+
+    receivesendVaccine_6
+    WHEN
+        grd1: sendVaccine_6 ∈ sentMessages
+        grd2: sendVaccine_6 ↦ Gateway ∈ sender
+        grd3: sendVaccine_6 ↦ HealthHub ∈ receiver
+        grd4: sendVaccine_6 ∉ receivedMessages
+        grd5: currentMessage = {sendVaccine_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendVaccine_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

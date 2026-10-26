@@ -1,0 +1,298 @@
+CONTEXT CenterPivotIrrigationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FieldSensor, PivotCtrl
+    cancelWater_1, validateWater_2, reserveWater_3, releaseSector_4, updateWater_5, cancelSector_6, scheduleWater_7, queryRain_8
+    rainData, rainValue, sectorData, sectorID, waterID
+AXIOMS
+    axm1: partition(Objects, {FieldSensor}, {PivotCtrl})
+    axm2: partition(Messages, {cancelWater_1}, {validateWater_2}, {reserveWater_3}, {releaseSector_4}, {updateWater_5}, {cancelSector_6}, {scheduleWater_7}, {queryRain_8})
+    axm3: partition(DataMessages, {rainData}, {rainValue}, {sectorData}, {sectorID}, {waterID})
+END
+
+MACHINE CenterPivotIrrigationInteractionMachine_1
+SEES CenterPivotIrrigationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: t_time_1 :∈ 0..0
+        act10: t_delay_1 := 5
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..2
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_5 :∈ 0..3
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+        act18: t_time_6 :∈ 0..15
+        act19: t_delay_6 := 0
+        act20: t_success_6 := 0
+    END
+
+
+    sendcancelWater_1
+    WHEN
+        grd1: cancelWater_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelWater_1}
+        act2: sender := sender ∪ {cancelWater_1 ↦ PivotCtrl}
+        act3: receiver := receiver ∪ {cancelWater_1 ↦ FieldSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelWater_1 ↦ sectorData}
+        act6: currentMessage := {cancelWater_1}
+    END
+
+    receivecancelWater_1
+    WHEN
+        grd1: cancelWater_1 ∈ sentMessages
+        grd2: cancelWater_1 ↦ PivotCtrl ∈ sender
+        grd3: cancelWater_1 ↦ FieldSensor ∈ receiver
+        grd4: cancelWater_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelWater_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelWater_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelWater_1 ↦ sectorData}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidateWater_2
+    WHEN
+        grd1: validateWater_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelWater_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateWater_2}
+        act2: sender := sender ∪ {validateWater_2 ↦ PivotCtrl}
+        act3: receiver := receiver ∪ {validateWater_2 ↦ FieldSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateWater_2}
+    END
+
+    receivevalidateWater_2
+    WHEN
+        grd1: validateWater_2 ∈ sentMessages
+        grd2: validateWater_2 ↦ PivotCtrl ∈ sender
+        grd3: validateWater_2 ↦ FieldSensor ∈ receiver
+        grd4: validateWater_2 ∉ receivedMessages
+        grd5: currentMessage = {validateWater_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateWater_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveWater_3
+    WHEN
+        grd1: reserveWater_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateWater_2 ∈ receivedMessages
+        grd4: cycleNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveWater_3}
+        act2: sender := sender ∪ {reserveWater_3 ↦ PivotCtrl}
+        act3: receiver := receiver ∪ {reserveWater_3 ↦ FieldSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveWater_3}
+    END
+
+    receivereserveWater_3
+    WHEN
+        grd1: reserveWater_3 ∈ sentMessages
+        grd2: reserveWater_3 ↦ PivotCtrl ∈ sender
+        grd3: reserveWater_3 ↦ FieldSensor ∈ receiver
+        grd4: reserveWater_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveWater_3}
+        grd6: cycleNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveWater_3}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseSector_4_opt1
+    WHEN
+        grd1: releaseSector_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveWater_3 ∈ receivedMessages
+        grd4: cycleNo < 9
+        grd5: cycleNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseSector_4}
+        act2: sender := sender ∪ {releaseSector_4 ↦ FieldSensor}
+        act3: receiver := receiver ∪ {releaseSector_4 ↦ PivotCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseSector_4 ↦ waterID}
+        act6: currentMessage := {releaseSector_4}
+    END
+
+    receivereleaseSector_4_opt1
+    WHEN
+        grd1: releaseSector_4 ∈ sentMessages
+        grd2: releaseSector_4 ↦ FieldSensor ∈ sender
+        grd3: releaseSector_4 ↦ PivotCtrl ∈ receiver
+        grd4: releaseSector_4 ∉ receivedMessages
+        grd5: currentMessage = {releaseSector_4}
+        grd6: cycleNo < 9
+        grd7: cycleNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseSector_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseSector_4 ↦ waterID}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateWater_5_opt1
+    WHEN
+        grd1: updateWater_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseSector_4 ∈ receivedMessages
+        grd4: cycleNo < 9
+        grd5: cycleNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateWater_5}
+        act2: sender := sender ∪ {updateWater_5 ↦ PivotCtrl}
+        act3: receiver := receiver ∪ {updateWater_5 ↦ FieldSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateWater_5 ↦ rainData, updateWater_5 ↦ rainValue}
+        act6: currentMessage := {updateWater_5}
+    END
+
+    receiveupdateWater_5_opt1
+    WHEN
+        grd1: updateWater_5 ∈ sentMessages
+        grd2: updateWater_5 ↦ PivotCtrl ∈ sender
+        grd3: updateWater_5 ↦ FieldSensor ∈ receiver
+        grd4: updateWater_5 ∉ receivedMessages
+        grd5: currentMessage = {updateWater_5}
+        grd6: cycleNo < 9
+        grd7: cycleNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateWater_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateWater_5 ↦ rainData, updateWater_5 ↦ rainValue}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcancelSector_6
+    WHEN
+        grd1: cancelSector_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateWater_5 ∈ receivedMessages
+        grd4: cycleNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSector_6}
+        act2: sender := sender ∪ {cancelSector_6 ↦ FieldSensor}
+        act3: receiver := receiver ∪ {cancelSector_6 ↦ PivotCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelSector_6 ↦ sectorID}
+        act6: currentMessage := {cancelSector_6}
+    END
+
+    receivecancelSector_6
+    WHEN
+        grd1: cancelSector_6 ∈ sentMessages
+        grd2: cancelSector_6 ↦ FieldSensor ∈ sender
+        grd3: cancelSector_6 ↦ PivotCtrl ∈ receiver
+        grd4: cancelSector_6 ∉ receivedMessages
+        grd5: currentMessage = {cancelSector_6}
+        grd6: cycleNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSector_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelSector_6 ↦ sectorID}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendscheduleWater_7
+    WHEN
+        grd1: scheduleWater_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSector_6 ∈ receivedMessages
+        grd4: cycleNo < 9
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleWater_7}
+        act2: sender := sender ∪ {scheduleWater_7 ↦ FieldSensor}
+        act3: receiver := receiver ∪ {scheduleWater_7 ↦ PivotCtrl}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleWater_7}
+    END
+
+    receivescheduleWater_7
+    WHEN
+        grd1: scheduleWater_7 ∈ sentMessages
+        grd2: scheduleWater_7 ↦ FieldSensor ∈ sender
+        grd3: scheduleWater_7 ↦ PivotCtrl ∈ receiver
+        grd4: scheduleWater_7 ∉ receivedMessages
+        grd5: currentMessage = {scheduleWater_7}
+        grd6: cycleNo < 9
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleWater_7}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryRain_8
+    WHEN
+        grd1: queryRain_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleWater_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryRain_8}
+        act2: sender := sender ∪ {queryRain_8 ↦ FieldSensor}
+        act3: receiver := receiver ∪ {queryRain_8 ↦ PivotCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryRain_8 ↦ sectorID}
+        act6: currentMessage := {queryRain_8}
+    END
+
+    receivequeryRain_8
+    WHEN
+        grd1: queryRain_8 ∈ sentMessages
+        grd2: queryRain_8 ↦ FieldSensor ∈ sender
+        grd3: queryRain_8 ↦ PivotCtrl ∈ receiver
+        grd4: queryRain_8 ∉ receivedMessages
+        grd5: currentMessage = {queryRain_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryRain_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryRain_8 ↦ sectorID}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_reserveWater_3_loop1
+    WHEN
+        grd1: cycleNo < 9
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+END

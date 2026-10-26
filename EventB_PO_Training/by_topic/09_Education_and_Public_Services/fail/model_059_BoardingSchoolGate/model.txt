@@ -1,0 +1,371 @@
+CONTEXT BoardingSchoolGateContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    GateKiosk, SchoolDB, Student
+    sendPass_1, scheduleNotice_2, requestExit_3, approveExit_4, validateExit_5, approveNotice_6, notifyNotice_7, cancelExit_8, syncExit_9, updateExit_10
+    exitRef, noticeID, noticeRef, noticeValue, passID, passInfo
+AXIOMS
+    axm1: partition(Objects, {GateKiosk}, {SchoolDB}, {Student})
+    axm2: partition(Messages, {sendPass_1}, {scheduleNotice_2}, {requestExit_3}, {approveExit_4}, {validateExit_5}, {approveNotice_6}, {notifyNotice_7}, {cancelExit_8}, {syncExit_9}, {updateExit_10})
+    axm3: partition(DataMessages, {exitRef}, {noticeID}, {noticeRef}, {noticeValue}, {passID}, {passInfo})
+END
+
+MACHINE BoardingSchoolGateInteractionMachine_1
+SEES BoardingSchoolGateContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, urgent, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: urgent ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+    inv19: t_time_4 ∈ ℤ
+    inv20: t_delay_4 ∈ ℤ
+    inv21: t_success_4 ∈ ℤ
+    inv22: t_time_6 ∈ ℤ
+    inv23: t_delay_6 ∈ ℤ
+    inv24: t_success_6 ∈ ℤ
+    inv25: t_time_7 ∈ ℤ
+    inv26: t_delay_7 ∈ ℤ
+    inv27: t_success_7 ∈ ℤ
+    inv28: t_time_9 ∈ ℤ
+    inv29: t_delay_9 ∈ ℤ
+    inv30: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: urgent := 0
+        act10: t_time_1 :∈ 0..1
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..0
+        act14: t_delay_2 := 2
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 30..20
+        act17: t_delay_3 := 0
+        act18: t_success_3 := 0
+        act19: t_time_4 :∈ 0..20
+        act20: t_delay_4 := 0
+        act21: t_success_4 := 0
+        act22: t_time_6 :∈ 0..15
+        act23: t_delay_6 := 0
+        act24: t_success_6 := 0
+        act25: t_time_7 :∈ 0..3
+        act26: t_delay_7 := 0
+        act27: t_success_7 := 0
+        act28: t_time_9 :∈ 0..5
+        act29: t_delay_9 := 0
+        act30: t_success_9 := 0
+    END
+
+
+    sendsendPass_1
+    WHEN
+        grd1: sendPass_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendPass_1}
+        act2: sender := sender ∪ {sendPass_1 ↦ Student}
+        act3: receiver := receiver ∪ {sendPass_1 ↦ SchoolDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendPass_1 ↦ noticeValue}
+        act6: currentMessage := {sendPass_1}
+    END
+
+    receivesendPass_1
+    WHEN
+        grd1: sendPass_1 ∈ sentMessages
+        grd2: sendPass_1 ↦ Student ∈ sender
+        grd3: sendPass_1 ↦ SchoolDB ∈ receiver
+        grd4: sendPass_1 ∉ receivedMessages
+        grd5: currentMessage = {sendPass_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendPass_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendPass_1 ↦ noticeValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendscheduleNotice_2
+    WHEN
+        grd1: scheduleNotice_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendPass_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleNotice_2}
+        act2: sender := sender ∪ {scheduleNotice_2 ↦ SchoolDB}
+        act3: receiver := receiver ∪ {scheduleNotice_2 ↦ GateKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleNotice_2}
+    END
+
+    receivescheduleNotice_2
+    WHEN
+        grd1: scheduleNotice_2 ∈ sentMessages
+        grd2: scheduleNotice_2 ↦ SchoolDB ∈ sender
+        grd3: scheduleNotice_2 ↦ GateKiosk ∈ receiver
+        grd4: scheduleNotice_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleNotice_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleNotice_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendrequestExit_3
+    WHEN
+        grd1: requestExit_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleNotice_2 ∈ receivedMessages
+        grd4: passNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestExit_3}
+        act2: sender := sender ∪ {requestExit_3 ↦ SchoolDB}
+        act3: receiver := receiver ∪ {requestExit_3 ↦ GateKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestExit_3 ↦ noticeRef}
+        act6: currentMessage := {requestExit_3}
+    END
+
+    receiverequestExit_3
+    WHEN
+        grd1: requestExit_3 ∈ sentMessages
+        grd2: requestExit_3 ↦ SchoolDB ∈ sender
+        grd3: requestExit_3 ↦ GateKiosk ∈ receiver
+        grd4: requestExit_3 ∉ receivedMessages
+        grd5: currentMessage = {requestExit_3}
+        grd6: passNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestExit_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestExit_3 ↦ noticeRef}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapproveExit_4
+    WHEN
+        grd1: approveExit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestExit_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveExit_4}
+        act2: sender := sender ∪ {approveExit_4 ↦ SchoolDB}
+        act3: receiver := receiver ∪ {approveExit_4 ↦ GateKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveExit_4 ↦ passInfo}
+        act6: currentMessage := {approveExit_4}
+    END
+
+    receiveapproveExit_4
+    WHEN
+        grd1: approveExit_4 ∈ sentMessages
+        grd2: approveExit_4 ↦ SchoolDB ∈ sender
+        grd3: approveExit_4 ↦ GateKiosk ∈ receiver
+        grd4: approveExit_4 ∉ receivedMessages
+        grd5: currentMessage = {approveExit_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveExit_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveExit_4 ↦ passInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendvalidateExit_5
+    WHEN
+        grd1: validateExit_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveExit_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateExit_5}
+        act2: sender := sender ∪ {validateExit_5 ↦ GateKiosk}
+        act3: receiver := receiver ∪ {validateExit_5 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateExit_5 ↦ exitRef}
+        act6: currentMessage := {validateExit_5}
+    END
+
+    receivevalidateExit_5
+    WHEN
+        grd1: validateExit_5 ∈ sentMessages
+        grd2: validateExit_5 ↦ GateKiosk ∈ sender
+        grd3: validateExit_5 ↦ Student ∈ receiver
+        grd4: validateExit_5 ∉ receivedMessages
+        grd5: currentMessage = {validateExit_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateExit_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateExit_5 ↦ exitRef}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveNotice_6
+    WHEN
+        grd1: approveNotice_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateExit_5 ∈ receivedMessages
+        grd4: urgent = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveNotice_6}
+        act2: sender := sender ∪ {approveNotice_6 ↦ SchoolDB}
+        act3: receiver := receiver ∪ {approveNotice_6 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveNotice_6}
+    END
+
+    receiveapproveNotice_6
+    WHEN
+        grd1: approveNotice_6 ∈ sentMessages
+        grd2: approveNotice_6 ↦ SchoolDB ∈ sender
+        grd3: approveNotice_6 ↦ Student ∈ receiver
+        grd4: approveNotice_6 ∉ receivedMessages
+        grd5: currentMessage = {approveNotice_6}
+        grd6: urgent = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveNotice_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendnotifyNotice_7
+    WHEN
+        grd1: notifyNotice_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveNotice_6 ∈ receivedMessages
+        grd4: urgent = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyNotice_7}
+        act2: sender := sender ∪ {notifyNotice_7 ↦ GateKiosk}
+        act3: receiver := receiver ∪ {notifyNotice_7 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyNotice_7 ↦ noticeID}
+        act6: currentMessage := {notifyNotice_7}
+    END
+
+    receivenotifyNotice_7
+    WHEN
+        grd1: notifyNotice_7 ∈ sentMessages
+        grd2: notifyNotice_7 ↦ GateKiosk ∈ sender
+        grd3: notifyNotice_7 ↦ Student ∈ receiver
+        grd4: notifyNotice_7 ∉ receivedMessages
+        grd5: currentMessage = {notifyNotice_7}
+        grd6: urgent = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyNotice_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyNotice_7 ↦ noticeID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendcancelExit_8
+    WHEN
+        grd1: cancelExit_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateExit_5 ∈ receivedMessages
+        grd4: urgent = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelExit_8}
+        act2: sender := sender ∪ {cancelExit_8 ↦ Student}
+        act3: receiver := receiver ∪ {cancelExit_8 ↦ SchoolDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelExit_8 ↦ passID}
+        act6: currentMessage := {cancelExit_8}
+    END
+
+    receivecancelExit_8
+    WHEN
+        grd1: cancelExit_8 ∈ sentMessages
+        grd2: cancelExit_8 ↦ Student ∈ sender
+        grd3: cancelExit_8 ↦ SchoolDB ∈ receiver
+        grd4: cancelExit_8 ∉ receivedMessages
+        grd5: currentMessage = {cancelExit_8}
+        grd6: urgent = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelExit_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelExit_8 ↦ passID}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncExit_9
+    WHEN
+        grd1: syncExit_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelExit_8 ∈ receivedMessages
+        grd4: urgent = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncExit_9}
+        act2: sender := sender ∪ {syncExit_9 ↦ GateKiosk}
+        act3: receiver := receiver ∪ {syncExit_9 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncExit_9}
+    END
+
+    receivesyncExit_9
+    WHEN
+        grd1: syncExit_9 ∈ sentMessages
+        grd2: syncExit_9 ↦ GateKiosk ∈ sender
+        grd3: syncExit_9 ↦ Student ∈ receiver
+        grd4: syncExit_9 ∉ receivedMessages
+        grd5: currentMessage = {syncExit_9}
+        grd6: urgent = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncExit_9}
+        act2: currentMessage := ∅
+        act3: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendupdateExit_10
+    WHEN
+        grd1: updateExit_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyNotice_7 ∈ receivedMessages ∨ syncExit_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateExit_10}
+        act2: sender := sender ∪ {updateExit_10 ↦ GateKiosk}
+        act3: receiver := receiver ∪ {updateExit_10 ↦ SchoolDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateExit_10 ↦ noticeValue}
+        act6: currentMessage := {updateExit_10}
+    END
+
+    receiveupdateExit_10
+    WHEN
+        grd1: updateExit_10 ∈ sentMessages
+        grd2: updateExit_10 ↦ GateKiosk ∈ sender
+        grd3: updateExit_10 ↦ SchoolDB ∈ receiver
+        grd4: updateExit_10 ∉ receivedMessages
+        grd5: currentMessage = {updateExit_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateExit_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateExit_10 ↦ noticeValue}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_requestExit_3_loop1
+    WHEN
+        grd1: passNo < 5
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

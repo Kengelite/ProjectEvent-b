@@ -1,0 +1,390 @@
+CONTEXT PassportRenewalKioskContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Citizen, ImmigrationDB, PassportKiosk, PrintCenter
+    ackPhoto_1, reportForm_2, sendPassport_3, cancelPassport_4, reserveForm_5, logPassport_6, fetchPassport_7, validatePhoto_8, validateForm_9, checkPhoto_10, sendForm_11, syncPhoto_12
+    formData, formRef, passportData, photoInfo, photoRef
+AXIOMS
+    axm1: partition(Objects, {Citizen}, {ImmigrationDB}, {PassportKiosk}, {PrintCenter})
+    axm2: partition(Messages, {ackPhoto_1}, {reportForm_2}, {sendPassport_3}, {cancelPassport_4}, {reserveForm_5}, {logPassport_6}, {fetchPassport_7}, {validatePhoto_8}, {validateForm_9}, {checkPhoto_10}, {sendForm_11}, {syncPhoto_12})
+    axm3: partition(DataMessages, {formData}, {formRef}, {passportData}, {photoInfo}, {photoRef})
+END
+
+MACHINE PassportRenewalKioskInteractionMachine_1
+SEES PassportRenewalKioskContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_obs, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_obs ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_obs := 0
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..20
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..2
+        act14: t_delay_3 := 0
+        act15: t_success_3 := 0
+        act16: t_time_6 :∈ 0..0
+        act17: t_delay_6 := 10
+        act18: t_success_6 := 0
+        act19: t_time_7 :∈ 0..0
+        act20: t_delay_7 := 10
+        act21: t_success_7 := 0
+    END
+
+
+    sendackPhoto_1
+    WHEN
+        grd1: ackPhoto_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackPhoto_1}
+        act2: sender := sender ∪ {ackPhoto_1 ↦ ImmigrationDB}
+        act3: receiver := receiver ∪ {ackPhoto_1 ↦ Citizen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackPhoto_1 ↦ photoRef}
+        act6: currentMessage := {ackPhoto_1}
+    END
+
+    receiveackPhoto_1
+    WHEN
+        grd1: ackPhoto_1 ∈ sentMessages
+        grd2: ackPhoto_1 ↦ ImmigrationDB ∈ sender
+        grd3: ackPhoto_1 ↦ Citizen ∈ receiver
+        grd4: ackPhoto_1 ∉ receivedMessages
+        grd5: currentMessage = {ackPhoto_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackPhoto_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackPhoto_1 ↦ photoRef}
+        act3: currentMessage := ∅
+    END
+
+    sendreportForm_2
+    WHEN
+        grd1: reportForm_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackPhoto_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportForm_2}
+        act2: sender := sender ∪ {reportForm_2 ↦ PrintCenter}
+        act3: receiver := receiver ∪ {reportForm_2 ↦ ImmigrationDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportForm_2}
+    END
+
+    receivereportForm_2
+    WHEN
+        grd1: reportForm_2 ∈ sentMessages
+        grd2: reportForm_2 ↦ PrintCenter ∈ sender
+        grd3: reportForm_2 ↦ ImmigrationDB ∈ receiver
+        grd4: reportForm_2 ∉ receivedMessages
+        grd5: currentMessage = {reportForm_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportForm_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+        act4: t_obs := t_time_2 + t_delay_2
+    END
+
+    sendsendPassport_3
+    WHEN
+        grd1: sendPassport_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportForm_2 ∈ receivedMessages
+        grd4: t_obs ≤ 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendPassport_3}
+        act2: sender := sender ∪ {sendPassport_3 ↦ Citizen}
+        act3: receiver := receiver ∪ {sendPassport_3 ↦ PassportKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendPassport_3 ↦ passportData}
+        act6: currentMessage := {sendPassport_3}
+    END
+
+    receivesendPassport_3
+    WHEN
+        grd1: sendPassport_3 ∈ sentMessages
+        grd2: sendPassport_3 ↦ Citizen ∈ sender
+        grd3: sendPassport_3 ↦ PassportKiosk ∈ receiver
+        grd4: sendPassport_3 ∉ receivedMessages
+        grd5: currentMessage = {sendPassport_3}
+        grd6: t_obs ≤ 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendPassport_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendPassport_3 ↦ passportData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcancelPassport_4
+    WHEN
+        grd1: cancelPassport_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportForm_2 ∈ receivedMessages
+        grd4: t_obs > 4
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelPassport_4}
+        act2: sender := sender ∪ {cancelPassport_4 ↦ PassportKiosk}
+        act3: receiver := receiver ∪ {cancelPassport_4 ↦ Citizen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelPassport_4 ↦ formData, cancelPassport_4 ↦ passportData}
+        act6: currentMessage := {cancelPassport_4}
+    END
+
+    receivecancelPassport_4
+    WHEN
+        grd1: cancelPassport_4 ∈ sentMessages
+        grd2: cancelPassport_4 ↦ PassportKiosk ∈ sender
+        grd3: cancelPassport_4 ↦ Citizen ∈ receiver
+        grd4: cancelPassport_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelPassport_4}
+        grd6: t_obs > 4
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelPassport_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelPassport_4 ↦ formData, cancelPassport_4 ↦ passportData}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveForm_5
+    WHEN
+        grd1: reserveForm_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendPassport_3 ∈ receivedMessages ∨ cancelPassport_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveForm_5}
+        act2: sender := sender ∪ {reserveForm_5 ↦ PrintCenter}
+        act3: receiver := receiver ∪ {reserveForm_5 ↦ ImmigrationDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveForm_5}
+    END
+
+    receivereserveForm_5
+    WHEN
+        grd1: reserveForm_5 ∈ sentMessages
+        grd2: reserveForm_5 ↦ PrintCenter ∈ sender
+        grd3: reserveForm_5 ↦ ImmigrationDB ∈ receiver
+        grd4: reserveForm_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveForm_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveForm_5}
+        act2: currentMessage := ∅
+    END
+
+    sendlogPassport_6
+    WHEN
+        grd1: logPassport_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveForm_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logPassport_6}
+        act2: sender := sender ∪ {logPassport_6 ↦ ImmigrationDB}
+        act3: receiver := receiver ∪ {logPassport_6 ↦ PassportKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logPassport_6}
+    END
+
+    receivelogPassport_6
+    WHEN
+        grd1: logPassport_6 ∈ sentMessages
+        grd2: logPassport_6 ↦ ImmigrationDB ∈ sender
+        grd3: logPassport_6 ↦ PassportKiosk ∈ receiver
+        grd4: logPassport_6 ∉ receivedMessages
+        grd5: currentMessage = {logPassport_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logPassport_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendfetchPassport_7
+    WHEN
+        grd1: fetchPassport_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logPassport_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPassport_7}
+        act2: sender := sender ∪ {fetchPassport_7 ↦ PassportKiosk}
+        act3: receiver := receiver ∪ {fetchPassport_7 ↦ PrintCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchPassport_7 ↦ formData}
+        act6: currentMessage := {fetchPassport_7}
+    END
+
+    receivefetchPassport_7
+    WHEN
+        grd1: fetchPassport_7 ∈ sentMessages
+        grd2: fetchPassport_7 ↦ PassportKiosk ∈ sender
+        grd3: fetchPassport_7 ↦ PrintCenter ∈ receiver
+        grd4: fetchPassport_7 ∉ receivedMessages
+        grd5: currentMessage = {fetchPassport_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPassport_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchPassport_7 ↦ formData}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendvalidatePhoto_8
+    WHEN
+        grd1: validatePhoto_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPassport_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePhoto_8}
+        act2: sender := sender ∪ {validatePhoto_8 ↦ PassportKiosk}
+        act3: receiver := receiver ∪ {validatePhoto_8 ↦ PrintCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePhoto_8 ↦ formRef}
+        act6: currentMessage := {validatePhoto_8}
+    END
+
+    receivevalidatePhoto_8
+    WHEN
+        grd1: validatePhoto_8 ∈ sentMessages
+        grd2: validatePhoto_8 ↦ PassportKiosk ∈ sender
+        grd3: validatePhoto_8 ↦ PrintCenter ∈ receiver
+        grd4: validatePhoto_8 ∉ receivedMessages
+        grd5: currentMessage = {validatePhoto_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePhoto_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePhoto_8 ↦ formRef}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateForm_9
+    WHEN
+        grd1: validateForm_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePhoto_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateForm_9}
+        act2: sender := sender ∪ {validateForm_9 ↦ Citizen}
+        act3: receiver := receiver ∪ {validateForm_9 ↦ ImmigrationDB}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateForm_9}
+    END
+
+    receivevalidateForm_9
+    WHEN
+        grd1: validateForm_9 ∈ sentMessages
+        grd2: validateForm_9 ↦ Citizen ∈ sender
+        grd3: validateForm_9 ↦ ImmigrationDB ∈ receiver
+        grd4: validateForm_9 ∉ receivedMessages
+        grd5: currentMessage = {validateForm_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateForm_9}
+        act2: currentMessage := ∅
+    END
+
+    sendcheckPhoto_10
+    WHEN
+        grd1: checkPhoto_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateForm_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPhoto_10}
+        act2: sender := sender ∪ {checkPhoto_10 ↦ PassportKiosk}
+        act3: receiver := receiver ∪ {checkPhoto_10 ↦ ImmigrationDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkPhoto_10 ↦ passportData}
+        act6: currentMessage := {checkPhoto_10}
+    END
+
+    receivecheckPhoto_10
+    WHEN
+        grd1: checkPhoto_10 ∈ sentMessages
+        grd2: checkPhoto_10 ↦ PassportKiosk ∈ sender
+        grd3: checkPhoto_10 ↦ ImmigrationDB ∈ receiver
+        grd4: checkPhoto_10 ∉ receivedMessages
+        grd5: currentMessage = {checkPhoto_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPhoto_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkPhoto_10 ↦ passportData}
+        act3: currentMessage := ∅
+    END
+
+    sendsendForm_11
+    WHEN
+        grd1: sendForm_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkPhoto_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendForm_11}
+        act2: sender := sender ∪ {sendForm_11 ↦ PrintCenter}
+        act3: receiver := receiver ∪ {sendForm_11 ↦ Citizen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendForm_11 ↦ photoRef}
+        act6: currentMessage := {sendForm_11}
+    END
+
+    receivesendForm_11
+    WHEN
+        grd1: sendForm_11 ∈ sentMessages
+        grd2: sendForm_11 ↦ PrintCenter ∈ sender
+        grd3: sendForm_11 ↦ Citizen ∈ receiver
+        grd4: sendForm_11 ∉ receivedMessages
+        grd5: currentMessage = {sendForm_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendForm_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendForm_11 ↦ photoRef}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncPhoto_12
+    WHEN
+        grd1: syncPhoto_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendForm_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPhoto_12}
+        act2: sender := sender ∪ {syncPhoto_12 ↦ Citizen}
+        act3: receiver := receiver ∪ {syncPhoto_12 ↦ PrintCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncPhoto_12 ↦ photoInfo}
+        act6: currentMessage := {syncPhoto_12}
+    END
+
+    receivesyncPhoto_12
+    WHEN
+        grd1: syncPhoto_12 ∈ sentMessages
+        grd2: syncPhoto_12 ↦ Citizen ∈ sender
+        grd3: syncPhoto_12 ↦ PrintCenter ∈ receiver
+        grd4: syncPhoto_12 ∉ receivedMessages
+        grd5: currentMessage = {syncPhoto_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPhoto_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncPhoto_12 ↦ photoInfo}
+        act3: currentMessage := ∅
+    END
+
+END

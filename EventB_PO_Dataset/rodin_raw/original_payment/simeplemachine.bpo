@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="CTXHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="Data" org.eventb.core.type="ℙ(Data)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="paymentDetails_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ProcessStandarddPayment_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="validatePayment_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="success" org.eventb.core.type="Data"/>
+        <org.eventb.core.poIdentifier name="NotiService" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="processLargePayment_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="PaymentService" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="data_amount" org.eventb.core.type="Data"/>
+        <org.eventb.core.poIdentifier name="paymentConfirmation_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="approvalRequired_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="submitPayment_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendEmailNotification_10" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="validationResult_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendSMSNotification_9" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="paymentStatus_11" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="transactionID" org.eventb.core.type="Data"/>
+        <org.eventb.core.poIdentifier name="User" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poPredicate name="ProcessStandarddPayment_6" org.eventb.core.predicate="partition(Objects,{User},{PaymentService},{NotiService})" org.eventb.core.source="/simple1/simpleContext.buc|org.eventb.core.contextFile#simpleContext|org.eventb.core.axiom#="/>
+        <org.eventb.core.poPredicate name="ProcessStandarddPayment_7" org.eventb.core.predicate="partition(Messages,{submitPayment_1},{paymentDetails_2},{processLargePayment_3},{approvalRequired_4},{ProcessStandarddPayment_5},{paymentConfirmation_6},{validatePayment_7},{validationResult_8},{sendSMSNotification_9},{sendEmailNotification_10},{paymentStatus_11})" org.eventb.core.source="/simple1/simpleContext.buc|org.eventb.core.contextFile#simpleContext|org.eventb.core.axiom#&gt;"/>
+        <org.eventb.core.poPredicate name="ProcessStandarddPayment_8" org.eventb.core.predicate="partition(Data,{data_amount},{success},{transactionID})" org.eventb.core.source="/simple1/simpleContext.buc|org.eventb.core.contextFile#simpleContext|org.eventb.core.axiom#?"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#CTXHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="receivedMessages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="sender" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="amount_1" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="senderdataMessages" org.eventb.core.type="ℙ(Messages×Data)"/>
+        <org.eventb.core.poIdentifier name="currentMessage" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="Login" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="t_delay_1" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="retry" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="sentMessages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="t_time_1" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="receiver" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="par_1" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="receiverdataMessages" org.eventb.core.type="ℙ(Messages×Data)"/>
+        <org.eventb.core.poIdentifier name="t_success_1" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="INITIALISATION/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  establishment" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessaget"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#'"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#CTXHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#INITIALISATION\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poSequent name="INITIALISATION/act12/FIS" org.eventb.core.accurate="true" org.eventb.core.poDesc="Feasibility of action" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessaget"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="2 ‥ 5≠(∅ ⦂ ℙ(ℤ))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#'|org.eventb.core.action#2"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#'|org.eventb.core.action#2"/>
+        <org.eventb.core.poSelHint name="SEQHYS" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#CTXHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessaget"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessaget" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#CTXHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="t_success_1'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="retry'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="Login'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="t_time_1'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="par_1'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="amount_1'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="senderdataMessages'" org.eventb.core.type="ℙ(Messages×Data)"/>
+        <org.eventb.core.poIdentifier name="receiverdataMessages'" org.eventb.core.type="ℙ(Messages×Data)"/>
+        <org.eventb.core.poIdentifier name="t_delay_1'" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessaget" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessaget" org.eventb.core.poStamp="0"/>
+    <org.eventb.core.poSequent name="sendsubmitPayment_1_opt1/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessageu"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{submitPayment_1}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#8"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendsubmitPayment_1_opt1\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessageu" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="senderdataMessages'" org.eventb.core.type="ℙ(Messages×Data)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessageu" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessageu" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="submitPayment_1∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#8|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#8|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="Login=1" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#8|org.eventb.core.guard#)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receivesubmitPayment_1_opt1/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagev"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{submitPayment_1}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receivesubmitPayment_1_opt1\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagev" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiverdataMessages'" org.eventb.core.type="ℙ(Messages×Data)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagev" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagev" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="submitPayment_1∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="submitPayment_1 ↦ User∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="submitPayment_1 ↦ PaymentService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="submitPayment_1∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={submitPayment_1}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="Login=1" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#C|org.eventb.core.guard#,"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendpaymentDetails_2_opt1/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagew"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{paymentDetails_2}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#D"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendpaymentDetails_2_opt1\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagew" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagew" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagew" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="paymentDetails_2∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#D|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#D|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="submitPayment_1∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#D|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="Login=1" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#D|org.eventb.core.guard#*"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receivePaymentDetails_2_opt1/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagex"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{paymentDetails_2}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receivePaymentDetails_2_opt1\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagex" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagex" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagex" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="paymentDetails_2∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="paymentDetails_2 ↦ PaymentService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="paymentDetails_2 ↦ User∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="paymentDetails_2∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={paymentDetails_2}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E|org.eventb.core.guard#,"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="Login=1" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#E|org.eventb.core.guard#-"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendprocessLargePayment_3_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagey"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{processLargePayment_3}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#F"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendprocessLargePayment_3_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagey" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagey" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagey" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="processLargePayment_3∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#F|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#F|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="amount_1≥1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#F|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="paymentDetails_2∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#F|org.eventb.core.guard#\/"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receiveprocessLargePayment_3_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagez"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{processLargePayment_3}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receiveprocessLargePayment_3_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagez" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagez" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagez" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="processLargePayment_3∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="processLargePayment_3 ↦ PaymentService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="processLargePayment_3 ↦ NotiService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="processLargePayment_3∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={processLargePayment_3}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G|org.eventb.core.guard#,"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="amount_1≥1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#G|org.eventb.core.guard#-"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendapprovalRequired_4_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessage{"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{approvalRequired_4}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#H"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendapprovalRequired_4_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessage{" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessage{" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessage{" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="approvalRequired_4∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#H|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#H|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="amount_1≥1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#H|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="processLargePayment_3∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#H|org.eventb.core.guard#0"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="reciveapprovalRequired_4_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessage\|"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{approvalRequired_4}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#reciveapprovalRequired_4_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessage|" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessage|" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessage\|" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="approvalRequired_4∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="approvalRequired_4 ↦ NotiService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="approvalRequired_4 ↦ PaymentService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="approvalRequired_4∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={approvalRequired_4}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="amount_1≥1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#I|org.eventb.core.guard#,"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendProcessStandarddPayment_5_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessage}"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{ProcessStandarddPayment_5}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#J"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendProcessStandarddPayment_5_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessage}" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessage}" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessage}" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="ProcessStandarddPayment_5∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#J|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#J|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="amount_1&lt;1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#J|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="paymentDetails_2∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#J|org.eventb.core.guard#\/"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receiveProcessStandarddPayment_5_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessage~"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{ProcessStandarddPayment_5}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receiveProcessStandarddPayment_5_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessage~" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessage~" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessage~" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="ProcessStandarddPayment_5∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="ProcessStandarddPayment_5 ↦ PaymentService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="ProcessStandarddPayment_5 ↦ NotiService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="ProcessStandarddPayment_5∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={ProcessStandarddPayment_5}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="amount_1&lt;1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#K|org.eventb.core.guard#,"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendpaymentConfirmation_6_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf'"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{paymentConfirmation_6}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#L"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendpaymentConfirmation_6_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf'" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf'" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf'" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="paymentConfirmation_6∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#L|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#L|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="amount_1&lt;1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#L|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="ProcessStandarddPayment_5∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#L|org.eventb.core.guard#*"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="recivepaymentConfirmation_6_alt2/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf("/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{paymentConfirmation_6}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#recivepaymentConfirmation_6_alt2\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf(" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf(" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf(" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="paymentConfirmation_6∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="paymentConfirmation_6 ↦ NotiService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="paymentConfirmation_6 ↦ PaymentService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="paymentConfirmation_6∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={paymentConfirmation_6}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="amount_1&lt;1000" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#M|org.eventb.core.guard#,"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf)" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="retry'" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf)" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf)" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="retry&lt;3" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#N|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="paymentConfirmation_6∈receivedMessages∨approvalRequired_4∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#N|org.eventb.core.guard#("/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendvalidatePayment_7_loop3/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf*"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{validatePayment_7}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#O"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendvalidatePayment_7_loop3\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf*" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf*" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf*" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="validatePayment_7∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#O|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#O|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="retry=3" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#O|org.eventb.core.guard#)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receivevalidatePayment_7_loop3/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf+"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{validatePayment_7}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receivevalidatePayment_7_loop3\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf+" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf+" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf+" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="validatePayment_7∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="validatePayment_7 ↦ User∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="validatePayment_7 ↦ PaymentService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="validatePayment_7∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={validatePayment_7}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="retry=3" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#P|org.eventb.core.guard#,"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendvalidationResult_8_loop3/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf,"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{validationResult_8}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#Q"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendvalidationResult_8_loop3\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf," org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf," org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf," org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="validationResult_8∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#Q|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#Q|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="retry=3" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#Q|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="validatePayment_7∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#Q|org.eventb.core.guard#*"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="recivevalidationResult_8_loop3/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf-"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{validationResult_8}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#recivevalidationResult_8_loop3\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf-" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf-" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf-" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="validationResult_8∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="validationResult_8 ↦ PaymentService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="validationResult_8 ↦ User∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="validationResult_8∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={validationResult_8}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="retry=3" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#R|org.eventb.core.guard#,"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendsendSMSNotification_9_par4/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf."/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{sendSMSNotification_9}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#S"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendsendSMSNotification_9_par4\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf." org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="par_1'" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf." org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf." org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="sendSMSNotification_9∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#S|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#S|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="validationResult_8∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#S|org.eventb.core.guard#."/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendsendEmailNotification_10_par4/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf\/"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{sendEmailNotification_10}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#T"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendsendEmailNotification_10_par4\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf/" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="par_1'" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf/" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf\/" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="sendEmailNotification_10∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#T|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="sendSMSNotification_9∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#T|org.eventb.core.guard#("/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receivedsendSMSNotification_9_par4/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf0"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{sendSMSNotification_9}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#U"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receivedsendSMSNotification_9_par4\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf0" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf0" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf0" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="sendSMSNotification_9∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#U|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="sendSMSNotification_9 ↦ User∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#U|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="sendSMSNotification_9 ↦ NotiService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#U|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="sendSMSNotification_9∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#U|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="par_1=2" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#U|org.eventb.core.guard#+"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receivedsendEmailNotification_10_par4/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf1"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{sendEmailNotification_10}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receivedsendEmailNotification_10_par4\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf1" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="par_1'" org.eventb.core.type="ℤ"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf1" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf1" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="sendEmailNotification_10∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="sendEmailNotification_10 ↦ User∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="sendEmailNotification_10 ↦ NotiService∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="sendEmailNotification_10∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="par_1=2" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V|org.eventb.core.guard#+"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="sendSMSNotification_9∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#V|org.eventb.core.guard#."/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="sendpaymentStatus_11/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf2"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="(∅ ⦂ ℙ(Messages))⊆sentMessages∪{paymentStatus_11}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#]"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#sendpaymentStatus_11\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf2" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="sender'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="sentMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiver'" org.eventb.core.type="ℙ(Messages×Objects)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="senderdataMessages'" org.eventb.core.type="ℙ(Messages×Data)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf2" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf2" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="paymentStatus_11∉sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#]|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage=(∅ ⦂ ℙ(Messages))" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#]|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="sendEmailNotification_10∈receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#]|org.eventb.core.guard#)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poSequent name="receivepaymentStatus_11/inv5/INV" org.eventb.core.accurate="true" org.eventb.core.poDesc="Invariant  preservation" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicateSet name="SEQHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTALLHYPreceiverdataMessagf3"/>
+        <org.eventb.core.poPredicate name="SEQHYQ" org.eventb.core.predicate="receivedMessages∪{paymentStatus_11}⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSource name="SEQHYR" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#^"/>
+        <org.eventb.core.poSource name="SEQHYS" org.eventb.core.poRole="DEFAULT" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poSelHint name="SEQHYT" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poSelHintSnd="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poSequent#receivepaymentStatus_11\/inv5\/INV|org.eventb.core.poPredicateSet#SEQHYP"/>
+        <org.eventb.core.poSelHint name="SEQHYU" org.eventb.core.poSelHintFst="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP|org.eventb.core.poPredicate#PRD4"/>
+    </org.eventb.core.poSequent>
+    <org.eventb.core.poPredicateSet name="EVTIDENTreceiverdataMessagf3" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ALLHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="t_success_1'" org.eventb.core.type="ℤ"/>
+        <org.eventb.core.poIdentifier name="currentMessage'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receivedMessages'" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="receiverdataMessages'" org.eventb.core.type="ℙ(Messages×Data)"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="EVTALLHYPreceiverdataMessagf3" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#EVTIDENTreceiverdataMessagf3" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="paymentStatus_11∈sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#^|org.eventb.core.guard#'"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="paymentStatus_11 ↦ NotiService∈sender" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#^|org.eventb.core.guard#("/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="paymentStatus_11 ↦ User∈receiver" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#^|org.eventb.core.guard#)"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="paymentStatus_11∉receivedMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#^|org.eventb.core.guard#*"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="currentMessage={paymentStatus_11}" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.event#^|org.eventb.core.guard#+"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/simple1/simeplemachine.bpo|org.eventb.core.poFile#simeplemachine|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="sentMessages⊆Messages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#\/"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="currentMessage⊆Messages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#0"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="sender⊆Messages × Objects" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#1"/>
+        <org.eventb.core.poPredicate name="PRD3" org.eventb.core.predicate="receiver⊆Messages × Objects" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#2"/>
+        <org.eventb.core.poPredicate name="PRD4" org.eventb.core.predicate="receivedMessages⊆sentMessages" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#3"/>
+        <org.eventb.core.poPredicate name="PRD5" org.eventb.core.predicate="senderdataMessages⊆Messages × Data" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#4"/>
+        <org.eventb.core.poPredicate name="PRD6" org.eventb.core.predicate="receiverdataMessages⊆Messages × Data" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#5"/>
+        <org.eventb.core.poPredicate name="PRD7" org.eventb.core.predicate="Login∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#?"/>
+        <org.eventb.core.poPredicate name="PRD8" org.eventb.core.predicate="amount_1∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#@"/>
+        <org.eventb.core.poPredicate name="PRD9" org.eventb.core.predicate="retry∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#A"/>
+        <org.eventb.core.poPredicate name="PRD10" org.eventb.core.predicate="par_1∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#B"/>
+        <org.eventb.core.poPredicate name="PRD11" org.eventb.core.predicate="t_time_1∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#Z"/>
+        <org.eventb.core.poPredicate name="PRD12" org.eventb.core.predicate="t_delay_1∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#["/>
+        <org.eventb.core.poPredicate name="PRD13" org.eventb.core.predicate="t_success_1∈ℤ" org.eventb.core.source="/simple1/simeplemachine.bum|org.eventb.core.machineFile#simeplemachine|org.eventb.core.invariant#\\"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

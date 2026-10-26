@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="syncLock_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="LiftCtrl" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="checkJob_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="jobInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="jobValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="jobCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="logJob_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="validateJob_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="requestJob_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cancelFault_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Technician" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/LiftMaintenance_Project/LiftMaintenanceContext.bpo|org.eventb.core.poFile#LiftMaintenanceContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{LiftCtrl},{Technician})" org.eventb.core.source="/LiftMaintenance_Project/LiftMaintenanceContext.buc|org.eventb.core.contextFile#LiftMaintenanceContext|org.eventb.core.axiom#internal_element15"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{logJob_1},{validateJob_2},{requestJob_3},{checkJob_4},{syncLock_5},{cancelFault_6})" org.eventb.core.source="/LiftMaintenance_Project/LiftMaintenanceContext.buc|org.eventb.core.contextFile#LiftMaintenanceContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{jobCode},{jobInfo},{jobValue})" org.eventb.core.source="/LiftMaintenance_Project/LiftMaintenanceContext.buc|org.eventb.core.contextFile#LiftMaintenanceContext|org.eventb.core.axiom#internal_element17"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

@@ -1,0 +1,218 @@
+CONTEXT WarehouseForkliftContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FleetCtrl, Forklift, WMS
+    scheduleAisle_1, cancelAisle_2, validatePallet_3, approvePallet_4, fetchAisle_5, approveAisle_6
+    aisleCode, aisleInfo, aisleValue, palletValue
+AXIOMS
+    axm1: partition(Objects, {FleetCtrl}, {Forklift}, {WMS})
+    axm2: partition(Messages, {scheduleAisle_1}, {cancelAisle_2}, {validatePallet_3}, {approvePallet_4}, {fetchAisle_5}, {approveAisle_6})
+    axm3: partition(DataMessages, {aisleCode}, {aisleInfo}, {aisleValue}, {palletValue})
+END
+
+MACHINE WarehouseForkliftInteractionMachine_1
+SEES WarehouseForkliftContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..60
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..1
+        act13: t_delay_3 := 10
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..10
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendscheduleAisle_1
+    WHEN
+        grd1: scheduleAisle_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleAisle_1}
+        act2: sender := sender ∪ {scheduleAisle_1 ↦ WMS}
+        act3: receiver := receiver ∪ {scheduleAisle_1 ↦ FleetCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleAisle_1 ↦ aisleValue}
+        act6: currentMessage := {scheduleAisle_1}
+    END
+
+    receivescheduleAisle_1
+    WHEN
+        grd1: scheduleAisle_1 ∈ sentMessages
+        grd2: scheduleAisle_1 ↦ WMS ∈ sender
+        grd3: scheduleAisle_1 ↦ FleetCtrl ∈ receiver
+        grd4: scheduleAisle_1 ∉ receivedMessages
+        grd5: currentMessage = {scheduleAisle_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleAisle_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleAisle_1 ↦ aisleValue}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendcancelAisle_2
+    WHEN
+        grd1: cancelAisle_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleAisle_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelAisle_2}
+        act2: sender := sender ∪ {cancelAisle_2 ↦ FleetCtrl}
+        act3: receiver := receiver ∪ {cancelAisle_2 ↦ Forklift}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelAisle_2}
+    END
+
+    receivecancelAisle_2
+    WHEN
+        grd1: cancelAisle_2 ∈ sentMessages
+        grd2: cancelAisle_2 ↦ FleetCtrl ∈ sender
+        grd3: cancelAisle_2 ↦ Forklift ∈ receiver
+        grd4: cancelAisle_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelAisle_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelAisle_2}
+        act2: currentMessage := ∅
+    END
+
+    sendvalidatePallet_3
+    WHEN
+        grd1: validatePallet_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelAisle_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePallet_3}
+        act2: sender := sender ∪ {validatePallet_3 ↦ FleetCtrl}
+        act3: receiver := receiver ∪ {validatePallet_3 ↦ WMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePallet_3 ↦ palletValue}
+        act6: currentMessage := {validatePallet_3}
+    END
+
+    receivevalidatePallet_3
+    WHEN
+        grd1: validatePallet_3 ∈ sentMessages
+        grd2: validatePallet_3 ↦ FleetCtrl ∈ sender
+        grd3: validatePallet_3 ↦ WMS ∈ receiver
+        grd4: validatePallet_3 ∉ receivedMessages
+        grd5: currentMessage = {validatePallet_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePallet_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePallet_3 ↦ palletValue}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendapprovePallet_4
+    WHEN
+        grd1: approvePallet_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePallet_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvePallet_4}
+        act2: sender := sender ∪ {approvePallet_4 ↦ WMS}
+        act3: receiver := receiver ∪ {approvePallet_4 ↦ FleetCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approvePallet_4 ↦ aisleInfo}
+        act6: currentMessage := {approvePallet_4}
+    END
+
+    receiveapprovePallet_4
+    WHEN
+        grd1: approvePallet_4 ∈ sentMessages
+        grd2: approvePallet_4 ↦ WMS ∈ sender
+        grd3: approvePallet_4 ↦ FleetCtrl ∈ receiver
+        grd4: approvePallet_4 ∉ receivedMessages
+        grd5: currentMessage = {approvePallet_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvePallet_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approvePallet_4 ↦ aisleInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchAisle_5
+    WHEN
+        grd1: fetchAisle_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvePallet_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchAisle_5}
+        act2: sender := sender ∪ {fetchAisle_5 ↦ WMS}
+        act3: receiver := receiver ∪ {fetchAisle_5 ↦ Forklift}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchAisle_5 ↦ aisleCode}
+        act6: currentMessage := {fetchAisle_5}
+    END
+
+    receivefetchAisle_5
+    WHEN
+        grd1: fetchAisle_5 ∈ sentMessages
+        grd2: fetchAisle_5 ↦ WMS ∈ sender
+        grd3: fetchAisle_5 ↦ Forklift ∈ receiver
+        grd4: fetchAisle_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchAisle_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchAisle_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchAisle_5 ↦ aisleCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendapproveAisle_6
+    WHEN
+        grd1: approveAisle_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchAisle_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveAisle_6}
+        act2: sender := sender ∪ {approveAisle_6 ↦ WMS}
+        act3: receiver := receiver ∪ {approveAisle_6 ↦ Forklift}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveAisle_6}
+    END
+
+    receiveapproveAisle_6
+    WHEN
+        grd1: approveAisle_6 ∈ sentMessages
+        grd2: approveAisle_6 ↦ WMS ∈ sender
+        grd3: approveAisle_6 ↦ Forklift ∈ receiver
+        grd4: approveAisle_6 ∉ receivedMessages
+        grd5: currentMessage = {approveAisle_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveAisle_6}
+        act2: currentMessage := ∅
+    END
+
+END

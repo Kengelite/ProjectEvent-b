@@ -1,0 +1,286 @@
+CONTEXT LibraryLoanContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Kiosk, LibraryDB, Member, NotifySvc
+    scanCard_1, checkMember_2, memberInfo_3, borrowBook_4, recordLoan_5, setReminder_6, rejectLoan_7, logout_8
+    bookID, dueDate, fineAmount, memberID
+AXIOMS
+    axm1: partition(Objects, {Kiosk}, {LibraryDB}, {Member}, {NotifySvc})
+    axm2: partition(Messages, {scanCard_1}, {checkMember_2}, {memberInfo_3}, {borrowBook_4}, {recordLoan_5}, {setReminder_6}, {rejectLoan_7}, {logout_8})
+    axm3: partition(DataMessages, {bookID}, {dueDate}, {fineAmount}, {memberID})
+END
+
+MACHINE LibraryLoanInteractionMachine_1
+SEES LibraryLoanContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, fine, wantReminder, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: fine ∈ ℤ
+    inv9: wantReminder ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: fine :∈ ℤ
+        act9: wantReminder := 1
+        act10: t_time_2 :∈ 0..2
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_5 :∈ 0..3
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+        act16: t_time_6 :∈ 0..5
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+    END
+
+
+    sendscanCard_1
+    WHEN
+        grd1: scanCard_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scanCard_1}
+        act2: sender := sender ∪ {scanCard_1 ↦ Member}
+        act3: receiver := receiver ∪ {scanCard_1 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scanCard_1 ↦ memberID}
+        act6: currentMessage := {scanCard_1}
+    END
+
+    receivescanCard_1
+    WHEN
+        grd1: scanCard_1 ∈ sentMessages
+        grd2: scanCard_1 ↦ Member ∈ sender
+        grd3: scanCard_1 ↦ Kiosk ∈ receiver
+        grd4: scanCard_1 ∉ receivedMessages
+        grd5: currentMessage = {scanCard_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scanCard_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scanCard_1 ↦ memberID}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckMember_2
+    WHEN
+        grd1: checkMember_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scanCard_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkMember_2}
+        act2: sender := sender ∪ {checkMember_2 ↦ Kiosk}
+        act3: receiver := receiver ∪ {checkMember_2 ↦ LibraryDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkMember_2 ↦ memberID}
+        act6: currentMessage := {checkMember_2}
+    END
+
+    receivecheckMember_2
+    WHEN
+        grd1: checkMember_2 ∈ sentMessages
+        grd2: checkMember_2 ↦ Kiosk ∈ sender
+        grd3: checkMember_2 ↦ LibraryDB ∈ receiver
+        grd4: checkMember_2 ∉ receivedMessages
+        grd5: currentMessage = {checkMember_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkMember_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkMember_2 ↦ memberID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendmemberInfo_3
+    WHEN
+        grd1: memberInfo_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkMember_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {memberInfo_3}
+        act2: sender := sender ∪ {memberInfo_3 ↦ LibraryDB}
+        act3: receiver := receiver ∪ {memberInfo_3 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {memberInfo_3 ↦ fineAmount}
+        act6: currentMessage := {memberInfo_3}
+    END
+
+    receivememberInfo_3
+    WHEN
+        grd1: memberInfo_3 ∈ sentMessages
+        grd2: memberInfo_3 ↦ LibraryDB ∈ sender
+        grd3: memberInfo_3 ↦ Kiosk ∈ receiver
+        grd4: memberInfo_3 ∉ receivedMessages
+        grd5: currentMessage = {memberInfo_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {memberInfo_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {memberInfo_3 ↦ fineAmount}
+        act3: currentMessage := ∅
+    END
+
+    sendborrowBook_4
+    WHEN
+        grd1: borrowBook_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: memberInfo_3 ∈ receivedMessages
+        grd4: fine ≤ 100
+    THEN
+        act1: sentMessages := sentMessages ∪ {borrowBook_4}
+        act2: sender := sender ∪ {borrowBook_4 ↦ Member}
+        act3: receiver := receiver ∪ {borrowBook_4 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {borrowBook_4 ↦ bookID}
+        act6: currentMessage := {borrowBook_4}
+    END
+
+    receiveborrowBook_4
+    WHEN
+        grd1: borrowBook_4 ∈ sentMessages
+        grd2: borrowBook_4 ↦ Member ∈ sender
+        grd3: borrowBook_4 ↦ Kiosk ∈ receiver
+        grd4: borrowBook_4 ∉ receivedMessages
+        grd5: currentMessage = {borrowBook_4}
+        grd6: fine ≤ 100
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {borrowBook_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {borrowBook_4 ↦ bookID}
+        act3: currentMessage := ∅
+    END
+
+    sendrecordLoan_5
+    WHEN
+        grd1: recordLoan_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: borrowBook_4 ∈ receivedMessages
+        grd4: fine ≤ 100
+    THEN
+        act1: sentMessages := sentMessages ∪ {recordLoan_5}
+        act2: sender := sender ∪ {recordLoan_5 ↦ Kiosk}
+        act3: receiver := receiver ∪ {recordLoan_5 ↦ LibraryDB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {recordLoan_5 ↦ bookID}
+        act6: currentMessage := {recordLoan_5}
+    END
+
+    receiverecordLoan_5
+    WHEN
+        grd1: recordLoan_5 ∈ sentMessages
+        grd2: recordLoan_5 ↦ Kiosk ∈ sender
+        grd3: recordLoan_5 ↦ LibraryDB ∈ receiver
+        grd4: recordLoan_5 ∉ receivedMessages
+        grd5: currentMessage = {recordLoan_5}
+        grd6: fine ≤ 100
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {recordLoan_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {recordLoan_5 ↦ bookID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendsetReminder_6_opt1
+    WHEN
+        grd1: setReminder_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: recordLoan_5 ∈ receivedMessages
+        grd4: fine ≤ 100
+        grd5: wantReminder = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {setReminder_6}
+        act2: sender := sender ∪ {setReminder_6 ↦ Kiosk}
+        act3: receiver := receiver ∪ {setReminder_6 ↦ NotifySvc}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {setReminder_6 ↦ dueDate}
+        act6: currentMessage := {setReminder_6}
+    END
+
+    receivesetReminder_6_opt1
+    WHEN
+        grd1: setReminder_6 ∈ sentMessages
+        grd2: setReminder_6 ↦ Kiosk ∈ sender
+        grd3: setReminder_6 ↦ NotifySvc ∈ receiver
+        grd4: setReminder_6 ∉ receivedMessages
+        grd5: currentMessage = {setReminder_6}
+        grd6: fine ≤ 100
+        grd7: wantReminder = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {setReminder_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {setReminder_6 ↦ dueDate}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendrejectLoan_7
+    WHEN
+        grd1: rejectLoan_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: memberInfo_3 ∈ receivedMessages
+        grd4: fine > 100
+    THEN
+        act1: sentMessages := sentMessages ∪ {rejectLoan_7}
+        act2: sender := sender ∪ {rejectLoan_7 ↦ Kiosk}
+        act3: receiver := receiver ∪ {rejectLoan_7 ↦ Member}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {rejectLoan_7 ↦ fineAmount}
+        act6: currentMessage := {rejectLoan_7}
+    END
+
+    receiverejectLoan_7
+    WHEN
+        grd1: rejectLoan_7 ∈ sentMessages
+        grd2: rejectLoan_7 ↦ Kiosk ∈ sender
+        grd3: rejectLoan_7 ↦ Member ∈ receiver
+        grd4: rejectLoan_7 ∉ receivedMessages
+        grd5: currentMessage = {rejectLoan_7}
+        grd6: fine > 100
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {rejectLoan_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {rejectLoan_7 ↦ fineAmount}
+        act3: currentMessage := ∅
+    END
+
+    sendlogout_8
+    WHEN
+        grd1: logout_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: setReminder_6 ∈ receivedMessages ∨ rejectLoan_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logout_8}
+        act2: sender := sender ∪ {logout_8 ↦ Member}
+        act3: receiver := receiver ∪ {logout_8 ↦ Kiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logout_8}
+    END
+
+    receivelogout_8
+    WHEN
+        grd1: logout_8 ∈ sentMessages
+        grd2: logout_8 ↦ Member ∈ sender
+        grd3: logout_8 ↦ Kiosk ∈ receiver
+        grd4: logout_8 ∉ receivedMessages
+        grd5: currentMessage = {logout_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logout_8}
+        act2: currentMessage := ∅
+    END
+
+END

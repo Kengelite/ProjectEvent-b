@@ -1,0 +1,218 @@
+CONTEXT CraneLoadMonitorContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CraneCtrl, LoadCell, SafetyOfficer, SiteServer
+    cancelLimit_1, validateAlarm_2, ackLimit_3, issueLimit_4, cancelLoad_5, scheduleLoad_6
+    alarmRef, limitID, limitRef, loadInfo, loadRef
+AXIOMS
+    axm1: partition(Objects, {CraneCtrl}, {LoadCell}, {SafetyOfficer}, {SiteServer})
+    axm2: partition(Messages, {cancelLimit_1}, {validateAlarm_2}, {ackLimit_3}, {issueLimit_4}, {cancelLoad_5}, {scheduleLoad_6})
+    axm3: partition(DataMessages, {alarmRef}, {limitID}, {limitRef}, {loadInfo}, {loadRef})
+END
+
+MACHINE CraneLoadMonitorInteractionMachine_1
+SEES CraneLoadMonitorContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_4 ∈ ℤ
+    inv15: t_delay_4 ∈ ℤ
+    inv16: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 2..1
+        act9: t_delay_1 := 0
+        act10: t_success_1 := 0
+        act11: t_time_3 :∈ 5..4
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_4 :∈ 10..7
+        act15: t_delay_4 := 0
+        act16: t_success_4 := 0
+    END
+
+
+    sendcancelLimit_1
+    WHEN
+        grd1: cancelLimit_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelLimit_1}
+        act2: sender := sender ∪ {cancelLimit_1 ↦ SafetyOfficer}
+        act3: receiver := receiver ∪ {cancelLimit_1 ↦ SiteServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelLimit_1 ↦ alarmRef}
+        act6: currentMessage := {cancelLimit_1}
+    END
+
+    receivecancelLimit_1
+    WHEN
+        grd1: cancelLimit_1 ∈ sentMessages
+        grd2: cancelLimit_1 ↦ SafetyOfficer ∈ sender
+        grd3: cancelLimit_1 ↦ SiteServer ∈ receiver
+        grd4: cancelLimit_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelLimit_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelLimit_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelLimit_1 ↦ alarmRef}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendvalidateAlarm_2
+    WHEN
+        grd1: validateAlarm_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelLimit_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateAlarm_2}
+        act2: sender := sender ∪ {validateAlarm_2 ↦ SafetyOfficer}
+        act3: receiver := receiver ∪ {validateAlarm_2 ↦ SiteServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateAlarm_2 ↦ loadRef}
+        act6: currentMessage := {validateAlarm_2}
+    END
+
+    receivevalidateAlarm_2
+    WHEN
+        grd1: validateAlarm_2 ∈ sentMessages
+        grd2: validateAlarm_2 ↦ SafetyOfficer ∈ sender
+        grd3: validateAlarm_2 ↦ SiteServer ∈ receiver
+        grd4: validateAlarm_2 ∉ receivedMessages
+        grd5: currentMessage = {validateAlarm_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateAlarm_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateAlarm_2 ↦ loadRef}
+        act3: currentMessage := ∅
+    END
+
+    sendackLimit_3
+    WHEN
+        grd1: ackLimit_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateAlarm_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackLimit_3}
+        act2: sender := sender ∪ {ackLimit_3 ↦ LoadCell}
+        act3: receiver := receiver ∪ {ackLimit_3 ↦ CraneCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackLimit_3 ↦ limitID}
+        act6: currentMessage := {ackLimit_3}
+    END
+
+    receiveackLimit_3
+    WHEN
+        grd1: ackLimit_3 ∈ sentMessages
+        grd2: ackLimit_3 ↦ LoadCell ∈ sender
+        grd3: ackLimit_3 ↦ CraneCtrl ∈ receiver
+        grd4: ackLimit_3 ∉ receivedMessages
+        grd5: currentMessage = {ackLimit_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackLimit_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackLimit_3 ↦ limitID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendissueLimit_4
+    WHEN
+        grd1: issueLimit_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackLimit_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueLimit_4}
+        act2: sender := sender ∪ {issueLimit_4 ↦ LoadCell}
+        act3: receiver := receiver ∪ {issueLimit_4 ↦ SafetyOfficer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueLimit_4}
+    END
+
+    receiveissueLimit_4
+    WHEN
+        grd1: issueLimit_4 ∈ sentMessages
+        grd2: issueLimit_4 ↦ LoadCell ∈ sender
+        grd3: issueLimit_4 ↦ SafetyOfficer ∈ receiver
+        grd4: issueLimit_4 ∉ receivedMessages
+        grd5: currentMessage = {issueLimit_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueLimit_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcancelLoad_5
+    WHEN
+        grd1: cancelLoad_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueLimit_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelLoad_5}
+        act2: sender := sender ∪ {cancelLoad_5 ↦ CraneCtrl}
+        act3: receiver := receiver ∪ {cancelLoad_5 ↦ LoadCell}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelLoad_5 ↦ limitRef}
+        act6: currentMessage := {cancelLoad_5}
+    END
+
+    receivecancelLoad_5
+    WHEN
+        grd1: cancelLoad_5 ∈ sentMessages
+        grd2: cancelLoad_5 ↦ CraneCtrl ∈ sender
+        grd3: cancelLoad_5 ↦ LoadCell ∈ receiver
+        grd4: cancelLoad_5 ∉ receivedMessages
+        grd5: currentMessage = {cancelLoad_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelLoad_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelLoad_5 ↦ limitRef}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleLoad_6
+    WHEN
+        grd1: scheduleLoad_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelLoad_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleLoad_6}
+        act2: sender := sender ∪ {scheduleLoad_6 ↦ SiteServer}
+        act3: receiver := receiver ∪ {scheduleLoad_6 ↦ LoadCell}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleLoad_6 ↦ loadInfo}
+        act6: currentMessage := {scheduleLoad_6}
+    END
+
+    receivescheduleLoad_6
+    WHEN
+        grd1: scheduleLoad_6 ∈ sentMessages
+        grd2: scheduleLoad_6 ↦ SiteServer ∈ sender
+        grd3: scheduleLoad_6 ↦ LoadCell ∈ receiver
+        grd4: scheduleLoad_6 ∉ receivedMessages
+        grd5: currentMessage = {scheduleLoad_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleLoad_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleLoad_6 ↦ loadInfo}
+        act3: currentMessage := ∅
+    END
+
+END

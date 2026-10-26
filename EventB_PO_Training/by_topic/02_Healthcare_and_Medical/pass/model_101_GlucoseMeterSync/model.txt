@@ -1,0 +1,456 @@
+CONTEXT GlucoseMeterSyncContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CloudLog, Doctor, Meter, PhoneApp
+    confirmInsulin_1, syncReading_2, updateAlert_3, queryReading_4, notifyAlert_5, releaseAlert_6, queryAlert_7, releaseInsulin_8, requestAlert_9, reportInsulin_10, updateInsulin_11, sendAlert_12, approveAlert_13, reserveAlert_14
+    alertCode, alertInfo, insulinCode, insulinData, insulinInfo, readingData, readingRef, readingValue
+AXIOMS
+    axm1: partition(Objects, {CloudLog}, {Doctor}, {Meter}, {PhoneApp})
+    axm2: partition(Messages, {confirmInsulin_1}, {syncReading_2}, {updateAlert_3}, {queryReading_4}, {notifyAlert_5}, {releaseAlert_6}, {queryAlert_7}, {releaseInsulin_8}, {requestAlert_9}, {reportInsulin_10}, {updateInsulin_11}, {sendAlert_12}, {approveAlert_13}, {reserveAlert_14})
+    axm3: partition(DataMessages, {alertCode}, {alertInfo}, {insulinCode}, {insulinData}, {insulinInfo}, {readingData}, {readingRef}, {readingValue})
+END
+
+MACHINE GlucoseMeterSyncInteractionMachine_1
+SEES GlucoseMeterSyncContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, par_1, par_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_10, t_delay_10, t_success_10, t_time_12, t_delay_12, t_success_12
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: par_2 ∈ ℤ
+    inv11: t_time_3 ∈ ℤ
+    inv12: t_delay_3 ∈ ℤ
+    inv13: t_success_3 ∈ ℤ
+    inv14: t_time_5 ∈ ℤ
+    inv15: t_delay_5 ∈ ℤ
+    inv16: t_success_5 ∈ ℤ
+    inv17: t_time_7 ∈ ℤ
+    inv18: t_delay_7 ∈ ℤ
+    inv19: t_success_7 ∈ ℤ
+    inv20: t_time_10 ∈ ℤ
+    inv21: t_delay_10 ∈ ℤ
+    inv22: t_success_10 ∈ ℤ
+    inv23: t_time_12 ∈ ℤ
+    inv24: t_delay_12 ∈ ℤ
+    inv25: t_success_12 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: par_1 := 0
+        act10: par_2 := 0
+        act11: t_time_3 :∈ 0..5
+        act12: t_delay_3 := 0
+        act13: t_success_3 := 0
+        act14: t_time_5 :∈ 0..2
+        act15: t_delay_5 := 0
+        act16: t_success_5 := 0
+        act17: t_time_7 :∈ 0..8
+        act18: t_delay_7 := 0
+        act19: t_success_7 := 0
+        act20: t_time_10 :∈ 0..20
+        act21: t_delay_10 := 0
+        act22: t_success_10 := 0
+        act23: t_time_12 :∈ 0..5
+        act24: t_delay_12 := 0
+        act25: t_success_12 := 0
+    END
+
+
+    sendconfirmInsulin_1
+    WHEN
+        grd1: confirmInsulin_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmInsulin_1}
+        act2: sender := sender ∪ {confirmInsulin_1 ↦ Meter}
+        act3: receiver := receiver ∪ {confirmInsulin_1 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmInsulin_1}
+    END
+
+    receiveconfirmInsulin_1
+    WHEN
+        grd1: confirmInsulin_1 ∈ sentMessages
+        grd2: confirmInsulin_1 ↦ Meter ∈ sender
+        grd3: confirmInsulin_1 ↦ PhoneApp ∈ receiver
+        grd4: confirmInsulin_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmInsulin_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmInsulin_1}
+        act2: currentMessage := ∅
+    END
+
+    sendsyncReading_2
+    WHEN
+        grd1: syncReading_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmInsulin_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncReading_2}
+        act2: sender := sender ∪ {syncReading_2 ↦ Meter}
+        act3: receiver := receiver ∪ {syncReading_2 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncReading_2}
+    END
+
+    receivesyncReading_2
+    WHEN
+        grd1: syncReading_2 ∈ sentMessages
+        grd2: syncReading_2 ↦ Meter ∈ sender
+        grd3: syncReading_2 ↦ PhoneApp ∈ receiver
+        grd4: syncReading_2 ∉ receivedMessages
+        grd5: currentMessage = {syncReading_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncReading_2}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateAlert_3
+    WHEN
+        grd1: updateAlert_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncReading_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateAlert_3}
+        act2: sender := sender ∪ {updateAlert_3 ↦ Meter}
+        act3: receiver := receiver ∪ {updateAlert_3 ↦ CloudLog}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateAlert_3}
+    END
+
+    receiveupdateAlert_3
+    WHEN
+        grd1: updateAlert_3 ∈ sentMessages
+        grd2: updateAlert_3 ↦ Meter ∈ sender
+        grd3: updateAlert_3 ↦ CloudLog ∈ receiver
+        grd4: updateAlert_3 ∉ receivedMessages
+        grd5: currentMessage = {updateAlert_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateAlert_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendqueryReading_4
+    WHEN
+        grd1: queryReading_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateAlert_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryReading_4}
+        act2: sender := sender ∪ {queryReading_4 ↦ CloudLog}
+        act3: receiver := receiver ∪ {queryReading_4 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryReading_4 ↦ insulinCode, queryReading_4 ↦ readingValue}
+        act6: currentMessage := {queryReading_4}
+    END
+
+    receivequeryReading_4
+    WHEN
+        grd1: queryReading_4 ∈ sentMessages
+        grd2: queryReading_4 ↦ CloudLog ∈ sender
+        grd3: queryReading_4 ↦ PhoneApp ∈ receiver
+        grd4: queryReading_4 ∉ receivedMessages
+        grd5: currentMessage = {queryReading_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryReading_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryReading_4 ↦ insulinCode, queryReading_4 ↦ readingValue}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyAlert_5
+    WHEN
+        grd1: notifyAlert_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryReading_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyAlert_5}
+        act2: sender := sender ∪ {notifyAlert_5 ↦ Meter}
+        act3: receiver := receiver ∪ {notifyAlert_5 ↦ Doctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyAlert_5 ↦ insulinData}
+        act6: currentMessage := {notifyAlert_5}
+    END
+
+    receivenotifyAlert_5
+    WHEN
+        grd1: notifyAlert_5 ∈ sentMessages
+        grd2: notifyAlert_5 ↦ Meter ∈ sender
+        grd3: notifyAlert_5 ↦ Doctor ∈ receiver
+        grd4: notifyAlert_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyAlert_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyAlert_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyAlert_5 ↦ insulinData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendreleaseAlert_6
+    WHEN
+        grd1: releaseAlert_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyAlert_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseAlert_6}
+        act2: sender := sender ∪ {releaseAlert_6 ↦ CloudLog}
+        act3: receiver := receiver ∪ {releaseAlert_6 ↦ Meter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseAlert_6}
+    END
+
+    receivereleaseAlert_6
+    WHEN
+        grd1: releaseAlert_6 ∈ sentMessages
+        grd2: releaseAlert_6 ↦ CloudLog ∈ sender
+        grd3: releaseAlert_6 ↦ Meter ∈ receiver
+        grd4: releaseAlert_6 ∉ receivedMessages
+        grd5: currentMessage = {releaseAlert_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseAlert_6}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryAlert_7
+    WHEN
+        grd1: queryAlert_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseAlert_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryAlert_7}
+        act2: sender := sender ∪ {queryAlert_7 ↦ CloudLog}
+        act3: receiver := receiver ∪ {queryAlert_7 ↦ Doctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryAlert_7 ↦ insulinCode}
+        act6: currentMessage := {queryAlert_7}
+    END
+
+    receivequeryAlert_7
+    WHEN
+        grd1: queryAlert_7 ∈ sentMessages
+        grd2: queryAlert_7 ↦ CloudLog ∈ sender
+        grd3: queryAlert_7 ↦ Doctor ∈ receiver
+        grd4: queryAlert_7 ∉ receivedMessages
+        grd5: currentMessage = {queryAlert_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryAlert_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryAlert_7 ↦ insulinCode}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendreleaseInsulin_8_opt1
+    WHEN
+        grd1: releaseInsulin_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryAlert_7 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseInsulin_8}
+        act2: sender := sender ∪ {releaseInsulin_8 ↦ Doctor}
+        act3: receiver := receiver ∪ {releaseInsulin_8 ↦ CloudLog}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseInsulin_8 ↦ insulinCode}
+        act6: currentMessage := {releaseInsulin_8}
+    END
+
+    receivereleaseInsulin_8_opt1
+    WHEN
+        grd1: releaseInsulin_8 ∈ sentMessages
+        grd2: releaseInsulin_8 ↦ Doctor ∈ sender
+        grd3: releaseInsulin_8 ↦ CloudLog ∈ receiver
+        grd4: releaseInsulin_8 ∉ receivedMessages
+        grd5: currentMessage = {releaseInsulin_8}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseInsulin_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseInsulin_8 ↦ insulinCode}
+        act3: currentMessage := ∅
+    END
+
+    sendrequestAlert_9_opt1
+    WHEN
+        grd1: requestAlert_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseInsulin_8 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestAlert_9}
+        act2: sender := sender ∪ {requestAlert_9 ↦ PhoneApp}
+        act3: receiver := receiver ∪ {requestAlert_9 ↦ Doctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestAlert_9 ↦ readingRef}
+        act6: currentMessage := {requestAlert_9}
+    END
+
+    receiverequestAlert_9_opt1
+    WHEN
+        grd1: requestAlert_9 ∈ sentMessages
+        grd2: requestAlert_9 ↦ PhoneApp ∈ sender
+        grd3: requestAlert_9 ↦ Doctor ∈ receiver
+        grd4: requestAlert_9 ∉ receivedMessages
+        grd5: currentMessage = {requestAlert_9}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestAlert_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestAlert_9 ↦ readingRef}
+        act3: currentMessage := ∅
+    END
+
+    sendreportInsulin_10_opt1
+    WHEN
+        grd1: reportInsulin_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestAlert_9 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportInsulin_10}
+        act2: sender := sender ∪ {reportInsulin_10 ↦ PhoneApp}
+        act3: receiver := receiver ∪ {reportInsulin_10 ↦ CloudLog}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportInsulin_10 ↦ readingData}
+        act6: currentMessage := {reportInsulin_10}
+    END
+
+    receivereportInsulin_10_opt1
+    WHEN
+        grd1: reportInsulin_10 ∈ sentMessages
+        grd2: reportInsulin_10 ↦ PhoneApp ∈ sender
+        grd3: reportInsulin_10 ↦ CloudLog ∈ receiver
+        grd4: reportInsulin_10 ∉ receivedMessages
+        grd5: currentMessage = {reportInsulin_10}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportInsulin_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportInsulin_10 ↦ readingData}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendupdateInsulin_11_opt1
+    WHEN
+        grd1: updateInsulin_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportInsulin_10 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateInsulin_11}
+        act2: sender := sender ∪ {updateInsulin_11 ↦ Meter}
+        act3: receiver := receiver ∪ {updateInsulin_11 ↦ CloudLog}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateInsulin_11}
+    END
+
+    receiveupdateInsulin_11_opt1
+    WHEN
+        grd1: updateInsulin_11 ∈ sentMessages
+        grd2: updateInsulin_11 ↦ Meter ∈ sender
+        grd3: updateInsulin_11 ↦ CloudLog ∈ receiver
+        grd4: updateInsulin_11 ∉ receivedMessages
+        grd5: currentMessage = {updateInsulin_11}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateInsulin_11}
+        act2: currentMessage := ∅
+    END
+
+    sendsendAlert_12_opt1
+    WHEN
+        grd1: sendAlert_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateInsulin_11 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAlert_12}
+        act2: sender := sender ∪ {sendAlert_12 ↦ Meter}
+        act3: receiver := receiver ∪ {sendAlert_12 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendAlert_12}
+    END
+
+    receivesendAlert_12_opt1
+    WHEN
+        grd1: sendAlert_12 ∈ sentMessages
+        grd2: sendAlert_12 ↦ Meter ∈ sender
+        grd3: sendAlert_12 ↦ PhoneApp ∈ receiver
+        grd4: sendAlert_12 ∉ receivedMessages
+        grd5: currentMessage = {sendAlert_12}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAlert_12}
+        act2: currentMessage := ∅
+        act3: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    sendapproveAlert_13_opt1
+    WHEN
+        grd1: approveAlert_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAlert_12 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveAlert_13}
+        act2: sender := sender ∪ {approveAlert_13 ↦ CloudLog}
+        act3: receiver := receiver ∪ {approveAlert_13 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveAlert_13 ↦ alertCode, approveAlert_13 ↦ insulinInfo}
+        act6: currentMessage := {approveAlert_13}
+    END
+
+    receiveapproveAlert_13_opt1
+    WHEN
+        grd1: approveAlert_13 ∈ sentMessages
+        grd2: approveAlert_13 ↦ CloudLog ∈ sender
+        grd3: approveAlert_13 ↦ PhoneApp ∈ receiver
+        grd4: approveAlert_13 ∉ receivedMessages
+        grd5: currentMessage = {approveAlert_13}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveAlert_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveAlert_13 ↦ alertCode, approveAlert_13 ↦ insulinInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveAlert_14
+    WHEN
+        grd1: reserveAlert_14 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveAlert_13 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveAlert_14}
+        act2: sender := sender ∪ {reserveAlert_14 ↦ Meter}
+        act3: receiver := receiver ∪ {reserveAlert_14 ↦ CloudLog}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveAlert_14 ↦ alertInfo}
+        act6: currentMessage := {reserveAlert_14}
+    END
+
+    receivereserveAlert_14
+    WHEN
+        grd1: reserveAlert_14 ∈ sentMessages
+        grd2: reserveAlert_14 ↦ Meter ∈ sender
+        grd3: reserveAlert_14 ↦ CloudLog ∈ receiver
+        grd4: reserveAlert_14 ∉ receivedMessages
+        grd5: currentMessage = {reserveAlert_14}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveAlert_14}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveAlert_14 ↦ alertInfo}
+        act3: currentMessage := ∅
+    END
+
+END

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="EdgeGateway" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="clockSynced_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="storeConfirm_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="aggregateBatch_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="timestamp" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="CloudDB" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="humidity" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="IoTSensor" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="syncClock_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sensorID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="recordID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="batchID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="readingCount" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="temperature" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="heartbeat_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ackReading_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="healthStatus" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="publishReading_1" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/SensorDataPipeline_Project/SensorDataPipelineContext.bpo|org.eventb.core.poFile#SensorDataPipelineContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CloudDB},{EdgeGateway},{IoTSensor})" org.eventb.core.source="/SensorDataPipeline_Project/SensorDataPipelineContext.buc|org.eventb.core.contextFile#SensorDataPipelineContext|org.eventb.core.axiom#internal_element22"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{publishReading_1},{ackReading_2},{aggregateBatch_3},{storeConfirm_4},{syncClock_5},{clockSynced_6},{heartbeat_7})" org.eventb.core.source="/SensorDataPipeline_Project/SensorDataPipelineContext.buc|org.eventb.core.contextFile#SensorDataPipelineContext|org.eventb.core.axiom#internal_element23"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{batchID},{healthStatus},{humidity},{readingCount},{recordID},{sensorID},{temperature},{timestamp})" org.eventb.core.source="/SensorDataPipeline_Project/SensorDataPipelineContext.buc|org.eventb.core.contextFile#SensorDataPipelineContext|org.eventb.core.axiom#internal_element24"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

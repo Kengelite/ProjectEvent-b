@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="pressureValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="workCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="validatePressure_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="approveWork_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="cancelWork_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="FlowMeter" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="workValue" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="workInfo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="SCADAServer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="scheduleWork_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="RTU" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="approvePressure_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="fetchWork_5" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/PipelineLeakSCADA_Project/PipelineLeakSCADAContext.bpo|org.eventb.core.poFile#PipelineLeakSCADAContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{FlowMeter},{RTU},{SCADAServer})" org.eventb.core.source="/PipelineLeakSCADA_Project/PipelineLeakSCADAContext.buc|org.eventb.core.contextFile#PipelineLeakSCADAContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{scheduleWork_1},{cancelWork_2},{validatePressure_3},{approvePressure_4},{fetchWork_5},{approveWork_6})" org.eventb.core.source="/PipelineLeakSCADA_Project/PipelineLeakSCADAContext.buc|org.eventb.core.contextFile#PipelineLeakSCADAContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{pressureValue},{workCode},{workInfo},{workValue})" org.eventb.core.source="/PipelineLeakSCADA_Project/PipelineLeakSCADAContext.buc|org.eventb.core.contextFile#PipelineLeakSCADAContext|org.eventb.core.axiom#internal_element19"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="PortSystem" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="updateManifest_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="releaseContainer_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="ackContainer_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="containerCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Shipper" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="manifestData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="assignContainer_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="updateBerth_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="syncManifest_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="berthData" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Vessel" org.eventb.core.type="Objects"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/CargoShipTracking_Project/CargoShipTrackingContext.bpo|org.eventb.core.poFile#CargoShipTrackingContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{PortSystem},{Shipper},{Vessel})" org.eventb.core.source="/CargoShipTracking_Project/CargoShipTrackingContext.buc|org.eventb.core.contextFile#CargoShipTrackingContext|org.eventb.core.axiom#internal_element16"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{syncManifest_1},{assignContainer_2},{ackContainer_3},{updateManifest_4},{updateBerth_5},{releaseContainer_6})" org.eventb.core.source="/CargoShipTracking_Project/CargoShipTrackingContext.buc|org.eventb.core.contextFile#CargoShipTrackingContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{berthData},{containerCode},{manifestData})" org.eventb.core.source="/CargoShipTracking_Project/CargoShipTrackingContext.buc|org.eventb.core.contextFile#CargoShipTrackingContext|org.eventb.core.axiom#internal_element18"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

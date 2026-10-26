@@ -1,0 +1,295 @@
+CONTEXT LivestockFeederContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FarmHub, FeederUnit
+    reportRation_1, syncFeed_2, ackFeed_3, updateRation_4, queryRation_5, confirmFeed_6, cancelRation_7, confirmRation_8
+    feedData, feedValue, orderID, orderInfo, rationInfo, rationRef, rationValue
+AXIOMS
+    axm1: partition(Objects, {FarmHub}, {FeederUnit})
+    axm2: partition(Messages, {reportRation_1}, {syncFeed_2}, {ackFeed_3}, {updateRation_4}, {queryRation_5}, {confirmFeed_6}, {cancelRation_7}, {confirmRation_8})
+    axm3: partition(DataMessages, {feedData}, {feedValue}, {orderID}, {orderInfo}, {rationInfo}, {rationRef}, {rationValue})
+END
+
+MACHINE LivestockFeederInteractionMachine_1
+SEES LivestockFeederContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, approved, express, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: approved ∈ ℤ
+    inv9: express ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_8 ∈ ℤ
+    inv20: t_delay_8 ∈ ℤ
+    inv21: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: approved := 0
+        act9: express := 1
+        act10: t_time_1 :∈ 0..20
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..8
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 3..1
+        act17: t_delay_4 := 1
+        act18: t_success_4 := 0
+        act19: t_time_8 :∈ 0..30
+        act20: t_delay_8 := 0
+        act21: t_success_8 := 0
+    END
+
+
+    sendreportRation_1
+    WHEN
+        grd1: reportRation_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportRation_1}
+        act2: sender := sender ∪ {reportRation_1 ↦ FeederUnit}
+        act3: receiver := receiver ∪ {reportRation_1 ↦ FarmHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportRation_1 ↦ feedData}
+        act6: currentMessage := {reportRation_1}
+    END
+
+    receivereportRation_1
+    WHEN
+        grd1: reportRation_1 ∈ sentMessages
+        grd2: reportRation_1 ↦ FeederUnit ∈ sender
+        grd3: reportRation_1 ↦ FarmHub ∈ receiver
+        grd4: reportRation_1 ∉ receivedMessages
+        grd5: currentMessage = {reportRation_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportRation_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportRation_1 ↦ feedData}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendsyncFeed_2
+    WHEN
+        grd1: syncFeed_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportRation_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncFeed_2}
+        act2: sender := sender ∪ {syncFeed_2 ↦ FarmHub}
+        act3: receiver := receiver ∪ {syncFeed_2 ↦ FeederUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncFeed_2 ↦ rationInfo}
+        act6: currentMessage := {syncFeed_2}
+    END
+
+    receivesyncFeed_2
+    WHEN
+        grd1: syncFeed_2 ∈ sentMessages
+        grd2: syncFeed_2 ↦ FarmHub ∈ sender
+        grd3: syncFeed_2 ↦ FeederUnit ∈ receiver
+        grd4: syncFeed_2 ∉ receivedMessages
+        grd5: currentMessage = {syncFeed_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncFeed_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncFeed_2 ↦ rationInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendackFeed_3
+    WHEN
+        grd1: ackFeed_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncFeed_2 ∈ receivedMessages
+        grd4: approved = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackFeed_3}
+        act2: sender := sender ∪ {ackFeed_3 ↦ FeederUnit}
+        act3: receiver := receiver ∪ {ackFeed_3 ↦ FarmHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackFeed_3 ↦ rationValue}
+        act6: currentMessage := {ackFeed_3}
+    END
+
+    receiveackFeed_3
+    WHEN
+        grd1: ackFeed_3 ∈ sentMessages
+        grd2: ackFeed_3 ↦ FeederUnit ∈ sender
+        grd3: ackFeed_3 ↦ FarmHub ∈ receiver
+        grd4: ackFeed_3 ∉ receivedMessages
+        grd5: currentMessage = {ackFeed_3}
+        grd6: approved = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackFeed_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackFeed_3 ↦ rationValue}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateRation_4_opt1
+    WHEN
+        grd1: updateRation_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackFeed_3 ∈ receivedMessages
+        grd4: approved = 1
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateRation_4}
+        act2: sender := sender ∪ {updateRation_4 ↦ FarmHub}
+        act3: receiver := receiver ∪ {updateRation_4 ↦ FeederUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateRation_4 ↦ orderInfo, updateRation_4 ↦ rationRef}
+        act6: currentMessage := {updateRation_4}
+    END
+
+    receiveupdateRation_4_opt1
+    WHEN
+        grd1: updateRation_4 ∈ sentMessages
+        grd2: updateRation_4 ↦ FarmHub ∈ sender
+        grd3: updateRation_4 ↦ FeederUnit ∈ receiver
+        grd4: updateRation_4 ∉ receivedMessages
+        grd5: currentMessage = {updateRation_4}
+        grd6: approved = 1
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateRation_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateRation_4 ↦ orderInfo, updateRation_4 ↦ rationRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendqueryRation_5_opt1
+    WHEN
+        grd1: queryRation_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateRation_4 ∈ receivedMessages
+        grd4: approved = 1
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryRation_5}
+        act2: sender := sender ∪ {queryRation_5 ↦ FeederUnit}
+        act3: receiver := receiver ∪ {queryRation_5 ↦ FarmHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryRation_5 ↦ feedData}
+        act6: currentMessage := {queryRation_5}
+    END
+
+    receivequeryRation_5_opt1
+    WHEN
+        grd1: queryRation_5 ∈ sentMessages
+        grd2: queryRation_5 ↦ FeederUnit ∈ sender
+        grd3: queryRation_5 ↦ FarmHub ∈ receiver
+        grd4: queryRation_5 ∉ receivedMessages
+        grd5: currentMessage = {queryRation_5}
+        grd6: approved = 1
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryRation_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryRation_5 ↦ feedData}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmFeed_6
+    WHEN
+        grd1: confirmFeed_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryRation_5 ∈ receivedMessages
+        grd4: approved = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmFeed_6}
+        act2: sender := sender ∪ {confirmFeed_6 ↦ FarmHub}
+        act3: receiver := receiver ∪ {confirmFeed_6 ↦ FeederUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmFeed_6}
+    END
+
+    receiveconfirmFeed_6
+    WHEN
+        grd1: confirmFeed_6 ∈ sentMessages
+        grd2: confirmFeed_6 ↦ FarmHub ∈ sender
+        grd3: confirmFeed_6 ↦ FeederUnit ∈ receiver
+        grd4: confirmFeed_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmFeed_6}
+        grd6: approved = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmFeed_6}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelRation_7
+    WHEN
+        grd1: cancelRation_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncFeed_2 ∈ receivedMessages
+        grd4: approved = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelRation_7}
+        act2: sender := sender ∪ {cancelRation_7 ↦ FarmHub}
+        act3: receiver := receiver ∪ {cancelRation_7 ↦ FeederUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelRation_7 ↦ feedValue, cancelRation_7 ↦ orderID}
+        act6: currentMessage := {cancelRation_7}
+    END
+
+    receivecancelRation_7
+    WHEN
+        grd1: cancelRation_7 ∈ sentMessages
+        grd2: cancelRation_7 ↦ FarmHub ∈ sender
+        grd3: cancelRation_7 ↦ FeederUnit ∈ receiver
+        grd4: cancelRation_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelRation_7}
+        grd6: approved = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelRation_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelRation_7 ↦ feedValue, cancelRation_7 ↦ orderID}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmRation_8
+    WHEN
+        grd1: confirmRation_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmFeed_6 ∈ receivedMessages ∨ cancelRation_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmRation_8}
+        act2: sender := sender ∪ {confirmRation_8 ↦ FarmHub}
+        act3: receiver := receiver ∪ {confirmRation_8 ↦ FeederUnit}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmRation_8}
+    END
+
+    receiveconfirmRation_8
+    WHEN
+        grd1: confirmRation_8 ∈ sentMessages
+        grd2: confirmRation_8 ↦ FarmHub ∈ sender
+        grd3: confirmRation_8 ↦ FeederUnit ∈ receiver
+        grd4: confirmRation_8 ∉ receivedMessages
+        grd5: currentMessage = {confirmRation_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmRation_8}
+        act2: currentMessage := ∅
+        act3: t_success_8 := t_time_8 + t_delay_8
+    END
+
+END

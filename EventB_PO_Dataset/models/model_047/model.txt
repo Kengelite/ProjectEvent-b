@@ -1,0 +1,311 @@
+CONTEXT VoiceAssistantContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CloudNLU, SmartSpeaker, User
+    wakeWord_1, streamAudio_2, intentResult_3, playSong_4, fetchWeather_5, weatherInfo_6, speakWeather_7, askRepeat_8, sleepMode_9
+    audioClip, city, forecast, intentTag, songID
+    MUSIC, UNKNOWN, WEATHER
+AXIOMS
+    axm1: partition(Objects, {CloudNLU}, {SmartSpeaker}, {User})
+    axm2: partition(Messages, {wakeWord_1}, {streamAudio_2}, {intentResult_3}, {playSong_4}, {fetchWeather_5}, {weatherInfo_6}, {speakWeather_7}, {askRepeat_8}, {sleepMode_9})
+    axm3: partition(DataMessages, {audioClip}, {city}, {forecast}, {intentTag}, {songID})
+    axm4: MUSIC = 0
+    axm5: UNKNOWN = 1
+    axm6: WEATHER = 2
+END
+
+MACHINE VoiceAssistantInteractionMachine_1
+SEES VoiceAssistantContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, intent, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: intent ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: intent := UNKNOWN
+        act9: t_time_2 :∈ 0..3
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..2
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..4
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendwakeWord_1
+    WHEN
+        grd1: wakeWord_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {wakeWord_1}
+        act2: sender := sender ∪ {wakeWord_1 ↦ User}
+        act3: receiver := receiver ∪ {wakeWord_1 ↦ SmartSpeaker}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {wakeWord_1}
+    END
+
+    receivewakeWord_1
+    WHEN
+        grd1: wakeWord_1 ∈ sentMessages
+        grd2: wakeWord_1 ↦ User ∈ sender
+        grd3: wakeWord_1 ↦ SmartSpeaker ∈ receiver
+        grd4: wakeWord_1 ∉ receivedMessages
+        grd5: currentMessage = {wakeWord_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {wakeWord_1}
+        act2: currentMessage := ∅
+    END
+
+    sendstreamAudio_2
+    WHEN
+        grd1: streamAudio_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: wakeWord_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {streamAudio_2}
+        act2: sender := sender ∪ {streamAudio_2 ↦ SmartSpeaker}
+        act3: receiver := receiver ∪ {streamAudio_2 ↦ CloudNLU}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {streamAudio_2 ↦ audioClip}
+        act6: currentMessage := {streamAudio_2}
+    END
+
+    receivestreamAudio_2
+    WHEN
+        grd1: streamAudio_2 ∈ sentMessages
+        grd2: streamAudio_2 ↦ SmartSpeaker ∈ sender
+        grd3: streamAudio_2 ↦ CloudNLU ∈ receiver
+        grd4: streamAudio_2 ∉ receivedMessages
+        grd5: currentMessage = {streamAudio_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {streamAudio_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {streamAudio_2 ↦ audioClip}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendintentResult_3
+    WHEN
+        grd1: intentResult_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: streamAudio_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {intentResult_3}
+        act2: sender := sender ∪ {intentResult_3 ↦ CloudNLU}
+        act3: receiver := receiver ∪ {intentResult_3 ↦ SmartSpeaker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {intentResult_3 ↦ intentTag}
+        act6: currentMessage := {intentResult_3}
+    END
+
+    receiveintentResult_3
+    WHEN
+        grd1: intentResult_3 ∈ sentMessages
+        grd2: intentResult_3 ↦ CloudNLU ∈ sender
+        grd3: intentResult_3 ↦ SmartSpeaker ∈ receiver
+        grd4: intentResult_3 ∉ receivedMessages
+        grd5: currentMessage = {intentResult_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {intentResult_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {intentResult_3 ↦ intentTag}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendplaySong_4
+    WHEN
+        grd1: playSong_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: intentResult_3 ∈ receivedMessages
+        grd4: intent = MUSIC
+    THEN
+        act1: sentMessages := sentMessages ∪ {playSong_4}
+        act2: sender := sender ∪ {playSong_4 ↦ SmartSpeaker}
+        act3: receiver := receiver ∪ {playSong_4 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {playSong_4 ↦ songID}
+        act6: currentMessage := {playSong_4}
+    END
+
+    receiveplaySong_4
+    WHEN
+        grd1: playSong_4 ∈ sentMessages
+        grd2: playSong_4 ↦ SmartSpeaker ∈ sender
+        grd3: playSong_4 ↦ User ∈ receiver
+        grd4: playSong_4 ∉ receivedMessages
+        grd5: currentMessage = {playSong_4}
+        grd6: intent = MUSIC
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {playSong_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {playSong_4 ↦ songID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchWeather_5
+    WHEN
+        grd1: fetchWeather_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: intentResult_3 ∈ receivedMessages
+        grd4: intent = WEATHER
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchWeather_5}
+        act2: sender := sender ∪ {fetchWeather_5 ↦ SmartSpeaker}
+        act3: receiver := receiver ∪ {fetchWeather_5 ↦ CloudNLU}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchWeather_5 ↦ city}
+        act6: currentMessage := {fetchWeather_5}
+    END
+
+    receivefetchWeather_5
+    WHEN
+        grd1: fetchWeather_5 ∈ sentMessages
+        grd2: fetchWeather_5 ↦ SmartSpeaker ∈ sender
+        grd3: fetchWeather_5 ↦ CloudNLU ∈ receiver
+        grd4: fetchWeather_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchWeather_5}
+        grd6: intent = WEATHER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchWeather_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchWeather_5 ↦ city}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendweatherInfo_6
+    WHEN
+        grd1: weatherInfo_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchWeather_5 ∈ receivedMessages
+        grd4: intent = WEATHER
+    THEN
+        act1: sentMessages := sentMessages ∪ {weatherInfo_6}
+        act2: sender := sender ∪ {weatherInfo_6 ↦ CloudNLU}
+        act3: receiver := receiver ∪ {weatherInfo_6 ↦ SmartSpeaker}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {weatherInfo_6 ↦ forecast}
+        act6: currentMessage := {weatherInfo_6}
+    END
+
+    receiveweatherInfo_6
+    WHEN
+        grd1: weatherInfo_6 ∈ sentMessages
+        grd2: weatherInfo_6 ↦ CloudNLU ∈ sender
+        grd3: weatherInfo_6 ↦ SmartSpeaker ∈ receiver
+        grd4: weatherInfo_6 ∉ receivedMessages
+        grd5: currentMessage = {weatherInfo_6}
+        grd6: intent = WEATHER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {weatherInfo_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {weatherInfo_6 ↦ forecast}
+        act3: currentMessage := ∅
+    END
+
+    sendspeakWeather_7
+    WHEN
+        grd1: speakWeather_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: weatherInfo_6 ∈ receivedMessages
+        grd4: intent = WEATHER
+    THEN
+        act1: sentMessages := sentMessages ∪ {speakWeather_7}
+        act2: sender := sender ∪ {speakWeather_7 ↦ SmartSpeaker}
+        act3: receiver := receiver ∪ {speakWeather_7 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {speakWeather_7 ↦ forecast}
+        act6: currentMessage := {speakWeather_7}
+    END
+
+    receivespeakWeather_7
+    WHEN
+        grd1: speakWeather_7 ∈ sentMessages
+        grd2: speakWeather_7 ↦ SmartSpeaker ∈ sender
+        grd3: speakWeather_7 ↦ User ∈ receiver
+        grd4: speakWeather_7 ∉ receivedMessages
+        grd5: currentMessage = {speakWeather_7}
+        grd6: intent = WEATHER
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {speakWeather_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {speakWeather_7 ↦ forecast}
+        act3: currentMessage := ∅
+    END
+
+    sendaskRepeat_8
+    WHEN
+        grd1: askRepeat_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: intentResult_3 ∈ receivedMessages
+        grd4: intent = UNKNOWN
+    THEN
+        act1: sentMessages := sentMessages ∪ {askRepeat_8}
+        act2: sender := sender ∪ {askRepeat_8 ↦ SmartSpeaker}
+        act3: receiver := receiver ∪ {askRepeat_8 ↦ User}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {askRepeat_8}
+    END
+
+    receiveaskRepeat_8
+    WHEN
+        grd1: askRepeat_8 ∈ sentMessages
+        grd2: askRepeat_8 ↦ SmartSpeaker ∈ sender
+        grd3: askRepeat_8 ↦ User ∈ receiver
+        grd4: askRepeat_8 ∉ receivedMessages
+        grd5: currentMessage = {askRepeat_8}
+        grd6: intent = UNKNOWN
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {askRepeat_8}
+        act2: currentMessage := ∅
+    END
+
+    sendsleepMode_9
+    WHEN
+        grd1: sleepMode_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: playSong_4 ∈ receivedMessages ∨ speakWeather_7 ∈ receivedMessages ∨ askRepeat_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sleepMode_9}
+        act2: sender := sender ∪ {sleepMode_9 ↦ SmartSpeaker}
+        act3: receiver := receiver ∪ {sleepMode_9 ↦ User}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sleepMode_9}
+    END
+
+    receivesleepMode_9
+    WHEN
+        grd1: sleepMode_9 ∈ sentMessages
+        grd2: sleepMode_9 ↦ SmartSpeaker ∈ sender
+        grd3: sleepMode_9 ↦ User ∈ receiver
+        grd4: sleepMode_9 ∉ receivedMessages
+        grd5: currentMessage = {sleepMode_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sleepMode_9}
+        act2: currentMessage := ∅
+    END
+
+END

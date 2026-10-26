@@ -1,0 +1,200 @@
+CONTEXT GymCheckInContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Member, Turnstile
+    scanQR_1, accessResult_2, openGate_3, renewPrompt_4, exitScan_5
+    accessFlag, memberCode, renewURL
+    ACTIVE, EXPIRED
+AXIOMS
+    axm1: partition(Objects, {Member}, {Turnstile})
+    axm2: partition(Messages, {scanQR_1}, {accessResult_2}, {openGate_3}, {renewPrompt_4}, {exitScan_5})
+    axm3: partition(DataMessages, {accessFlag}, {memberCode}, {renewURL})
+    axm4: ACTIVE = 0
+    axm5: EXPIRED = 1
+END
+
+MACHINE GymCheckInInteractionMachine_1
+SEES GymCheckInContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, membership, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: membership ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := {scanQR_1}
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: membership := EXPIRED
+        act9: t_time_1 :∈ 0..2
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..0
+        act13: t_delay_3 := 3
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..1
+        act16: t_delay_5 := 0
+        act17: t_success_5 := 0
+    END
+
+
+    sendscanQR_1
+    WHEN
+        grd1: scanQR_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {scanQR_1}
+        act2: sender := sender ∪ {scanQR_1 ↦ Member}
+        act3: receiver := receiver ∪ {scanQR_1 ↦ Turnstile}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scanQR_1 ↦ memberCode}
+        act6: currentMessage := {scanQR_1}
+    END
+
+    receivescanQR_1
+    WHEN
+        grd1: scanQR_1 ∈ sentMessages
+        grd2: scanQR_1 ↦ Member ∈ sender
+        grd3: scanQR_1 ↦ Turnstile ∈ receiver
+        grd4: scanQR_1 ∉ receivedMessages
+        grd5: currentMessage = {scanQR_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scanQR_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scanQR_1 ↦ memberCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendaccessResult_2
+    WHEN
+        grd1: accessResult_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scanQR_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {accessResult_2}
+        act2: sender := sender ∪ {accessResult_2 ↦ Turnstile}
+        act3: receiver := receiver ∪ {accessResult_2 ↦ Member}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {accessResult_2 ↦ accessFlag}
+        act6: currentMessage := {accessResult_2}
+    END
+
+    receiveaccessResult_2
+    WHEN
+        grd1: accessResult_2 ∈ sentMessages
+        grd2: accessResult_2 ↦ Turnstile ∈ sender
+        grd3: accessResult_2 ↦ Member ∈ receiver
+        grd4: accessResult_2 ∉ receivedMessages
+        grd5: currentMessage = {accessResult_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {accessResult_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {accessResult_2 ↦ accessFlag}
+        act3: currentMessage := ∅
+    END
+
+    sendopenGate_3
+    WHEN
+        grd1: openGate_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: accessResult_2 ∈ receivedMessages
+        grd4: membership = ACTIVE
+    THEN
+        act1: sentMessages := sentMessages ∪ {openGate_3}
+        act2: sender := sender ∪ {openGate_3 ↦ Turnstile}
+        act3: receiver := receiver ∪ {openGate_3 ↦ Member}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {openGate_3}
+    END
+
+    receiveopenGate_3
+    WHEN
+        grd1: openGate_3 ∈ sentMessages
+        grd2: openGate_3 ↦ Turnstile ∈ sender
+        grd3: openGate_3 ↦ Member ∈ receiver
+        grd4: openGate_3 ∉ receivedMessages
+        grd5: currentMessage = {openGate_3}
+        grd6: membership = ACTIVE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {openGate_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendrenewPrompt_4
+    WHEN
+        grd1: renewPrompt_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: accessResult_2 ∈ receivedMessages
+        grd4: membership = EXPIRED
+    THEN
+        act1: sentMessages := sentMessages ∪ {renewPrompt_4}
+        act2: sender := sender ∪ {renewPrompt_4 ↦ Turnstile}
+        act3: receiver := receiver ∪ {renewPrompt_4 ↦ Member}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {renewPrompt_4 ↦ renewURL}
+        act6: currentMessage := {renewPrompt_4}
+    END
+
+    receiverenewPrompt_4
+    WHEN
+        grd1: renewPrompt_4 ∈ sentMessages
+        grd2: renewPrompt_4 ↦ Turnstile ∈ sender
+        grd3: renewPrompt_4 ↦ Member ∈ receiver
+        grd4: renewPrompt_4 ∉ receivedMessages
+        grd5: currentMessage = {renewPrompt_4}
+        grd6: membership = EXPIRED
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {renewPrompt_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {renewPrompt_4 ↦ renewURL}
+        act3: currentMessage := ∅
+    END
+
+    sendexitScan_5
+    WHEN
+        grd1: exitScan_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: openGate_3 ∈ receivedMessages ∨ renewPrompt_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {exitScan_5}
+        act2: sender := sender ∪ {exitScan_5 ↦ Member}
+        act3: receiver := receiver ∪ {exitScan_5 ↦ Turnstile}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {exitScan_5 ↦ memberCode}
+        act6: currentMessage := {exitScan_5}
+    END
+
+    receiveexitScan_5
+    WHEN
+        grd1: exitScan_5 ∈ sentMessages
+        grd2: exitScan_5 ↦ Member ∈ sender
+        grd3: exitScan_5 ↦ Turnstile ∈ receiver
+        grd4: exitScan_5 ∉ receivedMessages
+        grd5: currentMessage = {exitScan_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {exitScan_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {exitScan_5 ↦ memberCode}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+END

@@ -1,0 +1,257 @@
+CONTEXT CinemaTicketingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BookingApp, CinemaServer, Customer
+    selectMovie_1, showtimes_2, pickSeat_3, seatStatus_4, reserveSeat_5, addSnack_6, issueTicket_7
+    movieID, schedule, seatAvail, seatNo, snackCombo, ticketCode
+AXIOMS
+    axm1: partition(Objects, {BookingApp}, {CinemaServer}, {Customer})
+    axm2: partition(Messages, {selectMovie_1}, {showtimes_2}, {pickSeat_3}, {seatStatus_4}, {reserveSeat_5}, {addSnack_6}, {issueTicket_7})
+    axm3: partition(DataMessages, {movieID}, {schedule}, {seatAvail}, {seatNo}, {snackCombo}, {ticketCode})
+END
+
+MACHINE CinemaTicketingInteractionMachine_1
+SEES CinemaTicketingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, seatTry, wantSnack, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: seatTry ∈ ℤ
+    inv9: wantSnack ∈ ℤ
+    inv10: t_time_4 ∈ ℤ
+    inv11: t_delay_4 ∈ ℤ
+    inv12: t_success_4 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: seatTry := 0
+        act9: wantSnack := 1
+        act10: t_time_4 :∈ 0..2
+        act11: t_delay_4 := 0
+        act12: t_success_4 := 0
+        act13: t_time_5 :∈ 0..5
+        act14: t_delay_5 := 10
+        act15: t_success_5 := 0
+    END
+
+
+    sendselectMovie_1
+    WHEN
+        grd1: selectMovie_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {selectMovie_1}
+        act2: sender := sender ∪ {selectMovie_1 ↦ Customer}
+        act3: receiver := receiver ∪ {selectMovie_1 ↦ BookingApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {selectMovie_1 ↦ movieID}
+        act6: currentMessage := {selectMovie_1}
+    END
+
+    receiveselectMovie_1
+    WHEN
+        grd1: selectMovie_1 ∈ sentMessages
+        grd2: selectMovie_1 ↦ Customer ∈ sender
+        grd3: selectMovie_1 ↦ BookingApp ∈ receiver
+        grd4: selectMovie_1 ∉ receivedMessages
+        grd5: currentMessage = {selectMovie_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {selectMovie_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {selectMovie_1 ↦ movieID}
+        act3: currentMessage := ∅
+    END
+
+    sendshowtimes_2
+    WHEN
+        grd1: showtimes_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: selectMovie_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {showtimes_2}
+        act2: sender := sender ∪ {showtimes_2 ↦ BookingApp}
+        act3: receiver := receiver ∪ {showtimes_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {showtimes_2 ↦ schedule}
+        act6: currentMessage := {showtimes_2}
+    END
+
+    receiveshowtimes_2
+    WHEN
+        grd1: showtimes_2 ∈ sentMessages
+        grd2: showtimes_2 ↦ BookingApp ∈ sender
+        grd3: showtimes_2 ↦ Customer ∈ receiver
+        grd4: showtimes_2 ∉ receivedMessages
+        grd5: currentMessage = {showtimes_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {showtimes_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {showtimes_2 ↦ schedule}
+        act3: currentMessage := ∅
+    END
+
+    sendpickSeat_3
+    WHEN
+        grd1: pickSeat_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: showtimes_2 ∈ receivedMessages
+        grd4: seatTry < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {pickSeat_3}
+        act2: sender := sender ∪ {pickSeat_3 ↦ Customer}
+        act3: receiver := receiver ∪ {pickSeat_3 ↦ BookingApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {pickSeat_3 ↦ seatNo}
+        act6: currentMessage := {pickSeat_3}
+    END
+
+    receivepickSeat_3
+    WHEN
+        grd1: pickSeat_3 ∈ sentMessages
+        grd2: pickSeat_3 ↦ Customer ∈ sender
+        grd3: pickSeat_3 ↦ BookingApp ∈ receiver
+        grd4: pickSeat_3 ∉ receivedMessages
+        grd5: currentMessage = {pickSeat_3}
+        grd6: seatTry < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pickSeat_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {pickSeat_3 ↦ seatNo}
+        act3: currentMessage := ∅
+    END
+
+    sendseatStatus_4
+    WHEN
+        grd1: seatStatus_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pickSeat_3 ∈ receivedMessages
+        grd4: seatTry < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {seatStatus_4}
+        act2: sender := sender ∪ {seatStatus_4 ↦ BookingApp}
+        act3: receiver := receiver ∪ {seatStatus_4 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {seatStatus_4 ↦ seatAvail}
+        act6: currentMessage := {seatStatus_4}
+    END
+
+    receiveseatStatus_4
+    WHEN
+        grd1: seatStatus_4 ∈ sentMessages
+        grd2: seatStatus_4 ↦ BookingApp ∈ sender
+        grd3: seatStatus_4 ↦ Customer ∈ receiver
+        grd4: seatStatus_4 ∉ receivedMessages
+        grd5: currentMessage = {seatStatus_4}
+        grd6: seatTry < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {seatStatus_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {seatStatus_4 ↦ seatAvail}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreserveSeat_5
+    WHEN
+        grd1: reserveSeat_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: seatStatus_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSeat_5}
+        act2: sender := sender ∪ {reserveSeat_5 ↦ BookingApp}
+        act3: receiver := receiver ∪ {reserveSeat_5 ↦ CinemaServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveSeat_5 ↦ seatNo}
+        act6: currentMessage := {reserveSeat_5}
+    END
+
+    receivereserveSeat_5
+    WHEN
+        grd1: reserveSeat_5 ∈ sentMessages
+        grd2: reserveSeat_5 ↦ BookingApp ∈ sender
+        grd3: reserveSeat_5 ↦ CinemaServer ∈ receiver
+        grd4: reserveSeat_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveSeat_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSeat_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveSeat_5 ↦ seatNo}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendaddSnack_6_opt1
+    WHEN
+        grd1: addSnack_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSeat_5 ∈ receivedMessages
+        grd4: wantSnack = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {addSnack_6}
+        act2: sender := sender ∪ {addSnack_6 ↦ Customer}
+        act3: receiver := receiver ∪ {addSnack_6 ↦ BookingApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {addSnack_6 ↦ snackCombo}
+        act6: currentMessage := {addSnack_6}
+    END
+
+    receiveaddSnack_6_opt1
+    WHEN
+        grd1: addSnack_6 ∈ sentMessages
+        grd2: addSnack_6 ↦ Customer ∈ sender
+        grd3: addSnack_6 ↦ BookingApp ∈ receiver
+        grd4: addSnack_6 ∉ receivedMessages
+        grd5: currentMessage = {addSnack_6}
+        grd6: wantSnack = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {addSnack_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {addSnack_6 ↦ snackCombo}
+        act3: currentMessage := ∅
+    END
+
+    sendissueTicket_7
+    WHEN
+        grd1: issueTicket_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: addSnack_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueTicket_7}
+        act2: sender := sender ∪ {issueTicket_7 ↦ CinemaServer}
+        act3: receiver := receiver ∪ {issueTicket_7 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueTicket_7 ↦ ticketCode}
+        act6: currentMessage := {issueTicket_7}
+    END
+
+    receiveissueTicket_7
+    WHEN
+        grd1: issueTicket_7 ∈ sentMessages
+        grd2: issueTicket_7 ↦ CinemaServer ∈ sender
+        grd3: issueTicket_7 ↦ Customer ∈ receiver
+        grd4: issueTicket_7 ∉ receivedMessages
+        grd5: currentMessage = {issueTicket_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueTicket_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueTicket_7 ↦ ticketCode}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_pickSeat_3_loop1
+    WHEN
+        grd1: seatTry < 3
+    THEN
+        act1: seatTry := seatTry + 1
+    END
+
+END

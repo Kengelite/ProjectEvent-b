@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="FactoryQualityGate" id="factoryqualitygate">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="loop" vertex="1">
+          <mxGeometry x="20" y="215" width="890" height="125" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[roundNo &lt; 7]" vertex="1">
+          <mxGeometry x="105" y="220" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Conveyor" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="445" as="geometry" />
+        </mxCell>
+        <mxCell id="ll4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="VisionCam" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="445" as="geometry" />
+        </mxCell>
+        <mxCell id="ll5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="QCServer" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="445" as="geometry" />
+        </mxCell>
+        <mxCell id="ll6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="RejectArm" vertex="1">
+          <mxGeometry x="790" y="40" width="100" height="445" as="geometry" />
+        </mxCell>
+        <mxCell id="m7" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="cancelPart() {0..15}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840.0" y="130" as="sourcePoint" />
+            <mxPoint x="590.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="fetchDefect(defectInfo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840.0" y="180" as="sourcePoint" />
+            <mxPoint x="590.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="logDefect(partInfo) {0..10}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="265" as="sourcePoint" />
+            <mxPoint x="840.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="notifyPart()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="315" as="sourcePoint" />
+            <mxPoint x="840.0" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reportPart(batchInfo) {0..10}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="375" as="sourcePoint" />
+            <mxPoint x="590.0" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="releaseBatch(batchCode) {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="425" as="sourcePoint" />
+            <mxPoint x="340.0" y="425" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

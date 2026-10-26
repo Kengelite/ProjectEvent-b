@@ -1,0 +1,291 @@
+CONTEXT PodcastPublishingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Creator, HostingSvc, StudioApp
+    validateFeed_1, assignAudio_2, sendEpisode_3, reserveEpisode_4, issueAudio_5, checkFeed_6, sendAudio_7, logAudio_8
+    audioValue, episodeCode, episodeInfo, feedCode
+AXIOMS
+    axm1: partition(Objects, {Creator}, {HostingSvc}, {StudioApp})
+    axm2: partition(Messages, {validateFeed_1}, {assignAudio_2}, {sendEpisode_3}, {reserveEpisode_4}, {issueAudio_5}, {checkFeed_6}, {sendAudio_7}, {logAudio_8})
+    axm3: partition(DataMessages, {audioValue}, {episodeCode}, {episodeInfo}, {feedCode})
+END
+
+MACHINE PodcastPublishingInteractionMachine_1
+SEES PodcastPublishingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: t_time_4 ∈ ℤ
+    inv10: t_delay_4 ∈ ℤ
+    inv11: t_success_4 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+    inv15: t_time_8 ∈ ℤ
+    inv16: t_delay_8 ∈ ℤ
+    inv17: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: t_time_4 :∈ 0..10
+        act10: t_delay_4 := 0
+        act11: t_success_4 := 0
+        act12: t_time_5 :∈ 0..30
+        act13: t_delay_5 := 0
+        act14: t_success_5 := 0
+        act15: t_time_8 :∈ 0..60
+        act16: t_delay_8 := 0
+        act17: t_success_8 := 0
+    END
+
+
+    sendvalidateFeed_1
+    WHEN
+        grd1: validateFeed_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateFeed_1}
+        act2: sender := sender ∪ {validateFeed_1 ↦ Creator}
+        act3: receiver := receiver ∪ {validateFeed_1 ↦ HostingSvc}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateFeed_1 ↦ audioValue}
+        act6: currentMessage := {validateFeed_1}
+    END
+
+    receivevalidateFeed_1
+    WHEN
+        grd1: validateFeed_1 ∈ sentMessages
+        grd2: validateFeed_1 ↦ Creator ∈ sender
+        grd3: validateFeed_1 ↦ HostingSvc ∈ receiver
+        grd4: validateFeed_1 ∉ receivedMessages
+        grd5: currentMessage = {validateFeed_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateFeed_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateFeed_1 ↦ audioValue}
+        act3: currentMessage := ∅
+    END
+
+    sendassignAudio_2
+    WHEN
+        grd1: assignAudio_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateFeed_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignAudio_2}
+        act2: sender := sender ∪ {assignAudio_2 ↦ Creator}
+        act3: receiver := receiver ∪ {assignAudio_2 ↦ StudioApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignAudio_2}
+    END
+
+    receiveassignAudio_2
+    WHEN
+        grd1: assignAudio_2 ∈ sentMessages
+        grd2: assignAudio_2 ↦ Creator ∈ sender
+        grd3: assignAudio_2 ↦ StudioApp ∈ receiver
+        grd4: assignAudio_2 ∉ receivedMessages
+        grd5: currentMessage = {assignAudio_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignAudio_2}
+        act2: currentMessage := ∅
+    END
+
+    sendsendEpisode_3
+    WHEN
+        grd1: sendEpisode_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignAudio_2 ∈ receivedMessages
+        grd4: retryNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendEpisode_3}
+        act2: sender := sender ∪ {sendEpisode_3 ↦ StudioApp}
+        act3: receiver := receiver ∪ {sendEpisode_3 ↦ Creator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendEpisode_3 ↦ episodeCode}
+        act6: currentMessage := {sendEpisode_3}
+    END
+
+    receivesendEpisode_3
+    WHEN
+        grd1: sendEpisode_3 ∈ sentMessages
+        grd2: sendEpisode_3 ↦ StudioApp ∈ sender
+        grd3: sendEpisode_3 ↦ Creator ∈ receiver
+        grd4: sendEpisode_3 ∉ receivedMessages
+        grd5: currentMessage = {sendEpisode_3}
+        grd6: retryNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendEpisode_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendEpisode_3 ↦ episodeCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveEpisode_4
+    WHEN
+        grd1: reserveEpisode_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendEpisode_3 ∈ receivedMessages
+        grd4: retryNo < 3
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveEpisode_4}
+        act2: sender := sender ∪ {reserveEpisode_4 ↦ StudioApp}
+        act3: receiver := receiver ∪ {reserveEpisode_4 ↦ Creator}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveEpisode_4}
+    END
+
+    receivereserveEpisode_4
+    WHEN
+        grd1: reserveEpisode_4 ∈ sentMessages
+        grd2: reserveEpisode_4 ↦ StudioApp ∈ sender
+        grd3: reserveEpisode_4 ↦ Creator ∈ receiver
+        grd4: reserveEpisode_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveEpisode_4}
+        grd6: retryNo < 3
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveEpisode_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendissueAudio_5
+    WHEN
+        grd1: issueAudio_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveEpisode_4 ∈ receivedMessages
+        grd4: retryNo < 3
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueAudio_5}
+        act2: sender := sender ∪ {issueAudio_5 ↦ Creator}
+        act3: receiver := receiver ∪ {issueAudio_5 ↦ StudioApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueAudio_5}
+    END
+
+    receiveissueAudio_5
+    WHEN
+        grd1: issueAudio_5 ∈ sentMessages
+        grd2: issueAudio_5 ↦ Creator ∈ sender
+        grd3: issueAudio_5 ↦ StudioApp ∈ receiver
+        grd4: issueAudio_5 ∉ receivedMessages
+        grd5: currentMessage = {issueAudio_5}
+        grd6: retryNo < 3
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueAudio_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcheckFeed_6
+    WHEN
+        grd1: checkFeed_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendEpisode_3 ∈ receivedMessages
+        grd4: retryNo < 3
+        grd5: retryNo mod 3 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkFeed_6}
+        act2: sender := sender ∪ {checkFeed_6 ↦ Creator}
+        act3: receiver := receiver ∪ {checkFeed_6 ↦ StudioApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkFeed_6}
+    END
+
+    receivecheckFeed_6
+    WHEN
+        grd1: checkFeed_6 ∈ sentMessages
+        grd2: checkFeed_6 ↦ Creator ∈ sender
+        grd3: checkFeed_6 ↦ StudioApp ∈ receiver
+        grd4: checkFeed_6 ∉ receivedMessages
+        grd5: currentMessage = {checkFeed_6}
+        grd6: retryNo < 3
+        grd7: retryNo mod 3 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkFeed_6}
+        act2: currentMessage := ∅
+    END
+
+    sendsendAudio_7
+    WHEN
+        grd1: sendAudio_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueAudio_5 ∈ receivedMessages ∨ checkFeed_6 ∈ receivedMessages
+        grd4: retryNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendAudio_7}
+        act2: sender := sender ∪ {sendAudio_7 ↦ HostingSvc}
+        act3: receiver := receiver ∪ {sendAudio_7 ↦ StudioApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendAudio_7 ↦ feedCode}
+        act6: currentMessage := {sendAudio_7}
+    END
+
+    receivesendAudio_7
+    WHEN
+        grd1: sendAudio_7 ∈ sentMessages
+        grd2: sendAudio_7 ↦ HostingSvc ∈ sender
+        grd3: sendAudio_7 ↦ StudioApp ∈ receiver
+        grd4: sendAudio_7 ∉ receivedMessages
+        grd5: currentMessage = {sendAudio_7}
+        grd6: retryNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendAudio_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendAudio_7 ↦ feedCode}
+        act3: currentMessage := ∅
+    END
+
+    sendlogAudio_8
+    WHEN
+        grd1: logAudio_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendAudio_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logAudio_8}
+        act2: sender := sender ∪ {logAudio_8 ↦ StudioApp}
+        act3: receiver := receiver ∪ {logAudio_8 ↦ HostingSvc}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logAudio_8 ↦ episodeInfo}
+        act6: currentMessage := {logAudio_8}
+    END
+
+    receivelogAudio_8
+    WHEN
+        grd1: logAudio_8 ∈ sentMessages
+        grd2: logAudio_8 ↦ StudioApp ∈ sender
+        grd3: logAudio_8 ↦ HostingSvc ∈ receiver
+        grd4: logAudio_8 ∉ receivedMessages
+        grd5: currentMessage = {logAudio_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logAudio_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logAudio_8 ↦ episodeInfo}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    checkloop_sendEpisode_3_loop1
+    WHEN
+        grd1: retryNo < 3
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

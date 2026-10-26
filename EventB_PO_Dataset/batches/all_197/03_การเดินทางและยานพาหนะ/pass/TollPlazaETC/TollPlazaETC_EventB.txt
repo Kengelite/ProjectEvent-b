@@ -1,0 +1,233 @@
+CONTEXT TollPlazaETCContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ETCBackend, TollGate, Vehicle
+    requestPlate_1, schedulePlate_2, validatePlate_3, validateToll_4, queryAccount_5, reservePlate_6
+    accountRef, plateInfo, plateValue, tollID, tollInfo, tollRef, tollValue
+AXIOMS
+    axm1: partition(Objects, {ETCBackend}, {TollGate}, {Vehicle})
+    axm2: partition(Messages, {requestPlate_1}, {schedulePlate_2}, {validatePlate_3}, {validateToll_4}, {queryAccount_5}, {reservePlate_6})
+    axm3: partition(DataMessages, {accountRef}, {plateInfo}, {plateValue}, {tollID}, {tollInfo}, {tollRef}, {tollValue})
+END
+
+MACHINE TollPlazaETCInteractionMachine_1
+SEES TollPlazaETCContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, withExtra, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: withExtra ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: withExtra := 1
+        act9: t_time_2 :∈ 0..30
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_3 :∈ 0..60
+        act13: t_delay_3 := 3
+        act14: t_success_3 := 0
+        act15: t_time_4 :∈ 0..0
+        act16: t_delay_4 := 1
+        act17: t_success_4 := 0
+        act18: t_time_6 :∈ 0..20
+        act19: t_delay_6 := 0
+        act20: t_success_6 := 0
+    END
+
+
+    sendrequestPlate_1
+    WHEN
+        grd1: requestPlate_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestPlate_1}
+        act2: sender := sender ∪ {requestPlate_1 ↦ TollGate}
+        act3: receiver := receiver ∪ {requestPlate_1 ↦ Vehicle}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestPlate_1 ↦ plateValue}
+        act6: currentMessage := {requestPlate_1}
+    END
+
+    receiverequestPlate_1
+    WHEN
+        grd1: requestPlate_1 ∈ sentMessages
+        grd2: requestPlate_1 ↦ TollGate ∈ sender
+        grd3: requestPlate_1 ↦ Vehicle ∈ receiver
+        grd4: requestPlate_1 ∉ receivedMessages
+        grd5: currentMessage = {requestPlate_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestPlate_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestPlate_1 ↦ plateValue}
+        act3: currentMessage := ∅
+    END
+
+    sendschedulePlate_2
+    WHEN
+        grd1: schedulePlate_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestPlate_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePlate_2}
+        act2: sender := sender ∪ {schedulePlate_2 ↦ Vehicle}
+        act3: receiver := receiver ∪ {schedulePlate_2 ↦ ETCBackend}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {schedulePlate_2 ↦ plateInfo, schedulePlate_2 ↦ tollInfo}
+        act6: currentMessage := {schedulePlate_2}
+    END
+
+    receiveschedulePlate_2
+    WHEN
+        grd1: schedulePlate_2 ∈ sentMessages
+        grd2: schedulePlate_2 ↦ Vehicle ∈ sender
+        grd3: schedulePlate_2 ↦ ETCBackend ∈ receiver
+        grd4: schedulePlate_2 ∉ receivedMessages
+        grd5: currentMessage = {schedulePlate_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePlate_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {schedulePlate_2 ↦ plateInfo, schedulePlate_2 ↦ tollInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendvalidatePlate_3_opt1
+    WHEN
+        grd1: validatePlate_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePlate_2 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePlate_3}
+        act2: sender := sender ∪ {validatePlate_3 ↦ ETCBackend}
+        act3: receiver := receiver ∪ {validatePlate_3 ↦ TollGate}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePlate_3 ↦ tollID}
+        act6: currentMessage := {validatePlate_3}
+    END
+
+    receivevalidatePlate_3_opt1
+    WHEN
+        grd1: validatePlate_3 ∈ sentMessages
+        grd2: validatePlate_3 ↦ ETCBackend ∈ sender
+        grd3: validatePlate_3 ↦ TollGate ∈ receiver
+        grd4: validatePlate_3 ∉ receivedMessages
+        grd5: currentMessage = {validatePlate_3}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePlate_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePlate_3 ↦ tollID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendvalidateToll_4_opt1
+    WHEN
+        grd1: validateToll_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePlate_3 ∈ receivedMessages
+        grd4: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateToll_4}
+        act2: sender := sender ∪ {validateToll_4 ↦ ETCBackend}
+        act3: receiver := receiver ∪ {validateToll_4 ↦ Vehicle}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateToll_4 ↦ accountRef}
+        act6: currentMessage := {validateToll_4}
+    END
+
+    receivevalidateToll_4_opt1
+    WHEN
+        grd1: validateToll_4 ∈ sentMessages
+        grd2: validateToll_4 ↦ ETCBackend ∈ sender
+        grd3: validateToll_4 ↦ Vehicle ∈ receiver
+        grd4: validateToll_4 ∉ receivedMessages
+        grd5: currentMessage = {validateToll_4}
+        grd6: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateToll_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateToll_4 ↦ accountRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendqueryAccount_5
+    WHEN
+        grd1: queryAccount_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateToll_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryAccount_5}
+        act2: sender := sender ∪ {queryAccount_5 ↦ TollGate}
+        act3: receiver := receiver ∪ {queryAccount_5 ↦ ETCBackend}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryAccount_5 ↦ tollValue}
+        act6: currentMessage := {queryAccount_5}
+    END
+
+    receivequeryAccount_5
+    WHEN
+        grd1: queryAccount_5 ∈ sentMessages
+        grd2: queryAccount_5 ↦ TollGate ∈ sender
+        grd3: queryAccount_5 ↦ ETCBackend ∈ receiver
+        grd4: queryAccount_5 ∉ receivedMessages
+        grd5: currentMessage = {queryAccount_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryAccount_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryAccount_5 ↦ tollValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreservePlate_6
+    WHEN
+        grd1: reservePlate_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryAccount_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePlate_6}
+        act2: sender := sender ∪ {reservePlate_6 ↦ TollGate}
+        act3: receiver := receiver ∪ {reservePlate_6 ↦ ETCBackend}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePlate_6 ↦ tollRef}
+        act6: currentMessage := {reservePlate_6}
+    END
+
+    receivereservePlate_6
+    WHEN
+        grd1: reservePlate_6 ∈ sentMessages
+        grd2: reservePlate_6 ↦ TollGate ∈ sender
+        grd3: reservePlate_6 ↦ ETCBackend ∈ receiver
+        grd4: reservePlate_6 ∉ receivedMessages
+        grd5: currentMessage = {reservePlate_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePlate_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePlate_6 ↦ tollRef}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

@@ -1,0 +1,312 @@
+CONTEXT OnlineExamContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ExamServer, ProctorAI, Student
+    login_1, fetchQuestion_2, questionData_3, autosave_4, saveAck_5, submitAnswer_6, flagBehavior_7, examResult_8
+    answer, content, draft, eventLog, questionID, score, studentID
+AXIOMS
+    axm1: partition(Objects, {ExamServer}, {ProctorAI}, {Student})
+    axm2: partition(Messages, {login_1}, {fetchQuestion_2}, {questionData_3}, {autosave_4}, {saveAck_5}, {submitAnswer_6}, {flagBehavior_7}, {examResult_8})
+    axm3: partition(DataMessages, {answer}, {content}, {draft}, {eventLog}, {questionID}, {score}, {studentID})
+END
+
+MACHINE OnlineExamInteractionMachine_1
+SEES OnlineExamContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, questionNo, autosaveCount, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: questionNo ∈ ℤ
+    inv9: autosaveCount ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_7 ∈ ℤ
+    inv17: t_delay_7 ∈ ℤ
+    inv18: t_success_7 ∈ ℤ
+    inv19: t_time_8 ∈ ℤ
+    inv20: t_delay_8 ∈ ℤ
+    inv21: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: questionNo := 0
+        act9: autosaveCount := 0
+        act10: t_time_2 :∈ 0..2
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_5 :∈ 0..1
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+        act16: t_time_7 :∈ 0..0
+        act17: t_delay_7 := 2
+        act18: t_success_7 := 0
+        act19: t_time_8 :∈ 0..5
+        act20: t_delay_8 := 0
+        act21: t_success_8 := 0
+    END
+
+
+    sendlogin_1
+    WHEN
+        grd1: login_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {login_1}
+        act2: sender := sender ∪ {login_1 ↦ Student}
+        act3: receiver := receiver ∪ {login_1 ↦ ExamServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {login_1 ↦ studentID}
+        act6: currentMessage := {login_1}
+    END
+
+    receivelogin_1
+    WHEN
+        grd1: login_1 ∈ sentMessages
+        grd2: login_1 ↦ Student ∈ sender
+        grd3: login_1 ↦ ExamServer ∈ receiver
+        grd4: login_1 ∉ receivedMessages
+        grd5: currentMessage = {login_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {login_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {login_1 ↦ studentID}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchQuestion_2
+    WHEN
+        grd1: fetchQuestion_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: login_1 ∈ receivedMessages
+        grd4: questionNo < 20
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchQuestion_2}
+        act2: sender := sender ∪ {fetchQuestion_2 ↦ Student}
+        act3: receiver := receiver ∪ {fetchQuestion_2 ↦ ExamServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchQuestion_2 ↦ questionID}
+        act6: currentMessage := {fetchQuestion_2}
+    END
+
+    receivefetchQuestion_2
+    WHEN
+        grd1: fetchQuestion_2 ∈ sentMessages
+        grd2: fetchQuestion_2 ↦ Student ∈ sender
+        grd3: fetchQuestion_2 ↦ ExamServer ∈ receiver
+        grd4: fetchQuestion_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchQuestion_2}
+        grd6: questionNo < 20
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchQuestion_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchQuestion_2 ↦ questionID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendquestionData_3
+    WHEN
+        grd1: questionData_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchQuestion_2 ∈ receivedMessages
+        grd4: questionNo < 20
+    THEN
+        act1: sentMessages := sentMessages ∪ {questionData_3}
+        act2: sender := sender ∪ {questionData_3 ↦ ExamServer}
+        act3: receiver := receiver ∪ {questionData_3 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {questionData_3 ↦ content}
+        act6: currentMessage := {questionData_3}
+    END
+
+    receivequestionData_3
+    WHEN
+        grd1: questionData_3 ∈ sentMessages
+        grd2: questionData_3 ↦ ExamServer ∈ sender
+        grd3: questionData_3 ↦ Student ∈ receiver
+        grd4: questionData_3 ∉ receivedMessages
+        grd5: currentMessage = {questionData_3}
+        grd6: questionNo < 20
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {questionData_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {questionData_3 ↦ content}
+        act3: currentMessage := ∅
+    END
+
+    sendautosave_4
+    WHEN
+        grd1: autosave_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: questionData_3 ∈ receivedMessages
+        grd4: questionNo < 20
+        grd5: autosaveCount < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {autosave_4}
+        act2: sender := sender ∪ {autosave_4 ↦ Student}
+        act3: receiver := receiver ∪ {autosave_4 ↦ ExamServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {autosave_4 ↦ draft}
+        act6: currentMessage := {autosave_4}
+    END
+
+    receiveautosave_4
+    WHEN
+        grd1: autosave_4 ∈ sentMessages
+        grd2: autosave_4 ↦ Student ∈ sender
+        grd3: autosave_4 ↦ ExamServer ∈ receiver
+        grd4: autosave_4 ∉ receivedMessages
+        grd5: currentMessage = {autosave_4}
+        grd6: questionNo < 20
+        grd7: autosaveCount < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {autosave_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {autosave_4 ↦ draft}
+        act3: currentMessage := ∅
+    END
+
+    sendsaveAck_5
+    WHEN
+        grd1: saveAck_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: autosave_4 ∈ receivedMessages
+        grd4: questionNo < 20
+        grd5: autosaveCount < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {saveAck_5}
+        act2: sender := sender ∪ {saveAck_5 ↦ ExamServer}
+        act3: receiver := receiver ∪ {saveAck_5 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {saveAck_5}
+    END
+
+    receivesaveAck_5
+    WHEN
+        grd1: saveAck_5 ∈ sentMessages
+        grd2: saveAck_5 ↦ ExamServer ∈ sender
+        grd3: saveAck_5 ↦ Student ∈ receiver
+        grd4: saveAck_5 ∉ receivedMessages
+        grd5: currentMessage = {saveAck_5}
+        grd6: questionNo < 20
+        grd7: autosaveCount < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {saveAck_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendsubmitAnswer_6
+    WHEN
+        grd1: submitAnswer_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: saveAck_5 ∈ receivedMessages
+        grd4: questionNo < 20
+    THEN
+        act1: sentMessages := sentMessages ∪ {submitAnswer_6}
+        act2: sender := sender ∪ {submitAnswer_6 ↦ Student}
+        act3: receiver := receiver ∪ {submitAnswer_6 ↦ ExamServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {submitAnswer_6 ↦ answer}
+        act6: currentMessage := {submitAnswer_6}
+    END
+
+    receivesubmitAnswer_6
+    WHEN
+        grd1: submitAnswer_6 ∈ sentMessages
+        grd2: submitAnswer_6 ↦ Student ∈ sender
+        grd3: submitAnswer_6 ↦ ExamServer ∈ receiver
+        grd4: submitAnswer_6 ∉ receivedMessages
+        grd5: currentMessage = {submitAnswer_6}
+        grd6: questionNo < 20
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {submitAnswer_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {submitAnswer_6 ↦ answer}
+        act3: currentMessage := ∅
+    END
+
+    sendflagBehavior_7
+    WHEN
+        grd1: flagBehavior_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: submitAnswer_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {flagBehavior_7}
+        act2: sender := sender ∪ {flagBehavior_7 ↦ ProctorAI}
+        act3: receiver := receiver ∪ {flagBehavior_7 ↦ ExamServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {flagBehavior_7 ↦ eventLog}
+        act6: currentMessage := {flagBehavior_7}
+    END
+
+    receiveflagBehavior_7
+    WHEN
+        grd1: flagBehavior_7 ∈ sentMessages
+        grd2: flagBehavior_7 ↦ ProctorAI ∈ sender
+        grd3: flagBehavior_7 ↦ ExamServer ∈ receiver
+        grd4: flagBehavior_7 ∉ receivedMessages
+        grd5: currentMessage = {flagBehavior_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {flagBehavior_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {flagBehavior_7 ↦ eventLog}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendexamResult_8
+    WHEN
+        grd1: examResult_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: flagBehavior_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {examResult_8}
+        act2: sender := sender ∪ {examResult_8 ↦ ExamServer}
+        act3: receiver := receiver ∪ {examResult_8 ↦ Student}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {examResult_8 ↦ score}
+        act6: currentMessage := {examResult_8}
+    END
+
+    receiveexamResult_8
+    WHEN
+        grd1: examResult_8 ∈ sentMessages
+        grd2: examResult_8 ↦ ExamServer ∈ sender
+        grd3: examResult_8 ↦ Student ∈ receiver
+        grd4: examResult_8 ∉ receivedMessages
+        grd5: currentMessage = {examResult_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {examResult_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {examResult_8 ↦ score}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    checkloop_fetchQuestion_2_loop1
+    WHEN
+        grd1: questionNo < 20
+    THEN
+        act1: questionNo := questionNo + 1
+    END
+
+    checkloop_autosave_4_loop2
+    WHEN
+        grd1: questionNo < 20
+        grd2: autosaveCount < 3
+    THEN
+        act1: autosaveCount := autosaveCount + 1
+    END
+
+END

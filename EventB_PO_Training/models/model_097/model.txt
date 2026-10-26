@@ -1,0 +1,413 @@
+CONTEXT FoodTruckOrderingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Customer, Kitchen, OrderTablet
+    validateOrder_1, checkPickup_2, releasePickup_3, issueDish_4, checkDish_5, cancelDish_6, cancelPickup_7, assignPickup_8, approvePickup_9, ackOrder_10, checkOrder_11
+    dishCode, dishID, dishValue, orderCode, pickupCode, pickupData, pickupID, pickupInfo, pickupRef
+    GREEN, RED
+AXIOMS
+    axm1: partition(Objects, {Customer}, {Kitchen}, {OrderTablet})
+    axm2: partition(Messages, {validateOrder_1}, {checkPickup_2}, {releasePickup_3}, {issueDish_4}, {checkDish_5}, {cancelDish_6}, {cancelPickup_7}, {assignPickup_8}, {approvePickup_9}, {ackOrder_10}, {checkOrder_11})
+    axm3: partition(DataMessages, {dishCode}, {dishID}, {dishValue}, {orderCode}, {pickupCode}, {pickupData}, {pickupID}, {pickupInfo}, {pickupRef})
+    axm4: GREEN = 0
+    axm5: RED = 1
+END
+
+MACHINE FoodTruckOrderingInteractionMachine_1
+SEES FoodTruckOrderingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, pollNo, needAck, express, tier, t_time_1, t_delay_1, t_success_1, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: pollNo ∈ ℤ
+    inv9: needAck ∈ ℤ
+    inv10: express ∈ ℤ
+    inv11: tier ∈ ℤ
+    inv12: t_time_1 ∈ ℤ
+    inv13: t_delay_1 ∈ ℤ
+    inv14: t_success_1 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+    inv18: t_time_7 ∈ ℤ
+    inv19: t_delay_7 ∈ ℤ
+    inv20: t_success_7 ∈ ℤ
+    inv21: t_time_8 ∈ ℤ
+    inv22: t_delay_8 ∈ ℤ
+    inv23: t_success_8 ∈ ℤ
+    inv24: t_time_10 ∈ ℤ
+    inv25: t_delay_10 ∈ ℤ
+    inv26: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: pollNo := 0
+        act9: needAck := 1
+        act10: express := 1
+        act11: tier := RED
+        act12: t_time_1 :∈ 0..2
+        act13: t_delay_1 := 2
+        act14: t_success_1 := 0
+        act15: t_time_5 :∈ 0..60
+        act16: t_delay_5 := 10
+        act17: t_success_5 := 0
+        act18: t_time_7 :∈ 0..5
+        act19: t_delay_7 := 0
+        act20: t_success_7 := 0
+        act21: t_time_8 :∈ 0..2
+        act22: t_delay_8 := 0
+        act23: t_success_8 := 0
+        act24: t_time_10 :∈ 0..5
+        act25: t_delay_10 := 0
+        act26: t_success_10 := 0
+    END
+
+
+    sendvalidateOrder_1
+    WHEN
+        grd1: validateOrder_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateOrder_1}
+        act2: sender := sender ∪ {validateOrder_1 ↦ Customer}
+        act3: receiver := receiver ∪ {validateOrder_1 ↦ OrderTablet}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateOrder_1 ↦ pickupInfo}
+        act6: currentMessage := {validateOrder_1}
+    END
+
+    receivevalidateOrder_1
+    WHEN
+        grd1: validateOrder_1 ∈ sentMessages
+        grd2: validateOrder_1 ↦ Customer ∈ sender
+        grd3: validateOrder_1 ↦ OrderTablet ∈ receiver
+        grd4: validateOrder_1 ∉ receivedMessages
+        grd5: currentMessage = {validateOrder_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateOrder_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateOrder_1 ↦ pickupInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendcheckPickup_2
+    WHEN
+        grd1: checkPickup_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateOrder_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkPickup_2}
+        act2: sender := sender ∪ {checkPickup_2 ↦ OrderTablet}
+        act3: receiver := receiver ∪ {checkPickup_2 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkPickup_2 ↦ dishCode}
+        act6: currentMessage := {checkPickup_2}
+    END
+
+    receivecheckPickup_2
+    WHEN
+        grd1: checkPickup_2 ∈ sentMessages
+        grd2: checkPickup_2 ↦ OrderTablet ∈ sender
+        grd3: checkPickup_2 ↦ Customer ∈ receiver
+        grd4: checkPickup_2 ∉ receivedMessages
+        grd5: currentMessage = {checkPickup_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkPickup_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkPickup_2 ↦ dishCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreleasePickup_3
+    WHEN
+        grd1: releasePickup_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkPickup_2 ∈ receivedMessages
+        grd4: pollNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {releasePickup_3}
+        act2: sender := sender ∪ {releasePickup_3 ↦ OrderTablet}
+        act3: receiver := receiver ∪ {releasePickup_3 ↦ Kitchen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releasePickup_3 ↦ dishID}
+        act6: currentMessage := {releasePickup_3}
+    END
+
+    receivereleasePickup_3
+    WHEN
+        grd1: releasePickup_3 ∈ sentMessages
+        grd2: releasePickup_3 ↦ OrderTablet ∈ sender
+        grd3: releasePickup_3 ↦ Kitchen ∈ receiver
+        grd4: releasePickup_3 ∉ receivedMessages
+        grd5: currentMessage = {releasePickup_3}
+        grd6: pollNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releasePickup_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releasePickup_3 ↦ dishID}
+        act3: currentMessage := ∅
+    END
+
+    sendissueDish_4_opt1
+    WHEN
+        grd1: issueDish_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releasePickup_3 ∈ receivedMessages
+        grd4: pollNo < 5
+        grd5: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueDish_4}
+        act2: sender := sender ∪ {issueDish_4 ↦ OrderTablet}
+        act3: receiver := receiver ∪ {issueDish_4 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueDish_4}
+    END
+
+    receiveissueDish_4_opt1
+    WHEN
+        grd1: issueDish_4 ∈ sentMessages
+        grd2: issueDish_4 ↦ OrderTablet ∈ sender
+        grd3: issueDish_4 ↦ Customer ∈ receiver
+        grd4: issueDish_4 ∉ receivedMessages
+        grd5: currentMessage = {issueDish_4}
+        grd6: pollNo < 5
+        grd7: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueDish_4}
+        act2: currentMessage := ∅
+    END
+
+    sendcheckDish_5
+    WHEN
+        grd1: checkDish_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueDish_4 ∈ receivedMessages
+        grd4: pollNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkDish_5}
+        act2: sender := sender ∪ {checkDish_5 ↦ Kitchen}
+        act3: receiver := receiver ∪ {checkDish_5 ↦ OrderTablet}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkDish_5}
+    END
+
+    receivecheckDish_5
+    WHEN
+        grd1: checkDish_5 ∈ sentMessages
+        grd2: checkDish_5 ↦ Kitchen ∈ sender
+        grd3: checkDish_5 ↦ OrderTablet ∈ receiver
+        grd4: checkDish_5 ∉ receivedMessages
+        grd5: currentMessage = {checkDish_5}
+        grd6: pollNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkDish_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcancelDish_6_opt2
+    WHEN
+        grd1: cancelDish_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkDish_5 ∈ receivedMessages
+        grd4: pollNo < 5
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelDish_6}
+        act2: sender := sender ∪ {cancelDish_6 ↦ Kitchen}
+        act3: receiver := receiver ∪ {cancelDish_6 ↦ OrderTablet}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelDish_6 ↦ pickupRef}
+        act6: currentMessage := {cancelDish_6}
+    END
+
+    receivecancelDish_6_opt2
+    WHEN
+        grd1: cancelDish_6 ∈ sentMessages
+        grd2: cancelDish_6 ↦ Kitchen ∈ sender
+        grd3: cancelDish_6 ↦ OrderTablet ∈ receiver
+        grd4: cancelDish_6 ∉ receivedMessages
+        grd5: currentMessage = {cancelDish_6}
+        grd6: pollNo < 5
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelDish_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelDish_6 ↦ pickupRef}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelPickup_7_opt2
+    WHEN
+        grd1: cancelPickup_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelDish_6 ∈ receivedMessages
+        grd4: pollNo < 5
+        grd5: express = 1
+        grd6: tier = GREEN
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelPickup_7}
+        act2: sender := sender ∪ {cancelPickup_7 ↦ Kitchen}
+        act3: receiver := receiver ∪ {cancelPickup_7 ↦ OrderTablet}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelPickup_7 ↦ dishValue}
+        act6: currentMessage := {cancelPickup_7}
+    END
+
+    receivecancelPickup_7_opt2
+    WHEN
+        grd1: cancelPickup_7 ∈ sentMessages
+        grd2: cancelPickup_7 ↦ Kitchen ∈ sender
+        grd3: cancelPickup_7 ↦ OrderTablet ∈ receiver
+        grd4: cancelPickup_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelPickup_7}
+        grd6: pollNo < 5
+        grd7: express = 1
+        grd8: tier = GREEN
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelPickup_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelPickup_7 ↦ dishValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendassignPickup_8_opt2
+    WHEN
+        grd1: assignPickup_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelDish_6 ∈ receivedMessages
+        grd4: pollNo < 5
+        grd5: express = 1
+        grd6: tier = RED
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignPickup_8}
+        act2: sender := sender ∪ {assignPickup_8 ↦ OrderTablet}
+        act3: receiver := receiver ∪ {assignPickup_8 ↦ Kitchen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignPickup_8 ↦ pickupCode}
+        act6: currentMessage := {assignPickup_8}
+    END
+
+    receiveassignPickup_8_opt2
+    WHEN
+        grd1: assignPickup_8 ∈ sentMessages
+        grd2: assignPickup_8 ↦ OrderTablet ∈ sender
+        grd3: assignPickup_8 ↦ Kitchen ∈ receiver
+        grd4: assignPickup_8 ∉ receivedMessages
+        grd5: currentMessage = {assignPickup_8}
+        grd6: pollNo < 5
+        grd7: express = 1
+        grd8: tier = RED
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignPickup_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignPickup_8 ↦ pickupCode}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendapprovePickup_9_opt2
+    WHEN
+        grd1: approvePickup_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelPickup_7 ∈ receivedMessages ∨ assignPickup_8 ∈ receivedMessages
+        grd4: pollNo < 5
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvePickup_9}
+        act2: sender := sender ∪ {approvePickup_9 ↦ Kitchen}
+        act3: receiver := receiver ∪ {approvePickup_9 ↦ Customer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approvePickup_9 ↦ pickupData}
+        act6: currentMessage := {approvePickup_9}
+    END
+
+    receiveapprovePickup_9_opt2
+    WHEN
+        grd1: approvePickup_9 ∈ sentMessages
+        grd2: approvePickup_9 ↦ Kitchen ∈ sender
+        grd3: approvePickup_9 ↦ Customer ∈ receiver
+        grd4: approvePickup_9 ∉ receivedMessages
+        grd5: currentMessage = {approvePickup_9}
+        grd6: pollNo < 5
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvePickup_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approvePickup_9 ↦ pickupData}
+        act3: currentMessage := ∅
+    END
+
+    sendackOrder_10
+    WHEN
+        grd1: ackOrder_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvePickup_9 ∈ receivedMessages
+        grd4: pollNo < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackOrder_10}
+        act2: sender := sender ∪ {ackOrder_10 ↦ OrderTablet}
+        act3: receiver := receiver ∪ {ackOrder_10 ↦ Kitchen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackOrder_10 ↦ pickupID}
+        act6: currentMessage := {ackOrder_10}
+    END
+
+    receiveackOrder_10
+    WHEN
+        grd1: ackOrder_10 ∈ sentMessages
+        grd2: ackOrder_10 ↦ OrderTablet ∈ sender
+        grd3: ackOrder_10 ↦ Kitchen ∈ receiver
+        grd4: ackOrder_10 ∉ receivedMessages
+        grd5: currentMessage = {ackOrder_10}
+        grd6: pollNo < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackOrder_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackOrder_10 ↦ pickupID}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendcheckOrder_11
+    WHEN
+        grd1: checkOrder_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackOrder_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkOrder_11}
+        act2: sender := sender ∪ {checkOrder_11 ↦ Customer}
+        act3: receiver := receiver ∪ {checkOrder_11 ↦ Kitchen}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkOrder_11 ↦ orderCode}
+        act6: currentMessage := {checkOrder_11}
+    END
+
+    receivecheckOrder_11
+    WHEN
+        grd1: checkOrder_11 ∈ sentMessages
+        grd2: checkOrder_11 ↦ Customer ∈ sender
+        grd3: checkOrder_11 ↦ Kitchen ∈ receiver
+        grd4: checkOrder_11 ∉ receivedMessages
+        grd5: currentMessage = {checkOrder_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkOrder_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkOrder_11 ↦ orderCode}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_releasePickup_3_loop1
+    WHEN
+        grd1: pollNo < 5
+    THEN
+        act1: pollNo := pollNo + 1
+    END
+
+END

@@ -1,0 +1,271 @@
+CONTEXT EmailVerificationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    AuthServer, User
+    register_1, sendCode_2, resendRequest_3, resendCode_4, submitCode_5, verifyResult_6, accountActivated_7
+    email, otp, userID, verifyStatus
+AXIOMS
+    axm1: partition(Objects, {AuthServer}, {User})
+    axm2: partition(Messages, {register_1}, {sendCode_2}, {resendRequest_3}, {resendCode_4}, {submitCode_5}, {verifyResult_6}, {accountActivated_7})
+    axm3: partition(DataMessages, {email}, {otp}, {userID}, {verifyStatus})
+END
+
+MACHINE EmailVerificationInteractionMachine_1
+SEES EmailVerificationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, resendCount, verifyAttempt, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: resendCount ∈ ℤ
+    inv9: verifyAttempt ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: resendCount := 0
+        act9: verifyAttempt := 0
+        act10: t_time_2 :∈ 0..60
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_4 :∈ 0..60
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_6 :∈ 0..2
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+    END
+
+
+    sendregister_1
+    WHEN
+        grd1: register_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {register_1}
+        act2: sender := sender ∪ {register_1 ↦ User}
+        act3: receiver := receiver ∪ {register_1 ↦ AuthServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {register_1 ↦ email}
+        act6: currentMessage := {register_1}
+    END
+
+    receiveregister_1
+    WHEN
+        grd1: register_1 ∈ sentMessages
+        grd2: register_1 ↦ User ∈ sender
+        grd3: register_1 ↦ AuthServer ∈ receiver
+        grd4: register_1 ∉ receivedMessages
+        grd5: currentMessage = {register_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {register_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {register_1 ↦ email}
+        act3: currentMessage := ∅
+    END
+
+    sendsendCode_2
+    WHEN
+        grd1: sendCode_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: register_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendCode_2}
+        act2: sender := sender ∪ {sendCode_2 ↦ AuthServer}
+        act3: receiver := receiver ∪ {sendCode_2 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendCode_2 ↦ otp}
+        act6: currentMessage := {sendCode_2}
+    END
+
+    receivesendCode_2
+    WHEN
+        grd1: sendCode_2 ∈ sentMessages
+        grd2: sendCode_2 ↦ AuthServer ∈ sender
+        grd3: sendCode_2 ↦ User ∈ receiver
+        grd4: sendCode_2 ∉ receivedMessages
+        grd5: currentMessage = {sendCode_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendCode_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendCode_2 ↦ otp}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendresendRequest_3
+    WHEN
+        grd1: resendRequest_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendCode_2 ∈ receivedMessages
+        grd4: resendCount < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {resendRequest_3}
+        act2: sender := sender ∪ {resendRequest_3 ↦ User}
+        act3: receiver := receiver ∪ {resendRequest_3 ↦ AuthServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {resendRequest_3}
+    END
+
+    receiveresendRequest_3
+    WHEN
+        grd1: resendRequest_3 ∈ sentMessages
+        grd2: resendRequest_3 ↦ User ∈ sender
+        grd3: resendRequest_3 ↦ AuthServer ∈ receiver
+        grd4: resendRequest_3 ∉ receivedMessages
+        grd5: currentMessage = {resendRequest_3}
+        grd6: resendCount < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {resendRequest_3}
+        act2: currentMessage := ∅
+    END
+
+    sendresendCode_4
+    WHEN
+        grd1: resendCode_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: resendRequest_3 ∈ receivedMessages
+        grd4: resendCount < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {resendCode_4}
+        act2: sender := sender ∪ {resendCode_4 ↦ AuthServer}
+        act3: receiver := receiver ∪ {resendCode_4 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {resendCode_4 ↦ otp}
+        act6: currentMessage := {resendCode_4}
+    END
+
+    receiveresendCode_4
+    WHEN
+        grd1: resendCode_4 ∈ sentMessages
+        grd2: resendCode_4 ↦ AuthServer ∈ sender
+        grd3: resendCode_4 ↦ User ∈ receiver
+        grd4: resendCode_4 ∉ receivedMessages
+        grd5: currentMessage = {resendCode_4}
+        grd6: resendCount < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {resendCode_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {resendCode_4 ↦ otp}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsubmitCode_5
+    WHEN
+        grd1: submitCode_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: resendCode_4 ∈ receivedMessages
+        grd4: verifyAttempt < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {submitCode_5}
+        act2: sender := sender ∪ {submitCode_5 ↦ User}
+        act3: receiver := receiver ∪ {submitCode_5 ↦ AuthServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {submitCode_5 ↦ otp}
+        act6: currentMessage := {submitCode_5}
+    END
+
+    receivesubmitCode_5
+    WHEN
+        grd1: submitCode_5 ∈ sentMessages
+        grd2: submitCode_5 ↦ User ∈ sender
+        grd3: submitCode_5 ↦ AuthServer ∈ receiver
+        grd4: submitCode_5 ∉ receivedMessages
+        grd5: currentMessage = {submitCode_5}
+        grd6: verifyAttempt < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {submitCode_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {submitCode_5 ↦ otp}
+        act3: currentMessage := ∅
+    END
+
+    sendverifyResult_6
+    WHEN
+        grd1: verifyResult_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: submitCode_5 ∈ receivedMessages
+        grd4: verifyAttempt < 5
+    THEN
+        act1: sentMessages := sentMessages ∪ {verifyResult_6}
+        act2: sender := sender ∪ {verifyResult_6 ↦ AuthServer}
+        act3: receiver := receiver ∪ {verifyResult_6 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {verifyResult_6 ↦ verifyStatus}
+        act6: currentMessage := {verifyResult_6}
+    END
+
+    receiveverifyResult_6
+    WHEN
+        grd1: verifyResult_6 ∈ sentMessages
+        grd2: verifyResult_6 ↦ AuthServer ∈ sender
+        grd3: verifyResult_6 ↦ User ∈ receiver
+        grd4: verifyResult_6 ∉ receivedMessages
+        grd5: currentMessage = {verifyResult_6}
+        grd6: verifyAttempt < 5
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {verifyResult_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {verifyResult_6 ↦ verifyStatus}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendaccountActivated_7
+    WHEN
+        grd1: accountActivated_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: verifyResult_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {accountActivated_7}
+        act2: sender := sender ∪ {accountActivated_7 ↦ AuthServer}
+        act3: receiver := receiver ∪ {accountActivated_7 ↦ User}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {accountActivated_7 ↦ userID}
+        act6: currentMessage := {accountActivated_7}
+    END
+
+    receiveaccountActivated_7
+    WHEN
+        grd1: accountActivated_7 ∈ sentMessages
+        grd2: accountActivated_7 ↦ AuthServer ∈ sender
+        grd3: accountActivated_7 ↦ User ∈ receiver
+        grd4: accountActivated_7 ∉ receivedMessages
+        grd5: currentMessage = {accountActivated_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {accountActivated_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {accountActivated_7 ↦ userID}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_resendRequest_3_loop1
+    WHEN
+        grd1: resendCount < 3
+    THEN
+        act1: resendCount := resendCount + 1
+    END
+
+    checkloop_submitCode_5_loop2
+    WHEN
+        grd1: verifyAttempt < 5
+    THEN
+        act1: verifyAttempt := verifyAttempt + 1
+    END
+
+END

@@ -1,0 +1,254 @@
+CONTEXT IoTDoorbellContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CloudRelay, Doorbell, OwnerApp, Visitor
+    approveMessage_1, ackVideo_2, assignVideo_3, notifyRing_4, reserveMessage_5, requestRing_6, checkVideo_7
+    messageID, messageInfo, ringInfo, videoID
+AXIOMS
+    axm1: partition(Objects, {CloudRelay}, {Doorbell}, {OwnerApp}, {Visitor})
+    axm2: partition(Messages, {approveMessage_1}, {ackVideo_2}, {assignVideo_3}, {notifyRing_4}, {reserveMessage_5}, {requestRing_6}, {checkVideo_7})
+    axm3: partition(DataMessages, {messageID}, {messageInfo}, {ringInfo}, {videoID})
+END
+
+MACHINE IoTDoorbellInteractionMachine_1
+SEES IoTDoorbellContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, needAck, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: needAck ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: needAck := 1
+        act10: t_time_1 :∈ 0..3
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..10
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_5 :∈ 0..30
+        act17: t_delay_5 := 5
+        act18: t_success_5 := 0
+        act19: t_time_7 :∈ 0..3
+        act20: t_delay_7 := 1
+        act21: t_success_7 := 0
+    END
+
+
+    sendapproveMessage_1
+    WHEN
+        grd1: approveMessage_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveMessage_1}
+        act2: sender := sender ∪ {approveMessage_1 ↦ Visitor}
+        act3: receiver := receiver ∪ {approveMessage_1 ↦ CloudRelay}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveMessage_1 ↦ messageID, approveMessage_1 ↦ ringInfo}
+        act6: currentMessage := {approveMessage_1}
+    END
+
+    receiveapproveMessage_1
+    WHEN
+        grd1: approveMessage_1 ∈ sentMessages
+        grd2: approveMessage_1 ↦ Visitor ∈ sender
+        grd3: approveMessage_1 ↦ CloudRelay ∈ receiver
+        grd4: approveMessage_1 ∉ receivedMessages
+        grd5: currentMessage = {approveMessage_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveMessage_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveMessage_1 ↦ messageID, approveMessage_1 ↦ ringInfo}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendackVideo_2
+    WHEN
+        grd1: ackVideo_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveMessage_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackVideo_2}
+        act2: sender := sender ∪ {ackVideo_2 ↦ OwnerApp}
+        act3: receiver := receiver ∪ {ackVideo_2 ↦ Doorbell}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackVideo_2}
+    END
+
+    receiveackVideo_2
+    WHEN
+        grd1: ackVideo_2 ∈ sentMessages
+        grd2: ackVideo_2 ↦ OwnerApp ∈ sender
+        grd3: ackVideo_2 ↦ Doorbell ∈ receiver
+        grd4: ackVideo_2 ∉ receivedMessages
+        grd5: currentMessage = {ackVideo_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackVideo_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendassignVideo_3_opt1
+    WHEN
+        grd1: assignVideo_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackVideo_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignVideo_3}
+        act2: sender := sender ∪ {assignVideo_3 ↦ Doorbell}
+        act3: receiver := receiver ∪ {assignVideo_3 ↦ CloudRelay}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignVideo_3}
+    END
+
+    receiveassignVideo_3_opt1
+    WHEN
+        grd1: assignVideo_3 ∈ sentMessages
+        grd2: assignVideo_3 ↦ Doorbell ∈ sender
+        grd3: assignVideo_3 ↦ CloudRelay ∈ receiver
+        grd4: assignVideo_3 ∉ receivedMessages
+        grd5: currentMessage = {assignVideo_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignVideo_3}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyRing_4
+    WHEN
+        grd1: notifyRing_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignVideo_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyRing_4}
+        act2: sender := sender ∪ {notifyRing_4 ↦ OwnerApp}
+        act3: receiver := receiver ∪ {notifyRing_4 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyRing_4 ↦ videoID}
+        act6: currentMessage := {notifyRing_4}
+    END
+
+    receivenotifyRing_4
+    WHEN
+        grd1: notifyRing_4 ∈ sentMessages
+        grd2: notifyRing_4 ↦ OwnerApp ∈ sender
+        grd3: notifyRing_4 ↦ Visitor ∈ receiver
+        grd4: notifyRing_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyRing_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyRing_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyRing_4 ↦ videoID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveMessage_5
+    WHEN
+        grd1: reserveMessage_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyRing_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveMessage_5}
+        act2: sender := sender ∪ {reserveMessage_5 ↦ Doorbell}
+        act3: receiver := receiver ∪ {reserveMessage_5 ↦ OwnerApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveMessage_5}
+    END
+
+    receivereserveMessage_5
+    WHEN
+        grd1: reserveMessage_5 ∈ sentMessages
+        grd2: reserveMessage_5 ↦ Doorbell ∈ sender
+        grd3: reserveMessage_5 ↦ OwnerApp ∈ receiver
+        grd4: reserveMessage_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveMessage_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveMessage_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrequestRing_6_opt2
+    WHEN
+        grd1: requestRing_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveMessage_5 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestRing_6}
+        act2: sender := sender ∪ {requestRing_6 ↦ CloudRelay}
+        act3: receiver := receiver ∪ {requestRing_6 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestRing_6 ↦ messageInfo}
+        act6: currentMessage := {requestRing_6}
+    END
+
+    receiverequestRing_6_opt2
+    WHEN
+        grd1: requestRing_6 ∈ sentMessages
+        grd2: requestRing_6 ↦ CloudRelay ∈ sender
+        grd3: requestRing_6 ↦ Visitor ∈ receiver
+        grd4: requestRing_6 ∉ receivedMessages
+        grd5: currentMessage = {requestRing_6}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestRing_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestRing_6 ↦ messageInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckVideo_7
+    WHEN
+        grd1: checkVideo_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestRing_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkVideo_7}
+        act2: sender := sender ∪ {checkVideo_7 ↦ Doorbell}
+        act3: receiver := receiver ∪ {checkVideo_7 ↦ CloudRelay}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {checkVideo_7}
+    END
+
+    receivecheckVideo_7
+    WHEN
+        grd1: checkVideo_7 ∈ sentMessages
+        grd2: checkVideo_7 ↦ Doorbell ∈ sender
+        grd3: checkVideo_7 ↦ CloudRelay ∈ receiver
+        grd4: checkVideo_7 ∉ receivedMessages
+        grd5: currentMessage = {checkVideo_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkVideo_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+END

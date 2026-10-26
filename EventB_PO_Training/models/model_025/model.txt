@@ -1,0 +1,356 @@
+CONTEXT InsuranceClaimContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Assessor, Bank, ClaimPortal, Claimant
+    submitClaim_1, uploadDocs_2, approvalNotice_3, assignAssessor_4, siteVisit_5, visitDone_6, assessmentReport_7, payout_8, transferDone_9, notifyClaimant_10
+    amountPaid, caseID, claimValue, docs, outcome, policyNo, reportID, txnID, visitDate
+AXIOMS
+    axm1: partition(Objects, {Assessor}, {Bank}, {ClaimPortal}, {Claimant})
+    axm2: partition(Messages, {submitClaim_1}, {uploadDocs_2}, {approvalNotice_3}, {assignAssessor_4}, {siteVisit_5}, {visitDone_6}, {assessmentReport_7}, {payout_8}, {transferDone_9}, {notifyClaimant_10})
+    axm3: partition(DataMessages, {amountPaid}, {caseID}, {claimValue}, {docs}, {outcome}, {policyNo}, {reportID}, {txnID}, {visitDate})
+END
+
+MACHINE InsuranceClaimInteractionMachine_1
+SEES InsuranceClaimContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, hasDocs, claimAmount, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: hasDocs ∈ ℤ
+    inv9: claimAmount ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_7 ∈ ℤ
+    inv20: t_delay_7 ∈ ℤ
+    inv21: t_success_7 ∈ ℤ
+    inv22: t_time_8 ∈ ℤ
+    inv23: t_delay_8 ∈ ℤ
+    inv24: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: hasDocs := 1
+        act9: claimAmount :∈ ℤ
+        act10: t_time_3 :∈ 0..1
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_4 :∈ 0..48
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..0
+        act17: t_delay_5 := 24
+        act18: t_success_5 := 0
+        act19: t_time_7 :∈ 0..72
+        act20: t_delay_7 := 0
+        act21: t_success_7 := 0
+        act22: t_time_8 :∈ 0..5
+        act23: t_delay_8 := 0
+        act24: t_success_8 := 0
+    END
+
+
+    sendsubmitClaim_1
+    WHEN
+        grd1: submitClaim_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {submitClaim_1}
+        act2: sender := sender ∪ {submitClaim_1 ↦ Claimant}
+        act3: receiver := receiver ∪ {submitClaim_1 ↦ ClaimPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {submitClaim_1 ↦ policyNo, submitClaim_1 ↦ claimValue}
+        act6: currentMessage := {submitClaim_1}
+    END
+
+    receivesubmitClaim_1
+    WHEN
+        grd1: submitClaim_1 ∈ sentMessages
+        grd2: submitClaim_1 ↦ Claimant ∈ sender
+        grd3: submitClaim_1 ↦ ClaimPortal ∈ receiver
+        grd4: submitClaim_1 ∉ receivedMessages
+        grd5: currentMessage = {submitClaim_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {submitClaim_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {submitClaim_1 ↦ policyNo, submitClaim_1 ↦ claimValue}
+        act3: currentMessage := ∅
+    END
+
+    senduploadDocs_2_opt1
+    WHEN
+        grd1: uploadDocs_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: submitClaim_1 ∈ receivedMessages
+        grd4: hasDocs = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {uploadDocs_2}
+        act2: sender := sender ∪ {uploadDocs_2 ↦ Claimant}
+        act3: receiver := receiver ∪ {uploadDocs_2 ↦ ClaimPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {uploadDocs_2 ↦ docs}
+        act6: currentMessage := {uploadDocs_2}
+    END
+
+    receiveuploadDocs_2_opt1
+    WHEN
+        grd1: uploadDocs_2 ∈ sentMessages
+        grd2: uploadDocs_2 ↦ Claimant ∈ sender
+        grd3: uploadDocs_2 ↦ ClaimPortal ∈ receiver
+        grd4: uploadDocs_2 ∉ receivedMessages
+        grd5: currentMessage = {uploadDocs_2}
+        grd6: hasDocs = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {uploadDocs_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {uploadDocs_2 ↦ docs}
+        act3: currentMessage := ∅
+    END
+
+    sendapprovalNotice_3
+    WHEN
+        grd1: approvalNotice_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: uploadDocs_2 ∈ receivedMessages
+        grd4: claimAmount ≤ 5000
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvalNotice_3}
+        act2: sender := sender ∪ {approvalNotice_3 ↦ ClaimPortal}
+        act3: receiver := receiver ∪ {approvalNotice_3 ↦ Claimant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approvalNotice_3 ↦ caseID}
+        act6: currentMessage := {approvalNotice_3}
+    END
+
+    receiveapprovalNotice_3
+    WHEN
+        grd1: approvalNotice_3 ∈ sentMessages
+        grd2: approvalNotice_3 ↦ ClaimPortal ∈ sender
+        grd3: approvalNotice_3 ↦ Claimant ∈ receiver
+        grd4: approvalNotice_3 ∉ receivedMessages
+        grd5: currentMessage = {approvalNotice_3}
+        grd6: claimAmount ≤ 5000
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvalNotice_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approvalNotice_3 ↦ caseID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendassignAssessor_4
+    WHEN
+        grd1: assignAssessor_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: uploadDocs_2 ∈ receivedMessages
+        grd4: claimAmount > 5000
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignAssessor_4}
+        act2: sender := sender ∪ {assignAssessor_4 ↦ ClaimPortal}
+        act3: receiver := receiver ∪ {assignAssessor_4 ↦ Assessor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignAssessor_4 ↦ caseID}
+        act6: currentMessage := {assignAssessor_4}
+    END
+
+    receiveassignAssessor_4
+    WHEN
+        grd1: assignAssessor_4 ∈ sentMessages
+        grd2: assignAssessor_4 ↦ ClaimPortal ∈ sender
+        grd3: assignAssessor_4 ↦ Assessor ∈ receiver
+        grd4: assignAssessor_4 ∉ receivedMessages
+        grd5: currentMessage = {assignAssessor_4}
+        grd6: claimAmount > 5000
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignAssessor_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignAssessor_4 ↦ caseID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsiteVisit_5
+    WHEN
+        grd1: siteVisit_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignAssessor_4 ∈ receivedMessages
+        grd4: claimAmount > 5000
+    THEN
+        act1: sentMessages := sentMessages ∪ {siteVisit_5}
+        act2: sender := sender ∪ {siteVisit_5 ↦ Assessor}
+        act3: receiver := receiver ∪ {siteVisit_5 ↦ Claimant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {siteVisit_5 ↦ visitDate}
+        act6: currentMessage := {siteVisit_5}
+    END
+
+    receivesiteVisit_5
+    WHEN
+        grd1: siteVisit_5 ∈ sentMessages
+        grd2: siteVisit_5 ↦ Assessor ∈ sender
+        grd3: siteVisit_5 ↦ Claimant ∈ receiver
+        grd4: siteVisit_5 ∉ receivedMessages
+        grd5: currentMessage = {siteVisit_5}
+        grd6: claimAmount > 5000
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {siteVisit_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {siteVisit_5 ↦ visitDate}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendvisitDone_6
+    WHEN
+        grd1: visitDone_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: siteVisit_5 ∈ receivedMessages
+        grd4: claimAmount > 5000
+    THEN
+        act1: sentMessages := sentMessages ∪ {visitDone_6}
+        act2: sender := sender ∪ {visitDone_6 ↦ Claimant}
+        act3: receiver := receiver ∪ {visitDone_6 ↦ Assessor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {visitDone_6}
+    END
+
+    receivevisitDone_6
+    WHEN
+        grd1: visitDone_6 ∈ sentMessages
+        grd2: visitDone_6 ↦ Claimant ∈ sender
+        grd3: visitDone_6 ↦ Assessor ∈ receiver
+        grd4: visitDone_6 ∉ receivedMessages
+        grd5: currentMessage = {visitDone_6}
+        grd6: claimAmount > 5000
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {visitDone_6}
+        act2: currentMessage := ∅
+    END
+
+    sendassessmentReport_7
+    WHEN
+        grd1: assessmentReport_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: visitDone_6 ∈ receivedMessages
+        grd4: claimAmount > 5000
+    THEN
+        act1: sentMessages := sentMessages ∪ {assessmentReport_7}
+        act2: sender := sender ∪ {assessmentReport_7 ↦ Assessor}
+        act3: receiver := receiver ∪ {assessmentReport_7 ↦ ClaimPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assessmentReport_7 ↦ reportID}
+        act6: currentMessage := {assessmentReport_7}
+    END
+
+    receiveassessmentReport_7
+    WHEN
+        grd1: assessmentReport_7 ∈ sentMessages
+        grd2: assessmentReport_7 ↦ Assessor ∈ sender
+        grd3: assessmentReport_7 ↦ ClaimPortal ∈ receiver
+        grd4: assessmentReport_7 ∉ receivedMessages
+        grd5: currentMessage = {assessmentReport_7}
+        grd6: claimAmount > 5000
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assessmentReport_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assessmentReport_7 ↦ reportID}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendpayout_8
+    WHEN
+        grd1: payout_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvalNotice_3 ∈ receivedMessages ∨ assessmentReport_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {payout_8}
+        act2: sender := sender ∪ {payout_8 ↦ ClaimPortal}
+        act3: receiver := receiver ∪ {payout_8 ↦ Bank}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {payout_8 ↦ amountPaid}
+        act6: currentMessage := {payout_8}
+    END
+
+    receivepayout_8
+    WHEN
+        grd1: payout_8 ∈ sentMessages
+        grd2: payout_8 ↦ ClaimPortal ∈ sender
+        grd3: payout_8 ↦ Bank ∈ receiver
+        grd4: payout_8 ∉ receivedMessages
+        grd5: currentMessage = {payout_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {payout_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {payout_8 ↦ amountPaid}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendtransferDone_9
+    WHEN
+        grd1: transferDone_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: payout_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {transferDone_9}
+        act2: sender := sender ∪ {transferDone_9 ↦ Bank}
+        act3: receiver := receiver ∪ {transferDone_9 ↦ ClaimPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {transferDone_9 ↦ txnID}
+        act6: currentMessage := {transferDone_9}
+    END
+
+    receivetransferDone_9
+    WHEN
+        grd1: transferDone_9 ∈ sentMessages
+        grd2: transferDone_9 ↦ Bank ∈ sender
+        grd3: transferDone_9 ↦ ClaimPortal ∈ receiver
+        grd4: transferDone_9 ∉ receivedMessages
+        grd5: currentMessage = {transferDone_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {transferDone_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {transferDone_9 ↦ txnID}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyClaimant_10
+    WHEN
+        grd1: notifyClaimant_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: transferDone_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyClaimant_10}
+        act2: sender := sender ∪ {notifyClaimant_10 ↦ ClaimPortal}
+        act3: receiver := receiver ∪ {notifyClaimant_10 ↦ Claimant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyClaimant_10 ↦ outcome}
+        act6: currentMessage := {notifyClaimant_10}
+    END
+
+    receivenotifyClaimant_10
+    WHEN
+        grd1: notifyClaimant_10 ∈ sentMessages
+        grd2: notifyClaimant_10 ↦ ClaimPortal ∈ sender
+        grd3: notifyClaimant_10 ↦ Claimant ∈ receiver
+        grd4: notifyClaimant_10 ∉ receivedMessages
+        grd5: currentMessage = {notifyClaimant_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyClaimant_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyClaimant_10 ↦ outcome}
+        act3: currentMessage := ∅
+    END
+
+END

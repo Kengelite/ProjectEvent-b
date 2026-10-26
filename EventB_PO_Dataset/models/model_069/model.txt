@@ -1,0 +1,278 @@
+CONTEXT CarWashBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Cashier, Driver, WashApp, WashBay
+    cancelSlot_1, fetchWash_2, cancelPayment_3, approveWash_4, issueWash_5, confirmPayment_6, confirmWash_7
+    paymentData, slotID, slotInfo, washCode, washInfo, washValue
+AXIOMS
+    axm1: partition(Objects, {Cashier}, {Driver}, {WashApp}, {WashBay})
+    axm2: partition(Messages, {cancelSlot_1}, {fetchWash_2}, {cancelPayment_3}, {approveWash_4}, {issueWash_5}, {confirmPayment_6}, {confirmWash_7})
+    axm3: partition(DataMessages, {paymentData}, {slotID}, {slotInfo}, {washCode}, {washInfo}, {washValue})
+END
+
+MACHINE CarWashBookingInteractionMachine_1
+SEES CarWashBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, roundNo, withExtra, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: roundNo ∈ ℤ
+    inv9: withExtra ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_6 ∈ ℤ
+    inv20: t_delay_6 ∈ ℤ
+    inv21: t_success_6 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: roundNo := 0
+        act9: withExtra := 1
+        act10: t_time_2 :∈ 0..8
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_4 :∈ 0..20
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_5 :∈ 0..20
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_6 :∈ 0..1
+        act20: t_delay_6 := 0
+        act21: t_success_6 := 0
+        act22: t_time_7 :∈ 0..60
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+    END
+
+
+    sendcancelSlot_1
+    WHEN
+        grd1: cancelSlot_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSlot_1}
+        act2: sender := sender ∪ {cancelSlot_1 ↦ WashApp}
+        act3: receiver := receiver ∪ {cancelSlot_1 ↦ WashBay}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelSlot_1 ↦ washInfo}
+        act6: currentMessage := {cancelSlot_1}
+    END
+
+    receivecancelSlot_1
+    WHEN
+        grd1: cancelSlot_1 ∈ sentMessages
+        grd2: cancelSlot_1 ↦ WashApp ∈ sender
+        grd3: cancelSlot_1 ↦ WashBay ∈ receiver
+        grd4: cancelSlot_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelSlot_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSlot_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelSlot_1 ↦ washInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchWash_2
+    WHEN
+        grd1: fetchWash_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSlot_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchWash_2}
+        act2: sender := sender ∪ {fetchWash_2 ↦ Driver}
+        act3: receiver := receiver ∪ {fetchWash_2 ↦ WashApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchWash_2 ↦ slotID, fetchWash_2 ↦ washValue}
+        act6: currentMessage := {fetchWash_2}
+    END
+
+    receivefetchWash_2
+    WHEN
+        grd1: fetchWash_2 ∈ sentMessages
+        grd2: fetchWash_2 ↦ Driver ∈ sender
+        grd3: fetchWash_2 ↦ WashApp ∈ receiver
+        grd4: fetchWash_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchWash_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchWash_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchWash_2 ↦ slotID, fetchWash_2 ↦ washValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcancelPayment_3
+    WHEN
+        grd1: cancelPayment_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchWash_2 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelPayment_3}
+        act2: sender := sender ∪ {cancelPayment_3 ↦ WashBay}
+        act3: receiver := receiver ∪ {cancelPayment_3 ↦ Cashier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelPayment_3 ↦ slotID, cancelPayment_3 ↦ slotInfo}
+        act6: currentMessage := {cancelPayment_3}
+    END
+
+    receivecancelPayment_3
+    WHEN
+        grd1: cancelPayment_3 ∈ sentMessages
+        grd2: cancelPayment_3 ↦ WashBay ∈ sender
+        grd3: cancelPayment_3 ↦ Cashier ∈ receiver
+        grd4: cancelPayment_3 ∉ receivedMessages
+        grd5: currentMessage = {cancelPayment_3}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelPayment_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelPayment_3 ↦ slotID, cancelPayment_3 ↦ slotInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveWash_4
+    WHEN
+        grd1: approveWash_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelPayment_3 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveWash_4}
+        act2: sender := sender ∪ {approveWash_4 ↦ WashApp}
+        act3: receiver := receiver ∪ {approveWash_4 ↦ Cashier}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveWash_4 ↦ paymentData, approveWash_4 ↦ washCode}
+        act6: currentMessage := {approveWash_4}
+    END
+
+    receiveapproveWash_4
+    WHEN
+        grd1: approveWash_4 ∈ sentMessages
+        grd2: approveWash_4 ↦ WashApp ∈ sender
+        grd3: approveWash_4 ↦ Cashier ∈ receiver
+        grd4: approveWash_4 ∉ receivedMessages
+        grd5: currentMessage = {approveWash_4}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveWash_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveWash_4 ↦ paymentData, approveWash_4 ↦ washCode}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendissueWash_5_opt1
+    WHEN
+        grd1: issueWash_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveWash_4 ∈ receivedMessages
+        grd4: roundNo < 12
+        grd5: withExtra = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueWash_5}
+        act2: sender := sender ∪ {issueWash_5 ↦ Driver}
+        act3: receiver := receiver ∪ {issueWash_5 ↦ WashApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueWash_5}
+    END
+
+    receiveissueWash_5_opt1
+    WHEN
+        grd1: issueWash_5 ∈ sentMessages
+        grd2: issueWash_5 ↦ Driver ∈ sender
+        grd3: issueWash_5 ↦ WashApp ∈ receiver
+        grd4: issueWash_5 ∉ receivedMessages
+        grd5: currentMessage = {issueWash_5}
+        grd6: roundNo < 12
+        grd7: withExtra = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueWash_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendconfirmPayment_6
+    WHEN
+        grd1: confirmPayment_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueWash_5 ∈ receivedMessages
+        grd4: roundNo < 12
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmPayment_6}
+        act2: sender := sender ∪ {confirmPayment_6 ↦ Cashier}
+        act3: receiver := receiver ∪ {confirmPayment_6 ↦ WashBay}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmPayment_6 ↦ slotInfo}
+        act6: currentMessage := {confirmPayment_6}
+    END
+
+    receiveconfirmPayment_6
+    WHEN
+        grd1: confirmPayment_6 ∈ sentMessages
+        grd2: confirmPayment_6 ↦ Cashier ∈ sender
+        grd3: confirmPayment_6 ↦ WashBay ∈ receiver
+        grd4: confirmPayment_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmPayment_6}
+        grd6: roundNo < 12
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmPayment_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmPayment_6 ↦ slotInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendconfirmWash_7
+    WHEN
+        grd1: confirmWash_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmPayment_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmWash_7}
+        act2: sender := sender ∪ {confirmWash_7 ↦ Driver}
+        act3: receiver := receiver ∪ {confirmWash_7 ↦ WashBay}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmWash_7}
+    END
+
+    receiveconfirmWash_7
+    WHEN
+        grd1: confirmWash_7 ∈ sentMessages
+        grd2: confirmWash_7 ↦ Driver ∈ sender
+        grd3: confirmWash_7 ↦ WashBay ∈ receiver
+        grd4: confirmWash_7 ∉ receivedMessages
+        grd5: currentMessage = {confirmWash_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmWash_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    checkloop_cancelPayment_3_loop1
+    WHEN
+        grd1: roundNo < 12
+    THEN
+        act1: roundNo := roundNo + 1
+    END
+
+END

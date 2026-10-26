@@ -1,0 +1,272 @@
+CONTEXT WarehouseRobotFleetContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ChargingDock, FleetManager, RobotA, RobotB
+    startShift_1, assignTaskA_2, assignTaskB_3, taskDone_4, reserveDock_5, dockReady_6, endShift_7
+    dockID, shiftID, taskID
+AXIOMS
+    axm1: partition(Objects, {ChargingDock}, {FleetManager}, {RobotA}, {RobotB})
+    axm2: partition(Messages, {startShift_1}, {assignTaskA_2}, {assignTaskB_3}, {taskDone_4}, {reserveDock_5}, {dockReady_6}, {endShift_7})
+    axm3: partition(DataMessages, {dockID}, {shiftID}, {taskID})
+END
+
+MACHINE WarehouseRobotFleetInteractionMachine_1
+SEES WarehouseRobotFleetContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, shift, lowBattery, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: shift ∈ ℤ
+    inv9: lowBattery ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: shift := 0
+        act9: lowBattery := 1
+        act10: par_1 := 0
+        act11: t_time_2 :∈ 0..5
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..5
+        act15: t_delay_3 := 0
+        act16: t_success_3 := 0
+        act17: t_time_5 :∈ 0..10
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+    END
+
+
+    sendstartShift_1
+    WHEN
+        grd1: startShift_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {startShift_1}
+        act2: sender := sender ∪ {startShift_1 ↦ FleetManager}
+        act3: receiver := receiver ∪ {startShift_1 ↦ RobotA}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startShift_1 ↦ shiftID}
+        act6: currentMessage := {startShift_1}
+    END
+
+    receivestartShift_1
+    WHEN
+        grd1: startShift_1 ∈ sentMessages
+        grd2: startShift_1 ↦ FleetManager ∈ sender
+        grd3: startShift_1 ↦ RobotA ∈ receiver
+        grd4: startShift_1 ∉ receivedMessages
+        grd5: currentMessage = {startShift_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startShift_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startShift_1 ↦ shiftID}
+        act3: currentMessage := ∅
+    END
+
+    sendassignTaskA_2
+    WHEN
+        grd1: assignTaskA_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startShift_1 ∈ receivedMessages
+        grd4: shift < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignTaskA_2}
+        act2: sender := sender ∪ {assignTaskA_2 ↦ FleetManager}
+        act3: receiver := receiver ∪ {assignTaskA_2 ↦ RobotA}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignTaskA_2 ↦ taskID}
+        act6: currentMessage := {assignTaskA_2}
+    END
+
+    receiveassignTaskA_2
+    WHEN
+        grd1: assignTaskA_2 ∈ sentMessages
+        grd2: assignTaskA_2 ↦ FleetManager ∈ sender
+        grd3: assignTaskA_2 ↦ RobotA ∈ receiver
+        grd4: assignTaskA_2 ∉ receivedMessages
+        grd5: currentMessage = {assignTaskA_2}
+        grd6: shift < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignTaskA_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignTaskA_2 ↦ taskID}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendassignTaskB_3
+    WHEN
+        grd1: assignTaskB_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignTaskA_2 ∈ receivedMessages
+        grd4: shift < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignTaskB_3}
+        act2: sender := sender ∪ {assignTaskB_3 ↦ FleetManager}
+        act3: receiver := receiver ∪ {assignTaskB_3 ↦ RobotB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignTaskB_3 ↦ taskID}
+        act6: currentMessage := {assignTaskB_3}
+    END
+
+    receiveassignTaskB_3
+    WHEN
+        grd1: assignTaskB_3 ∈ sentMessages
+        grd2: assignTaskB_3 ↦ FleetManager ∈ sender
+        grd3: assignTaskB_3 ↦ RobotB ∈ receiver
+        grd4: assignTaskB_3 ∉ receivedMessages
+        grd5: currentMessage = {assignTaskB_3}
+        grd6: shift < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignTaskB_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignTaskB_3 ↦ taskID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendtaskDone_4
+    WHEN
+        grd1: taskDone_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignTaskB_3 ∈ receivedMessages
+        grd4: shift < 8
+    THEN
+        act1: sentMessages := sentMessages ∪ {taskDone_4}
+        act2: sender := sender ∪ {taskDone_4 ↦ RobotA}
+        act3: receiver := receiver ∪ {taskDone_4 ↦ FleetManager}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {taskDone_4 ↦ taskID}
+        act6: currentMessage := {taskDone_4}
+    END
+
+    receivetaskDone_4
+    WHEN
+        grd1: taskDone_4 ∈ sentMessages
+        grd2: taskDone_4 ↦ RobotA ∈ sender
+        grd3: taskDone_4 ↦ FleetManager ∈ receiver
+        grd4: taskDone_4 ∉ receivedMessages
+        grd5: currentMessage = {taskDone_4}
+        grd6: shift < 8
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {taskDone_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {taskDone_4 ↦ taskID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveDock_5_opt1
+    WHEN
+        grd1: reserveDock_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: taskDone_4 ∈ receivedMessages
+        grd4: shift < 8
+        grd5: lowBattery = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveDock_5}
+        act2: sender := sender ∪ {reserveDock_5 ↦ FleetManager}
+        act3: receiver := receiver ∪ {reserveDock_5 ↦ ChargingDock}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveDock_5 ↦ dockID}
+        act6: currentMessage := {reserveDock_5}
+    END
+
+    receivereserveDock_5_opt1
+    WHEN
+        grd1: reserveDock_5 ∈ sentMessages
+        grd2: reserveDock_5 ↦ FleetManager ∈ sender
+        grd3: reserveDock_5 ↦ ChargingDock ∈ receiver
+        grd4: reserveDock_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveDock_5}
+        grd6: shift < 8
+        grd7: lowBattery = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveDock_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveDock_5 ↦ dockID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    senddockReady_6_opt1
+    WHEN
+        grd1: dockReady_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveDock_5 ∈ receivedMessages
+        grd4: shift < 8
+        grd5: lowBattery = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {dockReady_6}
+        act2: sender := sender ∪ {dockReady_6 ↦ ChargingDock}
+        act3: receiver := receiver ∪ {dockReady_6 ↦ FleetManager}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {dockReady_6}
+    END
+
+    receivedockReady_6_opt1
+    WHEN
+        grd1: dockReady_6 ∈ sentMessages
+        grd2: dockReady_6 ↦ ChargingDock ∈ sender
+        grd3: dockReady_6 ↦ FleetManager ∈ receiver
+        grd4: dockReady_6 ∉ receivedMessages
+        grd5: currentMessage = {dockReady_6}
+        grd6: shift < 8
+        grd7: lowBattery = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {dockReady_6}
+        act2: currentMessage := ∅
+    END
+
+    sendendShift_7
+    WHEN
+        grd1: endShift_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: dockReady_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {endShift_7}
+        act2: sender := sender ∪ {endShift_7 ↦ FleetManager}
+        act3: receiver := receiver ∪ {endShift_7 ↦ RobotB}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {endShift_7 ↦ shiftID}
+        act6: currentMessage := {endShift_7}
+    END
+
+    receiveendShift_7
+    WHEN
+        grd1: endShift_7 ∈ sentMessages
+        grd2: endShift_7 ↦ FleetManager ∈ sender
+        grd3: endShift_7 ↦ RobotB ∈ receiver
+        grd4: endShift_7 ∉ receivedMessages
+        grd5: currentMessage = {endShift_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {endShift_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {endShift_7 ↦ shiftID}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_assignTaskA_2_loop1
+    WHEN
+        grd1: shift < 8
+    THEN
+        act1: shift := shift + 1
+    END
+
+END

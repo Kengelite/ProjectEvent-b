@@ -1,0 +1,251 @@
+CONTEXT AirportBaggageContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Aircraft, BagSorter, BaggageSystem, CheckInDesk
+    tagBag_1, routeBag_2, sorted_3, loadBag_4, loadedAck_5, divertBag_6, manifestUpdate_7
+    bagTag, flightNo, gateNo
+AXIOMS
+    axm1: partition(Objects, {Aircraft}, {BagSorter}, {BaggageSystem}, {CheckInDesk})
+    axm2: partition(Messages, {tagBag_1}, {routeBag_2}, {sorted_3}, {loadBag_4}, {loadedAck_5}, {divertBag_6}, {manifestUpdate_7})
+    axm3: partition(DataMessages, {bagTag}, {flightNo}, {gateNo})
+END
+
+MACHINE AirportBaggageInteractionMachine_1
+SEES AirportBaggageContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, bagCleared, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: bagCleared ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_4 ∈ ℤ
+    inv16: t_delay_4 ∈ ℤ
+    inv17: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: bagCleared := 0
+        act9: t_time_1 :∈ 0..3
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..20
+        act13: t_delay_2 := 5
+        act14: t_success_2 := 0
+        act15: t_time_4 :∈ 15..13
+        act16: t_delay_4 := 0
+        act17: t_success_4 := 0
+    END
+
+
+    sendtagBag_1
+    WHEN
+        grd1: tagBag_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {tagBag_1}
+        act2: sender := sender ∪ {tagBag_1 ↦ CheckInDesk}
+        act3: receiver := receiver ∪ {tagBag_1 ↦ BaggageSystem}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {tagBag_1 ↦ bagTag}
+        act6: currentMessage := {tagBag_1}
+    END
+
+    receivetagBag_1
+    WHEN
+        grd1: tagBag_1 ∈ sentMessages
+        grd2: tagBag_1 ↦ CheckInDesk ∈ sender
+        grd3: tagBag_1 ↦ BaggageSystem ∈ receiver
+        grd4: tagBag_1 ∉ receivedMessages
+        grd5: currentMessage = {tagBag_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {tagBag_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {tagBag_1 ↦ bagTag}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendrouteBag_2
+    WHEN
+        grd1: routeBag_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: tagBag_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {routeBag_2}
+        act2: sender := sender ∪ {routeBag_2 ↦ BaggageSystem}
+        act3: receiver := receiver ∪ {routeBag_2 ↦ BagSorter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {routeBag_2 ↦ bagTag, routeBag_2 ↦ gateNo}
+        act6: currentMessage := {routeBag_2}
+    END
+
+    receiverouteBag_2
+    WHEN
+        grd1: routeBag_2 ∈ sentMessages
+        grd2: routeBag_2 ↦ BaggageSystem ∈ sender
+        grd3: routeBag_2 ↦ BagSorter ∈ receiver
+        grd4: routeBag_2 ∉ receivedMessages
+        grd5: currentMessage = {routeBag_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {routeBag_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {routeBag_2 ↦ bagTag, routeBag_2 ↦ gateNo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendsorted_3
+    WHEN
+        grd1: sorted_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: routeBag_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sorted_3}
+        act2: sender := sender ∪ {sorted_3 ↦ BagSorter}
+        act3: receiver := receiver ∪ {sorted_3 ↦ BaggageSystem}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sorted_3}
+    END
+
+    receivesorted_3
+    WHEN
+        grd1: sorted_3 ∈ sentMessages
+        grd2: sorted_3 ↦ BagSorter ∈ sender
+        grd3: sorted_3 ↦ BaggageSystem ∈ receiver
+        grd4: sorted_3 ∉ receivedMessages
+        grd5: currentMessage = {sorted_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sorted_3}
+        act2: currentMessage := ∅
+    END
+
+    sendloadBag_4
+    WHEN
+        grd1: loadBag_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sorted_3 ∈ receivedMessages
+        grd4: bagCleared = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {loadBag_4}
+        act2: sender := sender ∪ {loadBag_4 ↦ BagSorter}
+        act3: receiver := receiver ∪ {loadBag_4 ↦ Aircraft}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {loadBag_4 ↦ bagTag}
+        act6: currentMessage := {loadBag_4}
+    END
+
+    receiveloadBag_4
+    WHEN
+        grd1: loadBag_4 ∈ sentMessages
+        grd2: loadBag_4 ↦ BagSorter ∈ sender
+        grd3: loadBag_4 ↦ Aircraft ∈ receiver
+        grd4: loadBag_4 ∉ receivedMessages
+        grd5: currentMessage = {loadBag_4}
+        grd6: bagCleared = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {loadBag_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {loadBag_4 ↦ bagTag}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendloadedAck_5
+    WHEN
+        grd1: loadedAck_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: loadBag_4 ∈ receivedMessages
+        grd4: bagCleared = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {loadedAck_5}
+        act2: sender := sender ∪ {loadedAck_5 ↦ Aircraft}
+        act3: receiver := receiver ∪ {loadedAck_5 ↦ BaggageSystem}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {loadedAck_5}
+    END
+
+    receiveloadedAck_5
+    WHEN
+        grd1: loadedAck_5 ∈ sentMessages
+        grd2: loadedAck_5 ↦ Aircraft ∈ sender
+        grd3: loadedAck_5 ↦ BaggageSystem ∈ receiver
+        grd4: loadedAck_5 ∉ receivedMessages
+        grd5: currentMessage = {loadedAck_5}
+        grd6: bagCleared = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {loadedAck_5}
+        act2: currentMessage := ∅
+    END
+
+    senddivertBag_6
+    WHEN
+        grd1: divertBag_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sorted_3 ∈ receivedMessages
+        grd4: bagCleared = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {divertBag_6}
+        act2: sender := sender ∪ {divertBag_6 ↦ BagSorter}
+        act3: receiver := receiver ∪ {divertBag_6 ↦ CheckInDesk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {divertBag_6 ↦ bagTag}
+        act6: currentMessage := {divertBag_6}
+    END
+
+    receivedivertBag_6
+    WHEN
+        grd1: divertBag_6 ∈ sentMessages
+        grd2: divertBag_6 ↦ BagSorter ∈ sender
+        grd3: divertBag_6 ↦ CheckInDesk ∈ receiver
+        grd4: divertBag_6 ∉ receivedMessages
+        grd5: currentMessage = {divertBag_6}
+        grd6: bagCleared = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {divertBag_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {divertBag_6 ↦ bagTag}
+        act3: currentMessage := ∅
+    END
+
+    sendmanifestUpdate_7
+    WHEN
+        grd1: manifestUpdate_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: loadedAck_5 ∈ receivedMessages ∨ divertBag_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {manifestUpdate_7}
+        act2: sender := sender ∪ {manifestUpdate_7 ↦ BaggageSystem}
+        act3: receiver := receiver ∪ {manifestUpdate_7 ↦ Aircraft}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {manifestUpdate_7 ↦ flightNo}
+        act6: currentMessage := {manifestUpdate_7}
+    END
+
+    receivemanifestUpdate_7
+    WHEN
+        grd1: manifestUpdate_7 ∈ sentMessages
+        grd2: manifestUpdate_7 ↦ BaggageSystem ∈ sender
+        grd3: manifestUpdate_7 ↦ Aircraft ∈ receiver
+        grd4: manifestUpdate_7 ∉ receivedMessages
+        grd5: currentMessage = {manifestUpdate_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {manifestUpdate_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {manifestUpdate_7 ↦ flightNo}
+        act3: currentMessage := ∅
+    END
+
+END

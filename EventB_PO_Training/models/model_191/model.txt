@@ -1,0 +1,429 @@
+CONTEXT TrainSeatReservationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Conductor, RailApp, SeatServer, Traveler
+    queryTicket_1, assignCoach_2, scheduleCoach_3, confirmSeat_4, reserveTicket_5, issueTicket_6, requestCoach_7, approveTicket_8, checkTicket_9, cancelTicket_10, reportCoach_11, issueCoach_12
+    coachData, coachInfo, coachValue, seatCode, seatID, ticketCode, ticketID
+AXIOMS
+    axm1: partition(Objects, {Conductor}, {RailApp}, {SeatServer}, {Traveler})
+    axm2: partition(Messages, {queryTicket_1}, {assignCoach_2}, {scheduleCoach_3}, {confirmSeat_4}, {reserveTicket_5}, {issueTicket_6}, {requestCoach_7}, {approveTicket_8}, {checkTicket_9}, {cancelTicket_10}, {reportCoach_11}, {issueCoach_12})
+    axm3: partition(DataMessages, {coachData}, {coachInfo}, {coachValue}, {seatCode}, {seatID}, {ticketCode}, {ticketID})
+END
+
+MACHINE TrainSeatReservationInteractionMachine_1
+SEES TrainSeatReservationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_3 ∈ ℤ
+    inv17: t_delay_3 ∈ ℤ
+    inv18: t_success_3 ∈ ℤ
+    inv19: t_time_6 ∈ ℤ
+    inv20: t_delay_6 ∈ ℤ
+    inv21: t_success_6 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..30
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..0
+        act14: t_delay_2 := 10
+        act15: t_success_2 := 0
+        act16: t_time_3 :∈ 0..15
+        act17: t_delay_3 := 0
+        act18: t_success_3 := 0
+        act19: t_time_6 :∈ 0..5
+        act20: t_delay_6 := 10
+        act21: t_success_6 := 0
+        act22: t_time_7 :∈ 0..30
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+    END
+
+
+    sendqueryTicket_1
+    WHEN
+        grd1: queryTicket_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryTicket_1}
+        act2: sender := sender ∪ {queryTicket_1 ↦ RailApp}
+        act3: receiver := receiver ∪ {queryTicket_1 ↦ Traveler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryTicket_1 ↦ seatCode}
+        act6: currentMessage := {queryTicket_1}
+    END
+
+    receivequeryTicket_1
+    WHEN
+        grd1: queryTicket_1 ∈ sentMessages
+        grd2: queryTicket_1 ↦ RailApp ∈ sender
+        grd3: queryTicket_1 ↦ Traveler ∈ receiver
+        grd4: queryTicket_1 ∉ receivedMessages
+        grd5: currentMessage = {queryTicket_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryTicket_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryTicket_1 ↦ seatCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendassignCoach_2
+    WHEN
+        grd1: assignCoach_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryTicket_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignCoach_2}
+        act2: sender := sender ∪ {assignCoach_2 ↦ Conductor}
+        act3: receiver := receiver ∪ {assignCoach_2 ↦ RailApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignCoach_2 ↦ coachInfo}
+        act6: currentMessage := {assignCoach_2}
+    END
+
+    receiveassignCoach_2
+    WHEN
+        grd1: assignCoach_2 ∈ sentMessages
+        grd2: assignCoach_2 ↦ Conductor ∈ sender
+        grd3: assignCoach_2 ↦ RailApp ∈ receiver
+        grd4: assignCoach_2 ∉ receivedMessages
+        grd5: currentMessage = {assignCoach_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignCoach_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignCoach_2 ↦ coachInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendscheduleCoach_3
+    WHEN
+        grd1: scheduleCoach_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignCoach_2 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleCoach_3}
+        act2: sender := sender ∪ {scheduleCoach_3 ↦ SeatServer}
+        act3: receiver := receiver ∪ {scheduleCoach_3 ↦ Traveler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleCoach_3 ↦ seatCode}
+        act6: currentMessage := {scheduleCoach_3}
+    END
+
+    receivescheduleCoach_3
+    WHEN
+        grd1: scheduleCoach_3 ∈ sentMessages
+        grd2: scheduleCoach_3 ↦ SeatServer ∈ sender
+        grd3: scheduleCoach_3 ↦ Traveler ∈ receiver
+        grd4: scheduleCoach_3 ∉ receivedMessages
+        grd5: currentMessage = {scheduleCoach_3}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleCoach_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleCoach_3 ↦ seatCode}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendconfirmSeat_4
+    WHEN
+        grd1: confirmSeat_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleCoach_3 ∈ receivedMessages
+        grd4: passNo < 11
+        grd5: passNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmSeat_4}
+        act2: sender := sender ∪ {confirmSeat_4 ↦ SeatServer}
+        act3: receiver := receiver ∪ {confirmSeat_4 ↦ Traveler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmSeat_4 ↦ ticketID}
+        act6: currentMessage := {confirmSeat_4}
+    END
+
+    receiveconfirmSeat_4
+    WHEN
+        grd1: confirmSeat_4 ∈ sentMessages
+        grd2: confirmSeat_4 ↦ SeatServer ∈ sender
+        grd3: confirmSeat_4 ↦ Traveler ∈ receiver
+        grd4: confirmSeat_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmSeat_4}
+        grd6: passNo < 11
+        grd7: passNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmSeat_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmSeat_4 ↦ ticketID}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveTicket_5
+    WHEN
+        grd1: reserveTicket_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmSeat_4 ∈ receivedMessages
+        grd4: passNo < 11
+        grd5: passNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTicket_5}
+        act2: sender := sender ∪ {reserveTicket_5 ↦ Conductor}
+        act3: receiver := receiver ∪ {reserveTicket_5 ↦ SeatServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveTicket_5}
+    END
+
+    receivereserveTicket_5
+    WHEN
+        grd1: reserveTicket_5 ∈ sentMessages
+        grd2: reserveTicket_5 ↦ Conductor ∈ sender
+        grd3: reserveTicket_5 ↦ SeatServer ∈ receiver
+        grd4: reserveTicket_5 ∉ receivedMessages
+        grd5: currentMessage = {reserveTicket_5}
+        grd6: passNo < 11
+        grd7: passNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTicket_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueTicket_6
+    WHEN
+        grd1: issueTicket_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveTicket_5 ∈ receivedMessages
+        grd4: passNo < 11
+        grd5: passNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueTicket_6}
+        act2: sender := sender ∪ {issueTicket_6 ↦ Traveler}
+        act3: receiver := receiver ∪ {issueTicket_6 ↦ SeatServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueTicket_6}
+    END
+
+    receiveissueTicket_6
+    WHEN
+        grd1: issueTicket_6 ∈ sentMessages
+        grd2: issueTicket_6 ↦ Traveler ∈ sender
+        grd3: issueTicket_6 ↦ SeatServer ∈ receiver
+        grd4: issueTicket_6 ∉ receivedMessages
+        grd5: currentMessage = {issueTicket_6}
+        grd6: passNo < 11
+        grd7: passNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueTicket_6}
+        act2: currentMessage := ∅
+        act3: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendrequestCoach_7
+    WHEN
+        grd1: requestCoach_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueTicket_6 ∈ receivedMessages
+        grd4: passNo < 11
+        grd5: passNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestCoach_7}
+        act2: sender := sender ∪ {requestCoach_7 ↦ SeatServer}
+        act3: receiver := receiver ∪ {requestCoach_7 ↦ Conductor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestCoach_7 ↦ coachInfo}
+        act6: currentMessage := {requestCoach_7}
+    END
+
+    receiverequestCoach_7
+    WHEN
+        grd1: requestCoach_7 ∈ sentMessages
+        grd2: requestCoach_7 ↦ SeatServer ∈ sender
+        grd3: requestCoach_7 ↦ Conductor ∈ receiver
+        grd4: requestCoach_7 ∉ receivedMessages
+        grd5: currentMessage = {requestCoach_7}
+        grd6: passNo < 11
+        grd7: passNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestCoach_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestCoach_7 ↦ coachInfo}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendapproveTicket_8
+    WHEN
+        grd1: approveTicket_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleCoach_3 ∈ receivedMessages
+        grd4: passNo < 11
+        grd5: passNo mod 2 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveTicket_8}
+        act2: sender := sender ∪ {approveTicket_8 ↦ SeatServer}
+        act3: receiver := receiver ∪ {approveTicket_8 ↦ RailApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveTicket_8 ↦ coachValue}
+        act6: currentMessage := {approveTicket_8}
+    END
+
+    receiveapproveTicket_8
+    WHEN
+        grd1: approveTicket_8 ∈ sentMessages
+        grd2: approveTicket_8 ↦ SeatServer ∈ sender
+        grd3: approveTicket_8 ↦ RailApp ∈ receiver
+        grd4: approveTicket_8 ∉ receivedMessages
+        grd5: currentMessage = {approveTicket_8}
+        grd6: passNo < 11
+        grd7: passNo mod 2 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveTicket_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveTicket_8 ↦ coachValue}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckTicket_9
+    WHEN
+        grd1: checkTicket_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestCoach_7 ∈ receivedMessages ∨ approveTicket_8 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkTicket_9}
+        act2: sender := sender ∪ {checkTicket_9 ↦ Traveler}
+        act3: receiver := receiver ∪ {checkTicket_9 ↦ Conductor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkTicket_9 ↦ seatID}
+        act6: currentMessage := {checkTicket_9}
+    END
+
+    receivecheckTicket_9
+    WHEN
+        grd1: checkTicket_9 ∈ sentMessages
+        grd2: checkTicket_9 ↦ Traveler ∈ sender
+        grd3: checkTicket_9 ↦ Conductor ∈ receiver
+        grd4: checkTicket_9 ∉ receivedMessages
+        grd5: currentMessage = {checkTicket_9}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkTicket_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkTicket_9 ↦ seatID}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelTicket_10
+    WHEN
+        grd1: cancelTicket_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkTicket_9 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelTicket_10}
+        act2: sender := sender ∪ {cancelTicket_10 ↦ SeatServer}
+        act3: receiver := receiver ∪ {cancelTicket_10 ↦ Traveler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelTicket_10 ↦ ticketCode}
+        act6: currentMessage := {cancelTicket_10}
+    END
+
+    receivecancelTicket_10
+    WHEN
+        grd1: cancelTicket_10 ∈ sentMessages
+        grd2: cancelTicket_10 ↦ SeatServer ∈ sender
+        grd3: cancelTicket_10 ↦ Traveler ∈ receiver
+        grd4: cancelTicket_10 ∉ receivedMessages
+        grd5: currentMessage = {cancelTicket_10}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelTicket_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelTicket_10 ↦ ticketCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreportCoach_11
+    WHEN
+        grd1: reportCoach_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelTicket_10 ∈ receivedMessages
+        grd4: passNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportCoach_11}
+        act2: sender := sender ∪ {reportCoach_11 ↦ Traveler}
+        act3: receiver := receiver ∪ {reportCoach_11 ↦ RailApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportCoach_11 ↦ coachData}
+        act6: currentMessage := {reportCoach_11}
+    END
+
+    receivereportCoach_11
+    WHEN
+        grd1: reportCoach_11 ∈ sentMessages
+        grd2: reportCoach_11 ↦ Traveler ∈ sender
+        grd3: reportCoach_11 ↦ RailApp ∈ receiver
+        grd4: reportCoach_11 ∉ receivedMessages
+        grd5: currentMessage = {reportCoach_11}
+        grd6: passNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportCoach_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportCoach_11 ↦ coachData}
+        act3: currentMessage := ∅
+    END
+
+    sendissueCoach_12
+    WHEN
+        grd1: issueCoach_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCoach_11 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueCoach_12}
+        act2: sender := sender ∪ {issueCoach_12 ↦ RailApp}
+        act3: receiver := receiver ∪ {issueCoach_12 ↦ SeatServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueCoach_12}
+    END
+
+    receiveissueCoach_12
+    WHEN
+        grd1: issueCoach_12 ∈ sentMessages
+        grd2: issueCoach_12 ↦ RailApp ∈ sender
+        grd3: issueCoach_12 ↦ SeatServer ∈ receiver
+        grd4: issueCoach_12 ∉ receivedMessages
+        grd5: currentMessage = {issueCoach_12}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueCoach_12}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_scheduleCoach_3_loop1
+    WHEN
+        grd1: passNo < 11
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

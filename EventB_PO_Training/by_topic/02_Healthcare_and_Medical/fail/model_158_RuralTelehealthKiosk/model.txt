@@ -1,0 +1,478 @@
+CONTEXT RuralTelehealthKioskContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    RemoteDoctor, TeleKiosk, Villager
+    reportVital_1, validateVital_2, fetchPrescription_3, schedulePrescription_4, cancelPrescription_5, notifyConsult_6, sendVital_7, fetchVital_8, ackConsult_9, updateConsult_10, reportPrescription_11, confirmVital_12, releaseVital_13
+    consultData, consultInfo, consultValue, prescriptionCode, prescriptionID, prescriptionRef, prescriptionValue, vitalData, vitalID, vitalInfo, vitalRef
+AXIOMS
+    axm1: partition(Objects, {RemoteDoctor}, {TeleKiosk}, {Villager})
+    axm2: partition(Messages, {reportVital_1}, {validateVital_2}, {fetchPrescription_3}, {schedulePrescription_4}, {cancelPrescription_5}, {notifyConsult_6}, {sendVital_7}, {fetchVital_8}, {ackConsult_9}, {updateConsult_10}, {reportPrescription_11}, {confirmVital_12}, {releaseVital_13})
+    axm3: partition(DataMessages, {consultData}, {consultInfo}, {consultValue}, {prescriptionCode}, {prescriptionID}, {prescriptionRef}, {prescriptionValue}, {vitalData}, {vitalID}, {vitalInfo}, {vitalRef})
+END
+
+MACHINE RuralTelehealthKioskInteractionMachine_1
+SEES RuralTelehealthKioskContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, passNo, par_1, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9, t_time_11, t_delay_11, t_success_11, t_time_12, t_delay_12, t_success_12, t_time_13, t_delay_13, t_success_13
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: passNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_4 ∈ ℤ
+    inv11: t_delay_4 ∈ ℤ
+    inv12: t_success_4 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+    inv16: t_time_8 ∈ ℤ
+    inv17: t_delay_8 ∈ ℤ
+    inv18: t_success_8 ∈ ℤ
+    inv19: t_time_9 ∈ ℤ
+    inv20: t_delay_9 ∈ ℤ
+    inv21: t_success_9 ∈ ℤ
+    inv22: t_time_11 ∈ ℤ
+    inv23: t_delay_11 ∈ ℤ
+    inv24: t_success_11 ∈ ℤ
+    inv25: t_time_12 ∈ ℤ
+    inv26: t_delay_12 ∈ ℤ
+    inv27: t_success_12 ∈ ℤ
+    inv28: t_time_13 ∈ ℤ
+    inv29: t_delay_13 ∈ ℤ
+    inv30: t_success_13 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: passNo := 0
+        act9: par_1 := 0
+        act10: t_time_4 :∈ 0..60
+        act11: t_delay_4 := 0
+        act12: t_success_4 := 0
+        act13: t_time_5 :∈ 0..3
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+        act16: t_time_8 :∈ 0..1
+        act17: t_delay_8 := 0
+        act18: t_success_8 := 0
+        act19: t_time_9 :∈ 0..1
+        act20: t_delay_9 := 0
+        act21: t_success_9 := 0
+        act22: t_time_11 :∈ 0..3
+        act23: t_delay_11 := 0
+        act24: t_success_11 := 0
+        act25: t_time_12 :∈ 0..1
+        act26: t_delay_12 := 0
+        act27: t_success_12 := 0
+        act28: t_time_13 :∈ 0..10
+        act29: t_delay_13 := 0
+        act30: t_success_13 := 0
+    END
+
+
+    sendreportVital_1
+    WHEN
+        grd1: reportVital_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportVital_1}
+        act2: sender := sender ∪ {reportVital_1 ↦ TeleKiosk}
+        act3: receiver := receiver ∪ {reportVital_1 ↦ RemoteDoctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportVital_1 ↦ consultValue}
+        act6: currentMessage := {reportVital_1}
+    END
+
+    receivereportVital_1
+    WHEN
+        grd1: reportVital_1 ∈ sentMessages
+        grd2: reportVital_1 ↦ TeleKiosk ∈ sender
+        grd3: reportVital_1 ↦ RemoteDoctor ∈ receiver
+        grd4: reportVital_1 ∉ receivedMessages
+        grd5: currentMessage = {reportVital_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportVital_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportVital_1 ↦ consultValue}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateVital_2
+    WHEN
+        grd1: validateVital_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportVital_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateVital_2}
+        act2: sender := sender ∪ {validateVital_2 ↦ Villager}
+        act3: receiver := receiver ∪ {validateVital_2 ↦ TeleKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateVital_2 ↦ prescriptionRef}
+        act6: currentMessage := {validateVital_2}
+    END
+
+    receivevalidateVital_2
+    WHEN
+        grd1: validateVital_2 ∈ sentMessages
+        grd2: validateVital_2 ↦ Villager ∈ sender
+        grd3: validateVital_2 ↦ TeleKiosk ∈ receiver
+        grd4: validateVital_2 ∉ receivedMessages
+        grd5: currentMessage = {validateVital_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateVital_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateVital_2 ↦ prescriptionRef}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchPrescription_3
+    WHEN
+        grd1: fetchPrescription_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateVital_2 ∈ receivedMessages
+        grd4: passNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchPrescription_3}
+        act2: sender := sender ∪ {fetchPrescription_3 ↦ TeleKiosk}
+        act3: receiver := receiver ∪ {fetchPrescription_3 ↦ Villager}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchPrescription_3 ↦ consultData}
+        act6: currentMessage := {fetchPrescription_3}
+    END
+
+    receivefetchPrescription_3
+    WHEN
+        grd1: fetchPrescription_3 ∈ sentMessages
+        grd2: fetchPrescription_3 ↦ TeleKiosk ∈ sender
+        grd3: fetchPrescription_3 ↦ Villager ∈ receiver
+        grd4: fetchPrescription_3 ∉ receivedMessages
+        grd5: currentMessage = {fetchPrescription_3}
+        grd6: passNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchPrescription_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchPrescription_3 ↦ consultData}
+        act3: currentMessage := ∅
+    END
+
+    sendschedulePrescription_4
+    WHEN
+        grd1: schedulePrescription_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPrescription_3 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePrescription_4}
+        act2: sender := sender ∪ {schedulePrescription_4 ↦ Villager}
+        act3: receiver := receiver ∪ {schedulePrescription_4 ↦ RemoteDoctor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {schedulePrescription_4}
+    END
+
+    receiveschedulePrescription_4
+    WHEN
+        grd1: schedulePrescription_4 ∈ sentMessages
+        grd2: schedulePrescription_4 ↦ Villager ∈ sender
+        grd3: schedulePrescription_4 ↦ RemoteDoctor ∈ receiver
+        grd4: schedulePrescription_4 ∉ receivedMessages
+        grd5: currentMessage = {schedulePrescription_4}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePrescription_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendcancelPrescription_5
+    WHEN
+        grd1: cancelPrescription_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePrescription_4 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelPrescription_5}
+        act2: sender := sender ∪ {cancelPrescription_5 ↦ RemoteDoctor}
+        act3: receiver := receiver ∪ {cancelPrescription_5 ↦ Villager}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelPrescription_5}
+    END
+
+    receivecancelPrescription_5
+    WHEN
+        grd1: cancelPrescription_5 ∈ sentMessages
+        grd2: cancelPrescription_5 ↦ RemoteDoctor ∈ sender
+        grd3: cancelPrescription_5 ↦ Villager ∈ receiver
+        grd4: cancelPrescription_5 ∉ receivedMessages
+        grd5: currentMessage = {cancelPrescription_5}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelPrescription_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendnotifyConsult_6
+    WHEN
+        grd1: notifyConsult_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelPrescription_5 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyConsult_6}
+        act2: sender := sender ∪ {notifyConsult_6 ↦ Villager}
+        act3: receiver := receiver ∪ {notifyConsult_6 ↦ TeleKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyConsult_6}
+    END
+
+    receivenotifyConsult_6
+    WHEN
+        grd1: notifyConsult_6 ∈ sentMessages
+        grd2: notifyConsult_6 ↦ Villager ∈ sender
+        grd3: notifyConsult_6 ↦ TeleKiosk ∈ receiver
+        grd4: notifyConsult_6 ∉ receivedMessages
+        grd5: currentMessage = {notifyConsult_6}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyConsult_6}
+        act2: currentMessage := ∅
+    END
+
+    sendsendVital_7
+    WHEN
+        grd1: sendVital_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyConsult_6 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendVital_7}
+        act2: sender := sender ∪ {sendVital_7 ↦ RemoteDoctor}
+        act3: receiver := receiver ∪ {sendVital_7 ↦ TeleKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendVital_7 ↦ prescriptionValue}
+        act6: currentMessage := {sendVital_7}
+    END
+
+    receivesendVital_7
+    WHEN
+        grd1: sendVital_7 ∈ sentMessages
+        grd2: sendVital_7 ↦ RemoteDoctor ∈ sender
+        grd3: sendVital_7 ↦ TeleKiosk ∈ receiver
+        grd4: sendVital_7 ∉ receivedMessages
+        grd5: currentMessage = {sendVital_7}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendVital_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendVital_7 ↦ prescriptionValue}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchVital_8
+    WHEN
+        grd1: fetchVital_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendVital_7 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchVital_8}
+        act2: sender := sender ∪ {fetchVital_8 ↦ RemoteDoctor}
+        act3: receiver := receiver ∪ {fetchVital_8 ↦ TeleKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchVital_8 ↦ vitalInfo}
+        act6: currentMessage := {fetchVital_8}
+    END
+
+    receivefetchVital_8
+    WHEN
+        grd1: fetchVital_8 ∈ sentMessages
+        grd2: fetchVital_8 ↦ RemoteDoctor ∈ sender
+        grd3: fetchVital_8 ↦ TeleKiosk ∈ receiver
+        grd4: fetchVital_8 ∉ receivedMessages
+        grd5: currentMessage = {fetchVital_8}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchVital_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchVital_8 ↦ vitalInfo}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendackConsult_9
+    WHEN
+        grd1: ackConsult_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchVital_8 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackConsult_9}
+        act2: sender := sender ∪ {ackConsult_9 ↦ TeleKiosk}
+        act3: receiver := receiver ∪ {ackConsult_9 ↦ Villager}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackConsult_9 ↦ consultData, ackConsult_9 ↦ vitalID}
+        act6: currentMessage := {ackConsult_9}
+    END
+
+    receiveackConsult_9
+    WHEN
+        grd1: ackConsult_9 ∈ sentMessages
+        grd2: ackConsult_9 ↦ TeleKiosk ∈ sender
+        grd3: ackConsult_9 ↦ Villager ∈ receiver
+        grd4: ackConsult_9 ∉ receivedMessages
+        grd5: currentMessage = {ackConsult_9}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackConsult_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackConsult_9 ↦ consultData, ackConsult_9 ↦ vitalID}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendupdateConsult_10
+    WHEN
+        grd1: updateConsult_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackConsult_9 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateConsult_10}
+        act2: sender := sender ∪ {updateConsult_10 ↦ RemoteDoctor}
+        act3: receiver := receiver ∪ {updateConsult_10 ↦ TeleKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateConsult_10 ↦ consultInfo}
+        act6: currentMessage := {updateConsult_10}
+    END
+
+    receiveupdateConsult_10
+    WHEN
+        grd1: updateConsult_10 ∈ sentMessages
+        grd2: updateConsult_10 ↦ RemoteDoctor ∈ sender
+        grd3: updateConsult_10 ↦ TeleKiosk ∈ receiver
+        grd4: updateConsult_10 ∉ receivedMessages
+        grd5: currentMessage = {updateConsult_10}
+        grd6: passNo < 6
+        grd7: passNo mod 4 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateConsult_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateConsult_10 ↦ consultInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreportPrescription_11
+    WHEN
+        grd1: reportPrescription_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchPrescription_3 ∈ receivedMessages
+        grd4: passNo < 6
+        grd5: passNo mod 4 ≠ 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportPrescription_11}
+        act2: sender := sender ∪ {reportPrescription_11 ↦ Villager}
+        act3: receiver := receiver ∪ {reportPrescription_11 ↦ RemoteDoctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportPrescription_11 ↦ vitalData}
+        act6: currentMessage := {reportPrescription_11}
+    END
+
+    receivereportPrescription_11
+    WHEN
+        grd1: reportPrescription_11 ∈ sentMessages
+        grd2: reportPrescription_11 ↦ Villager ∈ sender
+        grd3: reportPrescription_11 ↦ RemoteDoctor ∈ receiver
+        grd4: reportPrescription_11 ∉ receivedMessages
+        grd5: currentMessage = {reportPrescription_11}
+        grd6: passNo < 6
+        grd7: passNo mod 4 ≠ 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportPrescription_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportPrescription_11 ↦ vitalData}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    sendconfirmVital_12
+    WHEN
+        grd1: confirmVital_12 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateConsult_10 ∈ receivedMessages ∨ reportPrescription_11 ∈ receivedMessages
+        grd4: passNo < 6
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmVital_12}
+        act2: sender := sender ∪ {confirmVital_12 ↦ Villager}
+        act3: receiver := receiver ∪ {confirmVital_12 ↦ RemoteDoctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmVital_12 ↦ vitalData, confirmVital_12 ↦ vitalRef}
+        act6: currentMessage := {confirmVital_12}
+    END
+
+    receiveconfirmVital_12
+    WHEN
+        grd1: confirmVital_12 ∈ sentMessages
+        grd2: confirmVital_12 ↦ Villager ∈ sender
+        grd3: confirmVital_12 ↦ RemoteDoctor ∈ receiver
+        grd4: confirmVital_12 ∉ receivedMessages
+        grd5: currentMessage = {confirmVital_12}
+        grd6: passNo < 6
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmVital_12}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmVital_12 ↦ vitalData, confirmVital_12 ↦ vitalRef}
+        act3: currentMessage := ∅
+        act4: t_success_12 := t_time_12 + t_delay_12
+    END
+
+    sendreleaseVital_13
+    WHEN
+        grd1: releaseVital_13 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmVital_12 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseVital_13}
+        act2: sender := sender ∪ {releaseVital_13 ↦ TeleKiosk}
+        act3: receiver := receiver ∪ {releaseVital_13 ↦ RemoteDoctor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseVital_13 ↦ prescriptionCode, releaseVital_13 ↦ prescriptionID}
+        act6: currentMessage := {releaseVital_13}
+    END
+
+    receivereleaseVital_13
+    WHEN
+        grd1: releaseVital_13 ∈ sentMessages
+        grd2: releaseVital_13 ↦ TeleKiosk ∈ sender
+        grd3: releaseVital_13 ↦ RemoteDoctor ∈ receiver
+        grd4: releaseVital_13 ∉ receivedMessages
+        grd5: currentMessage = {releaseVital_13}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseVital_13}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseVital_13 ↦ prescriptionCode, releaseVital_13 ↦ prescriptionID}
+        act3: currentMessage := ∅
+        act4: t_success_13 := t_time_13 + t_delay_13
+    END
+
+    checkloop_fetchPrescription_3_loop1
+    WHEN
+        grd1: passNo < 6
+    THEN
+        act1: passNo := passNo + 1
+    END
+
+END

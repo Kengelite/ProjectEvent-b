@@ -1,0 +1,213 @@
+CONTEXT ConferenceBadgeScanContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Attendee, BadgeScanner, EventCRM, Exhibitor
+    releaseBadge_1, scheduleSession_2, issueBadge_3, querySession_4, cancelSession_5, validateSession_6
+    badgeCode, leadID, leadValue, sessionData, sessionID, sessionValue
+AXIOMS
+    axm1: partition(Objects, {Attendee}, {BadgeScanner}, {EventCRM}, {Exhibitor})
+    axm2: partition(Messages, {releaseBadge_1}, {scheduleSession_2}, {issueBadge_3}, {querySession_4}, {cancelSession_5}, {validateSession_6})
+    axm3: partition(DataMessages, {badgeCode}, {leadID}, {leadValue}, {sessionData}, {sessionID}, {sessionValue})
+END
+
+MACHINE ConferenceBadgeScanInteractionMachine_1
+SEES ConferenceBadgeScanContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_6 ∈ ℤ
+    inv12: t_delay_6 ∈ ℤ
+    inv13: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..0
+        act9: t_delay_2 := 5
+        act10: t_success_2 := 0
+        act11: t_time_6 :∈ 0..0
+        act12: t_delay_6 := 3
+        act13: t_success_6 := 0
+    END
+
+
+    sendreleaseBadge_1
+    WHEN
+        grd1: releaseBadge_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseBadge_1}
+        act2: sender := sender ∪ {releaseBadge_1 ↦ Exhibitor}
+        act3: receiver := receiver ∪ {releaseBadge_1 ↦ EventCRM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseBadge_1 ↦ leadID}
+        act6: currentMessage := {releaseBadge_1}
+    END
+
+    receivereleaseBadge_1
+    WHEN
+        grd1: releaseBadge_1 ∈ sentMessages
+        grd2: releaseBadge_1 ↦ Exhibitor ∈ sender
+        grd3: releaseBadge_1 ↦ EventCRM ∈ receiver
+        grd4: releaseBadge_1 ∉ receivedMessages
+        grd5: currentMessage = {releaseBadge_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseBadge_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseBadge_1 ↦ leadID}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleSession_2
+    WHEN
+        grd1: scheduleSession_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseBadge_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleSession_2}
+        act2: sender := sender ∪ {scheduleSession_2 ↦ Attendee}
+        act3: receiver := receiver ∪ {scheduleSession_2 ↦ BadgeScanner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleSession_2 ↦ badgeCode}
+        act6: currentMessage := {scheduleSession_2}
+    END
+
+    receivescheduleSession_2
+    WHEN
+        grd1: scheduleSession_2 ∈ sentMessages
+        grd2: scheduleSession_2 ↦ Attendee ∈ sender
+        grd3: scheduleSession_2 ↦ BadgeScanner ∈ receiver
+        grd4: scheduleSession_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleSession_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleSession_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleSession_2 ↦ badgeCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendissueBadge_3
+    WHEN
+        grd1: issueBadge_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleSession_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueBadge_3}
+        act2: sender := sender ∪ {issueBadge_3 ↦ Exhibitor}
+        act3: receiver := receiver ∪ {issueBadge_3 ↦ BadgeScanner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueBadge_3 ↦ sessionData}
+        act6: currentMessage := {issueBadge_3}
+    END
+
+    receiveissueBadge_3
+    WHEN
+        grd1: issueBadge_3 ∈ sentMessages
+        grd2: issueBadge_3 ↦ Exhibitor ∈ sender
+        grd3: issueBadge_3 ↦ BadgeScanner ∈ receiver
+        grd4: issueBadge_3 ∉ receivedMessages
+        grd5: currentMessage = {issueBadge_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueBadge_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueBadge_3 ↦ sessionData}
+        act3: currentMessage := ∅
+    END
+
+    sendquerySession_4
+    WHEN
+        grd1: querySession_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueBadge_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {querySession_4}
+        act2: sender := sender ∪ {querySession_4 ↦ Attendee}
+        act3: receiver := receiver ∪ {querySession_4 ↦ EventCRM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {querySession_4 ↦ sessionID}
+        act6: currentMessage := {querySession_4}
+    END
+
+    receivequerySession_4
+    WHEN
+        grd1: querySession_4 ∈ sentMessages
+        grd2: querySession_4 ↦ Attendee ∈ sender
+        grd3: querySession_4 ↦ EventCRM ∈ receiver
+        grd4: querySession_4 ∉ receivedMessages
+        grd5: currentMessage = {querySession_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {querySession_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {querySession_4 ↦ sessionID}
+        act3: currentMessage := ∅
+    END
+
+    sendcancelSession_5
+    WHEN
+        grd1: cancelSession_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: querySession_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelSession_5}
+        act2: sender := sender ∪ {cancelSession_5 ↦ BadgeScanner}
+        act3: receiver := receiver ∪ {cancelSession_5 ↦ Exhibitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelSession_5 ↦ sessionData, cancelSession_5 ↦ sessionValue}
+        act6: currentMessage := {cancelSession_5}
+    END
+
+    receivecancelSession_5
+    WHEN
+        grd1: cancelSession_5 ∈ sentMessages
+        grd2: cancelSession_5 ↦ BadgeScanner ∈ sender
+        grd3: cancelSession_5 ↦ Exhibitor ∈ receiver
+        grd4: cancelSession_5 ∉ receivedMessages
+        grd5: currentMessage = {cancelSession_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelSession_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelSession_5 ↦ sessionData, cancelSession_5 ↦ sessionValue}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateSession_6
+    WHEN
+        grd1: validateSession_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelSession_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSession_6}
+        act2: sender := sender ∪ {validateSession_6 ↦ EventCRM}
+        act3: receiver := receiver ∪ {validateSession_6 ↦ BadgeScanner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateSession_6 ↦ leadValue}
+        act6: currentMessage := {validateSession_6}
+    END
+
+    receivevalidateSession_6
+    WHEN
+        grd1: validateSession_6 ∈ sentMessages
+        grd2: validateSession_6 ↦ EventCRM ∈ sender
+        grd3: validateSession_6 ↦ BadgeScanner ∈ receiver
+        grd4: validateSession_6 ∉ receivedMessages
+        grd5: currentMessage = {validateSession_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSession_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateSession_6 ↦ leadValue}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

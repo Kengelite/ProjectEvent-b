@@ -1,0 +1,207 @@
+CONTEXT DigitalVotingBoothContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Voter, VotingTerminal
+    cancelBallot_1, scheduleVote_2, logVote_3, updateReceipt_4, validateReceipt_5, sendVote_6
+    receiptRef, voteID, voteValue
+AXIOMS
+    axm1: partition(Objects, {Voter}, {VotingTerminal})
+    axm2: partition(Messages, {cancelBallot_1}, {scheduleVote_2}, {logVote_3}, {updateReceipt_4}, {validateReceipt_5}, {sendVote_6})
+    axm3: partition(DataMessages, {receiptRef}, {voteID}, {voteValue})
+END
+
+MACHINE DigitalVotingBoothInteractionMachine_1
+SEES DigitalVotingBoothContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_2 ∈ ℤ
+    inv9: t_delay_2 ∈ ℤ
+    inv10: t_success_2 ∈ ℤ
+    inv11: t_time_4 ∈ ℤ
+    inv12: t_delay_4 ∈ ℤ
+    inv13: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_2 :∈ 0..30
+        act9: t_delay_2 := 0
+        act10: t_success_2 := 0
+        act11: t_time_4 :∈ 0..20
+        act12: t_delay_4 := 0
+        act13: t_success_4 := 0
+    END
+
+
+    sendcancelBallot_1
+    WHEN
+        grd1: cancelBallot_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelBallot_1}
+        act2: sender := sender ∪ {cancelBallot_1 ↦ VotingTerminal}
+        act3: receiver := receiver ∪ {cancelBallot_1 ↦ Voter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelBallot_1 ↦ voteValue}
+        act6: currentMessage := {cancelBallot_1}
+    END
+
+    receivecancelBallot_1
+    WHEN
+        grd1: cancelBallot_1 ∈ sentMessages
+        grd2: cancelBallot_1 ↦ VotingTerminal ∈ sender
+        grd3: cancelBallot_1 ↦ Voter ∈ receiver
+        grd4: cancelBallot_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelBallot_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelBallot_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelBallot_1 ↦ voteValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleVote_2
+    WHEN
+        grd1: scheduleVote_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelBallot_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleVote_2}
+        act2: sender := sender ∪ {scheduleVote_2 ↦ Voter}
+        act3: receiver := receiver ∪ {scheduleVote_2 ↦ VotingTerminal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleVote_2}
+    END
+
+    receivescheduleVote_2
+    WHEN
+        grd1: scheduleVote_2 ∈ sentMessages
+        grd2: scheduleVote_2 ↦ Voter ∈ sender
+        grd3: scheduleVote_2 ↦ VotingTerminal ∈ receiver
+        grd4: scheduleVote_2 ∉ receivedMessages
+        grd5: currentMessage = {scheduleVote_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleVote_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendlogVote_3
+    WHEN
+        grd1: logVote_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleVote_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logVote_3}
+        act2: sender := sender ∪ {logVote_3 ↦ VotingTerminal}
+        act3: receiver := receiver ∪ {logVote_3 ↦ Voter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logVote_3}
+    END
+
+    receivelogVote_3
+    WHEN
+        grd1: logVote_3 ∈ sentMessages
+        grd2: logVote_3 ↦ VotingTerminal ∈ sender
+        grd3: logVote_3 ↦ Voter ∈ receiver
+        grd4: logVote_3 ∉ receivedMessages
+        grd5: currentMessage = {logVote_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logVote_3}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateReceipt_4
+    WHEN
+        grd1: updateReceipt_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logVote_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateReceipt_4}
+        act2: sender := sender ∪ {updateReceipt_4 ↦ VotingTerminal}
+        act3: receiver := receiver ∪ {updateReceipt_4 ↦ Voter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateReceipt_4 ↦ voteID}
+        act6: currentMessage := {updateReceipt_4}
+    END
+
+    receiveupdateReceipt_4
+    WHEN
+        grd1: updateReceipt_4 ∈ sentMessages
+        grd2: updateReceipt_4 ↦ VotingTerminal ∈ sender
+        grd3: updateReceipt_4 ↦ Voter ∈ receiver
+        grd4: updateReceipt_4 ∉ receivedMessages
+        grd5: currentMessage = {updateReceipt_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateReceipt_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateReceipt_4 ↦ voteID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendvalidateReceipt_5
+    WHEN
+        grd1: validateReceipt_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateReceipt_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateReceipt_5}
+        act2: sender := sender ∪ {validateReceipt_5 ↦ Voter}
+        act3: receiver := receiver ∪ {validateReceipt_5 ↦ VotingTerminal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateReceipt_5}
+    END
+
+    receivevalidateReceipt_5
+    WHEN
+        grd1: validateReceipt_5 ∈ sentMessages
+        grd2: validateReceipt_5 ↦ Voter ∈ sender
+        grd3: validateReceipt_5 ↦ VotingTerminal ∈ receiver
+        grd4: validateReceipt_5 ∉ receivedMessages
+        grd5: currentMessage = {validateReceipt_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateReceipt_5}
+        act2: currentMessage := ∅
+    END
+
+    sendsendVote_6
+    WHEN
+        grd1: sendVote_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateReceipt_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendVote_6}
+        act2: sender := sender ∪ {sendVote_6 ↦ Voter}
+        act3: receiver := receiver ∪ {sendVote_6 ↦ VotingTerminal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendVote_6 ↦ receiptRef}
+        act6: currentMessage := {sendVote_6}
+    END
+
+    receivesendVote_6
+    WHEN
+        grd1: sendVote_6 ∈ sentMessages
+        grd2: sendVote_6 ↦ Voter ∈ sender
+        grd3: sendVote_6 ↦ VotingTerminal ∈ receiver
+        grd4: sendVote_6 ∉ receivedMessages
+        grd5: currentMessage = {sendVote_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendVote_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendVote_6 ↦ receiptRef}
+        act3: currentMessage := ∅
+    END
+
+END

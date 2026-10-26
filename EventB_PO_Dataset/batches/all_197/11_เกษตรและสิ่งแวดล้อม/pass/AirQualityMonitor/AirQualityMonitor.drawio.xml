@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="AirQualityMonitor" id="airqualitymonitor">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="20" y="215" width="640" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="410" width="640" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="par" vertex="1">
+          <mxGeometry x="45" y="495" width="590" height="275" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="45" y="617" width="590" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="45" y="717" width="590" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="827" width="640" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[useCache == 1]" vertex="1">
+          <mxGeometry x="105" y="220" width="135" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t8" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[online == 1]" vertex="1">
+          <mxGeometry x="105" y="415" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t9" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+5}" vertex="1">
+          <mxGeometry x="310" y="537" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t10" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="{t..t+1}" vertex="1">
+          <mxGeometry x="435" y="737" width="90" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t11" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[online == 0]" vertex="1">
+          <mxGeometry x="105" y="840" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="AQSensor" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="965" as="geometry" />
+        </mxCell>
+        <mxCell id="ll13" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Gateway" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="965" as="geometry" />
+        </mxCell>
+        <mxCell id="ll14" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="CityPortal" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="965" as="geometry" />
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="cancelFan(alertData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="590.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="releaseAlert() {0..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="180" as="sourcePoint" />
+            <mxPoint x="340.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendAlert()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="265" as="sourcePoint" />
+            <mxPoint x="340.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="fetchFan(pmCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="325" as="sourcePoint" />
+            <mxPoint x="590.0" y="325" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="logFan()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="375" as="sourcePoint" />
+            <mxPoint x="90.0" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="queryAlert(pmData) {0..1}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="460" as="sourcePoint" />
+            <mxPoint x="90.0" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="notifyAlert() {0..8}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="545" as="sourcePoint" />
+            <mxPoint x="590.0" y="545" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reservePm(alertData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="595" as="sourcePoint" />
+            <mxPoint x="90.0" y="595" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="approveFan(alertInfo) {0..60}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="645" as="sourcePoint" />
+            <mxPoint x="340.0" y="645" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="reportFan(fanID)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="695" as="sourcePoint" />
+            <mxPoint x="590.0" y="695" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="requestPm()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="745" as="sourcePoint" />
+            <mxPoint x="590.0" y="745" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m26" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="fetchPm(alertValue, fanInfo)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="805" as="sourcePoint" />
+            <mxPoint x="590.0" y="805" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m27" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="cancelAlert(pmData)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="885" as="sourcePoint" />
+            <mxPoint x="340.0" y="885" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m28" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="validateFan()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="945" as="sourcePoint" />
+            <mxPoint x="90.0" y="945" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="address" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="voucher" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="assignDrone_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="deliverParcel_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="confirmDelivery_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="receipt" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Warehouse" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="placeOrder_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Customer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="lateCompensation_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="returnToBase_8" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="orderID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="Drone" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="parcelID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="DispatchServer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="pickupParcel_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="prepareParcel_2" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/DroneDelivery_Project/DroneDeliveryContext.bpo|org.eventb.core.poFile#DroneDeliveryContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Customer},{DispatchServer},{Drone},{Warehouse})" org.eventb.core.source="/DroneDelivery_Project/DroneDeliveryContext.buc|org.eventb.core.contextFile#DroneDeliveryContext|org.eventb.core.axiom#internal_element21"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{placeOrder_1},{prepareParcel_2},{assignDrone_3},{pickupParcel_4},{deliverParcel_5},{confirmDelivery_6},{lateCompensation_7},{returnToBase_8})" org.eventb.core.source="/DroneDelivery_Project/DroneDeliveryContext.buc|org.eventb.core.contextFile#DroneDeliveryContext|org.eventb.core.axiom#internal_element22"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{address},{orderID},{parcelID},{receipt},{voucher})" org.eventb.core.source="/DroneDelivery_Project/DroneDeliveryContext.buc|org.eventb.core.contextFile#DroneDeliveryContext|org.eventb.core.axiom#internal_element23"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

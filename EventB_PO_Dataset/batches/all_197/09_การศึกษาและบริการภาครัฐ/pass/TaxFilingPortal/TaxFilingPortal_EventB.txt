@@ -1,0 +1,223 @@
+CONTEXT TaxFilingPortalContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FilingPortal, RevenueDept, Taxpayer
+    reportReturn_1, releaseRefund_2, assignRefund_3, schedulePayment_4, updatePayment_5, issueReturn_6
+    paymentID, refundID, refundRef, returnRef
+AXIOMS
+    axm1: partition(Objects, {FilingPortal}, {RevenueDept}, {Taxpayer})
+    axm2: partition(Messages, {reportReturn_1}, {releaseRefund_2}, {assignRefund_3}, {schedulePayment_4}, {updatePayment_5}, {issueReturn_6})
+    axm3: partition(DataMessages, {paymentID}, {refundID}, {refundRef}, {returnRef})
+END
+
+MACHINE TaxFilingPortalInteractionMachine_1
+SEES TaxFilingPortalContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+    inv15: t_time_5 ∈ ℤ
+    inv16: t_delay_5 ∈ ℤ
+    inv17: t_success_5 ∈ ℤ
+    inv18: t_time_6 ∈ ℤ
+    inv19: t_delay_6 ∈ ℤ
+    inv20: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_1 :∈ 0..60
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..5
+        act13: t_delay_3 := 0
+        act14: t_success_3 := 0
+        act15: t_time_5 :∈ 0..0
+        act16: t_delay_5 := 5
+        act17: t_success_5 := 0
+        act18: t_time_6 :∈ 0..15
+        act19: t_delay_6 := 0
+        act20: t_success_6 := 0
+    END
+
+
+    sendreportReturn_1
+    WHEN
+        grd1: reportReturn_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportReturn_1}
+        act2: sender := sender ∪ {reportReturn_1 ↦ FilingPortal}
+        act3: receiver := receiver ∪ {reportReturn_1 ↦ Taxpayer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportReturn_1 ↦ refundID}
+        act6: currentMessage := {reportReturn_1}
+    END
+
+    receivereportReturn_1
+    WHEN
+        grd1: reportReturn_1 ∈ sentMessages
+        grd2: reportReturn_1 ↦ FilingPortal ∈ sender
+        grd3: reportReturn_1 ↦ Taxpayer ∈ receiver
+        grd4: reportReturn_1 ∉ receivedMessages
+        grd5: currentMessage = {reportReturn_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportReturn_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportReturn_1 ↦ refundID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendreleaseRefund_2
+    WHEN
+        grd1: releaseRefund_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportReturn_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseRefund_2}
+        act2: sender := sender ∪ {releaseRefund_2 ↦ FilingPortal}
+        act3: receiver := receiver ∪ {releaseRefund_2 ↦ Taxpayer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseRefund_2}
+    END
+
+    receivereleaseRefund_2
+    WHEN
+        grd1: releaseRefund_2 ∈ sentMessages
+        grd2: releaseRefund_2 ↦ FilingPortal ∈ sender
+        grd3: releaseRefund_2 ↦ Taxpayer ∈ receiver
+        grd4: releaseRefund_2 ∉ receivedMessages
+        grd5: currentMessage = {releaseRefund_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseRefund_2}
+        act2: currentMessage := ∅
+    END
+
+    sendassignRefund_3
+    WHEN
+        grd1: assignRefund_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseRefund_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignRefund_3}
+        act2: sender := sender ∪ {assignRefund_3 ↦ FilingPortal}
+        act3: receiver := receiver ∪ {assignRefund_3 ↦ Taxpayer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignRefund_3}
+    END
+
+    receiveassignRefund_3
+    WHEN
+        grd1: assignRefund_3 ∈ sentMessages
+        grd2: assignRefund_3 ↦ FilingPortal ∈ sender
+        grd3: assignRefund_3 ↦ Taxpayer ∈ receiver
+        grd4: assignRefund_3 ∉ receivedMessages
+        grd5: currentMessage = {assignRefund_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignRefund_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendschedulePayment_4
+    WHEN
+        grd1: schedulePayment_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignRefund_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {schedulePayment_4}
+        act2: sender := sender ∪ {schedulePayment_4 ↦ Taxpayer}
+        act3: receiver := receiver ∪ {schedulePayment_4 ↦ RevenueDept}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {schedulePayment_4}
+    END
+
+    receiveschedulePayment_4
+    WHEN
+        grd1: schedulePayment_4 ∈ sentMessages
+        grd2: schedulePayment_4 ↦ Taxpayer ∈ sender
+        grd3: schedulePayment_4 ↦ RevenueDept ∈ receiver
+        grd4: schedulePayment_4 ∉ receivedMessages
+        grd5: currentMessage = {schedulePayment_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {schedulePayment_4}
+        act2: currentMessage := ∅
+    END
+
+    sendupdatePayment_5
+    WHEN
+        grd1: updatePayment_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: schedulePayment_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updatePayment_5}
+        act2: sender := sender ∪ {updatePayment_5 ↦ Taxpayer}
+        act3: receiver := receiver ∪ {updatePayment_5 ↦ FilingPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updatePayment_5 ↦ refundRef, updatePayment_5 ↦ returnRef}
+        act6: currentMessage := {updatePayment_5}
+    END
+
+    receiveupdatePayment_5
+    WHEN
+        grd1: updatePayment_5 ∈ sentMessages
+        grd2: updatePayment_5 ↦ Taxpayer ∈ sender
+        grd3: updatePayment_5 ↦ FilingPortal ∈ receiver
+        grd4: updatePayment_5 ∉ receivedMessages
+        grd5: currentMessage = {updatePayment_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updatePayment_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updatePayment_5 ↦ refundRef, updatePayment_5 ↦ returnRef}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueReturn_6
+    WHEN
+        grd1: issueReturn_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updatePayment_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueReturn_6}
+        act2: sender := sender ∪ {issueReturn_6 ↦ FilingPortal}
+        act3: receiver := receiver ∪ {issueReturn_6 ↦ Taxpayer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueReturn_6 ↦ paymentID}
+        act6: currentMessage := {issueReturn_6}
+    END
+
+    receiveissueReturn_6
+    WHEN
+        grd1: issueReturn_6 ∈ sentMessages
+        grd2: issueReturn_6 ↦ FilingPortal ∈ sender
+        grd3: issueReturn_6 ↦ Taxpayer ∈ receiver
+        grd4: issueReturn_6 ∉ receivedMessages
+        grd5: currentMessage = {issueReturn_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueReturn_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueReturn_6 ↦ paymentID}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

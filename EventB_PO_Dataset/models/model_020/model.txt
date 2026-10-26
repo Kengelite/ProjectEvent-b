@@ -1,0 +1,195 @@
+CONTEXT FitnessTrackerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    PhoneApp, Wristband
+    pairDevice_1, pairOK_2, syncSteps_3, syncAck_4, showDashboard_5
+    deviceID, stepCount, summary
+AXIOMS
+    axm1: partition(Objects, {PhoneApp}, {Wristband})
+    axm2: partition(Messages, {pairDevice_1}, {pairOK_2}, {syncSteps_3}, {syncAck_4}, {showDashboard_5})
+    axm3: partition(DataMessages, {deviceID}, {stepCount}, {summary})
+END
+
+MACHINE FitnessTrackerInteractionMachine_1
+SEES FitnessTrackerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, syncRound, t_time_1, t_delay_1, t_success_1, t_time_3, t_delay_3, t_success_3
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: syncRound ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_3 ∈ ℤ
+    inv13: t_delay_3 ∈ ℤ
+    inv14: t_success_3 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: syncRound := 0
+        act9: t_time_1 :∈ 0..10
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_3 :∈ 0..4
+        act13: t_delay_3 := 2
+        act14: t_success_3 := 0
+    END
+
+
+    sendpairDevice_1
+    WHEN
+        grd1: pairDevice_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {pairDevice_1}
+        act2: sender := sender ∪ {pairDevice_1 ↦ Wristband}
+        act3: receiver := receiver ∪ {pairDevice_1 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {pairDevice_1 ↦ deviceID}
+        act6: currentMessage := {pairDevice_1}
+    END
+
+    receivepairDevice_1
+    WHEN
+        grd1: pairDevice_1 ∈ sentMessages
+        grd2: pairDevice_1 ↦ Wristband ∈ sender
+        grd3: pairDevice_1 ↦ PhoneApp ∈ receiver
+        grd4: pairDevice_1 ∉ receivedMessages
+        grd5: currentMessage = {pairDevice_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pairDevice_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {pairDevice_1 ↦ deviceID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendpairOK_2
+    WHEN
+        grd1: pairOK_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pairDevice_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {pairOK_2}
+        act2: sender := sender ∪ {pairOK_2 ↦ PhoneApp}
+        act3: receiver := receiver ∪ {pairOK_2 ↦ Wristband}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {pairOK_2}
+    END
+
+    receivepairOK_2
+    WHEN
+        grd1: pairOK_2 ∈ sentMessages
+        grd2: pairOK_2 ↦ PhoneApp ∈ sender
+        grd3: pairOK_2 ↦ Wristband ∈ receiver
+        grd4: pairOK_2 ∉ receivedMessages
+        grd5: currentMessage = {pairOK_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pairOK_2}
+        act2: currentMessage := ∅
+    END
+
+    sendsyncSteps_3
+    WHEN
+        grd1: syncSteps_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pairOK_2 ∈ receivedMessages
+        grd4: syncRound < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncSteps_3}
+        act2: sender := sender ∪ {syncSteps_3 ↦ Wristband}
+        act3: receiver := receiver ∪ {syncSteps_3 ↦ PhoneApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncSteps_3 ↦ stepCount}
+        act6: currentMessage := {syncSteps_3}
+    END
+
+    receivesyncSteps_3
+    WHEN
+        grd1: syncSteps_3 ∈ sentMessages
+        grd2: syncSteps_3 ↦ Wristband ∈ sender
+        grd3: syncSteps_3 ↦ PhoneApp ∈ receiver
+        grd4: syncSteps_3 ∉ receivedMessages
+        grd5: currentMessage = {syncSteps_3}
+        grd6: syncRound < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncSteps_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncSteps_3 ↦ stepCount}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendsyncAck_4
+    WHEN
+        grd1: syncAck_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncSteps_3 ∈ receivedMessages
+        grd4: syncRound < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncAck_4}
+        act2: sender := sender ∪ {syncAck_4 ↦ PhoneApp}
+        act3: receiver := receiver ∪ {syncAck_4 ↦ Wristband}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncAck_4}
+    END
+
+    receivesyncAck_4
+    WHEN
+        grd1: syncAck_4 ∈ sentMessages
+        grd2: syncAck_4 ↦ PhoneApp ∈ sender
+        grd3: syncAck_4 ↦ Wristband ∈ receiver
+        grd4: syncAck_4 ∉ receivedMessages
+        grd5: currentMessage = {syncAck_4}
+        grd6: syncRound < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncAck_4}
+        act2: currentMessage := ∅
+    END
+
+    sendshowDashboard_5
+    WHEN
+        grd1: showDashboard_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncAck_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {showDashboard_5}
+        act2: sender := sender ∪ {showDashboard_5 ↦ PhoneApp}
+        act3: receiver := receiver ∪ {showDashboard_5 ↦ Wristband}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {showDashboard_5 ↦ summary}
+        act6: currentMessage := {showDashboard_5}
+    END
+
+    receiveshowDashboard_5
+    WHEN
+        grd1: showDashboard_5 ∈ sentMessages
+        grd2: showDashboard_5 ↦ PhoneApp ∈ sender
+        grd3: showDashboard_5 ↦ Wristband ∈ receiver
+        grd4: showDashboard_5 ∉ receivedMessages
+        grd5: currentMessage = {showDashboard_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {showDashboard_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {showDashboard_5 ↦ summary}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_syncSteps_3_loop1
+    WHEN
+        grd1: syncRound < 10
+    THEN
+        act1: syncRound := syncRound + 1
+    END
+
+END

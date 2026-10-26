@@ -1,0 +1,265 @@
+CONTEXT SmartGymLockerContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    GymServer, LockerPanel, Member
+    sendLocker_1, reservePin_2, validatePin_3, issueSession_4, confirmSession_5, querySession_6, syncPin_7, queryLocker_8
+    lockerCode, lockerID, lockerInfo, lockerRef, pinData, pinInfo
+AXIOMS
+    axm1: partition(Objects, {GymServer}, {LockerPanel}, {Member})
+    axm2: partition(Messages, {sendLocker_1}, {reservePin_2}, {validatePin_3}, {issueSession_4}, {confirmSession_5}, {querySession_6}, {syncPin_7}, {queryLocker_8})
+    axm3: partition(DataMessages, {lockerCode}, {lockerID}, {lockerInfo}, {lockerRef}, {pinData}, {pinInfo})
+END
+
+MACHINE SmartGymLockerInteractionMachine_1
+SEES SmartGymLockerContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_3, t_delay_3, t_success_3, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_3 ∈ ℤ
+    inv10: t_delay_3 ∈ ℤ
+    inv11: t_success_3 ∈ ℤ
+    inv12: t_time_8 ∈ ℤ
+    inv13: t_delay_8 ∈ ℤ
+    inv14: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_3 :∈ 0..8
+        act10: t_delay_3 := 0
+        act11: t_success_3 := 0
+        act12: t_time_8 :∈ 0..8
+        act13: t_delay_8 := 0
+        act14: t_success_8 := 0
+    END
+
+
+    sendsendLocker_1
+    WHEN
+        grd1: sendLocker_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendLocker_1}
+        act2: sender := sender ∪ {sendLocker_1 ↦ Member}
+        act3: receiver := receiver ∪ {sendLocker_1 ↦ LockerPanel}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sendLocker_1}
+    END
+
+    receivesendLocker_1
+    WHEN
+        grd1: sendLocker_1 ∈ sentMessages
+        grd2: sendLocker_1 ↦ Member ∈ sender
+        grd3: sendLocker_1 ↦ LockerPanel ∈ receiver
+        grd4: sendLocker_1 ∉ receivedMessages
+        grd5: currentMessage = {sendLocker_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendLocker_1}
+        act2: currentMessage := ∅
+    END
+
+    sendreservePin_2
+    WHEN
+        grd1: reservePin_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendLocker_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reservePin_2}
+        act2: sender := sender ∪ {reservePin_2 ↦ LockerPanel}
+        act3: receiver := receiver ∪ {reservePin_2 ↦ GymServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reservePin_2 ↦ lockerID}
+        act6: currentMessage := {reservePin_2}
+    END
+
+    receivereservePin_2
+    WHEN
+        grd1: reservePin_2 ∈ sentMessages
+        grd2: reservePin_2 ↦ LockerPanel ∈ sender
+        grd3: reservePin_2 ↦ GymServer ∈ receiver
+        grd4: reservePin_2 ∉ receivedMessages
+        grd5: currentMessage = {reservePin_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reservePin_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reservePin_2 ↦ lockerID}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidatePin_3
+    WHEN
+        grd1: validatePin_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reservePin_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validatePin_3}
+        act2: sender := sender ∪ {validatePin_3 ↦ GymServer}
+        act3: receiver := receiver ∪ {validatePin_3 ↦ Member}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validatePin_3 ↦ pinData}
+        act6: currentMessage := {validatePin_3}
+    END
+
+    receivevalidatePin_3
+    WHEN
+        grd1: validatePin_3 ∈ sentMessages
+        grd2: validatePin_3 ↦ GymServer ∈ sender
+        grd3: validatePin_3 ↦ Member ∈ receiver
+        grd4: validatePin_3 ∉ receivedMessages
+        grd5: currentMessage = {validatePin_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validatePin_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validatePin_3 ↦ pinData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendissueSession_4
+    WHEN
+        grd1: issueSession_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validatePin_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueSession_4}
+        act2: sender := sender ∪ {issueSession_4 ↦ Member}
+        act3: receiver := receiver ∪ {issueSession_4 ↦ GymServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueSession_4 ↦ lockerRef}
+        act6: currentMessage := {issueSession_4}
+    END
+
+    receiveissueSession_4
+    WHEN
+        grd1: issueSession_4 ∈ sentMessages
+        grd2: issueSession_4 ↦ Member ∈ sender
+        grd3: issueSession_4 ↦ GymServer ∈ receiver
+        grd4: issueSession_4 ∉ receivedMessages
+        grd5: currentMessage = {issueSession_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueSession_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueSession_4 ↦ lockerRef}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmSession_5
+    WHEN
+        grd1: confirmSession_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueSession_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmSession_5}
+        act2: sender := sender ∪ {confirmSession_5 ↦ LockerPanel}
+        act3: receiver := receiver ∪ {confirmSession_5 ↦ GymServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmSession_5 ↦ lockerCode}
+        act6: currentMessage := {confirmSession_5}
+    END
+
+    receiveconfirmSession_5
+    WHEN
+        grd1: confirmSession_5 ∈ sentMessages
+        grd2: confirmSession_5 ↦ LockerPanel ∈ sender
+        grd3: confirmSession_5 ↦ GymServer ∈ receiver
+        grd4: confirmSession_5 ∉ receivedMessages
+        grd5: currentMessage = {confirmSession_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmSession_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmSession_5 ↦ lockerCode}
+        act3: currentMessage := ∅
+    END
+
+    sendquerySession_6
+    WHEN
+        grd1: querySession_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmSession_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {querySession_6}
+        act2: sender := sender ∪ {querySession_6 ↦ Member}
+        act3: receiver := receiver ∪ {querySession_6 ↦ LockerPanel}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {querySession_6 ↦ pinInfo}
+        act6: currentMessage := {querySession_6}
+    END
+
+    receivequerySession_6
+    WHEN
+        grd1: querySession_6 ∈ sentMessages
+        grd2: querySession_6 ↦ Member ∈ sender
+        grd3: querySession_6 ↦ LockerPanel ∈ receiver
+        grd4: querySession_6 ∉ receivedMessages
+        grd5: currentMessage = {querySession_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {querySession_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {querySession_6 ↦ pinInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncPin_7
+    WHEN
+        grd1: syncPin_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: querySession_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncPin_7}
+        act2: sender := sender ∪ {syncPin_7 ↦ LockerPanel}
+        act3: receiver := receiver ∪ {syncPin_7 ↦ Member}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncPin_7 ↦ lockerInfo}
+        act6: currentMessage := {syncPin_7}
+    END
+
+    receivesyncPin_7
+    WHEN
+        grd1: syncPin_7 ∈ sentMessages
+        grd2: syncPin_7 ↦ LockerPanel ∈ sender
+        grd3: syncPin_7 ↦ Member ∈ receiver
+        grd4: syncPin_7 ∉ receivedMessages
+        grd5: currentMessage = {syncPin_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncPin_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncPin_7 ↦ lockerInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryLocker_8
+    WHEN
+        grd1: queryLocker_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncPin_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryLocker_8}
+        act2: sender := sender ∪ {queryLocker_8 ↦ Member}
+        act3: receiver := receiver ∪ {queryLocker_8 ↦ GymServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryLocker_8}
+    END
+
+    receivequeryLocker_8
+    WHEN
+        grd1: queryLocker_8 ∈ sentMessages
+        grd2: queryLocker_8 ↦ Member ∈ sender
+        grd3: queryLocker_8 ↦ GymServer ∈ receiver
+        grd4: queryLocker_8 ∉ receivedMessages
+        grd5: currentMessage = {queryLocker_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryLocker_8}
+        act2: currentMessage := ∅
+        act3: t_success_8 := t_time_8 + t_delay_8
+    END
+
+END

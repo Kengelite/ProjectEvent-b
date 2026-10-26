@@ -1,0 +1,211 @@
+CONTEXT MeetingRoomDisplayContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CalendarAPI, Facilities, Organizer, RoomDisplay
+    cancelMeeting_1, confirmCheckin_2, confirmMeeting_3, updateRoom_4, requestMeeting_5, confirmRoom_6
+    meetingData, roomInfo
+AXIOMS
+    axm1: partition(Objects, {CalendarAPI}, {Facilities}, {Organizer}, {RoomDisplay})
+    axm2: partition(Messages, {cancelMeeting_1}, {confirmCheckin_2}, {confirmMeeting_3}, {updateRoom_4}, {requestMeeting_5}, {confirmRoom_6})
+    axm3: partition(DataMessages, {meetingData}, {roomInfo})
+END
+
+MACHINE MeetingRoomDisplayInteractionMachine_1
+SEES MeetingRoomDisplayContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, isVip, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: isVip ∈ ℤ
+    inv9: t_time_4 ∈ ℤ
+    inv10: t_delay_4 ∈ ℤ
+    inv11: t_success_4 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: isVip := 0
+        act9: t_time_4 :∈ 0..20
+        act10: t_delay_4 := 0
+        act11: t_success_4 := 0
+        act12: t_time_5 :∈ 0..3
+        act13: t_delay_5 := 0
+        act14: t_success_5 := 0
+    END
+
+
+    sendcancelMeeting_1
+    WHEN
+        grd1: cancelMeeting_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelMeeting_1}
+        act2: sender := sender ∪ {cancelMeeting_1 ↦ Organizer}
+        act3: receiver := receiver ∪ {cancelMeeting_1 ↦ Facilities}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelMeeting_1}
+    END
+
+    receivecancelMeeting_1
+    WHEN
+        grd1: cancelMeeting_1 ∈ sentMessages
+        grd2: cancelMeeting_1 ↦ Organizer ∈ sender
+        grd3: cancelMeeting_1 ↦ Facilities ∈ receiver
+        grd4: cancelMeeting_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelMeeting_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelMeeting_1}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmCheckin_2
+    WHEN
+        grd1: confirmCheckin_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelMeeting_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCheckin_2}
+        act2: sender := sender ∪ {confirmCheckin_2 ↦ Facilities}
+        act3: receiver := receiver ∪ {confirmCheckin_2 ↦ CalendarAPI}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmCheckin_2}
+    END
+
+    receiveconfirmCheckin_2
+    WHEN
+        grd1: confirmCheckin_2 ∈ sentMessages
+        grd2: confirmCheckin_2 ↦ Facilities ∈ sender
+        grd3: confirmCheckin_2 ↦ CalendarAPI ∈ receiver
+        grd4: confirmCheckin_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmCheckin_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCheckin_2}
+        act2: currentMessage := ∅
+    END
+
+    sendconfirmMeeting_3
+    WHEN
+        grd1: confirmMeeting_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmCheckin_2 ∈ receivedMessages
+        grd4: isVip = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmMeeting_3}
+        act2: sender := sender ∪ {confirmMeeting_3 ↦ RoomDisplay}
+        act3: receiver := receiver ∪ {confirmMeeting_3 ↦ Facilities}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmMeeting_3}
+    END
+
+    receiveconfirmMeeting_3
+    WHEN
+        grd1: confirmMeeting_3 ∈ sentMessages
+        grd2: confirmMeeting_3 ↦ RoomDisplay ∈ sender
+        grd3: confirmMeeting_3 ↦ Facilities ∈ receiver
+        grd4: confirmMeeting_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmMeeting_3}
+        grd6: isVip = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmMeeting_3}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateRoom_4
+    WHEN
+        grd1: updateRoom_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmMeeting_3 ∈ receivedMessages
+        grd4: isVip = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateRoom_4}
+        act2: sender := sender ∪ {updateRoom_4 ↦ CalendarAPI}
+        act3: receiver := receiver ∪ {updateRoom_4 ↦ Organizer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateRoom_4}
+    END
+
+    receiveupdateRoom_4
+    WHEN
+        grd1: updateRoom_4 ∈ sentMessages
+        grd2: updateRoom_4 ↦ CalendarAPI ∈ sender
+        grd3: updateRoom_4 ↦ Organizer ∈ receiver
+        grd4: updateRoom_4 ∉ receivedMessages
+        grd5: currentMessage = {updateRoom_4}
+        grd6: isVip = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateRoom_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendrequestMeeting_5
+    WHEN
+        grd1: requestMeeting_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmCheckin_2 ∈ receivedMessages
+        grd4: isVip = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestMeeting_5}
+        act2: sender := sender ∪ {requestMeeting_5 ↦ CalendarAPI}
+        act3: receiver := receiver ∪ {requestMeeting_5 ↦ Facilities}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestMeeting_5}
+    END
+
+    receiverequestMeeting_5
+    WHEN
+        grd1: requestMeeting_5 ∈ sentMessages
+        grd2: requestMeeting_5 ↦ CalendarAPI ∈ sender
+        grd3: requestMeeting_5 ↦ Facilities ∈ receiver
+        grd4: requestMeeting_5 ∉ receivedMessages
+        grd5: currentMessage = {requestMeeting_5}
+        grd6: isVip = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestMeeting_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendconfirmRoom_6
+    WHEN
+        grd1: confirmRoom_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateRoom_4 ∈ receivedMessages ∨ requestMeeting_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmRoom_6}
+        act2: sender := sender ∪ {confirmRoom_6 ↦ RoomDisplay}
+        act3: receiver := receiver ∪ {confirmRoom_6 ↦ Organizer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmRoom_6 ↦ meetingData, confirmRoom_6 ↦ roomInfo}
+        act6: currentMessage := {confirmRoom_6}
+    END
+
+    receiveconfirmRoom_6
+    WHEN
+        grd1: confirmRoom_6 ∈ sentMessages
+        grd2: confirmRoom_6 ↦ RoomDisplay ∈ sender
+        grd3: confirmRoom_6 ↦ Organizer ∈ receiver
+        grd4: confirmRoom_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmRoom_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmRoom_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmRoom_6 ↦ meetingData, confirmRoom_6 ↦ roomInfo}
+        act3: currentMessage := ∅
+    END
+
+END

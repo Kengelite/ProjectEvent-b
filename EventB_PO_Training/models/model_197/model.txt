@@ -1,0 +1,404 @@
+CONTEXT WaterLeakDetectionContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    HomeHub, LeakSensor, ShutoffValve
+    fetchTicket_1, updateLeak_2, reserveValve_3, releaseLeak_4, releaseTicket_5, reportValve_6, syncTicket_7, issueTicket_8, cancelLeak_9, ackLeak_10, reportLeak_11
+    leakInfo, leakValue, valveRef, valveValue
+AXIOMS
+    axm1: partition(Objects, {HomeHub}, {LeakSensor}, {ShutoffValve})
+    axm2: partition(Messages, {fetchTicket_1}, {updateLeak_2}, {reserveValve_3}, {releaseLeak_4}, {releaseTicket_5}, {reportValve_6}, {syncTicket_7}, {issueTicket_8}, {cancelLeak_9}, {ackLeak_10}, {reportLeak_11})
+    axm3: partition(DataMessages, {leakInfo}, {leakValue}, {valveRef}, {valveValue})
+END
+
+MACHINE WaterLeakDetectionInteractionMachine_1
+SEES WaterLeakDetectionContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, par_1, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8, t_time_9, t_delay_9, t_success_9
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_6 ∈ ℤ
+    inv20: t_delay_6 ∈ ℤ
+    inv21: t_success_6 ∈ ℤ
+    inv22: t_time_7 ∈ ℤ
+    inv23: t_delay_7 ∈ ℤ
+    inv24: t_success_7 ∈ ℤ
+    inv25: t_time_8 ∈ ℤ
+    inv26: t_delay_8 ∈ ℤ
+    inv27: t_success_8 ∈ ℤ
+    inv28: t_time_9 ∈ ℤ
+    inv29: t_delay_9 ∈ ℤ
+    inv30: t_success_9 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: par_1 := 0
+        act10: t_time_1 :∈ 0..8
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..10
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 0..2
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+        act19: t_time_6 :∈ 0..30
+        act20: t_delay_6 := 0
+        act21: t_success_6 := 0
+        act22: t_time_7 :∈ 0..60
+        act23: t_delay_7 := 0
+        act24: t_success_7 := 0
+        act25: t_time_8 :∈ 0..0
+        act26: t_delay_8 := 2
+        act27: t_success_8 := 0
+        act28: t_time_9 :∈ 0..1
+        act29: t_delay_9 := 0
+        act30: t_success_9 := 0
+    END
+
+
+    sendfetchTicket_1
+    WHEN
+        grd1: fetchTicket_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchTicket_1}
+        act2: sender := sender ∪ {fetchTicket_1 ↦ HomeHub}
+        act3: receiver := receiver ∪ {fetchTicket_1 ↦ LeakSensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchTicket_1}
+    END
+
+    receivefetchTicket_1
+    WHEN
+        grd1: fetchTicket_1 ∈ sentMessages
+        grd2: fetchTicket_1 ↦ HomeHub ∈ sender
+        grd3: fetchTicket_1 ↦ LeakSensor ∈ receiver
+        grd4: fetchTicket_1 ∉ receivedMessages
+        grd5: currentMessage = {fetchTicket_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchTicket_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendupdateLeak_2
+    WHEN
+        grd1: updateLeak_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchTicket_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateLeak_2}
+        act2: sender := sender ∪ {updateLeak_2 ↦ LeakSensor}
+        act3: receiver := receiver ∪ {updateLeak_2 ↦ ShutoffValve}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateLeak_2 ↦ valveRef}
+        act6: currentMessage := {updateLeak_2}
+    END
+
+    receiveupdateLeak_2
+    WHEN
+        grd1: updateLeak_2 ∈ sentMessages
+        grd2: updateLeak_2 ↦ LeakSensor ∈ sender
+        grd3: updateLeak_2 ↦ ShutoffValve ∈ receiver
+        grd4: updateLeak_2 ∉ receivedMessages
+        grd5: currentMessage = {updateLeak_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateLeak_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateLeak_2 ↦ valveRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveValve_3
+    WHEN
+        grd1: reserveValve_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateLeak_2 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveValve_3}
+        act2: sender := sender ∪ {reserveValve_3 ↦ ShutoffValve}
+        act3: receiver := receiver ∪ {reserveValve_3 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveValve_3 ↦ valveValue}
+        act6: currentMessage := {reserveValve_3}
+    END
+
+    receivereserveValve_3
+    WHEN
+        grd1: reserveValve_3 ∈ sentMessages
+        grd2: reserveValve_3 ↦ ShutoffValve ∈ sender
+        grd3: reserveValve_3 ↦ HomeHub ∈ receiver
+        grd4: reserveValve_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveValve_3}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveValve_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveValve_3 ↦ valveValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreleaseLeak_4_opt1
+    WHEN
+        grd1: releaseLeak_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveValve_3 ∈ receivedMessages
+        grd4: cycleNo < 10
+        grd5: cycleNo mod 2 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLeak_4}
+        act2: sender := sender ∪ {releaseLeak_4 ↦ LeakSensor}
+        act3: receiver := receiver ∪ {releaseLeak_4 ↦ ShutoffValve}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseLeak_4 ↦ valveValue}
+        act6: currentMessage := {releaseLeak_4}
+    END
+
+    receivereleaseLeak_4_opt1
+    WHEN
+        grd1: releaseLeak_4 ∈ sentMessages
+        grd2: releaseLeak_4 ↦ LeakSensor ∈ sender
+        grd3: releaseLeak_4 ↦ ShutoffValve ∈ receiver
+        grd4: releaseLeak_4 ∉ receivedMessages
+        grd5: currentMessage = {releaseLeak_4}
+        grd6: cycleNo < 10
+        grd7: cycleNo mod 2 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLeak_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseLeak_4 ↦ valveValue}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreleaseTicket_5
+    WHEN
+        grd1: releaseTicket_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLeak_4 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseTicket_5}
+        act2: sender := sender ∪ {releaseTicket_5 ↦ HomeHub}
+        act3: receiver := receiver ∪ {releaseTicket_5 ↦ ShutoffValve}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseTicket_5 ↦ leakValue}
+        act6: currentMessage := {releaseTicket_5}
+    END
+
+    receivereleaseTicket_5
+    WHEN
+        grd1: releaseTicket_5 ∈ sentMessages
+        grd2: releaseTicket_5 ↦ HomeHub ∈ sender
+        grd3: releaseTicket_5 ↦ ShutoffValve ∈ receiver
+        grd4: releaseTicket_5 ∉ receivedMessages
+        grd5: currentMessage = {releaseTicket_5}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseTicket_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseTicket_5 ↦ leakValue}
+        act3: currentMessage := ∅
+    END
+
+    sendreportValve_6
+    WHEN
+        grd1: reportValve_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseTicket_5 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportValve_6}
+        act2: sender := sender ∪ {reportValve_6 ↦ LeakSensor}
+        act3: receiver := receiver ∪ {reportValve_6 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportValve_6 ↦ leakInfo}
+        act6: currentMessage := {reportValve_6}
+    END
+
+    receivereportValve_6
+    WHEN
+        grd1: reportValve_6 ∈ sentMessages
+        grd2: reportValve_6 ↦ LeakSensor ∈ sender
+        grd3: reportValve_6 ↦ HomeHub ∈ receiver
+        grd4: reportValve_6 ∉ receivedMessages
+        grd5: currentMessage = {reportValve_6}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportValve_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportValve_6 ↦ leakInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendsyncTicket_7
+    WHEN
+        grd1: syncTicket_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportValve_6 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncTicket_7}
+        act2: sender := sender ∪ {syncTicket_7 ↦ HomeHub}
+        act3: receiver := receiver ∪ {syncTicket_7 ↦ ShutoffValve}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncTicket_7}
+    END
+
+    receivesyncTicket_7
+    WHEN
+        grd1: syncTicket_7 ∈ sentMessages
+        grd2: syncTicket_7 ↦ HomeHub ∈ sender
+        grd3: syncTicket_7 ↦ ShutoffValve ∈ receiver
+        grd4: syncTicket_7 ∉ receivedMessages
+        grd5: currentMessage = {syncTicket_7}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncTicket_7}
+        act2: currentMessage := ∅
+        act3: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendissueTicket_8
+    WHEN
+        grd1: issueTicket_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncTicket_7 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueTicket_8}
+        act2: sender := sender ∪ {issueTicket_8 ↦ LeakSensor}
+        act3: receiver := receiver ∪ {issueTicket_8 ↦ ShutoffValve}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {issueTicket_8}
+    END
+
+    receiveissueTicket_8
+    WHEN
+        grd1: issueTicket_8 ∈ sentMessages
+        grd2: issueTicket_8 ↦ LeakSensor ∈ sender
+        grd3: issueTicket_8 ↦ ShutoffValve ∈ receiver
+        grd4: issueTicket_8 ∉ receivedMessages
+        grd5: currentMessage = {issueTicket_8}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueTicket_8}
+        act2: currentMessage := ∅
+        act3: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendcancelLeak_9
+    WHEN
+        grd1: cancelLeak_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueTicket_8 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelLeak_9}
+        act2: sender := sender ∪ {cancelLeak_9 ↦ HomeHub}
+        act3: receiver := receiver ∪ {cancelLeak_9 ↦ LeakSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelLeak_9 ↦ valveRef}
+        act6: currentMessage := {cancelLeak_9}
+    END
+
+    receivecancelLeak_9
+    WHEN
+        grd1: cancelLeak_9 ∈ sentMessages
+        grd2: cancelLeak_9 ↦ HomeHub ∈ sender
+        grd3: cancelLeak_9 ↦ LeakSensor ∈ receiver
+        grd4: cancelLeak_9 ∉ receivedMessages
+        grd5: currentMessage = {cancelLeak_9}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelLeak_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelLeak_9 ↦ valveRef}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendackLeak_10
+    WHEN
+        grd1: ackLeak_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelLeak_9 ∈ receivedMessages
+        grd4: cycleNo < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackLeak_10}
+        act2: sender := sender ∪ {ackLeak_10 ↦ HomeHub}
+        act3: receiver := receiver ∪ {ackLeak_10 ↦ ShutoffValve}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackLeak_10}
+    END
+
+    receiveackLeak_10
+    WHEN
+        grd1: ackLeak_10 ∈ sentMessages
+        grd2: ackLeak_10 ↦ HomeHub ∈ sender
+        grd3: ackLeak_10 ↦ ShutoffValve ∈ receiver
+        grd4: ackLeak_10 ∉ receivedMessages
+        grd5: currentMessage = {ackLeak_10}
+        grd6: cycleNo < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackLeak_10}
+        act2: currentMessage := ∅
+    END
+
+    sendreportLeak_11
+    WHEN
+        grd1: reportLeak_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackLeak_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportLeak_11}
+        act2: sender := sender ∪ {reportLeak_11 ↦ HomeHub}
+        act3: receiver := receiver ∪ {reportLeak_11 ↦ LeakSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportLeak_11 ↦ leakInfo}
+        act6: currentMessage := {reportLeak_11}
+    END
+
+    receivereportLeak_11
+    WHEN
+        grd1: reportLeak_11 ∈ sentMessages
+        grd2: reportLeak_11 ↦ HomeHub ∈ sender
+        grd3: reportLeak_11 ↦ LeakSensor ∈ receiver
+        grd4: reportLeak_11 ∉ receivedMessages
+        grd5: currentMessage = {reportLeak_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportLeak_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportLeak_11 ↦ leakInfo}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_reserveValve_3_loop1
+    WHEN
+        grd1: cycleNo < 10
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+END

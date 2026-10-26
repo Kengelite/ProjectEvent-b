@@ -1,0 +1,406 @@
+CONTEXT SmartRainGaugeContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    FloodCenter, RainGauge, Resident, WeatherHub
+    queryWarning_1, confirmRainfall_2, reserveRainfall_3, checkLevel_4, approveRainfall_5, reserveLevel_6, validateLevel_7, updateWarning_8, scheduleLevel_9, syncRainfall_10, cancelRainfall_11
+    levelData, levelInfo, levelValue, rainfallCode, rainfallData, warningInfo, warningRef, warningValue
+AXIOMS
+    axm1: partition(Objects, {FloodCenter}, {RainGauge}, {Resident}, {WeatherHub})
+    axm2: partition(Messages, {queryWarning_1}, {confirmRainfall_2}, {reserveRainfall_3}, {checkLevel_4}, {approveRainfall_5}, {reserveLevel_6}, {validateLevel_7}, {updateWarning_8}, {scheduleLevel_9}, {syncRainfall_10}, {cancelRainfall_11})
+    axm3: partition(DataMessages, {levelData}, {levelInfo}, {levelValue}, {rainfallCode}, {rainfallData}, {warningInfo}, {warningRef}, {warningValue})
+END
+
+MACHINE SmartRainGaugeInteractionMachine_1
+SEES SmartRainGaugeContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, score, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_6, t_delay_6, t_success_6, t_time_7, t_delay_7, t_success_7, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: score ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_6 ∈ ℤ
+    inv18: t_delay_6 ∈ ℤ
+    inv19: t_success_6 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+    inv23: t_time_9 ∈ ℤ
+    inv24: t_delay_9 ∈ ℤ
+    inv25: t_success_9 ∈ ℤ
+    inv26: t_time_10 ∈ ℤ
+    inv27: t_delay_10 ∈ ℤ
+    inv28: t_success_10 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: score :∈ ℤ
+        act10: par_1 := 0
+        act11: t_time_2 :∈ 0..10
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..0
+        act15: t_delay_3 := 5
+        act16: t_success_3 := 0
+        act17: t_time_6 :∈ 0..5
+        act18: t_delay_6 := 0
+        act19: t_success_6 := 0
+        act20: t_time_7 :∈ 0..3
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+        act23: t_time_9 :∈ 0..30
+        act24: t_delay_9 := 1
+        act25: t_success_9 := 0
+        act26: t_time_10 :∈ 0..1
+        act27: t_delay_10 := 0
+        act28: t_success_10 := 0
+    END
+
+
+    sendqueryWarning_1
+    WHEN
+        grd1: queryWarning_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryWarning_1}
+        act2: sender := sender ∪ {queryWarning_1 ↦ Resident}
+        act3: receiver := receiver ∪ {queryWarning_1 ↦ FloodCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryWarning_1 ↦ warningRef}
+        act6: currentMessage := {queryWarning_1}
+    END
+
+    receivequeryWarning_1
+    WHEN
+        grd1: queryWarning_1 ∈ sentMessages
+        grd2: queryWarning_1 ↦ Resident ∈ sender
+        grd3: queryWarning_1 ↦ FloodCenter ∈ receiver
+        grd4: queryWarning_1 ∉ receivedMessages
+        grd5: currentMessage = {queryWarning_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryWarning_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryWarning_1 ↦ warningRef}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmRainfall_2
+    WHEN
+        grd1: confirmRainfall_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryWarning_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmRainfall_2}
+        act2: sender := sender ∪ {confirmRainfall_2 ↦ WeatherHub}
+        act3: receiver := receiver ∪ {confirmRainfall_2 ↦ Resident}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmRainfall_2}
+    END
+
+    receiveconfirmRainfall_2
+    WHEN
+        grd1: confirmRainfall_2 ∈ sentMessages
+        grd2: confirmRainfall_2 ↦ WeatherHub ∈ sender
+        grd3: confirmRainfall_2 ↦ Resident ∈ receiver
+        grd4: confirmRainfall_2 ∉ receivedMessages
+        grd5: currentMessage = {confirmRainfall_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmRainfall_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveRainfall_3_opt1
+    WHEN
+        grd1: reserveRainfall_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmRainfall_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveRainfall_3}
+        act2: sender := sender ∪ {reserveRainfall_3 ↦ FloodCenter}
+        act3: receiver := receiver ∪ {reserveRainfall_3 ↦ WeatherHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveRainfall_3}
+    END
+
+    receivereserveRainfall_3_opt1
+    WHEN
+        grd1: reserveRainfall_3 ∈ sentMessages
+        grd2: reserveRainfall_3 ↦ FloodCenter ∈ sender
+        grd3: reserveRainfall_3 ↦ WeatherHub ∈ receiver
+        grd4: reserveRainfall_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveRainfall_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveRainfall_3}
+        act2: currentMessage := ∅
+        act3: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendcheckLevel_4_opt1
+    WHEN
+        grd1: checkLevel_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveRainfall_3 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkLevel_4}
+        act2: sender := sender ∪ {checkLevel_4 ↦ Resident}
+        act3: receiver := receiver ∪ {checkLevel_4 ↦ FloodCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkLevel_4 ↦ rainfallData}
+        act6: currentMessage := {checkLevel_4}
+    END
+
+    receivecheckLevel_4_opt1
+    WHEN
+        grd1: checkLevel_4 ∈ sentMessages
+        grd2: checkLevel_4 ↦ Resident ∈ sender
+        grd3: checkLevel_4 ↦ FloodCenter ∈ receiver
+        grd4: checkLevel_4 ∉ receivedMessages
+        grd5: currentMessage = {checkLevel_4}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkLevel_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkLevel_4 ↦ rainfallData}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveRainfall_5_opt1
+    WHEN
+        grd1: approveRainfall_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkLevel_4 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveRainfall_5}
+        act2: sender := sender ∪ {approveRainfall_5 ↦ RainGauge}
+        act3: receiver := receiver ∪ {approveRainfall_5 ↦ WeatherHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveRainfall_5 ↦ levelInfo}
+        act6: currentMessage := {approveRainfall_5}
+    END
+
+    receiveapproveRainfall_5_opt1
+    WHEN
+        grd1: approveRainfall_5 ∈ sentMessages
+        grd2: approveRainfall_5 ↦ RainGauge ∈ sender
+        grd3: approveRainfall_5 ↦ WeatherHub ∈ receiver
+        grd4: approveRainfall_5 ∉ receivedMessages
+        grd5: currentMessage = {approveRainfall_5}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveRainfall_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveRainfall_5 ↦ levelInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveLevel_6_opt1
+    WHEN
+        grd1: reserveLevel_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveRainfall_5 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveLevel_6}
+        act2: sender := sender ∪ {reserveLevel_6 ↦ RainGauge}
+        act3: receiver := receiver ∪ {reserveLevel_6 ↦ WeatherHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveLevel_6 ↦ warningInfo}
+        act6: currentMessage := {reserveLevel_6}
+    END
+
+    receivereserveLevel_6_opt1
+    WHEN
+        grd1: reserveLevel_6 ∈ sentMessages
+        grd2: reserveLevel_6 ↦ RainGauge ∈ sender
+        grd3: reserveLevel_6 ↦ WeatherHub ∈ receiver
+        grd4: reserveLevel_6 ∉ receivedMessages
+        grd5: currentMessage = {reserveLevel_6}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveLevel_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveLevel_6 ↦ warningInfo}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendvalidateLevel_7_opt1
+    WHEN
+        grd1: validateLevel_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveLevel_6 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateLevel_7}
+        act2: sender := sender ∪ {validateLevel_7 ↦ RainGauge}
+        act3: receiver := receiver ∪ {validateLevel_7 ↦ Resident}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateLevel_7 ↦ warningValue}
+        act6: currentMessage := {validateLevel_7}
+    END
+
+    receivevalidateLevel_7_opt1
+    WHEN
+        grd1: validateLevel_7 ∈ sentMessages
+        grd2: validateLevel_7 ↦ RainGauge ∈ sender
+        grd3: validateLevel_7 ↦ Resident ∈ receiver
+        grd4: validateLevel_7 ∉ receivedMessages
+        grd5: currentMessage = {validateLevel_7}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateLevel_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateLevel_7 ↦ warningValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendupdateWarning_8_opt1
+    WHEN
+        grd1: updateWarning_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateLevel_7 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score < 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateWarning_8}
+        act2: sender := sender ∪ {updateWarning_8 ↦ FloodCenter}
+        act3: receiver := receiver ∪ {updateWarning_8 ↦ Resident}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateWarning_8 ↦ levelValue, updateWarning_8 ↦ rainfallCode}
+        act6: currentMessage := {updateWarning_8}
+    END
+
+    receiveupdateWarning_8_opt1
+    WHEN
+        grd1: updateWarning_8 ∈ sentMessages
+        grd2: updateWarning_8 ↦ FloodCenter ∈ sender
+        grd3: updateWarning_8 ↦ Resident ∈ receiver
+        grd4: updateWarning_8 ∉ receivedMessages
+        grd5: currentMessage = {updateWarning_8}
+        grd6: useCache = 1
+        grd7: score < 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateWarning_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateWarning_8 ↦ levelValue, updateWarning_8 ↦ rainfallCode}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleLevel_9_opt1
+    WHEN
+        grd1: scheduleLevel_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveRainfall_3 ∈ receivedMessages
+        grd4: useCache = 1
+        grd5: score ≥ 50
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleLevel_9}
+        act2: sender := sender ∪ {scheduleLevel_9 ↦ Resident}
+        act3: receiver := receiver ∪ {scheduleLevel_9 ↦ WeatherHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleLevel_9 ↦ levelData, scheduleLevel_9 ↦ rainfallCode}
+        act6: currentMessage := {scheduleLevel_9}
+    END
+
+    receivescheduleLevel_9_opt1
+    WHEN
+        grd1: scheduleLevel_9 ∈ sentMessages
+        grd2: scheduleLevel_9 ↦ Resident ∈ sender
+        grd3: scheduleLevel_9 ↦ WeatherHub ∈ receiver
+        grd4: scheduleLevel_9 ∉ receivedMessages
+        grd5: currentMessage = {scheduleLevel_9}
+        grd6: useCache = 1
+        grd7: score ≥ 50
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleLevel_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleLevel_9 ↦ levelData, scheduleLevel_9 ↦ rainfallCode}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendsyncRainfall_10_opt1
+    WHEN
+        grd1: syncRainfall_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateWarning_8 ∈ receivedMessages ∨ scheduleLevel_9 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncRainfall_10}
+        act2: sender := sender ∪ {syncRainfall_10 ↦ RainGauge}
+        act3: receiver := receiver ∪ {syncRainfall_10 ↦ Resident}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncRainfall_10 ↦ rainfallData}
+        act6: currentMessage := {syncRainfall_10}
+    END
+
+    receivesyncRainfall_10_opt1
+    WHEN
+        grd1: syncRainfall_10 ∈ sentMessages
+        grd2: syncRainfall_10 ↦ RainGauge ∈ sender
+        grd3: syncRainfall_10 ↦ Resident ∈ receiver
+        grd4: syncRainfall_10 ∉ receivedMessages
+        grd5: currentMessage = {syncRainfall_10}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncRainfall_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncRainfall_10 ↦ rainfallData}
+        act3: currentMessage := ∅
+        act4: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendcancelRainfall_11
+    WHEN
+        grd1: cancelRainfall_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncRainfall_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelRainfall_11}
+        act2: sender := sender ∪ {cancelRainfall_11 ↦ WeatherHub}
+        act3: receiver := receiver ∪ {cancelRainfall_11 ↦ RainGauge}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelRainfall_11 ↦ rainfallData}
+        act6: currentMessage := {cancelRainfall_11}
+    END
+
+    receivecancelRainfall_11
+    WHEN
+        grd1: cancelRainfall_11 ∈ sentMessages
+        grd2: cancelRainfall_11 ↦ WeatherHub ∈ sender
+        grd3: cancelRainfall_11 ↦ RainGauge ∈ receiver
+        grd4: cancelRainfall_11 ∉ receivedMessages
+        grd5: currentMessage = {cancelRainfall_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelRainfall_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelRainfall_11 ↦ rainfallData}
+        act3: currentMessage := ∅
+    END
+
+END

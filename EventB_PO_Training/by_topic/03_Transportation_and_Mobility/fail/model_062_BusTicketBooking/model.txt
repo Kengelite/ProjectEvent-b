@@ -1,0 +1,291 @@
+CONTEXT BusTicketBookingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BusApp, Passenger
+    validateSeat_1, logTicket_2, sendSeat_3, reserveSeat_4, requestRoute_5, logSeat_6, scheduleTicket_7, approveSeat_8
+    routeRef, seatCode, seatValue, ticketID, ticketValue
+AXIOMS
+    axm1: partition(Objects, {BusApp}, {Passenger})
+    axm2: partition(Messages, {validateSeat_1}, {logTicket_2}, {sendSeat_3}, {reserveSeat_4}, {requestRoute_5}, {logSeat_6}, {scheduleTicket_7}, {approveSeat_8})
+    axm3: partition(DataMessages, {routeRef}, {seatCode}, {seatValue}, {ticketID}, {ticketValue})
+END
+
+MACHINE BusTicketBookingInteractionMachine_1
+SEES BusTicketBookingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, t_time_4, t_delay_4, t_success_4, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: t_time_4 ∈ ℤ
+    inv10: t_delay_4 ∈ ℤ
+    inv11: t_success_4 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+    inv15: t_time_7 ∈ ℤ
+    inv16: t_delay_7 ∈ ℤ
+    inv17: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: t_time_4 :∈ 10..0
+        act10: t_delay_4 := 0
+        act11: t_success_4 := 0
+        act12: t_time_5 :∈ 0..20
+        act13: t_delay_5 := 3
+        act14: t_success_5 := 0
+        act15: t_time_7 :∈ 0..3
+        act16: t_delay_7 := 0
+        act17: t_success_7 := 0
+    END
+
+
+    sendvalidateSeat_1
+    WHEN
+        grd1: validateSeat_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateSeat_1}
+        act2: sender := sender ∪ {validateSeat_1 ↦ Passenger}
+        act3: receiver := receiver ∪ {validateSeat_1 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateSeat_1}
+    END
+
+    receivevalidateSeat_1
+    WHEN
+        grd1: validateSeat_1 ∈ sentMessages
+        grd2: validateSeat_1 ↦ Passenger ∈ sender
+        grd3: validateSeat_1 ↦ BusApp ∈ receiver
+        grd4: validateSeat_1 ∉ receivedMessages
+        grd5: currentMessage = {validateSeat_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateSeat_1}
+        act2: currentMessage := ∅
+    END
+
+    sendlogTicket_2
+    WHEN
+        grd1: logTicket_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateSeat_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logTicket_2}
+        act2: sender := sender ∪ {logTicket_2 ↦ Passenger}
+        act3: receiver := receiver ∪ {logTicket_2 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logTicket_2}
+    END
+
+    receivelogTicket_2
+    WHEN
+        grd1: logTicket_2 ∈ sentMessages
+        grd2: logTicket_2 ↦ Passenger ∈ sender
+        grd3: logTicket_2 ↦ BusApp ∈ receiver
+        grd4: logTicket_2 ∉ receivedMessages
+        grd5: currentMessage = {logTicket_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logTicket_2}
+        act2: currentMessage := ∅
+    END
+
+    sendsendSeat_3
+    WHEN
+        grd1: sendSeat_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logTicket_2 ∈ receivedMessages
+        grd4: retryNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendSeat_3}
+        act2: sender := sender ∪ {sendSeat_3 ↦ BusApp}
+        act3: receiver := receiver ∪ {sendSeat_3 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendSeat_3 ↦ seatCode}
+        act6: currentMessage := {sendSeat_3}
+    END
+
+    receivesendSeat_3
+    WHEN
+        grd1: sendSeat_3 ∈ sentMessages
+        grd2: sendSeat_3 ↦ BusApp ∈ sender
+        grd3: sendSeat_3 ↦ Passenger ∈ receiver
+        grd4: sendSeat_3 ∉ receivedMessages
+        grd5: currentMessage = {sendSeat_3}
+        grd6: retryNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendSeat_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendSeat_3 ↦ seatCode}
+        act3: currentMessage := ∅
+    END
+
+    sendreserveSeat_4_opt1
+    WHEN
+        grd1: reserveSeat_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendSeat_3 ∈ receivedMessages
+        grd4: retryNo < 3
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveSeat_4}
+        act2: sender := sender ∪ {reserveSeat_4 ↦ BusApp}
+        act3: receiver := receiver ∪ {reserveSeat_4 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveSeat_4}
+    END
+
+    receivereserveSeat_4_opt1
+    WHEN
+        grd1: reserveSeat_4 ∈ sentMessages
+        grd2: reserveSeat_4 ↦ BusApp ∈ sender
+        grd3: reserveSeat_4 ↦ Passenger ∈ receiver
+        grd4: reserveSeat_4 ∉ receivedMessages
+        grd5: currentMessage = {reserveSeat_4}
+        grd6: retryNo < 3
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveSeat_4}
+        act2: currentMessage := ∅
+        act3: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendrequestRoute_5_opt1
+    WHEN
+        grd1: requestRoute_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveSeat_4 ∈ receivedMessages
+        grd4: retryNo < 3
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestRoute_5}
+        act2: sender := sender ∪ {requestRoute_5 ↦ BusApp}
+        act3: receiver := receiver ∪ {requestRoute_5 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestRoute_5 ↦ routeRef}
+        act6: currentMessage := {requestRoute_5}
+    END
+
+    receiverequestRoute_5_opt1
+    WHEN
+        grd1: requestRoute_5 ∈ sentMessages
+        grd2: requestRoute_5 ↦ BusApp ∈ sender
+        grd3: requestRoute_5 ↦ Passenger ∈ receiver
+        grd4: requestRoute_5 ∉ receivedMessages
+        grd5: currentMessage = {requestRoute_5}
+        grd6: retryNo < 3
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestRoute_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestRoute_5 ↦ routeRef}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendlogSeat_6
+    WHEN
+        grd1: logSeat_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestRoute_5 ∈ receivedMessages
+        grd4: retryNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {logSeat_6}
+        act2: sender := sender ∪ {logSeat_6 ↦ BusApp}
+        act3: receiver := receiver ∪ {logSeat_6 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logSeat_6 ↦ seatValue, logSeat_6 ↦ ticketID}
+        act6: currentMessage := {logSeat_6}
+    END
+
+    receivelogSeat_6
+    WHEN
+        grd1: logSeat_6 ∈ sentMessages
+        grd2: logSeat_6 ↦ BusApp ∈ sender
+        grd3: logSeat_6 ↦ Passenger ∈ receiver
+        grd4: logSeat_6 ∉ receivedMessages
+        grd5: currentMessage = {logSeat_6}
+        grd6: retryNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logSeat_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logSeat_6 ↦ seatValue, logSeat_6 ↦ ticketID}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleTicket_7
+    WHEN
+        grd1: scheduleTicket_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logSeat_6 ∈ receivedMessages
+        grd4: retryNo < 3
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleTicket_7}
+        act2: sender := sender ∪ {scheduleTicket_7 ↦ Passenger}
+        act3: receiver := receiver ∪ {scheduleTicket_7 ↦ BusApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {scheduleTicket_7 ↦ ticketValue}
+        act6: currentMessage := {scheduleTicket_7}
+    END
+
+    receivescheduleTicket_7
+    WHEN
+        grd1: scheduleTicket_7 ∈ sentMessages
+        grd2: scheduleTicket_7 ↦ Passenger ∈ sender
+        grd3: scheduleTicket_7 ↦ BusApp ∈ receiver
+        grd4: scheduleTicket_7 ∉ receivedMessages
+        grd5: currentMessage = {scheduleTicket_7}
+        grd6: retryNo < 3
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleTicket_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {scheduleTicket_7 ↦ ticketValue}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    sendapproveSeat_8
+    WHEN
+        grd1: approveSeat_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleTicket_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveSeat_8}
+        act2: sender := sender ∪ {approveSeat_8 ↦ BusApp}
+        act3: receiver := receiver ∪ {approveSeat_8 ↦ Passenger}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveSeat_8 ↦ ticketValue}
+        act6: currentMessage := {approveSeat_8}
+    END
+
+    receiveapproveSeat_8
+    WHEN
+        grd1: approveSeat_8 ∈ sentMessages
+        grd2: approveSeat_8 ↦ BusApp ∈ sender
+        grd3: approveSeat_8 ↦ Passenger ∈ receiver
+        grd4: approveSeat_8 ∉ receivedMessages
+        grd5: currentMessage = {approveSeat_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveSeat_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveSeat_8 ↦ ticketValue}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_sendSeat_3_loop1
+    WHEN
+        grd1: retryNo < 3
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

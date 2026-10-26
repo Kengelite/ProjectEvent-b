@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="pickupCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="depositParcel_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="sendPickupCode_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Recipient" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="Courier" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="notifyCourier_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="SmartLocker" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="lockerReceipt_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="enterCode_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="openSlot_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="slotNo" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="parcelID" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="slotClosed_6" org.eventb.core.type="Messages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/ParcelLocker_Project/ParcelLockerContext.bpo|org.eventb.core.poFile#ParcelLockerContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{Courier},{Recipient},{SmartLocker})" org.eventb.core.source="/ParcelLocker_Project/ParcelLockerContext.buc|org.eventb.core.contextFile#ParcelLockerContext|org.eventb.core.axiom#internal_element17"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{depositParcel_1},{lockerReceipt_2},{sendPickupCode_3},{enterCode_4},{openSlot_5},{slotClosed_6},{notifyCourier_7})" org.eventb.core.source="/ParcelLocker_Project/ParcelLockerContext.buc|org.eventb.core.contextFile#ParcelLockerContext|org.eventb.core.axiom#internal_element18"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{parcelID},{pickupCode},{slotNo})" org.eventb.core.source="/ParcelLocker_Project/ParcelLockerContext.buc|org.eventb.core.contextFile#ParcelLockerContext|org.eventb.core.axiom#internal_element19"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

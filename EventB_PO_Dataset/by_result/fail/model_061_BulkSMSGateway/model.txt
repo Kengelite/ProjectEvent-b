@@ -1,0 +1,251 @@
+CONTEXT BulkSMSGatewayContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CarrierGW, Marketer, SMSPortal
+    confirmDelivery_1, approveCampaign_2, logCampaign_3, logDelivery_4, notifyCampaign_5, logMessage_6, confirmCampaign_7
+    campaignValue, messageCode, messageRef
+AXIOMS
+    axm1: partition(Objects, {CarrierGW}, {Marketer}, {SMSPortal})
+    axm2: partition(Messages, {confirmDelivery_1}, {approveCampaign_2}, {logCampaign_3}, {logDelivery_4}, {notifyCampaign_5}, {logMessage_6}, {confirmCampaign_7})
+    axm3: partition(DataMessages, {campaignValue}, {messageCode}, {messageRef})
+END
+
+MACHINE BulkSMSGatewayInteractionMachine_1
+SEES BulkSMSGatewayContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, retryNo, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: retryNo ∈ ℤ
+    inv9: t_time_5 ∈ ℤ
+    inv10: t_delay_5 ∈ ℤ
+    inv11: t_success_5 ∈ ℤ
+    inv12: t_time_6 ∈ ℤ
+    inv13: t_delay_6 ∈ ℤ
+    inv14: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: retryNo := 0
+        act9: t_time_5 :∈ 0..0
+        act10: t_delay_5 := 2
+        act11: t_success_5 := 0
+        act12: t_time_6 :∈ 0..3
+        act13: t_delay_6 := 0
+        act14: t_success_6 := 0
+    END
+
+
+    sendconfirmDelivery_1
+    WHEN
+        grd1: confirmDelivery_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmDelivery_1}
+        act2: sender := sender ∪ {confirmDelivery_1 ↦ CarrierGW}
+        act3: receiver := receiver ∪ {confirmDelivery_1 ↦ SMSPortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmDelivery_1}
+    END
+
+    receiveconfirmDelivery_1
+    WHEN
+        grd1: confirmDelivery_1 ∈ sentMessages
+        grd2: confirmDelivery_1 ↦ CarrierGW ∈ sender
+        grd3: confirmDelivery_1 ↦ SMSPortal ∈ receiver
+        grd4: confirmDelivery_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmDelivery_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmDelivery_1}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveCampaign_2
+    WHEN
+        grd1: approveCampaign_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmDelivery_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveCampaign_2}
+        act2: sender := sender ∪ {approveCampaign_2 ↦ Marketer}
+        act3: receiver := receiver ∪ {approveCampaign_2 ↦ CarrierGW}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveCampaign_2 ↦ messageRef}
+        act6: currentMessage := {approveCampaign_2}
+    END
+
+    receiveapproveCampaign_2
+    WHEN
+        grd1: approveCampaign_2 ∈ sentMessages
+        grd2: approveCampaign_2 ↦ Marketer ∈ sender
+        grd3: approveCampaign_2 ↦ CarrierGW ∈ receiver
+        grd4: approveCampaign_2 ∉ receivedMessages
+        grd5: currentMessage = {approveCampaign_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveCampaign_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveCampaign_2 ↦ messageRef}
+        act3: currentMessage := ∅
+    END
+
+    sendlogCampaign_3
+    WHEN
+        grd1: logCampaign_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveCampaign_2 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCampaign_3}
+        act2: sender := sender ∪ {logCampaign_3 ↦ CarrierGW}
+        act3: receiver := receiver ∪ {logCampaign_3 ↦ SMSPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logCampaign_3 ↦ messageCode}
+        act6: currentMessage := {logCampaign_3}
+    END
+
+    receivelogCampaign_3
+    WHEN
+        grd1: logCampaign_3 ∈ sentMessages
+        grd2: logCampaign_3 ↦ CarrierGW ∈ sender
+        grd3: logCampaign_3 ↦ SMSPortal ∈ receiver
+        grd4: logCampaign_3 ∉ receivedMessages
+        grd5: currentMessage = {logCampaign_3}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCampaign_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logCampaign_3 ↦ messageCode}
+        act3: currentMessage := ∅
+    END
+
+    sendlogDelivery_4_opt1
+    WHEN
+        grd1: logDelivery_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logCampaign_3 ∈ receivedMessages
+        grd4: retryNo < 11
+        grd5: retryNo mod 3 = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {logDelivery_4}
+        act2: sender := sender ∪ {logDelivery_4 ↦ SMSPortal}
+        act3: receiver := receiver ∪ {logDelivery_4 ↦ Marketer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {logDelivery_4}
+    END
+
+    receivelogDelivery_4_opt1
+    WHEN
+        grd1: logDelivery_4 ∈ sentMessages
+        grd2: logDelivery_4 ↦ SMSPortal ∈ sender
+        grd3: logDelivery_4 ↦ Marketer ∈ receiver
+        grd4: logDelivery_4 ∉ receivedMessages
+        grd5: currentMessage = {logDelivery_4}
+        grd6: retryNo < 11
+        grd7: retryNo mod 3 = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logDelivery_4}
+        act2: currentMessage := ∅
+    END
+
+    sendnotifyCampaign_5
+    WHEN
+        grd1: notifyCampaign_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logDelivery_4 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyCampaign_5}
+        act2: sender := sender ∪ {notifyCampaign_5 ↦ CarrierGW}
+        act3: receiver := receiver ∪ {notifyCampaign_5 ↦ Marketer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyCampaign_5}
+    END
+
+    receivenotifyCampaign_5
+    WHEN
+        grd1: notifyCampaign_5 ∈ sentMessages
+        grd2: notifyCampaign_5 ↦ CarrierGW ∈ sender
+        grd3: notifyCampaign_5 ↦ Marketer ∈ receiver
+        grd4: notifyCampaign_5 ∉ receivedMessages
+        grd5: currentMessage = {notifyCampaign_5}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyCampaign_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendlogMessage_6
+    WHEN
+        grd1: logMessage_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyCampaign_5 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {logMessage_6}
+        act2: sender := sender ∪ {logMessage_6 ↦ Marketer}
+        act3: receiver := receiver ∪ {logMessage_6 ↦ SMSPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logMessage_6 ↦ campaignValue}
+        act6: currentMessage := {logMessage_6}
+    END
+
+    receivelogMessage_6
+    WHEN
+        grd1: logMessage_6 ∈ sentMessages
+        grd2: logMessage_6 ↦ Marketer ∈ sender
+        grd3: logMessage_6 ↦ SMSPortal ∈ receiver
+        grd4: logMessage_6 ∉ receivedMessages
+        grd5: currentMessage = {logMessage_6}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logMessage_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logMessage_6 ↦ campaignValue}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendconfirmCampaign_7
+    WHEN
+        grd1: confirmCampaign_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logMessage_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCampaign_7}
+        act2: sender := sender ∪ {confirmCampaign_7 ↦ Marketer}
+        act3: receiver := receiver ∪ {confirmCampaign_7 ↦ SMSPortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmCampaign_7}
+    END
+
+    receiveconfirmCampaign_7
+    WHEN
+        grd1: confirmCampaign_7 ∈ sentMessages
+        grd2: confirmCampaign_7 ↦ Marketer ∈ sender
+        grd3: confirmCampaign_7 ↦ SMSPortal ∈ receiver
+        grd4: confirmCampaign_7 ∉ receivedMessages
+        grd5: currentMessage = {confirmCampaign_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCampaign_7}
+        act2: currentMessage := ∅
+    END
+
+    checkloop_logCampaign_3_loop1
+    WHEN
+        grd1: retryNo < 11
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

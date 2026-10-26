@@ -1,0 +1,209 @@
+CONTEXT OnlineDonationContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CRM, CharitySite, Donor, PaymentGW
+    sendReceipt_1, queryGift_2, approveReceipt_3, notifyReceipt_4, approveGift_5, requestGift_6
+    campaignData, campaignID, campaignRef, receiptCode, receiptID, receiptRef
+AXIOMS
+    axm1: partition(Objects, {CRM}, {CharitySite}, {Donor}, {PaymentGW})
+    axm2: partition(Messages, {sendReceipt_1}, {queryGift_2}, {approveReceipt_3}, {notifyReceipt_4}, {approveGift_5}, {requestGift_6})
+    axm3: partition(DataMessages, {campaignData}, {campaignID}, {campaignRef}, {receiptCode}, {receiptID}, {receiptRef})
+END
+
+MACHINE OnlineDonationInteractionMachine_1
+SEES OnlineDonationContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_5 ∈ ℤ
+    inv12: t_delay_5 ∈ ℤ
+    inv13: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..0
+        act9: t_delay_1 := 10
+        act10: t_success_1 := 0
+        act11: t_time_5 :∈ 0..30
+        act12: t_delay_5 := 0
+        act13: t_success_5 := 0
+    END
+
+
+    sendsendReceipt_1
+    WHEN
+        grd1: sendReceipt_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendReceipt_1}
+        act2: sender := sender ∪ {sendReceipt_1 ↦ CRM}
+        act3: receiver := receiver ∪ {sendReceipt_1 ↦ PaymentGW}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendReceipt_1 ↦ receiptID}
+        act6: currentMessage := {sendReceipt_1}
+    END
+
+    receivesendReceipt_1
+    WHEN
+        grd1: sendReceipt_1 ∈ sentMessages
+        grd2: sendReceipt_1 ↦ CRM ∈ sender
+        grd3: sendReceipt_1 ↦ PaymentGW ∈ receiver
+        grd4: sendReceipt_1 ∉ receivedMessages
+        grd5: currentMessage = {sendReceipt_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendReceipt_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendReceipt_1 ↦ receiptID}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendqueryGift_2
+    WHEN
+        grd1: queryGift_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendReceipt_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryGift_2}
+        act2: sender := sender ∪ {queryGift_2 ↦ CharitySite}
+        act3: receiver := receiver ∪ {queryGift_2 ↦ CRM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryGift_2 ↦ campaignData, queryGift_2 ↦ receiptCode}
+        act6: currentMessage := {queryGift_2}
+    END
+
+    receivequeryGift_2
+    WHEN
+        grd1: queryGift_2 ∈ sentMessages
+        grd2: queryGift_2 ↦ CharitySite ∈ sender
+        grd3: queryGift_2 ↦ CRM ∈ receiver
+        grd4: queryGift_2 ∉ receivedMessages
+        grd5: currentMessage = {queryGift_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryGift_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryGift_2 ↦ campaignData, queryGift_2 ↦ receiptCode}
+        act3: currentMessage := ∅
+    END
+
+    sendapproveReceipt_3
+    WHEN
+        grd1: approveReceipt_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryGift_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveReceipt_3}
+        act2: sender := sender ∪ {approveReceipt_3 ↦ CharitySite}
+        act3: receiver := receiver ∪ {approveReceipt_3 ↦ CRM}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveReceipt_3 ↦ campaignID, approveReceipt_3 ↦ campaignRef}
+        act6: currentMessage := {approveReceipt_3}
+    END
+
+    receiveapproveReceipt_3
+    WHEN
+        grd1: approveReceipt_3 ∈ sentMessages
+        grd2: approveReceipt_3 ↦ CharitySite ∈ sender
+        grd3: approveReceipt_3 ↦ CRM ∈ receiver
+        grd4: approveReceipt_3 ∉ receivedMessages
+        grd5: currentMessage = {approveReceipt_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveReceipt_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveReceipt_3 ↦ campaignID, approveReceipt_3 ↦ campaignRef}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyReceipt_4
+    WHEN
+        grd1: notifyReceipt_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveReceipt_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyReceipt_4}
+        act2: sender := sender ∪ {notifyReceipt_4 ↦ PaymentGW}
+        act3: receiver := receiver ∪ {notifyReceipt_4 ↦ CharitySite}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyReceipt_4}
+    END
+
+    receivenotifyReceipt_4
+    WHEN
+        grd1: notifyReceipt_4 ∈ sentMessages
+        grd2: notifyReceipt_4 ↦ PaymentGW ∈ sender
+        grd3: notifyReceipt_4 ↦ CharitySite ∈ receiver
+        grd4: notifyReceipt_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyReceipt_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyReceipt_4}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveGift_5
+    WHEN
+        grd1: approveGift_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyReceipt_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveGift_5}
+        act2: sender := sender ∪ {approveGift_5 ↦ Donor}
+        act3: receiver := receiver ∪ {approveGift_5 ↦ PaymentGW}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveGift_5}
+    END
+
+    receiveapproveGift_5
+    WHEN
+        grd1: approveGift_5 ∈ sentMessages
+        grd2: approveGift_5 ↦ Donor ∈ sender
+        grd3: approveGift_5 ↦ PaymentGW ∈ receiver
+        grd4: approveGift_5 ∉ receivedMessages
+        grd5: currentMessage = {approveGift_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveGift_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrequestGift_6
+    WHEN
+        grd1: requestGift_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveGift_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestGift_6}
+        act2: sender := sender ∪ {requestGift_6 ↦ PaymentGW}
+        act3: receiver := receiver ∪ {requestGift_6 ↦ CharitySite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {requestGift_6 ↦ receiptRef}
+        act6: currentMessage := {requestGift_6}
+    END
+
+    receiverequestGift_6
+    WHEN
+        grd1: requestGift_6 ∈ sentMessages
+        grd2: requestGift_6 ↦ PaymentGW ∈ sender
+        grd3: requestGift_6 ↦ CharitySite ∈ receiver
+        grd4: requestGift_6 ∉ receivedMessages
+        grd5: currentMessage = {requestGift_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestGift_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {requestGift_6 ↦ receiptRef}
+        act3: currentMessage := ∅
+    END
+
+END

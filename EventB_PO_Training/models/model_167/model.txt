@@ -1,0 +1,200 @@
+CONTEXT SmartCurtainControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CurtainMotor, HomeHub, Owner
+    approvePosition_1, updateScene_2, confirmLux_3, fetchScene_4, releaseLux_5, checkScene_6
+    luxRef, sceneCode, sceneData
+AXIOMS
+    axm1: partition(Objects, {CurtainMotor}, {HomeHub}, {Owner})
+    axm2: partition(Messages, {approvePosition_1}, {updateScene_2}, {confirmLux_3}, {fetchScene_4}, {releaseLux_5}, {checkScene_6})
+    axm3: partition(DataMessages, {luxRef}, {sceneCode}, {sceneData})
+END
+
+MACHINE SmartCurtainControlInteractionMachine_1
+SEES SmartCurtainControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_5 ∈ ℤ
+    inv9: t_delay_5 ∈ ℤ
+    inv10: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_5 :∈ 2..0
+        act9: t_delay_5 := 0
+        act10: t_success_5 := 0
+    END
+
+
+    sendapprovePosition_1
+    WHEN
+        grd1: approvePosition_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approvePosition_1}
+        act2: sender := sender ∪ {approvePosition_1 ↦ Owner}
+        act3: receiver := receiver ∪ {approvePosition_1 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approvePosition_1}
+    END
+
+    receiveapprovePosition_1
+    WHEN
+        grd1: approvePosition_1 ∈ sentMessages
+        grd2: approvePosition_1 ↦ Owner ∈ sender
+        grd3: approvePosition_1 ↦ HomeHub ∈ receiver
+        grd4: approvePosition_1 ∉ receivedMessages
+        grd5: currentMessage = {approvePosition_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approvePosition_1}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateScene_2
+    WHEN
+        grd1: updateScene_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approvePosition_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateScene_2}
+        act2: sender := sender ∪ {updateScene_2 ↦ CurtainMotor}
+        act3: receiver := receiver ∪ {updateScene_2 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateScene_2 ↦ sceneCode}
+        act6: currentMessage := {updateScene_2}
+    END
+
+    receiveupdateScene_2
+    WHEN
+        grd1: updateScene_2 ∈ sentMessages
+        grd2: updateScene_2 ↦ CurtainMotor ∈ sender
+        grd3: updateScene_2 ↦ HomeHub ∈ receiver
+        grd4: updateScene_2 ∉ receivedMessages
+        grd5: currentMessage = {updateScene_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateScene_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateScene_2 ↦ sceneCode}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmLux_3
+    WHEN
+        grd1: confirmLux_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateScene_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmLux_3}
+        act2: sender := sender ∪ {confirmLux_3 ↦ CurtainMotor}
+        act3: receiver := receiver ∪ {confirmLux_3 ↦ Owner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmLux_3 ↦ luxRef}
+        act6: currentMessage := {confirmLux_3}
+    END
+
+    receiveconfirmLux_3
+    WHEN
+        grd1: confirmLux_3 ∈ sentMessages
+        grd2: confirmLux_3 ↦ CurtainMotor ∈ sender
+        grd3: confirmLux_3 ↦ Owner ∈ receiver
+        grd4: confirmLux_3 ∉ receivedMessages
+        grd5: currentMessage = {confirmLux_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmLux_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmLux_3 ↦ luxRef}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchScene_4
+    WHEN
+        grd1: fetchScene_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmLux_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchScene_4}
+        act2: sender := sender ∪ {fetchScene_4 ↦ HomeHub}
+        act3: receiver := receiver ∪ {fetchScene_4 ↦ Owner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchScene_4}
+    END
+
+    receivefetchScene_4
+    WHEN
+        grd1: fetchScene_4 ∈ sentMessages
+        grd2: fetchScene_4 ↦ HomeHub ∈ sender
+        grd3: fetchScene_4 ↦ Owner ∈ receiver
+        grd4: fetchScene_4 ∉ receivedMessages
+        grd5: currentMessage = {fetchScene_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchScene_4}
+        act2: currentMessage := ∅
+    END
+
+    sendreleaseLux_5
+    WHEN
+        grd1: releaseLux_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchScene_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseLux_5}
+        act2: sender := sender ∪ {releaseLux_5 ↦ HomeHub}
+        act3: receiver := receiver ∪ {releaseLux_5 ↦ Owner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseLux_5}
+    END
+
+    receivereleaseLux_5
+    WHEN
+        grd1: releaseLux_5 ∈ sentMessages
+        grd2: releaseLux_5 ↦ HomeHub ∈ sender
+        grd3: releaseLux_5 ↦ Owner ∈ receiver
+        grd4: releaseLux_5 ∉ receivedMessages
+        grd5: currentMessage = {releaseLux_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseLux_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendcheckScene_6
+    WHEN
+        grd1: checkScene_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseLux_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkScene_6}
+        act2: sender := sender ∪ {checkScene_6 ↦ CurtainMotor}
+        act3: receiver := receiver ∪ {checkScene_6 ↦ HomeHub}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkScene_6 ↦ sceneData}
+        act6: currentMessage := {checkScene_6}
+    END
+
+    receivecheckScene_6
+    WHEN
+        grd1: checkScene_6 ∈ sentMessages
+        grd2: checkScene_6 ↦ CurtainMotor ∈ sender
+        grd3: checkScene_6 ↦ HomeHub ∈ receiver
+        grd4: checkScene_6 ∉ receivedMessages
+        grd5: currentMessage = {checkScene_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkScene_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkScene_6 ↦ sceneData}
+        act3: currentMessage := ∅
+    END
+
+END

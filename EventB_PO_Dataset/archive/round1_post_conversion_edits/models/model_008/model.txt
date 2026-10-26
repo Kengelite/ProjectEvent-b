@@ -1,0 +1,284 @@
+CONTEXT ChatMessagingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Alice, Bob, ChatServer
+    sendText_1, deliverText_2, readReceipt_3, forwardReceipt_4, typingIndicator_5, relayTyping_6, replyText_7, deliverReply_8
+    readTime, replyMsg, textMsg
+AXIOMS
+    axm1: partition(Objects, {Alice}, {Bob}, {ChatServer})
+    axm2: partition(Messages, {sendText_1}, {deliverText_2}, {readReceipt_3}, {forwardReceipt_4}, {typingIndicator_5}, {relayTyping_6}, {replyText_7}, {deliverReply_8})
+    axm3: partition(DataMessages, {readTime}, {replyMsg}, {textMsg})
+END
+
+MACHINE ChatMessagingInteractionMachine_1
+SEES ChatMessagingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, typing, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_7, t_delay_7, t_success_7, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: typing ∈ ℤ
+    inv9: t_time_1 ∈ ℤ
+    inv10: t_delay_1 ∈ ℤ
+    inv11: t_success_1 ∈ ℤ
+    inv12: t_time_2 ∈ ℤ
+    inv13: t_delay_2 ∈ ℤ
+    inv14: t_success_2 ∈ ℤ
+    inv15: t_time_7 ∈ ℤ
+    inv16: t_delay_7 ∈ ℤ
+    inv17: t_success_7 ∈ ℤ
+    inv18: t_time_8 ∈ ℤ
+    inv19: t_delay_8 ∈ ℤ
+    inv20: t_success_8 ∈ ℤ
+    inv21: receiverdataMessages ⊆ senderdataMessages
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: typing := 1
+        act9: t_time_1 :∈ 0..2
+        act10: t_delay_1 := 0
+        act11: t_success_1 := 0
+        act12: t_time_2 :∈ 0..5
+        act13: t_delay_2 := 0
+        act14: t_success_2 := 0
+        act15: t_time_7 :∈ 0..10
+        act16: t_delay_7 := 0
+        act17: t_success_7 := 0
+        act18: t_time_8 :∈ 0..5
+        act19: t_delay_8 := 0
+        act20: t_success_8 := 0
+    END
+
+
+    sendsendText_1
+    WHEN
+        grd1: sendText_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {sendText_1}
+        act2: sender := sender ∪ {sendText_1 ↦ Alice}
+        act3: receiver := receiver ∪ {sendText_1 ↦ ChatServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {sendText_1 ↦ textMsg}
+        act6: currentMessage := {sendText_1}
+    END
+
+    receivesendText_1
+    WHEN
+        grd1: sendText_1 ∈ sentMessages
+        grd2: sendText_1 ↦ Alice ∈ sender
+        grd3: sendText_1 ↦ ChatServer ∈ receiver
+        grd4: sendText_1 ∉ receivedMessages
+        grd5: currentMessage = {sendText_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sendText_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {sendText_1 ↦ textMsg}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    senddeliverText_2
+    WHEN
+        grd1: deliverText_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sendText_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {deliverText_2}
+        act2: sender := sender ∪ {deliverText_2 ↦ ChatServer}
+        act3: receiver := receiver ∪ {deliverText_2 ↦ Bob}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {deliverText_2 ↦ textMsg}
+        act6: currentMessage := {deliverText_2}
+    END
+
+    receivedeliverText_2
+    WHEN
+        grd1: deliverText_2 ∈ sentMessages
+        grd2: deliverText_2 ↦ ChatServer ∈ sender
+        grd3: deliverText_2 ↦ Bob ∈ receiver
+        grd4: deliverText_2 ∉ receivedMessages
+        grd5: currentMessage = {deliverText_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {deliverText_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {deliverText_2 ↦ textMsg}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreadReceipt_3
+    WHEN
+        grd1: readReceipt_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: deliverText_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {readReceipt_3}
+        act2: sender := sender ∪ {readReceipt_3 ↦ Bob}
+        act3: receiver := receiver ∪ {readReceipt_3 ↦ ChatServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {readReceipt_3 ↦ readTime}
+        act6: currentMessage := {readReceipt_3}
+    END
+
+    receivereadReceipt_3
+    WHEN
+        grd1: readReceipt_3 ∈ sentMessages
+        grd2: readReceipt_3 ↦ Bob ∈ sender
+        grd3: readReceipt_3 ↦ ChatServer ∈ receiver
+        grd4: readReceipt_3 ∉ receivedMessages
+        grd5: currentMessage = {readReceipt_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {readReceipt_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {readReceipt_3 ↦ readTime}
+        act3: currentMessage := ∅
+    END
+
+    sendforwardReceipt_4
+    WHEN
+        grd1: forwardReceipt_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: readReceipt_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {forwardReceipt_4}
+        act2: sender := sender ∪ {forwardReceipt_4 ↦ ChatServer}
+        act3: receiver := receiver ∪ {forwardReceipt_4 ↦ Alice}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {forwardReceipt_4 ↦ readTime}
+        act6: currentMessage := {forwardReceipt_4}
+    END
+
+    receiveforwardReceipt_4
+    WHEN
+        grd1: forwardReceipt_4 ∈ sentMessages
+        grd2: forwardReceipt_4 ↦ ChatServer ∈ sender
+        grd3: forwardReceipt_4 ↦ Alice ∈ receiver
+        grd4: forwardReceipt_4 ∉ receivedMessages
+        grd5: currentMessage = {forwardReceipt_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {forwardReceipt_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {forwardReceipt_4 ↦ readTime}
+        act3: currentMessage := ∅
+    END
+
+    sendtypingIndicator_5_opt1
+    WHEN
+        grd1: typingIndicator_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: forwardReceipt_4 ∈ receivedMessages
+        grd4: typing = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {typingIndicator_5}
+        act2: sender := sender ∪ {typingIndicator_5 ↦ Bob}
+        act3: receiver := receiver ∪ {typingIndicator_5 ↦ ChatServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {typingIndicator_5}
+    END
+
+    receivetypingIndicator_5_opt1
+    WHEN
+        grd1: typingIndicator_5 ∈ sentMessages
+        grd2: typingIndicator_5 ↦ Bob ∈ sender
+        grd3: typingIndicator_5 ↦ ChatServer ∈ receiver
+        grd4: typingIndicator_5 ∉ receivedMessages
+        grd5: currentMessage = {typingIndicator_5}
+        grd6: typing = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {typingIndicator_5}
+        act2: currentMessage := ∅
+    END
+
+    sendrelayTyping_6_opt1
+    WHEN
+        grd1: relayTyping_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: typingIndicator_5 ∈ receivedMessages
+        grd4: typing = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {relayTyping_6}
+        act2: sender := sender ∪ {relayTyping_6 ↦ ChatServer}
+        act3: receiver := receiver ∪ {relayTyping_6 ↦ Alice}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {relayTyping_6}
+    END
+
+    receiverelayTyping_6_opt1
+    WHEN
+        grd1: relayTyping_6 ∈ sentMessages
+        grd2: relayTyping_6 ↦ ChatServer ∈ sender
+        grd3: relayTyping_6 ↦ Alice ∈ receiver
+        grd4: relayTyping_6 ∉ receivedMessages
+        grd5: currentMessage = {relayTyping_6}
+        grd6: typing = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {relayTyping_6}
+        act2: currentMessage := ∅
+    END
+
+    sendreplyText_7
+    WHEN
+        grd1: replyText_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: relayTyping_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {replyText_7}
+        act2: sender := sender ∪ {replyText_7 ↦ Bob}
+        act3: receiver := receiver ∪ {replyText_7 ↦ ChatServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {replyText_7 ↦ replyMsg}
+        act6: currentMessage := {replyText_7}
+    END
+
+    receivereplyText_7
+    WHEN
+        grd1: replyText_7 ∈ sentMessages
+        grd2: replyText_7 ↦ Bob ∈ sender
+        grd3: replyText_7 ↦ ChatServer ∈ receiver
+        grd4: replyText_7 ∉ receivedMessages
+        grd5: currentMessage = {replyText_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {replyText_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {replyText_7 ↦ replyMsg}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    senddeliverReply_8
+    WHEN
+        grd1: deliverReply_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: replyText_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {deliverReply_8}
+        act2: sender := sender ∪ {deliverReply_8 ↦ ChatServer}
+        act3: receiver := receiver ∪ {deliverReply_8 ↦ Alice}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {deliverReply_8 ↦ replyMsg}
+        act6: currentMessage := {deliverReply_8}
+    END
+
+    receivedeliverReply_8
+    WHEN
+        grd1: deliverReply_8 ∈ sentMessages
+        grd2: deliverReply_8 ↦ ChatServer ∈ sender
+        grd3: deliverReply_8 ↦ Alice ∈ receiver
+        grd4: deliverReply_8 ∉ receivedMessages
+        grd5: currentMessage = {deliverReply_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {deliverReply_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {deliverReply_8 ↦ replyMsg}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+END

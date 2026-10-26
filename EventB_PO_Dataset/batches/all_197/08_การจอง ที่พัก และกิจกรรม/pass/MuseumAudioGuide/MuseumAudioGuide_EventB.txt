@@ -1,0 +1,256 @@
+CONTEXT MuseumAudioGuideContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BeaconNode, GuideApp, Visitor
+    confirmTour_1, notifyTour_2, reserveTour_3, cancelTour_4, validateTour_5, checkTour_6, validateAudio_7
+    audioCode, audioInfo, audioValue, exhibitRef, tourData
+AXIOMS
+    axm1: partition(Objects, {BeaconNode}, {GuideApp}, {Visitor})
+    axm2: partition(Messages, {confirmTour_1}, {notifyTour_2}, {reserveTour_3}, {cancelTour_4}, {validateTour_5}, {checkTour_6}, {validateAudio_7})
+    axm3: partition(DataMessages, {audioCode}, {audioInfo}, {audioValue}, {exhibitRef}, {tourData})
+END
+
+MACHINE MuseumAudioGuideInteractionMachine_1
+SEES MuseumAudioGuideContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, stepNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: stepNo ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: stepNo := 0
+        act10: t_time_1 :∈ 0..20
+        act11: t_delay_1 := 10
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..20
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 0..8
+        act17: t_delay_4 := 0
+        act18: t_success_4 := 0
+    END
+
+
+    sendconfirmTour_1
+    WHEN
+        grd1: confirmTour_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmTour_1}
+        act2: sender := sender ∪ {confirmTour_1 ↦ Visitor}
+        act3: receiver := receiver ∪ {confirmTour_1 ↦ BeaconNode}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmTour_1}
+    END
+
+    receiveconfirmTour_1
+    WHEN
+        grd1: confirmTour_1 ∈ sentMessages
+        grd2: confirmTour_1 ↦ Visitor ∈ sender
+        grd3: confirmTour_1 ↦ BeaconNode ∈ receiver
+        grd4: confirmTour_1 ∉ receivedMessages
+        grd5: currentMessage = {confirmTour_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmTour_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendnotifyTour_2
+    WHEN
+        grd1: notifyTour_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmTour_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyTour_2}
+        act2: sender := sender ∪ {notifyTour_2 ↦ GuideApp}
+        act3: receiver := receiver ∪ {notifyTour_2 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {notifyTour_2}
+    END
+
+    receivenotifyTour_2
+    WHEN
+        grd1: notifyTour_2 ∈ sentMessages
+        grd2: notifyTour_2 ↦ GuideApp ∈ sender
+        grd3: notifyTour_2 ↦ Visitor ∈ receiver
+        grd4: notifyTour_2 ∉ receivedMessages
+        grd5: currentMessage = {notifyTour_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyTour_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveTour_3_opt1
+    WHEN
+        grd1: reserveTour_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyTour_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveTour_3}
+        act2: sender := sender ∪ {reserveTour_3 ↦ Visitor}
+        act3: receiver := receiver ∪ {reserveTour_3 ↦ BeaconNode}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reserveTour_3}
+    END
+
+    receivereserveTour_3_opt1
+    WHEN
+        grd1: reserveTour_3 ∈ sentMessages
+        grd2: reserveTour_3 ↦ Visitor ∈ sender
+        grd3: reserveTour_3 ↦ BeaconNode ∈ receiver
+        grd4: reserveTour_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveTour_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveTour_3}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelTour_4
+    WHEN
+        grd1: cancelTour_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveTour_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelTour_4}
+        act2: sender := sender ∪ {cancelTour_4 ↦ Visitor}
+        act3: receiver := receiver ∪ {cancelTour_4 ↦ GuideApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelTour_4 ↦ exhibitRef}
+        act6: currentMessage := {cancelTour_4}
+    END
+
+    receivecancelTour_4
+    WHEN
+        grd1: cancelTour_4 ∈ sentMessages
+        grd2: cancelTour_4 ↦ Visitor ∈ sender
+        grd3: cancelTour_4 ↦ GuideApp ∈ receiver
+        grd4: cancelTour_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelTour_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelTour_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelTour_4 ↦ exhibitRef}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendvalidateTour_5
+    WHEN
+        grd1: validateTour_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelTour_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateTour_5}
+        act2: sender := sender ∪ {validateTour_5 ↦ BeaconNode}
+        act3: receiver := receiver ∪ {validateTour_5 ↦ GuideApp}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateTour_5 ↦ audioCode}
+        act6: currentMessage := {validateTour_5}
+    END
+
+    receivevalidateTour_5
+    WHEN
+        grd1: validateTour_5 ∈ sentMessages
+        grd2: validateTour_5 ↦ BeaconNode ∈ sender
+        grd3: validateTour_5 ↦ GuideApp ∈ receiver
+        grd4: validateTour_5 ∉ receivedMessages
+        grd5: currentMessage = {validateTour_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateTour_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateTour_5 ↦ audioCode}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckTour_6
+    WHEN
+        grd1: checkTour_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateTour_5 ∈ receivedMessages
+        grd4: stepNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkTour_6}
+        act2: sender := sender ∪ {checkTour_6 ↦ GuideApp}
+        act3: receiver := receiver ∪ {checkTour_6 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkTour_6 ↦ tourData}
+        act6: currentMessage := {checkTour_6}
+    END
+
+    receivecheckTour_6
+    WHEN
+        grd1: checkTour_6 ∈ sentMessages
+        grd2: checkTour_6 ↦ GuideApp ∈ sender
+        grd3: checkTour_6 ↦ Visitor ∈ receiver
+        grd4: checkTour_6 ∉ receivedMessages
+        grd5: currentMessage = {checkTour_6}
+        grd6: stepNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkTour_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkTour_6 ↦ tourData}
+        act3: currentMessage := ∅
+    END
+
+    sendvalidateAudio_7
+    WHEN
+        grd1: validateAudio_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkTour_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateAudio_7}
+        act2: sender := sender ∪ {validateAudio_7 ↦ GuideApp}
+        act3: receiver := receiver ∪ {validateAudio_7 ↦ Visitor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateAudio_7 ↦ audioInfo, validateAudio_7 ↦ audioValue}
+        act6: currentMessage := {validateAudio_7}
+    END
+
+    receivevalidateAudio_7
+    WHEN
+        grd1: validateAudio_7 ∈ sentMessages
+        grd2: validateAudio_7 ↦ GuideApp ∈ sender
+        grd3: validateAudio_7 ↦ Visitor ∈ receiver
+        grd4: validateAudio_7 ∉ receivedMessages
+        grd5: currentMessage = {validateAudio_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateAudio_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateAudio_7 ↦ audioInfo, validateAudio_7 ↦ audioValue}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_checkTour_6_loop1
+    WHEN
+        grd1: stepNo < 11
+    THEN
+        act1: stepNo := stepNo + 1
+    END
+
+END

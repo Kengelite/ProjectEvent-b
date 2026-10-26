@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="LiftEmergencyCall" id="liftemergencycall">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="f1" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="opt" vertex="1">
+          <mxGeometry x="20" y="215" width="890" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="alt" vertex="1">
+          <mxGeometry x="20" y="410" width="890" height="155" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=60;height=25;" value="par" vertex="1">
+          <mxGeometry x="20" y="685" width="890" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="482" width="890" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="757" width="890" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="1" style="line;strokeWidth=1;dashed=1;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry x="20" y="807" width="890" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="t7" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[needAck == 1]" vertex="1">
+          <mxGeometry x="105" y="220" width="126" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t8" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="t_obs = now" vertex="1">
+          <mxGeometry x="185" y="383" width="99" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t9" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[t_obs &lt;= 23]" vertex="1">
+          <mxGeometry x="105" y="415" width="117" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="t10" parent="1" style="text;html=1;align=left;verticalAlign=middle;" value="[t_obs &gt; 23]" vertex="1">
+          <mxGeometry x="105" y="495" width="108" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="ll11" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Passenger" vertex="1">
+          <mxGeometry x="40" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="ll12" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="LiftPhone" vertex="1">
+          <mxGeometry x="290" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="ll13" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="CallCenter" vertex="1">
+          <mxGeometry x="540" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="ll14" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;" value="Technician" vertex="1">
+          <mxGeometry x="790" y="40" width="100" height="915" as="geometry" />
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="releaseCall(faultCode) {8..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="130" as="sourcePoint" />
+            <mxPoint x="840.0" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="queryCall(callCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="590.0" y="180" as="sourcePoint" />
+            <mxPoint x="90.0" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="syncFault()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="265" as="sourcePoint" />
+            <mxPoint x="90.0" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="logCall()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="325" as="sourcePoint" />
+            <mxPoint x="840.0" y="325" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="notifyFault() {60..46}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="375" as="sourcePoint" />
+            <mxPoint x="340.0" y="375" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="reportFault(faultValue)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="460" as="sourcePoint" />
+            <mxPoint x="840.0" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="cancelFault(faultCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="540" as="sourcePoint" />
+            <mxPoint x="840.0" y="540" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="sendFault(faultData) {3..2}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="600" as="sourcePoint" />
+            <mxPoint x="840.0" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="syncCall(faultRef)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="650" as="sourcePoint" />
+            <mxPoint x="340.0" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="ackFault() {0..3}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="735" as="sourcePoint" />
+            <mxPoint x="840.0" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;endFill=1;" value="notifyDispatch(faultData) {0..10}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840.0" y="785" as="sourcePoint" />
+            <mxPoint x="590.0" y="785" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m26" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="confirmDispatch()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90.0" y="835" as="sourcePoint" />
+            <mxPoint x="340.0" y="835" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m27" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=none;startArrow=block;startFill=1;dashed=1;" value="validateFault(callCode)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="340.0" y="895" as="sourcePoint" />
+            <mxPoint x="90.0" y="895" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,331 @@
+CONTEXT FactoryRobotArmContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Controller, Operator, RobotArm, VisionSensor
+    startBatch_1, initArm_2, calibrateCamera_3, logStart_4, pickItem_5, inspectItem_6, inspectionResult_7, discardItem_8, reportSummary_9
+    armConfig, batchID, calibData, defectFlag, itemID, summary
+AXIOMS
+    axm1: partition(Objects, {Controller}, {Operator}, {RobotArm}, {VisionSensor})
+    axm2: partition(Messages, {startBatch_1}, {initArm_2}, {calibrateCamera_3}, {logStart_4}, {pickItem_5}, {inspectItem_6}, {inspectionResult_7}, {discardItem_8}, {reportSummary_9})
+    axm3: partition(DataMessages, {armConfig}, {batchID}, {calibData}, {defectFlag}, {itemID}, {summary})
+END
+
+MACHINE FactoryRobotArmInteractionMachine_1
+SEES FactoryRobotArmContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, pickCount, defect, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_7, t_delay_7, t_success_7
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: pickCount ∈ ℤ
+    inv9: defect ∈ ℤ
+    inv10: par_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_5 ∈ ℤ
+    inv18: t_delay_5 ∈ ℤ
+    inv19: t_success_5 ∈ ℤ
+    inv20: t_time_7 ∈ ℤ
+    inv21: t_delay_7 ∈ ℤ
+    inv22: t_success_7 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: pickCount := 0
+        act9: defect := 1
+        act10: par_1 := 0
+        act11: t_time_2 :∈ 0..5
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..8
+        act15: t_delay_3 := 0
+        act16: t_success_3 := 0
+        act17: t_time_5 :∈ 0..3
+        act18: t_delay_5 := 0
+        act19: t_success_5 := 0
+        act20: t_time_7 :∈ 0..2
+        act21: t_delay_7 := 0
+        act22: t_success_7 := 0
+    END
+
+
+    sendstartBatch_1
+    WHEN
+        grd1: startBatch_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {startBatch_1}
+        act2: sender := sender ∪ {startBatch_1 ↦ Operator}
+        act3: receiver := receiver ∪ {startBatch_1 ↦ Controller}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startBatch_1 ↦ batchID}
+        act6: currentMessage := {startBatch_1}
+    END
+
+    receivestartBatch_1
+    WHEN
+        grd1: startBatch_1 ∈ sentMessages
+        grd2: startBatch_1 ↦ Operator ∈ sender
+        grd3: startBatch_1 ↦ Controller ∈ receiver
+        grd4: startBatch_1 ∉ receivedMessages
+        grd5: currentMessage = {startBatch_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startBatch_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startBatch_1 ↦ batchID}
+        act3: currentMessage := ∅
+    END
+
+    sendinitArm_2
+    WHEN
+        grd1: initArm_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startBatch_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {initArm_2}
+        act2: sender := sender ∪ {initArm_2 ↦ Controller}
+        act3: receiver := receiver ∪ {initArm_2 ↦ RobotArm}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {initArm_2 ↦ armConfig}
+        act6: currentMessage := {initArm_2}
+    END
+
+    receiveinitArm_2
+    WHEN
+        grd1: initArm_2 ∈ sentMessages
+        grd2: initArm_2 ↦ Controller ∈ sender
+        grd3: initArm_2 ↦ RobotArm ∈ receiver
+        grd4: initArm_2 ∉ receivedMessages
+        grd5: currentMessage = {initArm_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {initArm_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {initArm_2 ↦ armConfig}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendcalibrateCamera_3
+    WHEN
+        grd1: calibrateCamera_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: initArm_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {calibrateCamera_3}
+        act2: sender := sender ∪ {calibrateCamera_3 ↦ Controller}
+        act3: receiver := receiver ∪ {calibrateCamera_3 ↦ VisionSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {calibrateCamera_3 ↦ calibData}
+        act6: currentMessage := {calibrateCamera_3}
+    END
+
+    receivecalibrateCamera_3
+    WHEN
+        grd1: calibrateCamera_3 ∈ sentMessages
+        grd2: calibrateCamera_3 ↦ Controller ∈ sender
+        grd3: calibrateCamera_3 ↦ VisionSensor ∈ receiver
+        grd4: calibrateCamera_3 ∉ receivedMessages
+        grd5: currentMessage = {calibrateCamera_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {calibrateCamera_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {calibrateCamera_3 ↦ calibData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendlogStart_4
+    WHEN
+        grd1: logStart_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: calibrateCamera_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logStart_4}
+        act2: sender := sender ∪ {logStart_4 ↦ Controller}
+        act3: receiver := receiver ∪ {logStart_4 ↦ Operator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logStart_4 ↦ batchID}
+        act6: currentMessage := {logStart_4}
+    END
+
+    receivelogStart_4
+    WHEN
+        grd1: logStart_4 ∈ sentMessages
+        grd2: logStart_4 ↦ Controller ∈ sender
+        grd3: logStart_4 ↦ Operator ∈ receiver
+        grd4: logStart_4 ∉ receivedMessages
+        grd5: currentMessage = {logStart_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logStart_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logStart_4 ↦ batchID}
+        act3: currentMessage := ∅
+    END
+
+    sendpickItem_5
+    WHEN
+        grd1: pickItem_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logStart_4 ∈ receivedMessages
+        grd4: pickCount < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {pickItem_5}
+        act2: sender := sender ∪ {pickItem_5 ↦ Controller}
+        act3: receiver := receiver ∪ {pickItem_5 ↦ RobotArm}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {pickItem_5 ↦ itemID}
+        act6: currentMessage := {pickItem_5}
+    END
+
+    receivepickItem_5
+    WHEN
+        grd1: pickItem_5 ∈ sentMessages
+        grd2: pickItem_5 ↦ Controller ∈ sender
+        grd3: pickItem_5 ↦ RobotArm ∈ receiver
+        grd4: pickItem_5 ∉ receivedMessages
+        grd5: currentMessage = {pickItem_5}
+        grd6: pickCount < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {pickItem_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {pickItem_5 ↦ itemID}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendinspectItem_6
+    WHEN
+        grd1: inspectItem_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: pickItem_5 ∈ receivedMessages
+        grd4: pickCount < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {inspectItem_6}
+        act2: sender := sender ∪ {inspectItem_6 ↦ RobotArm}
+        act3: receiver := receiver ∪ {inspectItem_6 ↦ VisionSensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {inspectItem_6 ↦ itemID}
+        act6: currentMessage := {inspectItem_6}
+    END
+
+    receiveinspectItem_6
+    WHEN
+        grd1: inspectItem_6 ∈ sentMessages
+        grd2: inspectItem_6 ↦ RobotArm ∈ sender
+        grd3: inspectItem_6 ↦ VisionSensor ∈ receiver
+        grd4: inspectItem_6 ∉ receivedMessages
+        grd5: currentMessage = {inspectItem_6}
+        grd6: pickCount < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {inspectItem_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {inspectItem_6 ↦ itemID}
+        act3: currentMessage := ∅
+    END
+
+    sendinspectionResult_7
+    WHEN
+        grd1: inspectionResult_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: inspectItem_6 ∈ receivedMessages
+        grd4: pickCount < 10
+    THEN
+        act1: sentMessages := sentMessages ∪ {inspectionResult_7}
+        act2: sender := sender ∪ {inspectionResult_7 ↦ VisionSensor}
+        act3: receiver := receiver ∪ {inspectionResult_7 ↦ Controller}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {inspectionResult_7 ↦ defectFlag}
+        act6: currentMessage := {inspectionResult_7}
+    END
+
+    receiveinspectionResult_7
+    WHEN
+        grd1: inspectionResult_7 ∈ sentMessages
+        grd2: inspectionResult_7 ↦ VisionSensor ∈ sender
+        grd3: inspectionResult_7 ↦ Controller ∈ receiver
+        grd4: inspectionResult_7 ∉ receivedMessages
+        grd5: currentMessage = {inspectionResult_7}
+        grd6: pickCount < 10
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {inspectionResult_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {inspectionResult_7 ↦ defectFlag}
+        act3: currentMessage := ∅
+        act4: t_success_7 := t_time_7 + t_delay_7
+    END
+
+    senddiscardItem_8_opt1
+    WHEN
+        grd1: discardItem_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: inspectionResult_7 ∈ receivedMessages
+        grd4: pickCount < 10
+        grd5: defect = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {discardItem_8}
+        act2: sender := sender ∪ {discardItem_8 ↦ Controller}
+        act3: receiver := receiver ∪ {discardItem_8 ↦ RobotArm}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {discardItem_8 ↦ itemID}
+        act6: currentMessage := {discardItem_8}
+    END
+
+    receivediscardItem_8_opt1
+    WHEN
+        grd1: discardItem_8 ∈ sentMessages
+        grd2: discardItem_8 ↦ Controller ∈ sender
+        grd3: discardItem_8 ↦ RobotArm ∈ receiver
+        grd4: discardItem_8 ∉ receivedMessages
+        grd5: currentMessage = {discardItem_8}
+        grd6: pickCount < 10
+        grd7: defect = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {discardItem_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {discardItem_8 ↦ itemID}
+        act3: currentMessage := ∅
+    END
+
+    sendreportSummary_9
+    WHEN
+        grd1: reportSummary_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: discardItem_8 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportSummary_9}
+        act2: sender := sender ∪ {reportSummary_9 ↦ Controller}
+        act3: receiver := receiver ∪ {reportSummary_9 ↦ Operator}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportSummary_9 ↦ summary}
+        act6: currentMessage := {reportSummary_9}
+    END
+
+    receivereportSummary_9
+    WHEN
+        grd1: reportSummary_9 ∈ sentMessages
+        grd2: reportSummary_9 ↦ Controller ∈ sender
+        grd3: reportSummary_9 ↦ Operator ∈ receiver
+        grd4: reportSummary_9 ∉ receivedMessages
+        grd5: currentMessage = {reportSummary_9}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportSummary_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportSummary_9 ↦ summary}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_pickItem_5_loop1
+    WHEN
+        grd1: pickCount < 10
+    THEN
+        act1: pickCount := pickCount + 1
+    END
+
+END

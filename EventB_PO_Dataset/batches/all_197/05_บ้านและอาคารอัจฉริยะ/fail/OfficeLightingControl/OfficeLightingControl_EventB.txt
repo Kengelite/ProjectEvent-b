@@ -1,0 +1,242 @@
+CONTEXT OfficeLightingControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    BMS, LightGateway, OccupancySensor
+    logDim_1, syncSchedule_2, releaseOccupancy_3, approveOccupancy_4, logSchedule_5, queryDim_6, fetchSchedule_7
+    dimCode, occupancyData, scheduleCode, scheduleData
+AXIOMS
+    axm1: partition(Objects, {BMS}, {LightGateway}, {OccupancySensor})
+    axm2: partition(Messages, {logDim_1}, {syncSchedule_2}, {releaseOccupancy_3}, {approveOccupancy_4}, {logSchedule_5}, {queryDim_6}, {fetchSchedule_7})
+    axm3: partition(DataMessages, {dimCode}, {occupancyData}, {scheduleCode}, {scheduleData})
+END
+
+MACHINE OfficeLightingControlInteractionMachine_1
+SEES OfficeLightingControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, needAck, express, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: needAck ∈ ℤ
+    inv9: express ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_5 ∈ ℤ
+    inv14: t_delay_5 ∈ ℤ
+    inv15: t_success_5 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: needAck := 1
+        act9: express := 1
+        act10: t_time_2 :∈ 30..11
+        act11: t_delay_2 := 10
+        act12: t_success_2 := 0
+        act13: t_time_5 :∈ 0..3
+        act14: t_delay_5 := 0
+        act15: t_success_5 := 0
+    END
+
+
+    sendlogDim_1
+    WHEN
+        grd1: logDim_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {logDim_1}
+        act2: sender := sender ∪ {logDim_1 ↦ BMS}
+        act3: receiver := receiver ∪ {logDim_1 ↦ OccupancySensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logDim_1 ↦ scheduleCode}
+        act6: currentMessage := {logDim_1}
+    END
+
+    receivelogDim_1
+    WHEN
+        grd1: logDim_1 ∈ sentMessages
+        grd2: logDim_1 ↦ BMS ∈ sender
+        grd3: logDim_1 ↦ OccupancySensor ∈ receiver
+        grd4: logDim_1 ∉ receivedMessages
+        grd5: currentMessage = {logDim_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logDim_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logDim_1 ↦ scheduleCode}
+        act3: currentMessage := ∅
+    END
+
+    sendsyncSchedule_2
+    WHEN
+        grd1: syncSchedule_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logDim_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncSchedule_2}
+        act2: sender := sender ∪ {syncSchedule_2 ↦ LightGateway}
+        act3: receiver := receiver ∪ {syncSchedule_2 ↦ BMS}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncSchedule_2}
+    END
+
+    receivesyncSchedule_2
+    WHEN
+        grd1: syncSchedule_2 ∈ sentMessages
+        grd2: syncSchedule_2 ↦ LightGateway ∈ sender
+        grd3: syncSchedule_2 ↦ BMS ∈ receiver
+        grd4: syncSchedule_2 ∉ receivedMessages
+        grd5: currentMessage = {syncSchedule_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncSchedule_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreleaseOccupancy_3_opt1
+    WHEN
+        grd1: releaseOccupancy_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncSchedule_2 ∈ receivedMessages
+        grd4: needAck = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseOccupancy_3}
+        act2: sender := sender ∪ {releaseOccupancy_3 ↦ OccupancySensor}
+        act3: receiver := receiver ∪ {releaseOccupancy_3 ↦ LightGateway}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {releaseOccupancy_3}
+    END
+
+    receivereleaseOccupancy_3_opt1
+    WHEN
+        grd1: releaseOccupancy_3 ∈ sentMessages
+        grd2: releaseOccupancy_3 ↦ OccupancySensor ∈ sender
+        grd3: releaseOccupancy_3 ↦ LightGateway ∈ receiver
+        grd4: releaseOccupancy_3 ∉ receivedMessages
+        grd5: currentMessage = {releaseOccupancy_3}
+        grd6: needAck = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseOccupancy_3}
+        act2: currentMessage := ∅
+    END
+
+    sendapproveOccupancy_4
+    WHEN
+        grd1: approveOccupancy_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseOccupancy_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveOccupancy_4}
+        act2: sender := sender ∪ {approveOccupancy_4 ↦ LightGateway}
+        act3: receiver := receiver ∪ {approveOccupancy_4 ↦ OccupancySensor}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {approveOccupancy_4}
+    END
+
+    receiveapproveOccupancy_4
+    WHEN
+        grd1: approveOccupancy_4 ∈ sentMessages
+        grd2: approveOccupancy_4 ↦ LightGateway ∈ sender
+        grd3: approveOccupancy_4 ↦ OccupancySensor ∈ receiver
+        grd4: approveOccupancy_4 ∉ receivedMessages
+        grd5: currentMessage = {approveOccupancy_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveOccupancy_4}
+        act2: currentMessage := ∅
+    END
+
+    sendlogSchedule_5
+    WHEN
+        grd1: logSchedule_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveOccupancy_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {logSchedule_5}
+        act2: sender := sender ∪ {logSchedule_5 ↦ LightGateway}
+        act3: receiver := receiver ∪ {logSchedule_5 ↦ BMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logSchedule_5 ↦ occupancyData}
+        act6: currentMessage := {logSchedule_5}
+    END
+
+    receivelogSchedule_5
+    WHEN
+        grd1: logSchedule_5 ∈ sentMessages
+        grd2: logSchedule_5 ↦ LightGateway ∈ sender
+        grd3: logSchedule_5 ↦ BMS ∈ receiver
+        grd4: logSchedule_5 ∉ receivedMessages
+        grd5: currentMessage = {logSchedule_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logSchedule_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logSchedule_5 ↦ occupancyData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendqueryDim_6_opt2
+    WHEN
+        grd1: queryDim_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logSchedule_5 ∈ receivedMessages
+        grd4: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryDim_6}
+        act2: sender := sender ∪ {queryDim_6 ↦ OccupancySensor}
+        act3: receiver := receiver ∪ {queryDim_6 ↦ BMS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryDim_6 ↦ dimCode}
+        act6: currentMessage := {queryDim_6}
+    END
+
+    receivequeryDim_6_opt2
+    WHEN
+        grd1: queryDim_6 ∈ sentMessages
+        grd2: queryDim_6 ↦ OccupancySensor ∈ sender
+        grd3: queryDim_6 ↦ BMS ∈ receiver
+        grd4: queryDim_6 ∉ receivedMessages
+        grd5: currentMessage = {queryDim_6}
+        grd6: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryDim_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryDim_6 ↦ dimCode}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchSchedule_7
+    WHEN
+        grd1: fetchSchedule_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryDim_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchSchedule_7}
+        act2: sender := sender ∪ {fetchSchedule_7 ↦ BMS}
+        act3: receiver := receiver ∪ {fetchSchedule_7 ↦ OccupancySensor}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchSchedule_7 ↦ scheduleData}
+        act6: currentMessage := {fetchSchedule_7}
+    END
+
+    receivefetchSchedule_7
+    WHEN
+        grd1: fetchSchedule_7 ∈ sentMessages
+        grd2: fetchSchedule_7 ↦ BMS ∈ sender
+        grd3: fetchSchedule_7 ↦ OccupancySensor ∈ receiver
+        grd4: fetchSchedule_7 ∉ receivedMessages
+        grd5: currentMessage = {fetchSchedule_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchSchedule_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchSchedule_7 ↦ scheduleData}
+        act3: currentMessage := ∅
+    END
+
+END

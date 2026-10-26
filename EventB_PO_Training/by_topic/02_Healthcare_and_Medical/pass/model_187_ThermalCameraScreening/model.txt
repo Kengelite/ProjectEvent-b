@@ -1,0 +1,221 @@
+CONTEXT ThermalCameraScreeningContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    EdgeNode, FacilityApp, Guard, ThermalCam
+    cancelScan_1, ackScan_2, assignAlert_3, confirmAlert_4, ackAlert_5, queryFever_6
+    alertCode, scanData, scanID
+AXIOMS
+    axm1: partition(Objects, {EdgeNode}, {FacilityApp}, {Guard}, {ThermalCam})
+    axm2: partition(Messages, {cancelScan_1}, {ackScan_2}, {assignAlert_3}, {confirmAlert_4}, {ackAlert_5}, {queryFever_6})
+    axm3: partition(DataMessages, {alertCode}, {scanData}, {scanID})
+END
+
+MACHINE ThermalCameraScreeningInteractionMachine_1
+SEES ThermalCameraScreeningContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_4 ∈ ℤ
+    inv18: t_delay_4 ∈ ℤ
+    inv19: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..15
+        act9: t_delay_1 := 1
+        act10: t_success_1 := 0
+        act11: t_time_2 :∈ 0..10
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 0..8
+        act15: t_delay_3 := 0
+        act16: t_success_3 := 0
+        act17: t_time_4 :∈ 0..1
+        act18: t_delay_4 := 0
+        act19: t_success_4 := 0
+    END
+
+
+    sendcancelScan_1
+    WHEN
+        grd1: cancelScan_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelScan_1}
+        act2: sender := sender ∪ {cancelScan_1 ↦ ThermalCam}
+        act3: receiver := receiver ∪ {cancelScan_1 ↦ Guard}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelScan_1}
+    END
+
+    receivecancelScan_1
+    WHEN
+        grd1: cancelScan_1 ∈ sentMessages
+        grd2: cancelScan_1 ↦ ThermalCam ∈ sender
+        grd3: cancelScan_1 ↦ Guard ∈ receiver
+        grd4: cancelScan_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelScan_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelScan_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendackScan_2
+    WHEN
+        grd1: ackScan_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelScan_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackScan_2}
+        act2: sender := sender ∪ {ackScan_2 ↦ FacilityApp}
+        act3: receiver := receiver ∪ {ackScan_2 ↦ EdgeNode}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackScan_2 ↦ alertCode}
+        act6: currentMessage := {ackScan_2}
+    END
+
+    receiveackScan_2
+    WHEN
+        grd1: ackScan_2 ∈ sentMessages
+        grd2: ackScan_2 ↦ FacilityApp ∈ sender
+        grd3: ackScan_2 ↦ EdgeNode ∈ receiver
+        grd4: ackScan_2 ∉ receivedMessages
+        grd5: currentMessage = {ackScan_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackScan_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackScan_2 ↦ alertCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendassignAlert_3
+    WHEN
+        grd1: assignAlert_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackScan_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignAlert_3}
+        act2: sender := sender ∪ {assignAlert_3 ↦ FacilityApp}
+        act3: receiver := receiver ∪ {assignAlert_3 ↦ Guard}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignAlert_3 ↦ scanData}
+        act6: currentMessage := {assignAlert_3}
+    END
+
+    receiveassignAlert_3
+    WHEN
+        grd1: assignAlert_3 ∈ sentMessages
+        grd2: assignAlert_3 ↦ FacilityApp ∈ sender
+        grd3: assignAlert_3 ↦ Guard ∈ receiver
+        grd4: assignAlert_3 ∉ receivedMessages
+        grd5: currentMessage = {assignAlert_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignAlert_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignAlert_3 ↦ scanData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendconfirmAlert_4
+    WHEN
+        grd1: confirmAlert_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignAlert_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmAlert_4}
+        act2: sender := sender ∪ {confirmAlert_4 ↦ Guard}
+        act3: receiver := receiver ∪ {confirmAlert_4 ↦ EdgeNode}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmAlert_4 ↦ scanID}
+        act6: currentMessage := {confirmAlert_4}
+    END
+
+    receiveconfirmAlert_4
+    WHEN
+        grd1: confirmAlert_4 ∈ sentMessages
+        grd2: confirmAlert_4 ↦ Guard ∈ sender
+        grd3: confirmAlert_4 ↦ EdgeNode ∈ receiver
+        grd4: confirmAlert_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmAlert_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmAlert_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmAlert_4 ↦ scanID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendackAlert_5
+    WHEN
+        grd1: ackAlert_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmAlert_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackAlert_5}
+        act2: sender := sender ∪ {ackAlert_5 ↦ FacilityApp}
+        act3: receiver := receiver ∪ {ackAlert_5 ↦ EdgeNode}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackAlert_5}
+    END
+
+    receiveackAlert_5
+    WHEN
+        grd1: ackAlert_5 ∈ sentMessages
+        grd2: ackAlert_5 ↦ FacilityApp ∈ sender
+        grd3: ackAlert_5 ↦ EdgeNode ∈ receiver
+        grd4: ackAlert_5 ∉ receivedMessages
+        grd5: currentMessage = {ackAlert_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackAlert_5}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryFever_6
+    WHEN
+        grd1: queryFever_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackAlert_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryFever_6}
+        act2: sender := sender ∪ {queryFever_6 ↦ ThermalCam}
+        act3: receiver := receiver ∪ {queryFever_6 ↦ FacilityApp}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryFever_6}
+    END
+
+    receivequeryFever_6
+    WHEN
+        grd1: queryFever_6 ∈ sentMessages
+        grd2: queryFever_6 ↦ ThermalCam ∈ sender
+        grd3: queryFever_6 ↦ FacilityApp ∈ receiver
+        grd4: queryFever_6 ∉ receivedMessages
+        grd5: currentMessage = {queryFever_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryFever_6}
+        act2: currentMessage := ∅
+    END
+
+END

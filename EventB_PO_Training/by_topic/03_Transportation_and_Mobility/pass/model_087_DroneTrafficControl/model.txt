@@ -1,0 +1,295 @@
+CONTEXT DroneTrafficControlContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    DronePilot, UTMServer
+    reportCorridor_1, syncFlight_2, ackFlight_3, updateCorridor_4, queryCorridor_5, confirmFlight_6, cancelCorridor_7, confirmCorridor_8
+    corridorInfo, corridorRef, corridorValue, flightData, flightValue, permitID, permitInfo
+AXIOMS
+    axm1: partition(Objects, {DronePilot}, {UTMServer})
+    axm2: partition(Messages, {reportCorridor_1}, {syncFlight_2}, {ackFlight_3}, {updateCorridor_4}, {queryCorridor_5}, {confirmFlight_6}, {cancelCorridor_7}, {confirmCorridor_8})
+    axm3: partition(DataMessages, {corridorInfo}, {corridorRef}, {corridorValue}, {flightData}, {flightValue}, {permitID}, {permitInfo})
+END
+
+MACHINE DroneTrafficControlInteractionMachine_1
+SEES DroneTrafficControlContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, approved, express, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: approved ∈ ℤ
+    inv9: express ∈ ℤ
+    inv10: t_time_1 ∈ ℤ
+    inv11: t_delay_1 ∈ ℤ
+    inv12: t_success_1 ∈ ℤ
+    inv13: t_time_2 ∈ ℤ
+    inv14: t_delay_2 ∈ ℤ
+    inv15: t_success_2 ∈ ℤ
+    inv16: t_time_4 ∈ ℤ
+    inv17: t_delay_4 ∈ ℤ
+    inv18: t_success_4 ∈ ℤ
+    inv19: t_time_8 ∈ ℤ
+    inv20: t_delay_8 ∈ ℤ
+    inv21: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: approved := 0
+        act9: express := 1
+        act10: t_time_1 :∈ 0..20
+        act11: t_delay_1 := 0
+        act12: t_success_1 := 0
+        act13: t_time_2 :∈ 0..8
+        act14: t_delay_2 := 0
+        act15: t_success_2 := 0
+        act16: t_time_4 :∈ 0..3
+        act17: t_delay_4 := 1
+        act18: t_success_4 := 0
+        act19: t_time_8 :∈ 0..30
+        act20: t_delay_8 := 0
+        act21: t_success_8 := 0
+    END
+
+
+    sendreportCorridor_1
+    WHEN
+        grd1: reportCorridor_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportCorridor_1}
+        act2: sender := sender ∪ {reportCorridor_1 ↦ DronePilot}
+        act3: receiver := receiver ∪ {reportCorridor_1 ↦ UTMServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportCorridor_1 ↦ flightData}
+        act6: currentMessage := {reportCorridor_1}
+    END
+
+    receivereportCorridor_1
+    WHEN
+        grd1: reportCorridor_1 ∈ sentMessages
+        grd2: reportCorridor_1 ↦ DronePilot ∈ sender
+        grd3: reportCorridor_1 ↦ UTMServer ∈ receiver
+        grd4: reportCorridor_1 ∉ receivedMessages
+        grd5: currentMessage = {reportCorridor_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportCorridor_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportCorridor_1 ↦ flightData}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendsyncFlight_2
+    WHEN
+        grd1: syncFlight_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCorridor_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncFlight_2}
+        act2: sender := sender ∪ {syncFlight_2 ↦ UTMServer}
+        act3: receiver := receiver ∪ {syncFlight_2 ↦ DronePilot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {syncFlight_2 ↦ corridorInfo}
+        act6: currentMessage := {syncFlight_2}
+    END
+
+    receivesyncFlight_2
+    WHEN
+        grd1: syncFlight_2 ∈ sentMessages
+        grd2: syncFlight_2 ↦ UTMServer ∈ sender
+        grd3: syncFlight_2 ↦ DronePilot ∈ receiver
+        grd4: syncFlight_2 ∉ receivedMessages
+        grd5: currentMessage = {syncFlight_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncFlight_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {syncFlight_2 ↦ corridorInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendackFlight_3
+    WHEN
+        grd1: ackFlight_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncFlight_2 ∈ receivedMessages
+        grd4: approved = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackFlight_3}
+        act2: sender := sender ∪ {ackFlight_3 ↦ DronePilot}
+        act3: receiver := receiver ∪ {ackFlight_3 ↦ UTMServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackFlight_3 ↦ corridorValue}
+        act6: currentMessage := {ackFlight_3}
+    END
+
+    receiveackFlight_3
+    WHEN
+        grd1: ackFlight_3 ∈ sentMessages
+        grd2: ackFlight_3 ↦ DronePilot ∈ sender
+        grd3: ackFlight_3 ↦ UTMServer ∈ receiver
+        grd4: ackFlight_3 ∉ receivedMessages
+        grd5: currentMessage = {ackFlight_3}
+        grd6: approved = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackFlight_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackFlight_3 ↦ corridorValue}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateCorridor_4_opt1
+    WHEN
+        grd1: updateCorridor_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackFlight_3 ∈ receivedMessages
+        grd4: approved = 1
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateCorridor_4}
+        act2: sender := sender ∪ {updateCorridor_4 ↦ UTMServer}
+        act3: receiver := receiver ∪ {updateCorridor_4 ↦ DronePilot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateCorridor_4 ↦ corridorRef, updateCorridor_4 ↦ permitInfo}
+        act6: currentMessage := {updateCorridor_4}
+    END
+
+    receiveupdateCorridor_4_opt1
+    WHEN
+        grd1: updateCorridor_4 ∈ sentMessages
+        grd2: updateCorridor_4 ↦ UTMServer ∈ sender
+        grd3: updateCorridor_4 ↦ DronePilot ∈ receiver
+        grd4: updateCorridor_4 ∉ receivedMessages
+        grd5: currentMessage = {updateCorridor_4}
+        grd6: approved = 1
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateCorridor_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateCorridor_4 ↦ corridorRef, updateCorridor_4 ↦ permitInfo}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendqueryCorridor_5_opt1
+    WHEN
+        grd1: queryCorridor_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateCorridor_4 ∈ receivedMessages
+        grd4: approved = 1
+        grd5: express = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryCorridor_5}
+        act2: sender := sender ∪ {queryCorridor_5 ↦ DronePilot}
+        act3: receiver := receiver ∪ {queryCorridor_5 ↦ UTMServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryCorridor_5 ↦ flightData}
+        act6: currentMessage := {queryCorridor_5}
+    END
+
+    receivequeryCorridor_5_opt1
+    WHEN
+        grd1: queryCorridor_5 ∈ sentMessages
+        grd2: queryCorridor_5 ↦ DronePilot ∈ sender
+        grd3: queryCorridor_5 ↦ UTMServer ∈ receiver
+        grd4: queryCorridor_5 ∉ receivedMessages
+        grd5: currentMessage = {queryCorridor_5}
+        grd6: approved = 1
+        grd7: express = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryCorridor_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryCorridor_5 ↦ flightData}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmFlight_6
+    WHEN
+        grd1: confirmFlight_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryCorridor_5 ∈ receivedMessages
+        grd4: approved = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmFlight_6}
+        act2: sender := sender ∪ {confirmFlight_6 ↦ UTMServer}
+        act3: receiver := receiver ∪ {confirmFlight_6 ↦ DronePilot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmFlight_6}
+    END
+
+    receiveconfirmFlight_6
+    WHEN
+        grd1: confirmFlight_6 ∈ sentMessages
+        grd2: confirmFlight_6 ↦ UTMServer ∈ sender
+        grd3: confirmFlight_6 ↦ DronePilot ∈ receiver
+        grd4: confirmFlight_6 ∉ receivedMessages
+        grd5: currentMessage = {confirmFlight_6}
+        grd6: approved = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmFlight_6}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelCorridor_7
+    WHEN
+        grd1: cancelCorridor_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncFlight_2 ∈ receivedMessages
+        grd4: approved = 0
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCorridor_7}
+        act2: sender := sender ∪ {cancelCorridor_7 ↦ UTMServer}
+        act3: receiver := receiver ∪ {cancelCorridor_7 ↦ DronePilot}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelCorridor_7 ↦ flightValue, cancelCorridor_7 ↦ permitID}
+        act6: currentMessage := {cancelCorridor_7}
+    END
+
+    receivecancelCorridor_7
+    WHEN
+        grd1: cancelCorridor_7 ∈ sentMessages
+        grd2: cancelCorridor_7 ↦ UTMServer ∈ sender
+        grd3: cancelCorridor_7 ↦ DronePilot ∈ receiver
+        grd4: cancelCorridor_7 ∉ receivedMessages
+        grd5: currentMessage = {cancelCorridor_7}
+        grd6: approved = 0
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCorridor_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelCorridor_7 ↦ flightValue, cancelCorridor_7 ↦ permitID}
+        act3: currentMessage := ∅
+    END
+
+    sendconfirmCorridor_8
+    WHEN
+        grd1: confirmCorridor_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmFlight_6 ∈ receivedMessages ∨ cancelCorridor_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCorridor_8}
+        act2: sender := sender ∪ {confirmCorridor_8 ↦ UTMServer}
+        act3: receiver := receiver ∪ {confirmCorridor_8 ↦ DronePilot}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {confirmCorridor_8}
+    END
+
+    receiveconfirmCorridor_8
+    WHEN
+        grd1: confirmCorridor_8 ∈ sentMessages
+        grd2: confirmCorridor_8 ↦ UTMServer ∈ sender
+        grd3: confirmCorridor_8 ↦ DronePilot ∈ receiver
+        grd4: confirmCorridor_8 ∉ receivedMessages
+        grd5: currentMessage = {confirmCorridor_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCorridor_8}
+        act2: currentMessage := ∅
+        act3: t_success_8 := t_time_8 + t_delay_8
+    END
+
+END

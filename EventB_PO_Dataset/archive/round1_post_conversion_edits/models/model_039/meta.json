@@ -1,0 +1,26 @@
+{
+  "model_id": "model_039",
+  "case": "SmartMeterBilling",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "SmartMeterBilling_Project",
+  "category": "model_error",
+  "mutation": "copy-paste slip: receive of generateBill_3 records payBill_4 (not yet sent) as received",
+  "operations": {
+    "replace_in_event": [
+      [
+        "receivegenerateBill_3",
+        "receivedMessages ∪ {generateBill_3}",
+        "receivedMessages ∪ {payBill_4}"
+      ]
+    ]
+  },
+  "added_invariant_labels": [],
+  "expected_failed_pos": [
+    "receivegenerateBill_3/inv5/INV"
+  ],
+  "expected_failed_count": 1,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_039",
+  "rodin_raw_dir": "rodin_raw/ml_pp/SmartMeterBilling_Project"
+}

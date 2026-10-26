@@ -1,0 +1,391 @@
+CONTEXT CloudCIPipelineContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CIRunner, Developer, GitServer, Registry
+    reportImage_1, issueImage_2, reserveBuild_3, notifyImage_4, reportCommit_5, issueBuild_6, checkImage_7, scheduleBuild_8, logCommit_9, fetchBuild_10, confirmCommit_11
+    buildCode, buildID, buildInfo, buildValue, commitCode, commitData, imageRef
+AXIOMS
+    axm1: partition(Objects, {CIRunner}, {Developer}, {GitServer}, {Registry})
+    axm2: partition(Messages, {reportImage_1}, {issueImage_2}, {reserveBuild_3}, {notifyImage_4}, {reportCommit_5}, {issueBuild_6}, {checkImage_7}, {scheduleBuild_8}, {logCommit_9}, {fetchBuild_10}, {confirmCommit_11})
+    axm3: partition(DataMessages, {buildCode}, {buildID}, {buildInfo}, {buildValue}, {commitCode}, {commitData}, {imageRef})
+END
+
+MACHINE CloudCIPipelineInteractionMachine_1
+SEES CloudCIPipelineContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, optIn, retryNo, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_4, t_delay_4, t_success_4, t_time_9, t_delay_9, t_success_9, t_time_10, t_delay_10, t_success_10, t_time_11, t_delay_11, t_success_11
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: optIn ∈ ℤ
+    inv10: retryNo ∈ ℤ
+    inv11: t_time_1 ∈ ℤ
+    inv12: t_delay_1 ∈ ℤ
+    inv13: t_success_1 ∈ ℤ
+    inv14: t_time_2 ∈ ℤ
+    inv15: t_delay_2 ∈ ℤ
+    inv16: t_success_2 ∈ ℤ
+    inv17: t_time_4 ∈ ℤ
+    inv18: t_delay_4 ∈ ℤ
+    inv19: t_success_4 ∈ ℤ
+    inv20: t_time_9 ∈ ℤ
+    inv21: t_delay_9 ∈ ℤ
+    inv22: t_success_9 ∈ ℤ
+    inv23: t_time_10 ∈ ℤ
+    inv24: t_delay_10 ∈ ℤ
+    inv25: t_success_10 ∈ ℤ
+    inv26: t_time_11 ∈ ℤ
+    inv27: t_delay_11 ∈ ℤ
+    inv28: t_success_11 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: optIn := 1
+        act10: retryNo := 0
+        act11: t_time_1 :∈ 0..1
+        act12: t_delay_1 := 3
+        act13: t_success_1 := 0
+        act14: t_time_2 :∈ 0..8
+        act15: t_delay_2 := 0
+        act16: t_success_2 := 0
+        act17: t_time_4 :∈ 0..30
+        act18: t_delay_4 := 5
+        act19: t_success_4 := 0
+        act20: t_time_9 :∈ 0..15
+        act21: t_delay_9 := 0
+        act22: t_success_9 := 0
+        act23: t_time_10 :∈ 0..0
+        act24: t_delay_10 := 2
+        act25: t_success_10 := 0
+        act26: t_time_11 :∈ 0..0
+        act27: t_delay_11 := 5
+        act28: t_success_11 := 0
+    END
+
+
+    sendreportImage_1
+    WHEN
+        grd1: reportImage_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportImage_1}
+        act2: sender := sender ∪ {reportImage_1 ↦ Registry}
+        act3: receiver := receiver ∪ {reportImage_1 ↦ Developer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reportImage_1 ↦ buildCode}
+        act6: currentMessage := {reportImage_1}
+    END
+
+    receivereportImage_1
+    WHEN
+        grd1: reportImage_1 ∈ sentMessages
+        grd2: reportImage_1 ↦ Registry ∈ sender
+        grd3: reportImage_1 ↦ Developer ∈ receiver
+        grd4: reportImage_1 ∉ receivedMessages
+        grd5: currentMessage = {reportImage_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportImage_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reportImage_1 ↦ buildCode}
+        act3: currentMessage := ∅
+        act4: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendissueImage_2
+    WHEN
+        grd1: issueImage_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportImage_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueImage_2}
+        act2: sender := sender ∪ {issueImage_2 ↦ CIRunner}
+        act3: receiver := receiver ∪ {issueImage_2 ↦ Developer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueImage_2 ↦ buildInfo}
+        act6: currentMessage := {issueImage_2}
+    END
+
+    receiveissueImage_2
+    WHEN
+        grd1: issueImage_2 ∈ sentMessages
+        grd2: issueImage_2 ↦ CIRunner ∈ sender
+        grd3: issueImage_2 ↦ Developer ∈ receiver
+        grd4: issueImage_2 ∉ receivedMessages
+        grd5: currentMessage = {issueImage_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueImage_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueImage_2 ↦ buildInfo}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendreserveBuild_3_opt1
+    WHEN
+        grd1: reserveBuild_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueImage_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {reserveBuild_3}
+        act2: sender := sender ∪ {reserveBuild_3 ↦ GitServer}
+        act3: receiver := receiver ∪ {reserveBuild_3 ↦ CIRunner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {reserveBuild_3 ↦ commitCode}
+        act6: currentMessage := {reserveBuild_3}
+    END
+
+    receivereserveBuild_3_opt1
+    WHEN
+        grd1: reserveBuild_3 ∈ sentMessages
+        grd2: reserveBuild_3 ↦ GitServer ∈ sender
+        grd3: reserveBuild_3 ↦ CIRunner ∈ receiver
+        grd4: reserveBuild_3 ∉ receivedMessages
+        grd5: currentMessage = {reserveBuild_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reserveBuild_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {reserveBuild_3 ↦ commitCode}
+        act3: currentMessage := ∅
+    END
+
+    sendnotifyImage_4
+    WHEN
+        grd1: notifyImage_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reserveBuild_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {notifyImage_4}
+        act2: sender := sender ∪ {notifyImage_4 ↦ GitServer}
+        act3: receiver := receiver ∪ {notifyImage_4 ↦ CIRunner}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {notifyImage_4 ↦ buildID}
+        act6: currentMessage := {notifyImage_4}
+    END
+
+    receivenotifyImage_4
+    WHEN
+        grd1: notifyImage_4 ∈ sentMessages
+        grd2: notifyImage_4 ↦ GitServer ∈ sender
+        grd3: notifyImage_4 ↦ CIRunner ∈ receiver
+        grd4: notifyImage_4 ∉ receivedMessages
+        grd5: currentMessage = {notifyImage_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {notifyImage_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {notifyImage_4 ↦ buildID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendreportCommit_5
+    WHEN
+        grd1: reportCommit_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: notifyImage_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {reportCommit_5}
+        act2: sender := sender ∪ {reportCommit_5 ↦ GitServer}
+        act3: receiver := receiver ∪ {reportCommit_5 ↦ CIRunner}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {reportCommit_5}
+    END
+
+    receivereportCommit_5
+    WHEN
+        grd1: reportCommit_5 ∈ sentMessages
+        grd2: reportCommit_5 ↦ GitServer ∈ sender
+        grd3: reportCommit_5 ↦ CIRunner ∈ receiver
+        grd4: reportCommit_5 ∉ receivedMessages
+        grd5: currentMessage = {reportCommit_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {reportCommit_5}
+        act2: currentMessage := ∅
+    END
+
+    sendissueBuild_6_opt2
+    WHEN
+        grd1: issueBuild_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: reportCommit_5 ∈ receivedMessages
+        grd4: optIn = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueBuild_6}
+        act2: sender := sender ∪ {issueBuild_6 ↦ GitServer}
+        act3: receiver := receiver ∪ {issueBuild_6 ↦ Registry}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueBuild_6 ↦ buildCode}
+        act6: currentMessage := {issueBuild_6}
+    END
+
+    receiveissueBuild_6_opt2
+    WHEN
+        grd1: issueBuild_6 ∈ sentMessages
+        grd2: issueBuild_6 ↦ GitServer ∈ sender
+        grd3: issueBuild_6 ↦ Registry ∈ receiver
+        grd4: issueBuild_6 ∉ receivedMessages
+        grd5: currentMessage = {issueBuild_6}
+        grd6: optIn = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueBuild_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueBuild_6 ↦ buildCode}
+        act3: currentMessage := ∅
+    END
+
+    sendcheckImage_7
+    WHEN
+        grd1: checkImage_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: issueBuild_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkImage_7}
+        act2: sender := sender ∪ {checkImage_7 ↦ Developer}
+        act3: receiver := receiver ∪ {checkImage_7 ↦ GitServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkImage_7 ↦ buildValue}
+        act6: currentMessage := {checkImage_7}
+    END
+
+    receivecheckImage_7
+    WHEN
+        grd1: checkImage_7 ∈ sentMessages
+        grd2: checkImage_7 ↦ Developer ∈ sender
+        grd3: checkImage_7 ↦ GitServer ∈ receiver
+        grd4: checkImage_7 ∉ receivedMessages
+        grd5: currentMessage = {checkImage_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkImage_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkImage_7 ↦ buildValue}
+        act3: currentMessage := ∅
+    END
+
+    sendscheduleBuild_8
+    WHEN
+        grd1: scheduleBuild_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkImage_7 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {scheduleBuild_8}
+        act2: sender := sender ∪ {scheduleBuild_8 ↦ Developer}
+        act3: receiver := receiver ∪ {scheduleBuild_8 ↦ GitServer}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {scheduleBuild_8}
+    END
+
+    receivescheduleBuild_8
+    WHEN
+        grd1: scheduleBuild_8 ∈ sentMessages
+        grd2: scheduleBuild_8 ↦ Developer ∈ sender
+        grd3: scheduleBuild_8 ↦ GitServer ∈ receiver
+        grd4: scheduleBuild_8 ∉ receivedMessages
+        grd5: currentMessage = {scheduleBuild_8}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {scheduleBuild_8}
+        act2: currentMessage := ∅
+    END
+
+    sendlogCommit_9
+    WHEN
+        grd1: logCommit_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: scheduleBuild_8 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {logCommit_9}
+        act2: sender := sender ∪ {logCommit_9 ↦ CIRunner}
+        act3: receiver := receiver ∪ {logCommit_9 ↦ GitServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {logCommit_9 ↦ imageRef}
+        act6: currentMessage := {logCommit_9}
+    END
+
+    receivelogCommit_9
+    WHEN
+        grd1: logCommit_9 ∈ sentMessages
+        grd2: logCommit_9 ↦ CIRunner ∈ sender
+        grd3: logCommit_9 ↦ GitServer ∈ receiver
+        grd4: logCommit_9 ∉ receivedMessages
+        grd5: currentMessage = {logCommit_9}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {logCommit_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {logCommit_9 ↦ imageRef}
+        act3: currentMessage := ∅
+        act4: t_success_9 := t_time_9 + t_delay_9
+    END
+
+    sendfetchBuild_10
+    WHEN
+        grd1: fetchBuild_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: logCommit_9 ∈ receivedMessages
+        grd4: retryNo < 11
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchBuild_10}
+        act2: sender := sender ∪ {fetchBuild_10 ↦ GitServer}
+        act3: receiver := receiver ∪ {fetchBuild_10 ↦ Registry}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchBuild_10}
+    END
+
+    receivefetchBuild_10
+    WHEN
+        grd1: fetchBuild_10 ∈ sentMessages
+        grd2: fetchBuild_10 ↦ GitServer ∈ sender
+        grd3: fetchBuild_10 ↦ Registry ∈ receiver
+        grd4: fetchBuild_10 ∉ receivedMessages
+        grd5: currentMessage = {fetchBuild_10}
+        grd6: retryNo < 11
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchBuild_10}
+        act2: currentMessage := ∅
+        act3: t_success_10 := t_time_10 + t_delay_10
+    END
+
+    sendconfirmCommit_11
+    WHEN
+        grd1: confirmCommit_11 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchBuild_10 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmCommit_11}
+        act2: sender := sender ∪ {confirmCommit_11 ↦ Registry}
+        act3: receiver := receiver ∪ {confirmCommit_11 ↦ GitServer}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmCommit_11 ↦ commitData}
+        act6: currentMessage := {confirmCommit_11}
+    END
+
+    receiveconfirmCommit_11
+    WHEN
+        grd1: confirmCommit_11 ∈ sentMessages
+        grd2: confirmCommit_11 ↦ Registry ∈ sender
+        grd3: confirmCommit_11 ↦ GitServer ∈ receiver
+        grd4: confirmCommit_11 ∉ receivedMessages
+        grd5: currentMessage = {confirmCommit_11}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmCommit_11}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmCommit_11 ↦ commitData}
+        act3: currentMessage := ∅
+        act4: t_success_11 := t_time_11 + t_delay_11
+    END
+
+    checkloop_logCommit_9_loop1
+    WHEN
+        grd1: retryNo < 11
+    THEN
+        act1: retryNo := retryNo + 1
+    END
+
+END

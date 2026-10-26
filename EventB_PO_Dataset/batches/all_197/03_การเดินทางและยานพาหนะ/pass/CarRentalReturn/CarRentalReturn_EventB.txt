@@ -1,0 +1,209 @@
+CONTEXT CarRentalReturnContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Renter, ReturnKiosk
+    approveDamage_1, fetchCar_2, validateDamage_3, cancelCar_4, fetchDamage_5, queryInvoice_6
+    carInfo, carValue, damageID
+AXIOMS
+    axm1: partition(Objects, {Renter}, {ReturnKiosk})
+    axm2: partition(Messages, {approveDamage_1}, {fetchCar_2}, {validateDamage_3}, {cancelCar_4}, {fetchDamage_5}, {queryInvoice_6})
+    axm3: partition(DataMessages, {carInfo}, {carValue}, {damageID})
+END
+
+MACHINE CarRentalReturnInteractionMachine_1
+SEES CarRentalReturnContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, par_1, t_time_2, t_delay_2, t_success_2, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: par_1 ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_6 ∈ ℤ
+    inv13: t_delay_6 ∈ ℤ
+    inv14: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: par_1 := 0
+        act9: t_time_2 :∈ 0..15
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_6 :∈ 0..30
+        act13: t_delay_6 := 0
+        act14: t_success_6 := 0
+    END
+
+
+    sendapproveDamage_1
+    WHEN
+        grd1: approveDamage_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveDamage_1}
+        act2: sender := sender ∪ {approveDamage_1 ↦ Renter}
+        act3: receiver := receiver ∪ {approveDamage_1 ↦ ReturnKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveDamage_1 ↦ carInfo}
+        act6: currentMessage := {approveDamage_1}
+    END
+
+    receiveapproveDamage_1
+    WHEN
+        grd1: approveDamage_1 ∈ sentMessages
+        grd2: approveDamage_1 ↦ Renter ∈ sender
+        grd3: approveDamage_1 ↦ ReturnKiosk ∈ receiver
+        grd4: approveDamage_1 ∉ receivedMessages
+        grd5: currentMessage = {approveDamage_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveDamage_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveDamage_1 ↦ carInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendfetchCar_2
+    WHEN
+        grd1: fetchCar_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveDamage_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchCar_2}
+        act2: sender := sender ∪ {fetchCar_2 ↦ Renter}
+        act3: receiver := receiver ∪ {fetchCar_2 ↦ ReturnKiosk}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {fetchCar_2}
+    END
+
+    receivefetchCar_2
+    WHEN
+        grd1: fetchCar_2 ∈ sentMessages
+        grd2: fetchCar_2 ↦ Renter ∈ sender
+        grd3: fetchCar_2 ↦ ReturnKiosk ∈ receiver
+        grd4: fetchCar_2 ∉ receivedMessages
+        grd5: currentMessage = {fetchCar_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchCar_2}
+        act2: currentMessage := ∅
+        act3: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendvalidateDamage_3
+    WHEN
+        grd1: validateDamage_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchCar_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateDamage_3}
+        act2: sender := sender ∪ {validateDamage_3 ↦ ReturnKiosk}
+        act3: receiver := receiver ∪ {validateDamage_3 ↦ Renter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {validateDamage_3}
+    END
+
+    receivevalidateDamage_3
+    WHEN
+        grd1: validateDamage_3 ∈ sentMessages
+        grd2: validateDamage_3 ↦ ReturnKiosk ∈ sender
+        grd3: validateDamage_3 ↦ Renter ∈ receiver
+        grd4: validateDamage_3 ∉ receivedMessages
+        grd5: currentMessage = {validateDamage_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateDamage_3}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelCar_4
+    WHEN
+        grd1: cancelCar_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateDamage_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCar_4}
+        act2: sender := sender ∪ {cancelCar_4 ↦ ReturnKiosk}
+        act3: receiver := receiver ∪ {cancelCar_4 ↦ Renter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelCar_4}
+    END
+
+    receivecancelCar_4
+    WHEN
+        grd1: cancelCar_4 ∈ sentMessages
+        grd2: cancelCar_4 ↦ ReturnKiosk ∈ sender
+        grd3: cancelCar_4 ↦ Renter ∈ receiver
+        grd4: cancelCar_4 ∉ receivedMessages
+        grd5: currentMessage = {cancelCar_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCar_4}
+        act2: currentMessage := ∅
+    END
+
+    sendfetchDamage_5
+    WHEN
+        grd1: fetchDamage_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelCar_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {fetchDamage_5}
+        act2: sender := sender ∪ {fetchDamage_5 ↦ Renter}
+        act3: receiver := receiver ∪ {fetchDamage_5 ↦ ReturnKiosk}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {fetchDamage_5 ↦ damageID}
+        act6: currentMessage := {fetchDamage_5}
+    END
+
+    receivefetchDamage_5
+    WHEN
+        grd1: fetchDamage_5 ∈ sentMessages
+        grd2: fetchDamage_5 ↦ Renter ∈ sender
+        grd3: fetchDamage_5 ↦ ReturnKiosk ∈ receiver
+        grd4: fetchDamage_5 ∉ receivedMessages
+        grd5: currentMessage = {fetchDamage_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {fetchDamage_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {fetchDamage_5 ↦ damageID}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryInvoice_6
+    WHEN
+        grd1: queryInvoice_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: fetchDamage_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryInvoice_6}
+        act2: sender := sender ∪ {queryInvoice_6 ↦ ReturnKiosk}
+        act3: receiver := receiver ∪ {queryInvoice_6 ↦ Renter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryInvoice_6 ↦ carValue}
+        act6: currentMessage := {queryInvoice_6}
+    END
+
+    receivequeryInvoice_6
+    WHEN
+        grd1: queryInvoice_6 ∈ sentMessages
+        grd2: queryInvoice_6 ↦ ReturnKiosk ∈ sender
+        grd3: queryInvoice_6 ↦ Renter ∈ receiver
+        grd4: queryInvoice_6 ∉ receivedMessages
+        grd5: currentMessage = {queryInvoice_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryInvoice_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryInvoice_6 ↦ carValue}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END

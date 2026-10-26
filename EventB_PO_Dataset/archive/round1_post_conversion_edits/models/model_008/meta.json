@@ -1,0 +1,29 @@
+{
+  "model_id": "model_008",
+  "case": "ChatMessaging",
+  "design_intent": "expected_fail",
+  "variant": "mutated",
+  "rodin_project": "ChatMessaging_Project",
+  "category": "non_inductive",
+  "mutation": "added receiverdataMessages ⊆ senderdataMessages (true when reachable, not inductive)",
+  "operations": {
+    "add_inv": [
+      "receiverdataMessages ⊆ senderdataMessages"
+    ]
+  },
+  "added_invariant_labels": [
+    "inv21"
+  ],
+  "expected_failed_pos": [
+    "receivesendText_1/inv21/INV",
+    "receivedeliverText_2/inv21/INV",
+    "receivereadReceipt_3/inv21/INV",
+    "receiveforwardReceipt_4/inv21/INV",
+    "receivereplyText_7/inv21/INV",
+    "receivedeliverReply_8/inv21/INV"
+  ],
+  "expected_failed_count": 6,
+  "note": "expected_* is a prediction; the label must come from Rodin's .bps",
+  "source_dir": "sources/model_008",
+  "rodin_raw_dir": "rodin_raw/ml_pp/ChatMessaging_Project"
+}

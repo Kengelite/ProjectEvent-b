@@ -1,0 +1,340 @@
+CONTEXT JobApplicationPortalContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ATS, Applicant, CareerSite
+    assignInterview_1, checkResume_2, validateInterview_3, releaseInterview_4, ackOffer_5, requestOffer_6, requestInterview_7, updateOffer_8, cancelResume_9, assignResume_10
+    interviewData, offerID, offerInfo, offerRef, resumeValue
+    ACTIVE, IDLE
+AXIOMS
+    axm1: partition(Objects, {ATS}, {Applicant}, {CareerSite})
+    axm2: partition(Messages, {assignInterview_1}, {checkResume_2}, {validateInterview_3}, {releaseInterview_4}, {ackOffer_5}, {requestOffer_6}, {requestInterview_7}, {updateOffer_8}, {cancelResume_9}, {assignResume_10})
+    axm3: partition(DataMessages, {interviewData}, {offerID}, {offerInfo}, {offerRef}, {resumeValue})
+    axm4: ACTIVE = 0
+    axm5: IDLE = 1
+END
+
+MACHINE JobApplicationPortalInteractionMachine_1
+SEES JobApplicationPortalContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, stage, par_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_5, t_delay_5, t_success_5, t_time_8, t_delay_8, t_success_8
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: stage ∈ ℤ
+    inv9: par_1 ∈ ℤ
+    inv10: t_time_2 ∈ ℤ
+    inv11: t_delay_2 ∈ ℤ
+    inv12: t_success_2 ∈ ℤ
+    inv13: t_time_3 ∈ ℤ
+    inv14: t_delay_3 ∈ ℤ
+    inv15: t_success_3 ∈ ℤ
+    inv16: t_time_5 ∈ ℤ
+    inv17: t_delay_5 ∈ ℤ
+    inv18: t_success_5 ∈ ℤ
+    inv19: t_time_8 ∈ ℤ
+    inv20: t_delay_8 ∈ ℤ
+    inv21: t_success_8 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: stage := IDLE
+        act9: par_1 := 0
+        act10: t_time_2 :∈ 0..15
+        act11: t_delay_2 := 0
+        act12: t_success_2 := 0
+        act13: t_time_3 :∈ 0..1
+        act14: t_delay_3 := 3
+        act15: t_success_3 := 0
+        act16: t_time_5 :∈ 0..1
+        act17: t_delay_5 := 0
+        act18: t_success_5 := 0
+        act19: t_time_8 :∈ 0..3
+        act20: t_delay_8 := 0
+        act21: t_success_8 := 0
+    END
+
+
+    sendassignInterview_1
+    WHEN
+        grd1: assignInterview_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignInterview_1}
+        act2: sender := sender ∪ {assignInterview_1 ↦ CareerSite}
+        act3: receiver := receiver ∪ {assignInterview_1 ↦ Applicant}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {assignInterview_1}
+    END
+
+    receiveassignInterview_1
+    WHEN
+        grd1: assignInterview_1 ∈ sentMessages
+        grd2: assignInterview_1 ↦ CareerSite ∈ sender
+        grd3: assignInterview_1 ↦ Applicant ∈ receiver
+        grd4: assignInterview_1 ∉ receivedMessages
+        grd5: currentMessage = {assignInterview_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignInterview_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcheckResume_2
+    WHEN
+        grd1: checkResume_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignInterview_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {checkResume_2}
+        act2: sender := sender ∪ {checkResume_2 ↦ CareerSite}
+        act3: receiver := receiver ∪ {checkResume_2 ↦ ATS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {checkResume_2 ↦ offerRef}
+        act6: currentMessage := {checkResume_2}
+    END
+
+    receivecheckResume_2
+    WHEN
+        grd1: checkResume_2 ∈ sentMessages
+        grd2: checkResume_2 ↦ CareerSite ∈ sender
+        grd3: checkResume_2 ↦ ATS ∈ receiver
+        grd4: checkResume_2 ∉ receivedMessages
+        grd5: currentMessage = {checkResume_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {checkResume_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {checkResume_2 ↦ offerRef}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendvalidateInterview_3
+    WHEN
+        grd1: validateInterview_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: checkResume_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {validateInterview_3}
+        act2: sender := sender ∪ {validateInterview_3 ↦ Applicant}
+        act3: receiver := receiver ∪ {validateInterview_3 ↦ CareerSite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {validateInterview_3 ↦ offerID}
+        act6: currentMessage := {validateInterview_3}
+    END
+
+    receivevalidateInterview_3
+    WHEN
+        grd1: validateInterview_3 ∈ sentMessages
+        grd2: validateInterview_3 ↦ Applicant ∈ sender
+        grd3: validateInterview_3 ↦ CareerSite ∈ receiver
+        grd4: validateInterview_3 ∉ receivedMessages
+        grd5: currentMessage = {validateInterview_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {validateInterview_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {validateInterview_3 ↦ offerID}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendreleaseInterview_4
+    WHEN
+        grd1: releaseInterview_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: validateInterview_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {releaseInterview_4}
+        act2: sender := sender ∪ {releaseInterview_4 ↦ CareerSite}
+        act3: receiver := receiver ∪ {releaseInterview_4 ↦ Applicant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {releaseInterview_4 ↦ offerID}
+        act6: currentMessage := {releaseInterview_4}
+    END
+
+    receivereleaseInterview_4
+    WHEN
+        grd1: releaseInterview_4 ∈ sentMessages
+        grd2: releaseInterview_4 ↦ CareerSite ∈ sender
+        grd3: releaseInterview_4 ↦ Applicant ∈ receiver
+        grd4: releaseInterview_4 ∉ receivedMessages
+        grd5: currentMessage = {releaseInterview_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {releaseInterview_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {releaseInterview_4 ↦ offerID}
+        act3: currentMessage := ∅
+    END
+
+    sendackOffer_5
+    WHEN
+        grd1: ackOffer_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: releaseInterview_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackOffer_5}
+        act2: sender := sender ∪ {ackOffer_5 ↦ Applicant}
+        act3: receiver := receiver ∪ {ackOffer_5 ↦ CareerSite}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackOffer_5 ↦ interviewData}
+        act6: currentMessage := {ackOffer_5}
+    END
+
+    receiveackOffer_5
+    WHEN
+        grd1: ackOffer_5 ∈ sentMessages
+        grd2: ackOffer_5 ↦ Applicant ∈ sender
+        grd3: ackOffer_5 ↦ CareerSite ∈ receiver
+        grd4: ackOffer_5 ∉ receivedMessages
+        grd5: currentMessage = {ackOffer_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackOffer_5}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackOffer_5 ↦ interviewData}
+        act3: currentMessage := ∅
+        act4: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendrequestOffer_6
+    WHEN
+        grd1: requestOffer_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackOffer_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestOffer_6}
+        act2: sender := sender ∪ {requestOffer_6 ↦ CareerSite}
+        act3: receiver := receiver ∪ {requestOffer_6 ↦ Applicant}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestOffer_6}
+    END
+
+    receiverequestOffer_6
+    WHEN
+        grd1: requestOffer_6 ∈ sentMessages
+        grd2: requestOffer_6 ↦ CareerSite ∈ sender
+        grd3: requestOffer_6 ↦ Applicant ∈ receiver
+        grd4: requestOffer_6 ∉ receivedMessages
+        grd5: currentMessage = {requestOffer_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestOffer_6}
+        act2: currentMessage := ∅
+    END
+
+    sendrequestInterview_7
+    WHEN
+        grd1: requestInterview_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestOffer_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {requestInterview_7}
+        act2: sender := sender ∪ {requestInterview_7 ↦ CareerSite}
+        act3: receiver := receiver ∪ {requestInterview_7 ↦ Applicant}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {requestInterview_7}
+    END
+
+    receiverequestInterview_7
+    WHEN
+        grd1: requestInterview_7 ∈ sentMessages
+        grd2: requestInterview_7 ↦ CareerSite ∈ sender
+        grd3: requestInterview_7 ↦ Applicant ∈ receiver
+        grd4: requestInterview_7 ∉ receivedMessages
+        grd5: currentMessage = {requestInterview_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {requestInterview_7}
+        act2: currentMessage := ∅
+    END
+
+    sendupdateOffer_8
+    WHEN
+        grd1: updateOffer_8 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestInterview_7 ∈ receivedMessages
+        grd4: stage = ACTIVE
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateOffer_8}
+        act2: sender := sender ∪ {updateOffer_8 ↦ CareerSite}
+        act3: receiver := receiver ∪ {updateOffer_8 ↦ Applicant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {updateOffer_8 ↦ offerInfo}
+        act6: currentMessage := {updateOffer_8}
+    END
+
+    receiveupdateOffer_8
+    WHEN
+        grd1: updateOffer_8 ∈ sentMessages
+        grd2: updateOffer_8 ↦ CareerSite ∈ sender
+        grd3: updateOffer_8 ↦ Applicant ∈ receiver
+        grd4: updateOffer_8 ∉ receivedMessages
+        grd5: currentMessage = {updateOffer_8}
+        grd6: stage = ACTIVE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateOffer_8}
+        act2: receiverdataMessages := receiverdataMessages ∪ {updateOffer_8 ↦ offerInfo}
+        act3: currentMessage := ∅
+        act4: t_success_8 := t_time_8 + t_delay_8
+    END
+
+    sendcancelResume_9
+    WHEN
+        grd1: cancelResume_9 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: requestInterview_7 ∈ receivedMessages
+        grd4: stage = IDLE
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelResume_9}
+        act2: sender := sender ∪ {cancelResume_9 ↦ CareerSite}
+        act3: receiver := receiver ∪ {cancelResume_9 ↦ ATS}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelResume_9 ↦ offerInfo}
+        act6: currentMessage := {cancelResume_9}
+    END
+
+    receivecancelResume_9
+    WHEN
+        grd1: cancelResume_9 ∈ sentMessages
+        grd2: cancelResume_9 ↦ CareerSite ∈ sender
+        grd3: cancelResume_9 ↦ ATS ∈ receiver
+        grd4: cancelResume_9 ∉ receivedMessages
+        grd5: currentMessage = {cancelResume_9}
+        grd6: stage = IDLE
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelResume_9}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelResume_9 ↦ offerInfo}
+        act3: currentMessage := ∅
+    END
+
+    sendassignResume_10
+    WHEN
+        grd1: assignResume_10 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateOffer_8 ∈ receivedMessages ∨ cancelResume_9 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignResume_10}
+        act2: sender := sender ∪ {assignResume_10 ↦ CareerSite}
+        act3: receiver := receiver ∪ {assignResume_10 ↦ Applicant}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignResume_10 ↦ resumeValue}
+        act6: currentMessage := {assignResume_10}
+    END
+
+    receiveassignResume_10
+    WHEN
+        grd1: assignResume_10 ∈ sentMessages
+        grd2: assignResume_10 ↦ CareerSite ∈ sender
+        grd3: assignResume_10 ↦ Applicant ∈ receiver
+        grd4: assignResume_10 ∉ receivedMessages
+        grd5: currentMessage = {assignResume_10}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignResume_10}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignResume_10 ↦ resumeValue}
+        act3: currentMessage := ∅
+    END
+
+END

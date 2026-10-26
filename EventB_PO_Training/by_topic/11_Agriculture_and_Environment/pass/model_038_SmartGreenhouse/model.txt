@@ -1,0 +1,270 @@
+CONTEXT SmartGreenhouseContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    ClimateCtrl, FanUnit, Scheduler, Sprinkler
+    startCycle_1, readClimate_2, climateData_3, startSprinkler_4, sprinklerOn_5, startFan_6, endCycle_7
+    cycleID, fanSpeed, humidityVal, report, waterLevel
+AXIOMS
+    axm1: partition(Objects, {ClimateCtrl}, {FanUnit}, {Scheduler}, {Sprinkler})
+    axm2: partition(Messages, {startCycle_1}, {readClimate_2}, {climateData_3}, {startSprinkler_4}, {sprinklerOn_5}, {startFan_6}, {endCycle_7})
+    axm3: partition(DataMessages, {cycleID}, {fanSpeed}, {humidityVal}, {report}, {waterLevel})
+END
+
+MACHINE SmartGreenhouseInteractionMachine_1
+SEES SmartGreenhouseContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, cycleNo, humidity, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: cycleNo ∈ ℤ
+    inv9: humidity ∈ ℤ
+    inv10: t_time_3 ∈ ℤ
+    inv11: t_delay_3 ∈ ℤ
+    inv12: t_success_3 ∈ ℤ
+    inv13: t_time_4 ∈ ℤ
+    inv14: t_delay_4 ∈ ℤ
+    inv15: t_success_4 ∈ ℤ
+    inv16: t_time_6 ∈ ℤ
+    inv17: t_delay_6 ∈ ℤ
+    inv18: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: cycleNo := 0
+        act9: humidity :∈ ℤ
+        act10: t_time_3 :∈ 0..3
+        act11: t_delay_3 := 0
+        act12: t_success_3 := 0
+        act13: t_time_4 :∈ 0..5
+        act14: t_delay_4 := 0
+        act15: t_success_4 := 0
+        act16: t_time_6 :∈ 0..2
+        act17: t_delay_6 := 0
+        act18: t_success_6 := 0
+    END
+
+
+    sendstartCycle_1
+    WHEN
+        grd1: startCycle_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {startCycle_1}
+        act2: sender := sender ∪ {startCycle_1 ↦ Scheduler}
+        act3: receiver := receiver ∪ {startCycle_1 ↦ ClimateCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startCycle_1 ↦ cycleID}
+        act6: currentMessage := {startCycle_1}
+    END
+
+    receivestartCycle_1
+    WHEN
+        grd1: startCycle_1 ∈ sentMessages
+        grd2: startCycle_1 ↦ Scheduler ∈ sender
+        grd3: startCycle_1 ↦ ClimateCtrl ∈ receiver
+        grd4: startCycle_1 ∉ receivedMessages
+        grd5: currentMessage = {startCycle_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startCycle_1}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startCycle_1 ↦ cycleID}
+        act3: currentMessage := ∅
+    END
+
+    sendreadClimate_2
+    WHEN
+        grd1: readClimate_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startCycle_1 ∈ receivedMessages
+        grd4: cycleNo < 24
+    THEN
+        act1: sentMessages := sentMessages ∪ {readClimate_2}
+        act2: sender := sender ∪ {readClimate_2 ↦ Scheduler}
+        act3: receiver := receiver ∪ {readClimate_2 ↦ ClimateCtrl}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {readClimate_2}
+    END
+
+    receivereadClimate_2
+    WHEN
+        grd1: readClimate_2 ∈ sentMessages
+        grd2: readClimate_2 ↦ Scheduler ∈ sender
+        grd3: readClimate_2 ↦ ClimateCtrl ∈ receiver
+        grd4: readClimate_2 ∉ receivedMessages
+        grd5: currentMessage = {readClimate_2}
+        grd6: cycleNo < 24
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {readClimate_2}
+        act2: currentMessage := ∅
+    END
+
+    sendclimateData_3
+    WHEN
+        grd1: climateData_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: readClimate_2 ∈ receivedMessages
+        grd4: cycleNo < 24
+    THEN
+        act1: sentMessages := sentMessages ∪ {climateData_3}
+        act2: sender := sender ∪ {climateData_3 ↦ ClimateCtrl}
+        act3: receiver := receiver ∪ {climateData_3 ↦ Scheduler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {climateData_3 ↦ humidityVal}
+        act6: currentMessage := {climateData_3}
+    END
+
+    receiveclimateData_3
+    WHEN
+        grd1: climateData_3 ∈ sentMessages
+        grd2: climateData_3 ↦ ClimateCtrl ∈ sender
+        grd3: climateData_3 ↦ Scheduler ∈ receiver
+        grd4: climateData_3 ∉ receivedMessages
+        grd5: currentMessage = {climateData_3}
+        grd6: cycleNo < 24
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {climateData_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {climateData_3 ↦ humidityVal}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendstartSprinkler_4
+    WHEN
+        grd1: startSprinkler_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: climateData_3 ∈ receivedMessages
+        grd4: cycleNo < 24
+        grd5: humidity < 40
+    THEN
+        act1: sentMessages := sentMessages ∪ {startSprinkler_4}
+        act2: sender := sender ∪ {startSprinkler_4 ↦ Scheduler}
+        act3: receiver := receiver ∪ {startSprinkler_4 ↦ Sprinkler}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startSprinkler_4 ↦ waterLevel}
+        act6: currentMessage := {startSprinkler_4}
+    END
+
+    receivestartSprinkler_4
+    WHEN
+        grd1: startSprinkler_4 ∈ sentMessages
+        grd2: startSprinkler_4 ↦ Scheduler ∈ sender
+        grd3: startSprinkler_4 ↦ Sprinkler ∈ receiver
+        grd4: startSprinkler_4 ∉ receivedMessages
+        grd5: currentMessage = {startSprinkler_4}
+        grd6: cycleNo < 24
+        grd7: humidity < 40
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startSprinkler_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startSprinkler_4 ↦ waterLevel}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendsprinklerOn_5
+    WHEN
+        grd1: sprinklerOn_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: startSprinkler_4 ∈ receivedMessages
+        grd4: cycleNo < 24
+        grd5: humidity < 40
+    THEN
+        act1: sentMessages := sentMessages ∪ {sprinklerOn_5}
+        act2: sender := sender ∪ {sprinklerOn_5 ↦ Sprinkler}
+        act3: receiver := receiver ∪ {sprinklerOn_5 ↦ Scheduler}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {sprinklerOn_5}
+    END
+
+    receivesprinklerOn_5
+    WHEN
+        grd1: sprinklerOn_5 ∈ sentMessages
+        grd2: sprinklerOn_5 ↦ Sprinkler ∈ sender
+        grd3: sprinklerOn_5 ↦ Scheduler ∈ receiver
+        grd4: sprinklerOn_5 ∉ receivedMessages
+        grd5: currentMessage = {sprinklerOn_5}
+        grd6: cycleNo < 24
+        grd7: humidity < 40
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {sprinklerOn_5}
+        act2: currentMessage := ∅
+    END
+
+    sendstartFan_6
+    WHEN
+        grd1: startFan_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: climateData_3 ∈ receivedMessages
+        grd4: cycleNo < 24
+        grd5: humidity ≥ 40
+    THEN
+        act1: sentMessages := sentMessages ∪ {startFan_6}
+        act2: sender := sender ∪ {startFan_6 ↦ Scheduler}
+        act3: receiver := receiver ∪ {startFan_6 ↦ FanUnit}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {startFan_6 ↦ fanSpeed}
+        act6: currentMessage := {startFan_6}
+    END
+
+    receivestartFan_6
+    WHEN
+        grd1: startFan_6 ∈ sentMessages
+        grd2: startFan_6 ↦ Scheduler ∈ sender
+        grd3: startFan_6 ↦ FanUnit ∈ receiver
+        grd4: startFan_6 ∉ receivedMessages
+        grd5: currentMessage = {startFan_6}
+        grd6: cycleNo < 24
+        grd7: humidity ≥ 40
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {startFan_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {startFan_6 ↦ fanSpeed}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+    sendendCycle_7
+    WHEN
+        grd1: endCycle_7 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: sprinklerOn_5 ∈ receivedMessages ∨ startFan_6 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {endCycle_7}
+        act2: sender := sender ∪ {endCycle_7 ↦ Scheduler}
+        act3: receiver := receiver ∪ {endCycle_7 ↦ ClimateCtrl}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {endCycle_7 ↦ report}
+        act6: currentMessage := {endCycle_7}
+    END
+
+    receiveendCycle_7
+    WHEN
+        grd1: endCycle_7 ∈ sentMessages
+        grd2: endCycle_7 ↦ Scheduler ∈ sender
+        grd3: endCycle_7 ↦ ClimateCtrl ∈ receiver
+        grd4: endCycle_7 ∉ receivedMessages
+        grd5: currentMessage = {endCycle_7}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {endCycle_7}
+        act2: receiverdataMessages := receiverdataMessages ∪ {endCycle_7 ↦ report}
+        act3: currentMessage := ∅
+    END
+
+    checkloop_readClimate_2_loop1
+    WHEN
+        grd1: cycleNo < 24
+    THEN
+        act1: cycleNo := cycleNo + 1
+    END
+
+END

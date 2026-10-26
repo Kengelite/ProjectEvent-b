@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<org.eventb.core.poFile org.eventb.core.poStamp="0">
+    <org.eventb.core.poPredicateSet name="ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poIdentifier name="DataMessages" org.eventb.core.type="ℙ(DataMessages)"/>
+        <org.eventb.core.poIdentifier name="Objects" org.eventb.core.type="ℙ(Objects)"/>
+        <org.eventb.core.poIdentifier name="Messages" org.eventb.core.type="ℙ(Messages)"/>
+        <org.eventb.core.poIdentifier name="riskScore_3" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="txnRef" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="postTransfer_4" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="riskLevel" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="CoreBanking" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="initiateTransfer_1" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="Customer" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="transferStatus_7" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="balance" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="transferAmt" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="postingDone_5" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="holdTransfer_6" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="statusCode" org.eventb.core.type="DataMessages"/>
+        <org.eventb.core.poIdentifier name="MobileBank" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="checkFraud_2" org.eventb.core.type="Messages"/>
+        <org.eventb.core.poIdentifier name="FraudCheck" org.eventb.core.type="Objects"/>
+        <org.eventb.core.poIdentifier name="accountNo" org.eventb.core.type="DataMessages"/>
+    </org.eventb.core.poPredicateSet>
+    <org.eventb.core.poPredicateSet name="ALLHYP" org.eventb.core.parentSet="/BankTransfer_Project/BankTransferContext.bpo|org.eventb.core.poFile#BankTransferContext|org.eventb.core.poPredicateSet#ABSHYP" org.eventb.core.poStamp="0">
+        <org.eventb.core.poPredicate name="PRD0" org.eventb.core.predicate="partition(Objects,{CoreBanking},{Customer},{FraudCheck},{MobileBank})" org.eventb.core.source="/BankTransfer_Project/BankTransferContext.buc|org.eventb.core.contextFile#BankTransferContext|org.eventb.core.axiom#internal_element21"/>
+        <org.eventb.core.poPredicate name="PRD1" org.eventb.core.predicate="partition(Messages,{initiateTransfer_1},{checkFraud_2},{riskScore_3},{postTransfer_4},{postingDone_5},{holdTransfer_6},{transferStatus_7})" org.eventb.core.source="/BankTransfer_Project/BankTransferContext.buc|org.eventb.core.contextFile#BankTransferContext|org.eventb.core.axiom#internal_element22"/>
+        <org.eventb.core.poPredicate name="PRD2" org.eventb.core.predicate="partition(DataMessages,{accountNo},{balance},{riskLevel},{statusCode},{transferAmt},{txnRef})" org.eventb.core.source="/BankTransfer_Project/BankTransferContext.buc|org.eventb.core.contextFile#BankTransferContext|org.eventb.core.axiom#internal_element23"/>
+    </org.eventb.core.poPredicateSet>
+</org.eventb.core.poFile>

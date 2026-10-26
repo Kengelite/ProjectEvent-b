@@ -1,0 +1,221 @@
+CONTEXT FlightCrewSchedulingContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    CrewMember, CrewPortal, OpsCenter, Scheduler
+    cancelDuty_1, ackDuty_2, assignSwap_3, confirmSwap_4, ackSwap_5, queryRoster_6
+    dutyData, dutyID, swapCode
+AXIOMS
+    axm1: partition(Objects, {CrewMember}, {CrewPortal}, {OpsCenter}, {Scheduler})
+    axm2: partition(Messages, {cancelDuty_1}, {ackDuty_2}, {assignSwap_3}, {confirmSwap_4}, {ackSwap_5}, {queryRoster_6})
+    axm3: partition(DataMessages, {dutyData}, {dutyID}, {swapCode})
+END
+
+MACHINE FlightCrewSchedulingInteractionMachine_1
+SEES FlightCrewSchedulingContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, t_time_1, t_delay_1, t_success_1, t_time_2, t_delay_2, t_success_2, t_time_3, t_delay_3, t_success_3, t_time_4, t_delay_4, t_success_4
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: t_time_1 ∈ ℤ
+    inv9: t_delay_1 ∈ ℤ
+    inv10: t_success_1 ∈ ℤ
+    inv11: t_time_2 ∈ ℤ
+    inv12: t_delay_2 ∈ ℤ
+    inv13: t_success_2 ∈ ℤ
+    inv14: t_time_3 ∈ ℤ
+    inv15: t_delay_3 ∈ ℤ
+    inv16: t_success_3 ∈ ℤ
+    inv17: t_time_4 ∈ ℤ
+    inv18: t_delay_4 ∈ ℤ
+    inv19: t_success_4 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: t_time_1 :∈ 0..15
+        act9: t_delay_1 := 1
+        act10: t_success_1 := 0
+        act11: t_time_2 :∈ 10..5
+        act12: t_delay_2 := 0
+        act13: t_success_2 := 0
+        act14: t_time_3 :∈ 8..4
+        act15: t_delay_3 := 0
+        act16: t_success_3 := 0
+        act17: t_time_4 :∈ 0..1
+        act18: t_delay_4 := 0
+        act19: t_success_4 := 0
+    END
+
+
+    sendcancelDuty_1
+    WHEN
+        grd1: cancelDuty_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelDuty_1}
+        act2: sender := sender ∪ {cancelDuty_1 ↦ CrewMember}
+        act3: receiver := receiver ∪ {cancelDuty_1 ↦ OpsCenter}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {cancelDuty_1}
+    END
+
+    receivecancelDuty_1
+    WHEN
+        grd1: cancelDuty_1 ∈ sentMessages
+        grd2: cancelDuty_1 ↦ CrewMember ∈ sender
+        grd3: cancelDuty_1 ↦ OpsCenter ∈ receiver
+        grd4: cancelDuty_1 ∉ receivedMessages
+        grd5: currentMessage = {cancelDuty_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelDuty_1}
+        act2: currentMessage := ∅
+        act3: t_success_1 := t_time_1 + t_delay_1
+    END
+
+    sendackDuty_2
+    WHEN
+        grd1: ackDuty_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelDuty_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackDuty_2}
+        act2: sender := sender ∪ {ackDuty_2 ↦ Scheduler}
+        act3: receiver := receiver ∪ {ackDuty_2 ↦ CrewPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {ackDuty_2 ↦ swapCode}
+        act6: currentMessage := {ackDuty_2}
+    END
+
+    receiveackDuty_2
+    WHEN
+        grd1: ackDuty_2 ∈ sentMessages
+        grd2: ackDuty_2 ↦ Scheduler ∈ sender
+        grd3: ackDuty_2 ↦ CrewPortal ∈ receiver
+        grd4: ackDuty_2 ∉ receivedMessages
+        grd5: currentMessage = {ackDuty_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackDuty_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {ackDuty_2 ↦ swapCode}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendassignSwap_3
+    WHEN
+        grd1: assignSwap_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackDuty_2 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {assignSwap_3}
+        act2: sender := sender ∪ {assignSwap_3 ↦ Scheduler}
+        act3: receiver := receiver ∪ {assignSwap_3 ↦ OpsCenter}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {assignSwap_3 ↦ dutyData}
+        act6: currentMessage := {assignSwap_3}
+    END
+
+    receiveassignSwap_3
+    WHEN
+        grd1: assignSwap_3 ∈ sentMessages
+        grd2: assignSwap_3 ↦ Scheduler ∈ sender
+        grd3: assignSwap_3 ↦ OpsCenter ∈ receiver
+        grd4: assignSwap_3 ∉ receivedMessages
+        grd5: currentMessage = {assignSwap_3}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {assignSwap_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {assignSwap_3 ↦ dutyData}
+        act3: currentMessage := ∅
+        act4: t_success_3 := t_time_3 + t_delay_3
+    END
+
+    sendconfirmSwap_4
+    WHEN
+        grd1: confirmSwap_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: assignSwap_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {confirmSwap_4}
+        act2: sender := sender ∪ {confirmSwap_4 ↦ OpsCenter}
+        act3: receiver := receiver ∪ {confirmSwap_4 ↦ CrewPortal}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {confirmSwap_4 ↦ dutyID}
+        act6: currentMessage := {confirmSwap_4}
+    END
+
+    receiveconfirmSwap_4
+    WHEN
+        grd1: confirmSwap_4 ∈ sentMessages
+        grd2: confirmSwap_4 ↦ OpsCenter ∈ sender
+        grd3: confirmSwap_4 ↦ CrewPortal ∈ receiver
+        grd4: confirmSwap_4 ∉ receivedMessages
+        grd5: currentMessage = {confirmSwap_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {confirmSwap_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {confirmSwap_4 ↦ dutyID}
+        act3: currentMessage := ∅
+        act4: t_success_4 := t_time_4 + t_delay_4
+    END
+
+    sendackSwap_5
+    WHEN
+        grd1: ackSwap_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: confirmSwap_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {ackSwap_5}
+        act2: sender := sender ∪ {ackSwap_5 ↦ Scheduler}
+        act3: receiver := receiver ∪ {ackSwap_5 ↦ CrewPortal}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {ackSwap_5}
+    END
+
+    receiveackSwap_5
+    WHEN
+        grd1: ackSwap_5 ∈ sentMessages
+        grd2: ackSwap_5 ↦ Scheduler ∈ sender
+        grd3: ackSwap_5 ↦ CrewPortal ∈ receiver
+        grd4: ackSwap_5 ∉ receivedMessages
+        grd5: currentMessage = {ackSwap_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {ackSwap_5}
+        act2: currentMessage := ∅
+    END
+
+    sendqueryRoster_6
+    WHEN
+        grd1: queryRoster_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: ackSwap_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryRoster_6}
+        act2: sender := sender ∪ {queryRoster_6 ↦ CrewMember}
+        act3: receiver := receiver ∪ {queryRoster_6 ↦ Scheduler}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {queryRoster_6}
+    END
+
+    receivequeryRoster_6
+    WHEN
+        grd1: queryRoster_6 ∈ sentMessages
+        grd2: queryRoster_6 ↦ CrewMember ∈ sender
+        grd3: queryRoster_6 ↦ Scheduler ∈ receiver
+        grd4: queryRoster_6 ∉ receivedMessages
+        grd5: currentMessage = {queryRoster_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryRoster_6}
+        act2: currentMessage := ∅
+    END
+
+END

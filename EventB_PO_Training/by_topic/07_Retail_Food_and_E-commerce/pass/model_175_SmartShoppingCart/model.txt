@@ -1,0 +1,220 @@
+CONTEXT SmartShoppingCartContext
+SETS
+    Objects; Messages; DataMessages
+CONSTANTS
+    Checkout, Shopper, SmartCart, StoreServer
+    syncTotal_1, cancelCoupon_2, approveCoupon_3, queryItem_4, updateCoupon_5, issueCoupon_6
+    couponCode, couponValue, itemCode, itemRef
+AXIOMS
+    axm1: partition(Objects, {Checkout}, {Shopper}, {SmartCart}, {StoreServer})
+    axm2: partition(Messages, {syncTotal_1}, {cancelCoupon_2}, {approveCoupon_3}, {queryItem_4}, {updateCoupon_5}, {issueCoupon_6})
+    axm3: partition(DataMessages, {couponCode}, {couponValue}, {itemCode}, {itemRef})
+END
+
+MACHINE SmartShoppingCartInteractionMachine_1
+SEES SmartShoppingCartContext
+VARIABLES
+    sentMessages, sender, receiver, receivedMessages, senderdataMessages, currentMessage, receiverdataMessages, useCache, t_time_2, t_delay_2, t_success_2, t_time_5, t_delay_5, t_success_5, t_time_6, t_delay_6, t_success_6
+INVARIANTS
+    inv1: sentMessages ⊆ Messages
+    inv2: currentMessage ⊆ Messages
+    inv3: sender ⊆ Messages × Objects
+    inv4: receiver ⊆ Messages × Objects
+    inv5: receivedMessages ⊆ sentMessages
+    inv6: senderdataMessages ⊆ Messages × DataMessages
+    inv7: receiverdataMessages ⊆ Messages × DataMessages
+    inv8: useCache ∈ ℤ
+    inv9: t_time_2 ∈ ℤ
+    inv10: t_delay_2 ∈ ℤ
+    inv11: t_success_2 ∈ ℤ
+    inv12: t_time_5 ∈ ℤ
+    inv13: t_delay_5 ∈ ℤ
+    inv14: t_success_5 ∈ ℤ
+    inv15: t_time_6 ∈ ℤ
+    inv16: t_delay_6 ∈ ℤ
+    inv17: t_success_6 ∈ ℤ
+EVENTS
+    INITIALISATION BEGIN
+        act1: sentMessages := ∅
+        act2: sender := ∅
+        act3: receiver := ∅
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := ∅
+        act6: receiverdataMessages := ∅
+        act7: currentMessage := ∅
+        act8: useCache := 1
+        act9: t_time_2 :∈ 0..20
+        act10: t_delay_2 := 0
+        act11: t_success_2 := 0
+        act12: t_time_5 :∈ 0..0
+        act13: t_delay_5 := 3
+        act14: t_success_5 := 0
+        act15: t_time_6 :∈ 0..30
+        act16: t_delay_6 := 0
+        act17: t_success_6 := 0
+    END
+
+
+    sendsyncTotal_1
+    WHEN
+        grd1: syncTotal_1 ∉ sentMessages
+        grd2: currentMessage = ∅
+    THEN
+        act1: sentMessages := sentMessages ∪ {syncTotal_1}
+        act2: sender := sender ∪ {syncTotal_1 ↦ Shopper}
+        act3: receiver := receiver ∪ {syncTotal_1 ↦ SmartCart}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {syncTotal_1}
+    END
+
+    receivesyncTotal_1
+    WHEN
+        grd1: syncTotal_1 ∈ sentMessages
+        grd2: syncTotal_1 ↦ Shopper ∈ sender
+        grd3: syncTotal_1 ↦ SmartCart ∈ receiver
+        grd4: syncTotal_1 ∉ receivedMessages
+        grd5: currentMessage = {syncTotal_1}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {syncTotal_1}
+        act2: currentMessage := ∅
+    END
+
+    sendcancelCoupon_2
+    WHEN
+        grd1: cancelCoupon_2 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: syncTotal_1 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {cancelCoupon_2}
+        act2: sender := sender ∪ {cancelCoupon_2 ↦ SmartCart}
+        act3: receiver := receiver ∪ {cancelCoupon_2 ↦ Shopper}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {cancelCoupon_2 ↦ couponValue}
+        act6: currentMessage := {cancelCoupon_2}
+    END
+
+    receivecancelCoupon_2
+    WHEN
+        grd1: cancelCoupon_2 ∈ sentMessages
+        grd2: cancelCoupon_2 ↦ SmartCart ∈ sender
+        grd3: cancelCoupon_2 ↦ Shopper ∈ receiver
+        grd4: cancelCoupon_2 ∉ receivedMessages
+        grd5: currentMessage = {cancelCoupon_2}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {cancelCoupon_2}
+        act2: receiverdataMessages := receiverdataMessages ∪ {cancelCoupon_2 ↦ couponValue}
+        act3: currentMessage := ∅
+        act4: t_success_2 := t_time_2 + t_delay_2
+    END
+
+    sendapproveCoupon_3_opt1
+    WHEN
+        grd1: approveCoupon_3 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: cancelCoupon_2 ∈ receivedMessages
+        grd4: useCache = 1
+    THEN
+        act1: sentMessages := sentMessages ∪ {approveCoupon_3}
+        act2: sender := sender ∪ {approveCoupon_3 ↦ Shopper}
+        act3: receiver := receiver ∪ {approveCoupon_3 ↦ Checkout}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {approveCoupon_3 ↦ couponValue, approveCoupon_3 ↦ itemRef}
+        act6: currentMessage := {approveCoupon_3}
+    END
+
+    receiveapproveCoupon_3_opt1
+    WHEN
+        grd1: approveCoupon_3 ∈ sentMessages
+        grd2: approveCoupon_3 ↦ Shopper ∈ sender
+        grd3: approveCoupon_3 ↦ Checkout ∈ receiver
+        grd4: approveCoupon_3 ∉ receivedMessages
+        grd5: currentMessage = {approveCoupon_3}
+        grd6: useCache = 1
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {approveCoupon_3}
+        act2: receiverdataMessages := receiverdataMessages ∪ {approveCoupon_3 ↦ couponValue, approveCoupon_3 ↦ itemRef}
+        act3: currentMessage := ∅
+    END
+
+    sendqueryItem_4
+    WHEN
+        grd1: queryItem_4 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: approveCoupon_3 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {queryItem_4}
+        act2: sender := sender ∪ {queryItem_4 ↦ StoreServer}
+        act3: receiver := receiver ∪ {queryItem_4 ↦ SmartCart}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {queryItem_4 ↦ itemCode}
+        act6: currentMessage := {queryItem_4}
+    END
+
+    receivequeryItem_4
+    WHEN
+        grd1: queryItem_4 ∈ sentMessages
+        grd2: queryItem_4 ↦ StoreServer ∈ sender
+        grd3: queryItem_4 ↦ SmartCart ∈ receiver
+        grd4: queryItem_4 ∉ receivedMessages
+        grd5: currentMessage = {queryItem_4}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {queryItem_4}
+        act2: receiverdataMessages := receiverdataMessages ∪ {queryItem_4 ↦ itemCode}
+        act3: currentMessage := ∅
+    END
+
+    sendupdateCoupon_5
+    WHEN
+        grd1: updateCoupon_5 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: queryItem_4 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {updateCoupon_5}
+        act2: sender := sender ∪ {updateCoupon_5 ↦ Checkout}
+        act3: receiver := receiver ∪ {updateCoupon_5 ↦ Shopper}
+        act4: receivedMessages := ∅
+        act5: currentMessage := {updateCoupon_5}
+    END
+
+    receiveupdateCoupon_5
+    WHEN
+        grd1: updateCoupon_5 ∈ sentMessages
+        grd2: updateCoupon_5 ↦ Checkout ∈ sender
+        grd3: updateCoupon_5 ↦ Shopper ∈ receiver
+        grd4: updateCoupon_5 ∉ receivedMessages
+        grd5: currentMessage = {updateCoupon_5}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {updateCoupon_5}
+        act2: currentMessage := ∅
+        act3: t_success_5 := t_time_5 + t_delay_5
+    END
+
+    sendissueCoupon_6
+    WHEN
+        grd1: issueCoupon_6 ∉ sentMessages
+        grd2: currentMessage = ∅
+        grd3: updateCoupon_5 ∈ receivedMessages
+    THEN
+        act1: sentMessages := sentMessages ∪ {issueCoupon_6}
+        act2: sender := sender ∪ {issueCoupon_6 ↦ Shopper}
+        act3: receiver := receiver ∪ {issueCoupon_6 ↦ Checkout}
+        act4: receivedMessages := ∅
+        act5: senderdataMessages := senderdataMessages ∪ {issueCoupon_6 ↦ couponCode}
+        act6: currentMessage := {issueCoupon_6}
+    END
+
+    receiveissueCoupon_6
+    WHEN
+        grd1: issueCoupon_6 ∈ sentMessages
+        grd2: issueCoupon_6 ↦ Shopper ∈ sender
+        grd3: issueCoupon_6 ↦ Checkout ∈ receiver
+        grd4: issueCoupon_6 ∉ receivedMessages
+        grd5: currentMessage = {issueCoupon_6}
+    THEN
+        act1: receivedMessages := receivedMessages ∪ {issueCoupon_6}
+        act2: receiverdataMessages := receiverdataMessages ∪ {issueCoupon_6 ↦ couponCode}
+        act3: currentMessage := ∅
+        act4: t_success_6 := t_time_6 + t_delay_6
+    END
+
+END
