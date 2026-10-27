@@ -85,6 +85,83 @@ RELATED = [
                             "<i>International Conference on Learning Representations (ICLR)</i>."),
 ]
 
+# Published work similar to our models (found by web search 2026-10-27). Similar system or method only —
+# NOT a source of the data. keys: kw = regex on the case name, topics = topic codes it also covers.
+SIMILAR = [
+    {"id": "S1", "kind": "วิธีการ", "about": "แปลง UML Sequence Diagram เป็น Event-B (combined fragments)",
+     "ref": "Dhaou, F., Mouakher, I., Attiogbé, C., & Bsaies, K. (2015). Extending causal semantics of UML2.0 sequence "
+            "diagram for distributed systems. ICSOFT-EA 2015, 339–347.", "url": "https://www.scitepress.org/Papers/2015/55177/",
+     "all": True},
+    {"id": "S2", "kind": "วิธีการ", "about": "Sequence Diagram ที่มี fragment ซ้อนกัน",
+     "ref": "Dhaou, F., Mouakher, I., Attiogbé, C., & Bsaies, K. (2017). A causal semantics for UML2.0 sequence diagrams "
+            "with nested combined fragments. ENASE 2017.", "url": "https://www.scitepress.org/Papers/2017/63141", "all": True},
+    {"id": "S3", "kind": "วิธีการ", "about": "แปลง UML timing diagram เป็น Event-B (กรณีศึกษาลิฟต์)",
+     "ref": "Joochim, T., Gravell, A., & Poppleton, M. Translating UML 2.0 timing diagrams into Event-B and UML-B.",
+     "url": "https://eprints.soton.ac.uk/268489/", "all": True, "kw": r"Lift|Elevator"},
+    {"id": "S4", "kind": "วิธีการ", "about": "deadline / delay ใน Event-B (ตรงกับ t_time / t_delay ของเรา)",
+     "ref": "Sarshogh, M. R., & Butler, M. (2011). Specification and refinement of discrete timing properties in Event-B. "
+            "ECEASST, 46.", "url": "https://journal.ub.tu-berlin.de/eceasst/article/view/701", "all": True},
+    {"id": "S5", "kind": "ระบบ", "about": "ไฟจราจร (ตัวอย่างใน Rodin Handbook)",
+     "ref": "Jastram, M., & Butler, M. Rodin User's Handbook — Traffic light tutorial.",
+     "url": "https://www3.hhu.de/stups/handbook/rodin/release-2014-12-04/html/tut_building_the_model.html",
+     "kw": r"Traffic|Signal|Crossing"},
+    {"id": "S6", "kind": "ระบบ", "about": "ATM / บัญชีธนาคาร (UML-B ATM ใน Event-B Examples)",
+     "ref": "Event-B Wiki. Event-B Examples (ATM development).", "url": "https://wiki.event-b.org/index.php/Event-B_Examples",
+     "kw": r"ATM|^Bank|Withdraw|Transfer|Payment|Wallet|TopUp|Card|Escrow|Trading|Canteen|Prepay"},
+    {"id": "S7", "kind": "ระบบ", "about": "กระเป๋าเงินอิเล็กทรอนิกส์ (Mondex)",
+     "ref": "Butler, M., & Yadav, D. (2008). An incremental development of the Mondex system in Event-B. "
+            "Formal Aspects of Computing, 20(1), 61–77.", "url": "", "kw": r"Payment|Wallet|TopUp|Transfer|Card|OTP",
+     "topics": ["FIN"]},
+    {"id": "S8", "kind": "ระบบ", "about": "เครื่องฟอกไต (ABZ 2016 case study)",
+     "ref": "Mashkoor, A. (2016). The hemodialysis machine case study. ABZ 2016.",
+     "url": "https://irit.fr/ABZ-CS/html_files/files/2016/PDF/Case_Study_The%20Hemodialysis%20Machine_2016.pdf",
+     "topics": ["HEA"]},
+    {"id": "S9", "kind": "ระบบ", "about": "อุปกรณ์การแพทย์ (Event-B + Rodin, เครื่องฟอกไต)",
+     "ref": "Mashkoor, A., et al. (2017). Towards the trustworthy development of active medical devices: "
+            "A hemodialysis case study. arXiv:1706.06369.", "url": "https://arxiv.org/abs/1706.06369", "topics": ["HEA"]},
+    {"id": "S10", "kind": "ระบบ", "about": "ระบบควบคุมรถไฟ (ABZ 2018 Hybrid ERTMS/ETCS Level 3)",
+     "ref": "Mammar, A., Frappier, M., Tueno Fotso, S. J., & Laleau, R. (2018). An Event-B model of the hybrid "
+            "ERTMS/ETCS level 3 standard. ABZ 2018.", "url": "https://hal.archives-ouvertes.fr/hal-01797810",
+     "kw": r"Train|Rail|Metro|Tram"},
+    {"id": "S11", "kind": "ระบบ", "about": "ควบคุมความเร็ว / ไฟรถยนต์ (ABZ 2020)",
+     "ref": "Mammar, A., & Frappier, M. (2020). Modeling of a speed control system using Event-B. ABZ 2020, 367–381.",
+     "url": "https://doi.org/10.1007/978-3-030-48077-6_29",
+     "kw": r"CarRental|Taxi|Ride|Vehicle|Scooter|Parking|Toll|Garage|GolfCart|FleetFuel|Bus(?!iness)|^EV|Shuttle",
+     "topics": ["TRA"]},
+    {"id": "S12", "kind": "ระบบ", "about": "ระบบฐานล้อเครื่องบิน (ABZ 2014 landing gear)",
+     "ref": "Mammar, A., & Laleau, R. (2014). Modelling an aircraft landing system in Event-B (full report). "
+            "arXiv:1407.0927.", "url": "https://arxiv.org/abs/1407.0927", "kw": r"Airport|FlightCheck|Drone|Aircraft"},
+    {"id": "S13", "kind": "ระบบ", "about": "ระบบ IoT (invariant ของสถาปัตยกรรม IoT)",
+     "ref": "Architectural invariants and correctness of IoT-based systems. arXiv:1912.08912.",
+     "url": "https://arxiv.org/abs/1912.08912", "topics": ["HOME", "AGR"],
+     "kw": r"Smart|IoT|Sensor|Monitor"},
+    {"id": "S14", "kind": "ระบบ", "about": "โครงข่ายไฟฟ้าอัจฉริยะผ่าน IoT (Event-B dataset)",
+     "ref": "University of Southampton. Event-B model of an IoT-enabled smart grid (dataset).",
+     "url": "https://eprints.soton.ac.uk/498327", "topics": ["IND"],
+     "kw": r"Grid|Solar|Energy|Battery|Wind|Turbine|PipelineLeak|Charging|SmartMeter"},
+    {"id": "S15", "kind": "ระบบ", "about": "โปรโตคอลอุปกรณ์ IoT (LwM2M client)",
+     "ref": "Toward a correct implementation of LwM2M client with Event-B. ICSOFT 2020.",
+     "url": "https://www.scitepress.org/Papers/2020/98326/", "topics": ["IT"]},
+    {"id": "S16", "kind": "ระบบ", "about": "ระบบลงคะแนนเลือกตั้ง",
+     "ref": "Gibson, J. P., Kherroubi, S., & Méry, D. (2017). Applying a dependency mechanism for voting protocol "
+            "models using Event-B. FORTE 2017.", "url": "https://hal.archives-ouvertes.fr/hal-01658423",
+     "kw": r"Vot|Ballot", "topics": ["EDU"]},
+]
+
+
+def similar_rows(rows):
+    """For each model: the published work whose system (by name, else by topic) or method is similar."""
+    import re
+    out = []
+    for r in rows:
+        code = TOPIC[r["case"]]
+        by_name = [x["id"] for x in SIMILAR if x.get("kw") and re.search(x["kw"], r["case"])]
+        by_topic = [x["id"] for x in SIMILAR if code in x.get("topics", []) and x["id"] not in by_name]
+        out.append({"model_id": r["id"], "case": r["case"], "topic": r["topic"],
+                    "similar_system": "; ".join(by_name), "similar_topic": "; ".join(by_topic),
+                    "similar_method": "; ".join(x["id"] for x in SIMILAR if x.get("all"))})
+    return out
+
 
 def provenance():
     commit = subprocess.run(["git", "-C", PROJECT, "log", "-1", "--format=%h (%ad)", "--date=short", "main", "--",
@@ -200,6 +277,13 @@ def write_sources(out):
            "งานด้านล่างใกล้เคียงกับงานนี้ด้านข้อมูล วิธีการ หรือเครื่องมือ ใช้เป็นงานที่เกี่ยวข้องเท่านั้น "
            "**ไม่ใช่แหล่งที่มาของข้อมูล** — ข้อมูลในชุดนี้สร้างขึ้นเองทั้งหมด (ดูหัวข้อที่มาของข้อมูล)", ""]
     md += [f"- **{k}** — " + re.sub(r"</?i>", "*", r) for k, r in RELATED]
+    md += ["", "## งานที่คล้ายกับแบบจำลองของเรา", "",
+           "ค้นจากเว็บเมื่อ 27 ต.ค. 2026 — คล้ายด้านระบบหรือวิธีการ **ไม่ใช่แหล่งที่มาของข้อมูล** "
+           "แบบจำลองแต่ละตัวจับคู่กับงานเหล่านี้ใน `csv/similar_work.csv` (ตามชื่อระบบก่อน ถ้าไม่พบใช้ตามหัวข้อ) "
+           "ควรเปิดตรวจลิงก์ก่อนอ้างในเล่ม", "", "| รหัส | ด้าน | คล้ายเรื่อง | อ้างอิง |", "|---|---|---|---|"]
+    md += [f"| {x['id']} | {x['kind']} | {x['about']} | {x['ref']} {x['url']} |" for x in SIMILAR]
+    md += ["", "ไม่พบงาน Event-B ที่ตรงกับหัวข้อโลจิสติกส์ ค้าปลีก การจอง และเกษตร และไม่พบงานที่ใช้ LLM "
+           "ทำนายผล Proof Obligation ของ Event-B (ณ วันที่ค้น) — จุดนี้เป็นช่องว่างที่งานนี้เติมได้"]
     open(os.path.join(out, "SOURCES.md"), "w", encoding="utf-8").write("\n".join(md) + "\n")
 SYSTEM = ("You are an Event-B proof-obligation analyst. Given an Event-B model (context and machine) "
           "generated by ChronoSeq-B from a sequence diagram, predict the proof obligations that Rodin "
@@ -308,6 +392,8 @@ def build(out, seed):
                 shutil.copy2(os.path.join(src, f), dst)
 
     by_topic(out, rows)
+    sim = similar_rows(rows)
+    write_csv(os.path.join(out, "csv", "similar_work.csv"), sim, list(sim[0]))
     prov = provenance_rows(rows)
     write_csv(os.path.join(out, "csv", "provenance.csv"), prov, list(prov[0]))
     provenance_pdf(out, prov)
@@ -473,6 +559,18 @@ def pdf(out, rows, po_rows):
              "<table><tr><th style='width:20%'>ด้าน</th><th>อ้างอิง</th></tr>")
     h += [f"<tr><td>{esc(k)}</td><td>{r}</td></tr>" for k, r in RELATED]
     h.append("</table>")
+    sim = similar_rows(rows)
+    h.append("<h3>งานที่คล้ายกับแบบจำลองของเรา</h3><p>ค้นจากเว็บเมื่อ 27 ต.ค. 2026 — คล้ายด้านระบบหรือวิธีการ "
+             "<b>ไม่ใช่แหล่งที่มาของข้อมูล</b> · การจับคู่รายแบบจำลองอยู่ใน <code>csv/similar_work.csv</code> · "
+             "ควรเปิดตรวจลิงก์ก่อนอ้างในเล่ม</p><table style='font-size:8.8pt'><tr><th>รหัส</th><th>คล้ายเรื่อง</th>"
+             "<th>อ้างอิง</th><th>แบบจำลองที่คล้าย</th></tr>")
+    for x in SIMILAR:
+        n = sum(x["id"] in "; ".join((q["similar_system"], q["similar_topic"], q["similar_method"])).split("; ")
+                for q in sim)
+        h.append(f"<tr><td>{x['id']}</td><td>{esc(x['about'])}</td><td style='overflow-wrap:anywhere'>{esc(x['ref'])}"
+                 f"{'<br>' + esc(x['url']) if x['url'] else ''}</td><td class='n'>{n}</td></tr>")
+    h.append("</table><p>ไม่พบงาน Event-B ที่ตรงกับหัวข้อโลจิสติกส์ ค้าปลีก การจอง และเกษตร และไม่พบงานที่ใช้ LLM "
+             "ทำนายผล Proof Obligation ของ Event-B ณ วันที่ค้น — เป็นช่องว่างที่งานนี้เติมได้</p>")
 
     with tempfile.TemporaryDirectory() as tmp:
         page = os.path.join(tmp, "readme.html")
