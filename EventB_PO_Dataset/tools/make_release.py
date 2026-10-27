@@ -18,6 +18,7 @@ Output (rebuilt from scratch each run):
                                 Rodin result, with a list.csv per topic
     FLOW.pdf, FLOW.png          workflow diagram (tools/make_user_flow.py)
     SOURCES.md                  provenance (tools, versions, dates) and references
+    PROVENANCE.pdf, csv/provenance.csv   where every single model came from
 
 Nothing that reveals the answer (meta.json, diagrams, Rodin files) is copied into the
 inputs. The split is stratified by result and by kind of failing PO; model_001 (the
@@ -93,10 +94,106 @@ def provenance():
     return [(k, v.format(repo=CONVERTER_REPO, commit=commit, python=py)) for k, v in PROVENANCE]
 
 
+ERROR_TH = {"inverted1": "ช่วงเวลากลับด้าน 1 จุด", "inverted2": "ช่วงเวลากลับด้าน 2 จุด",
+            "inverted3": "ช่วงเวลากลับด้าน 3 จุด", "inverted_frame": "ช่วงเวลากลับด้านใน fragment",
+            "mod_alt": "mod กับตัวนับ loop (alt)", "mod_opt": "mod กับตัวนับ loop (opt)",
+            "mod_inverted": "ช่วงเวลากลับด้าน + mod"}
+
+
+def provenance_rows(rows):
+    """One row per model: origin, how the diagram was made, diagram error, conversion and proof."""
+    commit = subprocess.run(["git", "-C", PROJECT, "log", "-1", "--format=%h", "main", "--",
+                             "eventb_generator.py", "xml_parser.py", "rodin_exporter.py"],
+                            capture_output=True, text=True).stdout.strip() or "unknown"
+    out = []
+    for r in rows:
+        m = json.load(open(os.path.join(DATASET, "models", r["id"], "meta.json")))
+        batch = m.get("batch") or ""
+        if r["id"] == "model_001":
+            origin, detail, gen = ("งานเดิมของผู้วิจัย",
+                                   "กรณีศึกษาจากงานวิทยานิพนธ์เดิม แผนภาพและไฟล์ .bum ต้นฉบับสูญหาย "
+                                   "จึงสร้าง model.txt กลับจากไฟล์ Rodin (.buc / .bpo) มีเฉพาะชื่อ event", "")
+        elif batch == "round1":
+            origin, gen = "รอบแรก: กำหนดสถานการณ์ทีละแบบ", "script เขียนไฟล์ draw.io"
+            detail = "กำหนดสถานการณ์และโครงสร้างทีละแบบ แล้วเขียนเป็นไฟล์ draw.io ด้วย script"
+            if "round1_version" in m:
+                gen += " + redo_round1.py"
+                detail += ("; 23 ต.ค. 2026 เพิ่มจุดผิดลงในแผนภาพเดิม แทนการแก้ Event-B หลังแปลง"
+                           if r["result"] == "fail" else "; 23 ต.ค. 2026 แปลงใหม่จากแผนภาพเดิมโดยไม่เติม invariant")
+        else:
+            origin, gen = f"สร้างอัตโนมัติ ({batch})", "gen_batch.py"
+            detail = f"สุ่มโครงสร้างด้วย seed {m.get('seed')} อย่างน้อย {m.get('min_msgs')} message"
+            if r["result"] == "fail":
+                detail += " และเขียนจุดผิดลงในแผนภาพตอนสร้าง"
+        out.append({
+            "model_id": r["id"], "case": r["case"], "topic": r["topic"], "result": r["result"],
+            "origin": origin, "origin_detail": detail, "generator": gen, "seed": m.get("seed", ""),
+            "diagram_created": m.get("diagram_created") or "",
+            "diagram_error": ERROR_TH.get(m.get("mutation_type"), ""),
+            "error_detail": m["mutation"] if m.get("variant") == "diagram_error" else "",
+            "converter": "ChronoSeq-B (รุ่นเดิม)" if r["id"] == "model_001" else f"ChronoSeq-B {commit}",
+            "prover": "Rodin" if r["id"] == "model_001" else "Rodin + Atelier B (ML/PP)",
+            "proved_on": m.get("proved_on", ""), "total_po": r["total_po"], "failed": r["failed"],
+            "earlier_version": (m.get("round1_version") or "").replace(" (archived)", ""),
+        })
+    return out
+
+
+def provenance_pdf(out, prov):
+    groups = [("งานเดิมของผู้วิจัย", lambda p: p["model_id"] == "model_001"),
+              ("รอบแรก: กำหนดสถานการณ์ทีละแบบ", lambda p: p["origin"].startswith("รอบแรก")),
+              ("สร้างอัตโนมัติ", lambda p: p["origin"].startswith("สร้างอัตโนมัติ"))]
+    h = ["<h1>ที่มาของแบบจำลองแต่ละตัว</h1>",
+         f"<div class='sub'>{len(prov)} แบบจำลอง · ข้อมูลสังเคราะห์ ไม่ได้นำมาจากชุดข้อมูลภายนอก · "
+         "ตารางเดียวกันอยู่ใน csv/provenance.csv</div>"]
+    h.append("<h2>1. สรุปตามที่มา</h2><table><tr><th>ที่มา</th><th>แบบจำลอง</th><th>วิธีสร้างแผนภาพ</th>"
+             "<th>สร้างแผนภาพ</th><th>พิสูจน์</th><th>ผ่าน / ไม่ผ่าน</th></tr>")
+    how = {"งานเดิมของผู้วิจัย": "กรณีศึกษาเดิม (สร้าง model.txt กลับจากไฟล์ Rodin)",
+           "รอบแรก: กำหนดสถานการณ์ทีละแบบ": "กำหนดสถานการณ์ทีละแบบ เขียนเป็นไฟล์ draw.io ด้วย script "
+                                          "(21 แบบจำลองแก้ใหม่ 23 ต.ค. 2026 ดูคอลัมน์ประวัติ)",
+           "สร้างอัตโนมัติ": "สุ่มด้วย gen_batch.py (batch_02 / 03 / 04) seed คงที่ สร้างซ้ำได้"}
+    for name, f in groups:
+        g = [p for p in prov if f(p)]
+        dates = sorted({p["diagram_created"] for p in g if p["diagram_created"]})
+        proved = sorted({p["proved_on"] for p in g})
+        span = lambda d: "–" if not d else d[0] if len(d) == 1 else f"{d[0]}<br>ถึง {d[-1]}"
+        h.append(f"<tr><td>{esc(name)}</td><td class='n'>{len(g)}</td><td>{esc(how[name])}</td>"
+                 f"<td class='d'>{span(dates)}</td><td class='d'>{span(proved)}</td>"
+                 f"<td class='n'>{sum(p['result'] == 'pass' for p in g)} / {sum(p['result'] == 'fail' for p in g)}</td></tr>")
+    h.append("</table>")
+    h.append("<p>ทุกแบบจำลอง (ยกเว้น model_001) แปลงด้วย ChronoSeq-B และพิสูจน์ด้วย Rodin + Atelier B (ML/PP) "
+             "แบบจำลองที่ไม่ผ่านมีจุดผิดอยู่ในแผนภาพเท่านั้น</p>")
+    h.append("<h2>2. รายแบบจำลอง</h2>")
+    for name, f in groups:
+        g = [p for p in prov if f(p)]
+        h.append(f"<h3>{esc(name)} ({len(g)})</h3><table class='prov'><tr><th>ID</th><th>แบบจำลอง</th><th>ผล</th>"
+                 "<th>วิธีสร้าง</th><th>seed</th><th>สร้างแผนภาพ</th><th>จุดผิดในแผนภาพ</th><th>พิสูจน์</th></tr>")
+        for p in g:
+            how_one = p["generator"] or "สร้างกลับจากไฟล์ Rodin"
+            if p["earlier_version"]:
+                how_one += f"<br><span class='ln'>เดิม: {esc(p['earlier_version'][:70])}…</span>"
+            h.append(f"<tr><td>{p['model_id']}</td><td>{esc(p['case'])}</td>"
+                     f"<td class='res-{p['result']}'>{p['result']}</td><td>{how_one if p['earlier_version'] else esc(how_one)}</td>"
+                     f"<td class='n'>{p['seed']}</td><td class='d'>{p['diagram_created'] or '–'}</td>"
+                     f"<td>{esc(p['diagram_error']) or '–'}</td><td class='d'>{p['proved_on']}</td></tr>")
+        h.append("</table>")
+    css = (CSS + EXTRA_CSS + "td.res-pass { color: #2e7d5b; font-weight: bold; } td.res-fail { color: #c0392b; font-weight: bold; }"
+           "table.prov { font-size: 8.4pt; } table.prov td { padding: 2px 5px; } td.d { white-space: nowrap; }")
+    with tempfile.TemporaryDirectory() as tmp:
+        page = os.path.join(tmp, "prov.html")
+        open(page, "w").write(f"<!doctype html><html lang='th'><head><meta charset='utf-8'><style>{css}</style></head>"
+                              f"<body>{''.join(h)}</body></html>")
+        subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer",
+                        f"--print-to-pdf={os.path.join(out, 'PROVENANCE.pdf')}", f"file://{page}"],
+                       check=True, capture_output=True)
+
+
 def write_sources(out):
     import re
     md = ["# แหล่งที่มา (Sources)", "", "## ที่มาของข้อมูล", "", "| รายการ | รายละเอียด |", "|---|---|"]
     md += [f"| {k} | {v} |" for k, v in provenance()]
+    md += ["", "ที่มาของแบบจำลองทีละตัว (วิธีสร้าง, seed, วันที่, จุดผิด, วันที่พิสูจน์): "
+           "`csv/provenance.csv` และ `PROVENANCE.pdf`"]
     md += ["", "## เอกสารอ้างอิง", ""]
     md += [f"{k}. " + re.sub(r"</?i>", "*", r) for k, r in enumerate(REFERENCES, start=1)]
     md += ["", "## งานที่เกี่ยวข้อง", "",
@@ -211,6 +308,9 @@ def build(out, seed):
                 shutil.copy2(os.path.join(src, f), dst)
 
     by_topic(out, rows)
+    prov = provenance_rows(rows)
+    write_csv(os.path.join(out, "csv", "provenance.csv"), prov, list(prov[0]))
+    provenance_pdf(out, prov)
     write_sources(out)
     pdf(out, rows, po_rows)
     make_user_flow.main(out)
@@ -316,6 +416,7 @@ def pdf(out, rows, po_rows):
             "│   │   └── fail/model_004_BankTransfer/ …",
             "│   └── … (11 หัวข้อ)",
             "├── FLOW.pdf · FLOW.png       ← แผนภาพขั้นตอนการดำเนินงาน",
+            "├── PROVENANCE.pdf            ← ที่มาของแบบจำลองแต่ละตัว (csv/provenance.csv)",
             "└── SOURCES.md                ← แหล่งที่มาและเอกสารอ้างอิง"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
 
