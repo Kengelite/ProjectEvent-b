@@ -19,6 +19,7 @@ Output (rebuilt from scratch each run):
     FLOW.pdf, FLOW.png          workflow diagram (tools/make_user_flow.py)
     SOURCES.md                  provenance (tools, versions, dates) and references
     PROVENANCE.pdf, csv/provenance.csv   where every single model came from
+    SIMILAR_WORK.pdf, csv/similar_work.csv   published work similar to each model (related work)
 
 Nothing that reveals the answer (meta.json, diagrams, Rodin files) is copied into the
 inputs. The split is stratified by result and by kind of failing PO; model_001 (the
@@ -247,6 +248,84 @@ def similar_rows(rows):
                     "similar_system": "; ".join(by_name), "similar_topic": "; ".join(by_topic),
                     "similar_method": "; ".join(x["id"] for x in SIMILAR if x.get("all"))})
     return out
+
+
+SIMILAR_GROUPS = [("วิธีการ (ใช้กับทุกแบบจำลอง)", ["M1", "M2", "M3", "M4"]),
+                  ("การเงินและการชำระเงิน", ["S1", "S2", "S3"]),
+                  ("สุขภาพและการแพทย์", ["S4", "S5", "S6", "S7"]),
+                  ("การเดินทางและยานพาหนะ", ["S8", "S9", "S10", "S11", "S12"]),
+                  ("โลจิสติกส์และคลังสินค้า", ["S13", "S14", "S15"]),
+                  ("บ้านและอาคารอัจฉริยะ", ["S16", "S17", "S18"]),
+                  ("อุตสาหกรรม พลังงาน และโครงสร้างพื้นฐาน", ["S19", "S20"]),
+                  ("ค้าปลีก อาหาร และ e-commerce", ["S21", "S22", "S23"]),
+                  ("การจอง ที่พัก และกิจกรรม", ["S24"]),
+                  ("การศึกษาและบริการภาครัฐ", ["S25", "S26", "S27"]),
+                  ("ไอทีและบริการดิจิทัล", ["S28", "S29", "S30", "S31"]),
+                  ("เกษตรและสิ่งแวดล้อม", ["S32", "S33"])]
+
+
+def similar_pdf(out, rows, sim):
+    """SIMILAR_WORK.pdf: published work similar to the models, and which model resembles which."""
+    by_id = {x["id"]: x for x in SIMILAR}
+    assert sorted(i for _, ids in SIMILAR_GROUPS for i in ids) == sorted(by_id)
+    used = Counter(i for q in sim for i in q["similar_system"].split("; ") if i)
+    checked = sum(bool(x.get("checked")) for x in SIMILAR)
+    h = ["<h1>งานที่คล้ายกับแบบจำลองของเรา</h1>",
+         f"<div class='sub'>{len(SIMILAR)} รายการอ้างอิง · จับคู่ครบ {len(sim)} แบบจำลอง · ค้นจากเว็บเมื่อ 27 ต.ค. 2026</div>"]
+    h.append("<h2>1. เอกสารนี้คืออะไร</h2>")
+    h.append("<div class='warn'><b>งานในเอกสารนี้ไม่ใช่แหล่งที่มาของข้อมูล</b><br>แบบจำลองทั้ง 198 ตัวเป็นข้อมูลสังเคราะห์ "
+             "ที่สร้างขึ้นเอง (ดู <code>PROVENANCE.pdf</code>) งานด้านล่างเป็นงานตีพิมพ์ที่ทำแบบจำลอง Event-B "
+             "(หรือ formal method อื่น) ของระบบประเภทเดียวกัน หรือใช้วิธีการเดียวกัน ใช้อ้างเป็นงานที่เกี่ยวข้อง "
+             "(related work) และใช้แสดงว่าระบบในชุดข้อมูลเป็นระบบที่มีผู้ศึกษาด้วยวิธีทางรูปนัยมาก่อน</div>")
+    h.append("<table><tr><th style='width:22%'>ประเภท</th><th>ความหมาย</th></tr>"
+             "<tr><td>วิธีการ (M1–M4)</td><td>แปลงแผนภาพ UML เป็น Event-B และการจัดการเวลาใน Event-B — ใช้กับทุกแบบจำลอง</td></tr>"
+             "<tr><td>ระบบ (S1–S33)</td><td>ระบบประเภทเดียวกับแบบจำลองของเรา จับคู่จากชื่อระบบ เช่น TrafficLightController "
+             "↔ ไฟจราจร</td></tr>"
+             "<tr><td>formal อื่น</td><td>ใช้ formal method อื่น (Petri net, timed automata) เพราะไม่พบงาน Event-B ที่ตรง</td></tr>"
+             f"<tr><td>✓ ตรวจแล้ว</td><td>เปิดตรวจชื่อเรื่องและผู้แต่งแล้ว ({checked} จาก {len(SIMILAR)} รายการ) — "
+             "รายการที่ไม่มี ✓ มาจากผลค้นหา ต้องเปิดตรวจชื่อเรื่อง ผู้แต่ง และปีก่อนอ้างในเล่ม</td></tr></table>")
+    h.append("<p><b>ข้อค้นพบ:</b> ไม่พบงานที่ใช้ LLM ทำนายผล Proof Obligation ของ Event-B ณ วันที่ค้น "
+             "— เป็นช่องว่างที่งานนี้เติมได้</p>")
+
+    h.append("<h2>2. รายการอ้างอิงตามหัวข้อ</h2>")
+    for name, ids in SIMILAR_GROUPS:
+        h.append(f"<div class='grp'><h3>{esc(name)}</h3><table class='refs2'><tr><th style='width:6%'>รหัส</th>"
+                 "<th style='width:24%'>คล้ายเรื่อง</th><th>อ้างอิง</th><th style='width:6%'>ตรวจ</th>"
+                 "<th style='width:9%'>แบบจำลอง</th></tr>")
+        for i in ids:
+            x = by_id[i]
+            n = len(sim) if x.get("all") else used[i]
+            kind = "" if x["kind"] in ("ระบบ", "วิธีการ") else f"<br><span class='ln'>({esc(x['kind'])})</span>"
+            link = f"<br><span class='url'>{esc(x['url'])}</span>" if x["url"] else ""
+            h.append(f"<tr><td><b>{i}</b></td><td>{esc(x['about'])}{kind}</td><td>{esc(x['ref'])}{link}</td>"
+                     f"<td class='c'>{'✓' if x.get('checked') else ''}</td><td class='n'>{n}</td></tr>")
+        h.append("</table></div>")
+
+    h.append("<h2 style='break-before:page'>3. แบบจำลองแต่ละตัวคล้ายกับงานไหน</h2>")
+    h.append("<p>คอลัมน์ <b>ระบบที่คล้าย</b> จับคู่จากชื่อระบบ · <b>หัวข้อเดียวกัน</b> เป็นงานในหัวข้อเดียวกันเพิ่มเติม · "
+             "ทุกแบบจำลองยังคล้ายกับงานด้านวิธีการ M1–M4 · รหัสดูได้จากข้อ 2 · ไฟล์เดียวกันอยู่ใน "
+             "<code>csv/similar_work.csv</code></p>")
+    for code, (en, th) in TOPIC_NAMES.items():
+        g = [(r, q) for r, q in zip(rows, sim) if r["topic"] == en]
+        h.append(f"<h3>{esc(th)} ({len(g)})</h3><table class='prov'><tr><th style='width:12%'>ID</th>"
+                 "<th style='width:30%'>แบบจำลอง</th><th style='width:8%'>ผล</th><th>ระบบที่คล้าย</th>"
+                 "<th style='width:22%'>หัวข้อเดียวกัน</th></tr>")
+        for r, q in g:
+            sys_ = ", ".join(f"<b>{i}</b> {esc(by_id[i]['about'])}" for i in q["similar_system"].split("; ") if i)
+            h.append(f"<tr><td>{r['id']}</td><td>{esc(r['case'])}</td><td class='res-{r['result']}'>{r['result']}</td>"
+                     f"<td>{sys_}</td><td>{esc(q['similar_topic'].replace('; ', ', ')) or '–'}</td></tr>")
+        h.append("</table>")
+
+    css = (CSS + EXTRA_CSS + "td.res-pass { color: #2e7d5b; font-weight: bold; } td.res-fail { color: #c0392b; font-weight: bold; }"
+           "table.prov { font-size: 8.4pt; } table.prov td { padding: 2px 5px; } table.refs2 { font-size: 8.8pt; }"
+           ".grp { break-inside: avoid; } .url { color: #2f5fa8; font-size: 8pt; overflow-wrap: anywhere; } td.c { text-align: center; color: #2e7d5b; font-weight: bold; }")
+    with tempfile.TemporaryDirectory() as tmp:
+        page = os.path.join(tmp, "similar.html")
+        open(page, "w").write(f"<!doctype html><html lang='th'><head><meta charset='utf-8'><style>{css}</style></head>"
+                              f"<body>{''.join(h)}</body></html>")
+        subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer",
+                        f"--print-to-pdf={os.path.join(out, 'SIMILAR_WORK.pdf')}", f"file://{page}"],
+                       check=True, capture_output=True)
 
 
 def provenance():
@@ -481,6 +560,7 @@ def build(out, seed):
     by_topic(out, rows)
     sim = similar_rows(rows)
     write_csv(os.path.join(out, "csv", "similar_work.csv"), sim, list(sim[0]))
+    similar_pdf(out, rows, sim)
     prov = provenance_rows(rows)
     write_csv(os.path.join(out, "csv", "provenance.csv"), prov, list(prov[0]))
     provenance_pdf(out, prov)
@@ -590,6 +670,7 @@ def pdf(out, rows, po_rows):
             "│   └── … (11 หัวข้อ)",
             "├── FLOW.pdf · FLOW.png       ← แผนภาพขั้นตอนการดำเนินงาน",
             "├── PROVENANCE.pdf            ← ที่มาของแบบจำลองแต่ละตัว (csv/provenance.csv)",
+            "├── SIMILAR_WORK.pdf          ← งานตีพิมพ์ที่คล้ายกับแบบจำลอง (csv/similar_work.csv)",
             "└── SOURCES.md                ← แหล่งที่มาและเอกสารอ้างอิง"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
 
