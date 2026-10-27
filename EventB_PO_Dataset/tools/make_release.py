@@ -54,36 +54,40 @@ PROVENANCE = [
     ("เครื่องมือประมวลผล", "Python {python} · script ใน EventB_PO_Dataset/tools/ ({repo})"),
 ]
 REFERENCES = [
-    "Abrial, J.-R. (2010). <i>Modeling in Event-B: System and Software Engineering</i>. Cambridge University Press.",
+    "Abrial, J.-R. (2010). <i>Modeling in Event-B: System and Software Engineering</i>. Cambridge University Press. "
+    "https://doi.org/10.1017/CBO9781139195881",
     "Abrial, J.-R., Butler, M., Hallerstede, S., Hoang, T. S., Mehta, F., & Voisin, L. (2010). Rodin: An open toolset "
     "for modelling and reasoning in Event-B. <i>International Journal on Software Tools for Technology Transfer, 12</i>(6), "
     "447–466. https://doi.org/10.1007/s10009-010-0145-y",
-    "Event-B and the Rodin Platform. https://www.event-b.org/",
+    "Event-B and the Rodin Platform. https://wiki.event-b.org/",
     "CLEARSY. Atelier B (provers ML and PP, Rodin plugin). https://www.atelierb.eu/",
     "Object Management Group. (2017). <i>OMG Unified Modeling Language (UML), Version 2.5.1</i>. https://www.omg.org/spec/UML/2.5.1",
     "draw.io (diagrams.net). https://www.drawio.com/",
     "ChronoSeq-B — Sequence Diagram to Event-B converter. " + CONVERTER_REPO,
-    "OpenAI. Fine-tuning guide (chat-format training data). https://platform.openai.com/docs/guides/fine-tuning",
+    "OpenAI. Supervised fine-tuning guide (chat-format training data). "
+    "https://developers.openai.com/api/docs/guides/supervised-fine-tuning",
     "Hugging Face. TRL — SFTTrainer. https://huggingface.co/docs/trl/sft_trainer",
 ]
 
 # related work: similar data, methods or tools — NOT where this dataset came from
 RELATED = [
     ("คลังแบบจำลอง Event-B", "DEPLOY Project. DEPLOY Repository of Event-B models and case studies. "
-                            "http://deploy-eprints.ecs.soton.ac.uk/"),
+                            "https://web-archive.southampton.ac.uk/deploy-eprints.ecs.soton.ac.uk/"),
     ("กรณีศึกษา Event-B", "Butler, M., & Yadav, D. (2008). An incremental development of the Mondex system in Event-B. "
-                         "<i>Formal Aspects of Computing, 20</i>(1), 61–77."),
+                         "<i>Formal Aspects of Computing, 20</i>(1), 61–77. https://doi.org/10.1007/s00165-007-0061-4"),
     ("แปลง UML เป็น B", "Snook, C., & Butler, M. (2006). UML-B: Formal modeling and design aided by UML. "
-                       "<i>ACM Transactions on Software Engineering and Methodology, 15</i>(1), 92–122."),
+                       "<i>ACM Transactions on Software Engineering and Methodology, 15</i>(1), 92–122. "
+                       "https://doi.org/10.1145/1125808.1125811"),
     ("LLM กับการพิสูจน์", "Polu, S., & Sutskever, I. (2020). Generative language modeling for automated theorem proving. "
                          "arXiv:2009.03393."),
     ("ชุดข้อมูลการพิสูจน์ + RAG", "Yang, K., Swope, A. M., Gu, A., Chalamala, R., Song, P., Yu, S., Godil, S., Prenger, R., & "
                                 "Anandkumar, A. (2023). LeanDojo: Theorem proving with retrieval-augmented language models. "
                                 "<i>NeurIPS 2023 Datasets and Benchmarks Track</i>. arXiv:2306.15626."),
     ("RAG", "Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. "
-            "<i>Advances in Neural Information Processing Systems, 33</i>."),
-    ("fine-tune แบบประหยัด", "Hu, E. J., et al. (2022). LoRA: Low-rank adaptation of large language models. "
-                            "<i>International Conference on Learning Representations (ICLR)</i>."),
+            "<i>Advances in Neural Information Processing Systems, 33</i>, 9459–9474."),
+    ("fine-tune แบบประหยัด", "Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., & Chen, W. (2022). "
+                            "LoRA: Low-rank adaptation of large language models. <i>International Conference on Learning "
+                            "Representations (ICLR)</i>. arXiv:2106.09685."),
 ]
 
 # Published work similar to our models (found by web search 2026-10-27). Similar system or method only —
@@ -92,146 +96,183 @@ SIMILAR = [
     # ── method (applies to every model) ──
     {"id": "M1", "kind": "วิธีการ", "about": "แปลง UML Sequence Diagram เป็น Event-B (combined fragments)", "all": True, "checked": True,
      "ref": "Dhaou, F., Mouakher, I., Attiogbé, C., & Bsaies, K. (2015). Extending causal semantics of UML2.0 sequence "
-            "diagram for distributed systems. ICSOFT-EA 2015, 339–347.", "url": "https://www.scitepress.org/Papers/2015/55177/"},
-    {"id": "M2", "kind": "วิธีการ", "about": "Sequence Diagram ที่มี fragment ซ้อนกัน", "all": True, "checked": True,
-     "ref": "Dhaou, F., Mouakher, I., Attiogbé, C., & Bsaies, K. (2017). A causal semantics for UML2.0 sequence diagrams "
-            "with nested combined fragments. ENASE 2017.", "url": "https://www.scitepress.org/Papers/2017/63141"},
+            "diagram for distributed systems. In ICSOFT-EA 2015 (pp. 339–347). SciTePress.",
+     "url": "https://doi.org/10.5220/0005517703390347"},
+    {"id": "M2", "kind": "วิธีการ", "about": "ความหมายเชิงรูปนัยของ Sequence Diagram ที่มี fragment ซ้อนกัน "
+                                           "(ต่อยอดจาก M1 แต่ไม่ได้แปลงเป็น Event-B)", "all": True, "checked": True,
+     "ref": "Dhaou, F., Mouakher, I., Attiogbé, J. C., & Bsaies, K. (2017). A causal semantics for UML2.0 sequence diagrams "
+            "with nested combined fragments. In ENASE 2017 (pp. 47–56). SciTePress.",
+     "url": "https://doi.org/10.5220/0006314100470056"},
     {"id": "M3", "kind": "วิธีการ", "about": "แปลง UML timing diagram เป็น Event-B (กรณีศึกษาลิฟต์)", "all": True,
-     "ref": "Joochim, T., Gravell, A., & Poppleton, M. Translating UML 2.0 timing diagrams into Event-B and UML-B.",
-     "url": "https://eprints.soton.ac.uk/268489/", "kw": r"Lift|Elevator"},
+     "checked": True, "ref": "Joochim, T., Snook, C., Poppleton, M., & Gravell, A. (2010). Timing diagrams requirements "
+                            "modeling using Event-B formal methods. In Proceedings of the IASTED International Conference "
+                            "on Software Engineering (SE 2010). ACTA Press.",
+     "url": "https://doi.org/10.2316/P.2010.677-028", "kw": r"Lift|Elevator"},
     {"id": "M4", "kind": "วิธีการ", "about": "deadline / delay ใน Event-B (ตรงกับ t_time / t_delay)", "all": True,
-     "ref": "Sarshogh, M. R., & Butler, M. (2011). Specification and refinement of discrete timing properties in Event-B. "
-            "ECEASST, 46.", "url": "https://journal.ub.tu-berlin.de/eceasst/article/view/701"},
+     "checked": True, "ref": "Sarshogh, M. R., & Butler, M. (2012). Specification and refinement of discrete timing "
+                            "properties in Event-B. Electronic Communications of the EASST, 46.",
+     "url": "https://doi.org/10.14279/tuj.eceasst.46.701"},
     # ── finance ──
     {"id": "S1", "kind": "ระบบ", "about": "ATM / บัญชีธนาคาร (UML-B ATM)", "topics": ["FIN"],
-     "ref": "Event-B Wiki. Event-B Examples (ATM development).", "url": "https://wiki.event-b.org/index.php/Event-B_Examples",
+     "ref": "Event-B Wiki. (n.d.). Event-B examples: UML-B development of an ATM.", "checked": True,
+     "url": "https://wiki.event-b.org/index.php/Event-B_Examples",
      "kw": r"ATM|^Bank|Withdraw|Transfer|Payment|Wallet|TopUp|Card|Escrow|Trading|Canteen|Prepay"},
     {"id": "S2", "kind": "ระบบ", "about": "กระเป๋าเงินอิเล็กทรอนิกส์ (Mondex)", "topics": ["FIN"],
      "ref": "Butler, M., & Yadav, D. (2008). An incremental development of the Mondex system in Event-B. "
-            "Formal Aspects of Computing, 20(1), 61–77.", "url": "", "kw": r"Payment|Wallet|TopUp|Transfer|Card|OTP"},
+            "Formal Aspects of Computing, 20(1), 61–77.", "checked": True,
+     "url": "https://doi.org/10.1007/s00165-007-0061-4", "kw": r"Payment|Wallet|TopUp|Transfer|Card"},
     {"id": "S3", "kind": "ระบบ", "about": "ระบบบริจาค Gift Aid (Event-B ตามกฎหมาย)", "checked": True,
-     "ref": "Williams, D. M., Darwish, S., Schneider, S., & Michael, D. R. (2020). Swiftaid Rodin Event-B models "
-            "[dataset]. Zenodo. https://doi.org/10.5281/zenodo.3715494", "url": "https://zenodo.org/records/3715494",
-     "kw": r"Donation|Charity|Tax"},
+     "ref": "Williams, D. M., Darwish, S., Schneider, S., & Michael, D. R. (2020). Legislation-driven development of a "
+            "Gift Aid system using Event-B. Formal Aspects of Computing, 32(2–3), 251–273. "
+            "Models: Swiftaid Rodin Event-B models, Zenodo, https://doi.org/10.5281/zenodo.3715494",
+     "url": "https://doi.org/10.1007/s00165-020-00512-5",
+     "kw": r"(?<!Blood)Donation|Charity|Tax(?!i)"},
     # ── healthcare ──
     {"id": "S4", "kind": "ระบบ", "about": "เครื่องฟอกไต (ABZ 2016 case study)", "topics": ["HEA"],
-     "ref": "Mashkoor, A. (2016). The hemodialysis machine case study. ABZ 2016.",
-     "url": "https://irit.fr/ABZ-CS/html_files/files/2016/PDF/Case_Study_The%20Hemodialysis%20Machine_2016.pdf"},
+     "ref": "Mashkoor, A. (2016). The hemodialysis machine case study. In ABZ 2016 (LNCS 9675, pp. 329–343). Springer.",
+     "checked": True, "url": "https://doi.org/10.1007/978-3-319-33600-8_29"},
     {"id": "S5", "kind": "ระบบ", "about": "อุปกรณ์การแพทย์ด้วย Event-B + Rodin", "topics": ["HEA"], "checked": True,
-     "ref": "Mashkoor, A., & Biro, M. (2017). Towards the trustworthy development of active medical devices: "
-            "A hemodialysis case study. arXiv:1706.06369.", "url": "https://arxiv.org/abs/1706.06369",
+     "ref": "Mashkoor, A., & Biro, M. (2016). Towards the trustworthy development of active medical devices: "
+            "A hemodialysis case study. IEEE Embedded Systems Letters, 8(1), 14–17.",
+     "url": "https://doi.org/10.1109/LES.2015.2494459",
      "kw": r"Dialysis|Medical|Pill|Glucose|Oxygen|Medication"},
     {"id": "S6", "kind": "ระบบ", "about": "ระบบบริการสุขภาพ: จัดสรรผู้ป่วยให้ผู้ให้บริการ (Event-B)", "topics": ["HEA"],
-     "ref": "Petre, L., et al. (2020). Event-B model of a healthcare system as distributed medical providers. "
-            "Fundamenta Informaticae.", "url": "https://content.iospress.com/articles/fundamenta-informaticae/fi1886",
-     "kw": r"Hospital|Patient|Triage|Telemedicine|Telehealth|Clinic|Appointment|Pharmacy|Lab(?!el)|Vaccine|Blood|Dental|Veterinary"},
+     "checked": True, "ref": "Petre, L., Sanwal, U., Shah, G., Panchal, C., Tyagi, D., & Petre, I. (2020). A computational "
+                            "model for the access to medical service in a basic prototype of a healthcare system. "
+                            "Fundamenta Informaticae, 171(1–4), 331–343.",
+     "url": "https://doi.org/10.3233/FI-2020-1886",
+     "kw": r"Hospital|Patient|Triage|Telemedicine|Telehealth|Clinic|Appointment|Pharmacy|LabSample|Vaccine|Blood|Dental|Veterinary"},
     {"id": "S7", "kind": "ระบบ", "about": "ระบบสั่งการฉุกเฉิน / ดับเพลิง (Event-B workflow)", "checked": True,
      "ref": "Dghaym, D., Butler, M., & Salehi Fathabadi, A. (2014). Evaluation of graphical control flow management "
-            "approaches for Event-B modelling. ECEASST, 66.", "url": "https://eceasst.org/index.php/eceasst/article/view/2094",
-     "kw": r"Emergency|Dispatch|Ambulance|Disaster|Fire"},
+            "approaches for Event-B modelling. Electronic Communications of the EASST, 66.",
+     "url": "https://doi.org/10.14279/tuj.eceasst.66.891",
+     "kw": r"Emergency|Ambulance|Disaster|Fire"},
     # ── transportation ──
-    {"id": "S8", "kind": "ระบบ", "about": "ไฟจราจร (Rodin Handbook)", "kw": r"Traffic|Signal|Crossing",
-     "ref": "Jastram, M., & Butler, M. Rodin User's Handbook — traffic light tutorial.",
-     "url": "https://www3.hhu.de/stups/handbook/rodin/release-2014-12-04/html/tut_building_the_model.html"},
+    {"id": "S8", "kind": "ระบบ", "about": "ไฟจราจร (บทสอนใน Rodin Handbook)", "kw": r"TrafficLight|TrafficSignal|Crossing",
+     "checked": True, "ref": "Jastram, M., & Butler, M. (2014). Rodin user's handbook: Covers Rodin v.2.8. CreateSpace. "
+                            "Section 2.4 \"The First Machine: A Traffic Light Controller\".",
+     "url": "https://stups.hhu-hosting.de/handbook/rodin/release-2014-12-04/html/tut_building_the_model.html"},
     {"id": "S9", "kind": "ระบบ", "about": "ระบบควบคุมรถไฟ (ABZ 2018 Hybrid ERTMS/ETCS Level 3)", "kw": r"Train|Rail|Metro|Tram",
      "ref": "Mammar, A., Frappier, M., Tueno Fotso, S. J., & Laleau, R. (2018). An Event-B model of the hybrid "
-            "ERTMS/ETCS level 3 standard. ABZ 2018.", "url": "https://hal.archives-ouvertes.fr/hal-01797810"},
+            "ERTMS/ETCS level 3 standard. In ABZ 2018 (LNCS 10817, pp. 353–366). Springer.", "checked": True,
+     "url": "https://doi.org/10.1007/978-3-319-91271-4_24"},
     {"id": "S10", "kind": "ระบบ", "about": "ควบคุมความเร็วรถยนต์ (ABZ 2020)", "topics": ["TRA"],
-     "ref": "Mammar, A., & Frappier, M. (2020). Modeling of a speed control system using Event-B. ABZ 2020, 367–381.",
+     "ref": "Mammar, A., & Frappier, M. (2020). Modeling of a speed control system using Event-B. In ABZ 2020 "
+            "(LNCS 12071, pp. 367–381). Springer.", "checked": True,
      "url": "https://doi.org/10.1007/978-3-030-48077-6_29",
      "kw": r"CarRental|Taxi|Ride|Vehicle|Scooter|Parking|Toll|Garage|GolfCart|FleetFuel|Bus(?!iness)|^EV|Shuttle|Bike"},
     {"id": "S11", "kind": "ระบบ", "about": "ระบบฐานล้อเครื่องบิน (ABZ 2014)", "checked": True,
      "ref": "Méry, D., & Singh, N. K. (2014). Modelling an aircraft landing system in Event-B (full report). arXiv:1407.0927.",
      "url": "https://arxiv.org/abs/1407.0927", "kw": r"Airport|Flight|Drone|Aircraft"},
-    {"id": "S12", "kind": "ระบบ", "about": "เรือไร้คนขับเข้าเทียบท่า (Event-B + STPA)", "topics": ["LOG"],
-     "ref": "Control logic verification of safety of the intended functionality for maritime autonomous surface ships "
-            "based on Event-B: A case of autonomous berthing scenario.", "url": "https://trid.trb.org/View/2728291",
-     "kw": r"Ship|Port|Cargo|Pilot|Seaport|Ferry"},
+    {"id": "S12", "kind": "ระบบ", "about": "เรือไร้คนขับเข้าเทียบท่า (Event-B + STPA)", "topics": ["LOG"], "checked": True,
+     "ref": "Zhang, R., Ma, X., Qiao, W., Zhang, H., & Han, B. (2027). Control logic verification of safety of the intended "
+            "functionality for maritime autonomous surface ships based on Event-B: A case of autonomous berthing scenario. "
+            "Reliability Engineering & System Safety, 277, 113158.", "url": "https://doi.org/10.1016/j.ress.2026.113158",
+     "kw": r"Ship|Port(?!al)|Cargo|Pilot|Seaport|Ferry"},
     # ── logistics ──
-    {"id": "S13", "kind": "ระบบ", "about": "คลังสินค้าอัตโนมัติ (stacker crane) ใน Event-B", "topics": ["LOG"],
-     "ref": "Event-B model of an automated storage and retrieval warehouse with stacker cranes. Tomas Bata University "
-            "repository.", "url": "https://m.publikace.k.utb.cz/handle/10563/1008104",
-     "kw": r"Warehouse|Picking|Forklift|Storage|Mailroom|Sorting|Inventory"},
+    {"id": "S13", "kind": "ระบบ", "about": "คลังสินค้าอัตโนมัติ (stacker crane) ใน Event-B", "topics": ["LOG"], "checked": True,
+     "ref": "Hrušecká, D., Adla, R., Krayem, S., & Pivnička, M. (2018). Event-B model for increasing the efficiency of "
+            "warehouse management. Polish Journal of Management Studies, 17(2), 63–74.",
+     "url": "https://doi.org/10.17512/pjms.2018.17.2.06",
+     "kw": r"Warehouse|Picking|Forklift|Storage|Mailroom|Sorting|(?<!Fridge)Inventory"},
     {"id": "S14", "kind": "ระบบ", "about": "การสื่อสารผู้ซื้อ–ผู้ขาย B2B (DEPLOY)", "topics": ["LOG"],
-     "ref": "Hoang, T. S. Event-B model of buyer/seller (order/supply chain) communication. DEPLOY repository, eprint 128.",
-     "url": "https://web-archive.southampton.ac.uk/deploy-eprints.ecs.soton.ac.uk/128/index.html",
+     "ref": "Hoang, T. S. (2009). Event-B model of the Buyer / Seller B2B Communication [Rodin archive]. "
+            "DEPLOY Repository, ID 128. University of Southampton.", "checked": True,
+     "url": "http://web.archive.org/web/20161018043310/http://deploy-eprints.ecs.soton.ac.uk:80/128/",
      "kw": r"Reorder|Supply|Customs|Purchase|Parcel|Package|Delivery|Courier|Mail"},
     {"id": "S15", "kind": "formal อื่น", "about": "ป้องกันเครนท่าเรือชนกัน (Petri net)",
-     "ref": "Kezić, D., Antonić, R., & Račić, N. (2006). Port cranes collision avoidance supervisor (Petri nets). "
-            "Promet – Traffic & Transportation.", "url": "https://doaj.org/article/eca9ff9373974108bfd3dc156107cf13",
+     "ref": "Kezić, D., Antonić, R., & Račić, N. (2006). Automatic supervisory system synthesis for port cranes collision "
+            "prevention by using Petri net. Promet – Traffic & Transportation, 18(3), 143–150.", "checked": True,
+     "url": "https://hrcak.srce.hr/102243",
      "kw": r"Crane"},
     # ── smart home / building ──
     {"id": "S16", "kind": "ระบบ", "about": "ระบบ IoT (invariant ของสถาปัตยกรรม)", "topics": ["HOME", "AGR"], "checked": True,
-     "ref": "Attiogbé, C., & Rocheteau, J. (2019). Architectural invariants and correctness of IoT-based systems. "
-            "arXiv:1912.08912.", "url": "https://arxiv.org/abs/1912.08912", "kw": r"Smart|IoT|Sensor|Monitor|Tracker|Thermostat|Voice|Lighting|Camera|Laundry|Timing|AudioGuide"},
+     "ref": "Attiogbé, C., & Rocheteau, J. (2022). Architectural invariants and correctness of IoT-based systems. "
+            "In MEDI 2022 short papers and DETECT workshop (CCIS 1751, pp. 75–88). Springer. (preprint arXiv:1912.08912)",
+     "url": "https://doi.org/10.1007/978-3-031-23119-3_6", "kw": r"Smart|IoT|Sensor|Monitor|Tracker|Thermostat|Voice|Lighting|Camera|Laundry|Timing|AudioGuide"},
     {"id": "S17", "kind": "ระบบ", "about": "ประตู–กุญแจกับความปลอดภัยเมื่อเกิดไฟไหม้ (ตัวอย่าง Event-B)", "topics": ["HOME"],
-     "checked": True, "ref": "Nicoletti, S. M., Peppelman, M., Kolb, C., & Stoelinga, M. (2021). Model-based joint "
-                            "analysis of safety and security: Survey and identification of gaps. arXiv:2106.06272.",
-     "url": "https://arxiv.org/abs/2106.06272", "kw": r"Door|Lock|Fire|Alarm|Security|Sprinkler|Gate(?!way)|Intercom"},
-    {"id": "S18", "kind": "ระบบ", "about": "กุญแจห้องพักอิเล็กทรอนิกส์ (กรณีศึกษาของ Abrial)",
-     "ref": "Electronic hotel key system (SCEH) specified in Event-B and animated with ProB. arXiv:1212.4959.",
+     "checked": True, "ref": "Nicoletti, S. M., Peppelman, M., Kolb, C., & Stoelinga, M. (2023). Model-based joint "
+                            "analysis of safety and security: Survey and identification of gaps. Computer Science Review, "
+                            "50, 100597.",
+     "url": "https://doi.org/10.1016/j.cosrev.2023.100597", "kw": r"Door|(?<!Ship)Lock(?!er)|Fire|Alarm|Security|Sprinkler|Gate(?!way)|Intercom"},
+    {"id": "S18", "kind": "ระบบ", "about": "กุญแจห้องพักอิเล็กทรอนิกส์ (SCEH) ใน Event-B ตรวจด้วย ProB", "checked": True,
+     "ref": "Sayar, I. (2012). D'Event-B vers UML/OCL en passant par UML/EM-OCL [Master's thesis, Université de Sfax]. "
+            "arXiv:1212.4959.",
      "url": "https://arxiv.org/abs/1212.4959", "kw": r"Hotel|Keyless|Locker|Badge"},
     # ── industrial / energy ──
     {"id": "S19", "kind": "ระบบ", "about": "โครงข่ายไฟฟ้าอัจฉริยะผ่าน IoT (Event-B dataset)", "topics": ["IND"],
-     "ref": "University of Southampton. Event-B model of an IoT-enabled smart grid [dataset].",
-     "url": "https://eprints.soton.ac.uk/498327",
+     "checked": True, "ref": "Akkad, A. S. A. (2024). Dataset in support of the thesis 'An information security model "
+                            "for an Internet of Things-enabled smart grid in the Saudi energy sector' [Data set]. "
+                            "University of Southampton.",
+     "url": "https://doi.org/10.5258/SOTON/D3060",
      "kw": r"Grid|Solar|Energy|Battery|Wind|Turbine|PipelineLeak|Charging|SmartMeter|StreetLight"},
     {"id": "S20", "kind": "ระบบ", "about": "สายการผลิตโลหะ (production cell) ใน Event-B", "topics": ["IND"],
-     "ref": "Gondal, A., Poppleton, M., Butler, M., & Snook, C. (2010). Feature-oriented modelling using Event-B. SETP-10.",
-     "url": "https://eprints.soton.ac.uk/268579", "kw": r"Factory|Robot|Arm|Quality|Assembly|Mining|Crane"},
+     "ref": "Gondal, A., Poppleton, M., Butler, M., & Snook, C. (2010). Feature-oriented modelling using Event-B. "
+            "In International Conference on Software Engineering Theory and Practice (SETP-10).", "checked": True,
+     "url": "https://eprints.soton.ac.uk/268579", "kw": r"Factory|RobotArm|Assembly|Mining|Crane"},
     # ── retail / food ──
     {"id": "S21", "kind": "ระบบ", "about": "ตู้ขายสินค้า (vending machine) ใน Event-B", "topics": ["RET"], "checked": True,
-     "ref": "Stock, S., Leuschel, M., & Mashkoor, A. (2025). Failure divergence refinement for Event-B. arXiv:2505.19069.",
-     "url": "https://arxiv.org/abs/2505.19069", "kw": r"Vending|Kiosk|Fridge"},
+     "ref": "Stock, S., Leuschel, M., & Mashkoor, A. (2025). Failure divergence refinement for Event-B. In TASE 2025 "
+            "(LNCS 15841, pp. 85–103). Springer.",
+     "url": "https://doi.org/10.1007/978-3-031-98208-8_6", "kw": r"Vending|Kiosk"},
     {"id": "S22", "kind": "ระบบ", "about": "ตู้ขายสินค้าแบบ refine หลายขั้น + LTL", "checked": True,
-     "ref": "Schneider, S., Treharne, H., Wehrheim, H., & Williams, D. (2014). Managing LTL properties in Event-B "
-            "refinement. arXiv:1406.6622.", "url": "https://arxiv.org/abs/1406.6622", "kw": r"Vending"},
-    {"id": "S23", "kind": "ระบบ", "about": "ซื้อของออนไลน์: ตะกร้า → ชำระเงิน → ส่งของ", "topics": ["RET"], "checked": True,
-     "ref": "Babin, G., et al. (2014). A formal approach for correct-by-construction system substitution. arXiv:1404.7513.",
+     "ref": "Schneider, S., Treharne, H., Wehrheim, H., & Williams, D. M. (2014). Managing LTL properties in Event-B "
+            "refinement. In iFM 2014 (LNCS 8739, pp. 221–237). Springer.",
+     "url": "https://doi.org/10.1007/978-3-319-10181-1_14", "kw": r"Vending"},
+    {"id": "S23", "kind": "ระบบ", "about": "ซื้อของออนไลน์: ตะกร้า → ชำระเงิน → ออกใบเสร็จ → ส่งของ", "topics": ["RET"],
+     "checked": True, "ref": "Babin, G. (2014). A formal approach for correct-by-construction system substitution. "
+                            "EDCC 2014 Student Forum. arXiv:1404.7513.",
      "url": "https://arxiv.org/abs/1404.7513",
-     "kw": r"Order|Grocery|Shopping|Cart|Marketplace|Checkout|Food|Concession|Truck|Cafe|Restaurant|Photo|Coffee|Auction"},
+     "kw": r"(?<!Trading)Order|Grocery|Shopping|(?<!Golf)Cart|Marketplace|Checkout|Food|Concession|Truck|Cafe|Restaurant|Coffee|Auction"},
     # ── booking ──
     {"id": "S24", "kind": "ระบบ", "about": "จองห้องพักผ่าน REST service ใน Event-B", "topics": ["BOOK"], "checked": True,
      "ref": "Rauf, I., Vistbakka, I., & Troubitsyna, E. (2018). Formal verification of stateful services with REST APIs "
-            "using Event-B. IEEE ICWS 2018, 131–138.",
-     "url": "https://research.abo.fi/en/publications/formal-verification-of-stateful-services-with-rest-apis-using-eve/",
-     "kw": r"Hotel|Reservation|Booking|Seat|Desk|Room|Rental|Ticket|Appointment|Queue"},
+            "using Event-B. In 2018 IEEE International Conference on Web Services (ICWS) (pp. 131–138). IEEE.",
+     "url": "https://doi.org/10.1109/ICWS.2018.00024",
+     "kw": r"Hotel|Reservation|Booking|Seat|Desk|Room|Rental|Ticket|Appointment|(?<!Printer)Queue"},
     # ── education / public ──
     {"id": "S25", "kind": "ระบบ", "about": "ระบบลงคะแนนเลือกตั้ง", "topics": ["EDU"], "kw": r"Vot|Ballot",
      "ref": "Gibson, J. P., Kherroubi, S., & Méry, D. (2017). Applying a dependency mechanism for voting protocol "
-            "models using Event-B. FORTE 2017.", "url": "https://hal.archives-ouvertes.fr/hal-01658423"},
+            "models using Event-B. In FORTE 2017 (LNCS 10321, pp. 124–138). Springer.", "checked": True,
+     "url": "https://doi.org/10.1007/978-3-319-60225-7_9"},
     {"id": "S26", "kind": "ระบบ", "about": "ระบบบริหารมหาวิทยาลัย: รับสมัคร สอบ เช็กชื่อ ผลการเรียน", "topics": ["EDU"],
-     "ref": "Formal modeling and proving of Campus Management System: Event-B perspective. "
-            "Bahria University Journal of ICT.", "url": "https://ojs.bahria.edu.pk/index.php/bujict/article/view/174",
+     "checked": True, "ref": "Akhter, N. (2017). Formal modeling and proving of Campus Management System: Event-B "
+                            "perspective. Bahria University Journal of Information & Communication Technologies, 10(2).",
+     "url": "http://web.archive.org/web/20220809115202/http://ojs.bahria.edu.pk/index.php/bujict/article/view/174",
      "kw": r"Exam|Course|Student|Attendance|Campus|Library|School|Childcare|Proctor|Grading|Quiz|Enroll|Boarding"},
-    {"id": "S27", "kind": "ระบบ", "about": "ลงทะเบียนวิชา (ตัวอย่างในบทนำ Event-B)", "topics": ["EDU"],
-     "ref": "Hoang, T. S. (2013). An introduction to the Event-B modelling method. In Industrial Deployment of System "
-            "Engineering Methods. Springer.", "url": "https://www.southampton.ac.uk/~tsh2n14/publications/chapters/eventb-dbook13.pdf",
+    {"id": "S27", "kind": "ระบบ", "about": "ระบบจัดการรายวิชา: เปิด–ปิดวิชาและลงทะเบียนผู้เรียน (ตัวอย่างในบทนำ Event-B)",
+     "topics": ["EDU"], "checked": True,
+     "ref": "Hoang, T. S. (2013). An introduction to the Event-B modelling method. In A. Romanovsky & M. Thomas (Eds.), "
+            "Industrial deployment of system engineering methods (pp. 211–236). Springer. "
+            "https://doi.org/10.1007/978-3-642-33170-1", "url": "https://www.southampton.ac.uk/~tsh2n14/publications/chapters/eventb-dbook13.pdf",
      "kw": r"Course|Enroll"},
     # ── IT ──
     {"id": "S28", "kind": "ระบบ", "about": "โปรโตคอลอุปกรณ์ IoT (LwM2M client)", "topics": ["IT"], "checked": True,
      "ref": "Mouakher, I., Dhaou, F., & Attiogbé, J. C. (2020). Toward a correct implementation of LwM2M client with "
-            "Event-B. ICSOFT 2020.", "url": "https://www.scitepress.org/Papers/2020/98326/", "kw": r"Wifi|Hotspot|Router|Doorbell"},
-    {"id": "S29", "kind": "ระบบ", "about": "ยืนยันตัวตน / สิทธิ์การเข้าถึง (authentication pattern)", "topics": ["IT"],
-     "ref": "Yagmahan, Rezazadeh, & Butler (2024). Authentication pattern and serverless access control in Event-B "
-            "(ABZ 2024) [dataset].", "url": "https://eprints.soton.ac.uk/489451/",
+            "Event-B. In ICSOFT 2020 (pp. 172–179). SciTePress.", "url": "https://doi.org/10.5220/0009832601720179", "kw": r"Wifi|Hotspot|Router|Doorbell"},
+    {"id": "S29", "kind": "ระบบ", "about": "ควบคุมสิทธิ์การเข้าถึงและทรัพยากรของแอป serverless (Event-B)", "topics": ["IT"],
+     "checked": True, "ref": "Yagmahan, M. S. N., Rezazadeh, A., & Butler, M. (2024). An Event-B formal model for access "
+                            "control and resource management of serverless apps. In ABZ 2024 (LNCS 14759, pp. 181–190). "
+                            "Springer.", "url": "https://doi.org/10.1007/978-3-031-63790-2_11",
      "kw": r"Login|OTP|Auth|Access|Portal|Verification|Parental|Passport|Permit|Check-?In|CheckIn|Visitor"},
     {"id": "S30", "kind": "ระบบ", "about": "ประกอบ web service (BPEL) แล้วตรวจด้วย Event-B", "topics": ["IT"],
-     "ref": "Verification and validation of web service composition using Event B method. HAL hal-00634407.",
-     "url": "https://hal.archives-ouvertes.fr/hal-00634407",
-     "kw": r"Cloud|Pipeline|Gateway|Backup|Streaming|Publishing|Job|API|Escrow|Server|Insurance|Archive|Document"},
+     "checked": True, "ref": "Aït-Sadoune, I., & Aït-Ameur, Y. (2008). Verification and validation of web service "
+                            "composition using Event B method. In ABZ 2008 (LNCS 5238, pp. 339–340). Springer.",
+     "url": "https://doi.org/10.1007/978-3-540-87603-8_28",
+     "kw": r"Cloud|DataPipeline|CIPipeline|Gateway|Backup|Streaming|Publishing|Job|API|Server|Insurance|Archive|Document"},
     {"id": "S31", "kind": "ระบบ", "about": "คลังรูปแบบการสื่อสารสำหรับระบบกระจาย (Event-B)", "topics": ["IT"],
-     "ref": "Modeling communication semantics for distributed systems in Event-B. WTF (SBC).",
-     "url": "https://sol.sbc.org.br/index.php/wtf/article/view/23083",
+     "checked": True, "ref": "Dotti, F. L., & Ribeiro, L. (2012). Modeling communication semantics for distributed "
+                            "systems in Event-B. In Anais do XIII Workshop de Testes e Tolerância a Falhas (WTF 2012) "
+                            "(pp. 101–114). SBC.", "url": "https://doi.org/10.5753/wtf.2012.23083",
      "kw": r"Chat|Messag|SMS|Email|Notification|Broadcast|Podcast|Alert|Satellite"},
     # ── agriculture ──
     {"id": "S32", "kind": "ระบบ", "about": "ตัวควบคุมปั๊มน้ำ (Event-B, refine 2 ขั้น)", "topics": ["AGR"], "checked": True,
-     "ref": "Karmakar, R., Sarkar, B. B., & Chaki, N. (2020). Event-B based formal modeling of a controller: A case study. "
-            "EasyChair Preprint.", "url": "https://easychair.org/publications/preprint/NGXM",
-     "kw": r"Irrigation|Pump|Water|Rain|Leak|Aquarium|Sprinkler"},
+     "ref": "Karmakar, R., Sarkar, B. B., & Chaki, N. (2021). Event-B based formal modeling of a controller: A case study. "
+            "In COMSYS 2020 (AISC 1255, pp. 649–658). Springer.", "url": "https://doi.org/10.1007/978-981-15-7834-2_60",
+     "kw": r"Irrigation|Pump|Water|Rain|Aquarium|Sprinkler"},
     {"id": "S33", "kind": "formal อื่น", "about": "model checking สำหรับเกษตรแม่นยำ (timed automata)", "topics": ["AGR"],
-     "ref": "Model-checking pour l'agriculture de précision [doctoral thesis]. Université de Montpellier.",
-     "url": "https://esploro.umontpellier.fr/esploro/outputs/doctoral/Model-checking-pour-lagriculture-de-précision/9939414009311",
+     "checked": True, "ref": "Saddem, R. (2019). Model-checking pour l'agriculture de précision [Doctoral thesis, "
+                            "Université de Montpellier].", "url": "https://theses.hal.science/tel-02476234",
      "kw": r"Farm|Crop|Livestock|Beehive|Greenhouse|Soil|Milking|Feeder|Forest|Recycling|Waste|Trash"},
 ]
 
@@ -282,8 +323,9 @@ def similar_pdf(out, rows, sim):
              "<tr><td>ระบบ (S1–S33)</td><td>ระบบประเภทเดียวกับแบบจำลองของเรา จับคู่จากชื่อระบบ เช่น TrafficLightController "
              "↔ ไฟจราจร</td></tr>"
              "<tr><td>formal อื่น</td><td>ใช้ formal method อื่น (Petri net, timed automata) เพราะไม่พบงาน Event-B ที่ตรง</td></tr>"
-             f"<tr><td>✓ ตรวจแล้ว</td><td>เปิดตรวจชื่อเรื่องและผู้แต่งแล้ว ({checked} จาก {len(SIMILAR)} รายการ) — "
-             "รายการที่ไม่มี ✓ มาจากผลค้นหา ต้องเปิดตรวจชื่อเรื่อง ผู้แต่ง และปีก่อนอ้างในเล่ม</td></tr></table>")
+             f"<tr><td>✓ ตรวจแล้ว</td><td>ตรวจซ้ำแล้ว {checked} จาก {len(SIMILAR)} รายการ เมื่อ 27 ต.ค. 2026 — "
+             "เทียบผู้แต่ง ปี ชื่อเรื่อง แหล่งตีพิมพ์ และ DOI กับ Crossref / DOI / arXiv / HAL "
+             "และเปิดอ่านบทคัดย่อหรือเนื้อหาว่าตรงกับเรื่องที่ระบุ</td></tr></table>")
     h.append("<p><b>ข้อค้นพบ:</b> ไม่พบงานที่ใช้ LLM ทำนายผล Proof Obligation ของ Event-B ณ วันที่ค้น "
              "— เป็นช่องว่างที่งานนี้เติมได้</p>")
 
@@ -445,7 +487,7 @@ def write_sources(out):
     md += ["", "## งานที่คล้ายกับแบบจำลองของเรา", "",
            "ค้นจากเว็บเมื่อ 27 ต.ค. 2026 — คล้ายด้านระบบหรือวิธีการ **ไม่ใช่แหล่งที่มาของข้อมูล** "
            "แบบจำลองแต่ละตัวจับคู่กับงานเหล่านี้ใน `csv/similar_work.csv` (ตามชื่อระบบก่อน ถ้าไม่พบใช้ตามหัวข้อ) "
-           "✓ = เปิดตรวจชื่อเรื่องและผู้แต่งแล้ว รายการอื่นมาจากผลค้นหา ควรเปิดตรวจก่อนอ้างในเล่ม", "",
+           "✓ = ตรวจซ้ำแล้วเมื่อ 27 ต.ค. 2026 (ผู้แต่ง ปี ชื่อเรื่อง แหล่งตีพิมพ์ DOI และเนื้อหาตรงกับที่ระบุ เทียบกับ Crossref / DOI / arXiv / HAL)", "",
            "| รหัส | ด้าน | คล้ายเรื่อง | อ้างอิง | ตรวจ |", "|---|---|---|---|---|"]
     md += [f"| {x['id']} | {x['kind']} | {x['about']} | {x['ref']} {x['url']} | {'✓' if x.get('checked') else ''} |"
            for x in SIMILAR]
@@ -730,7 +772,7 @@ def pdf(out, rows, po_rows):
     sim = similar_rows(rows)
     h.append("<h3>งานที่คล้ายกับแบบจำลองของเรา</h3><p>ค้นจากเว็บเมื่อ 27 ต.ค. 2026 — คล้ายด้านระบบหรือวิธีการ "
              "<b>ไม่ใช่แหล่งที่มาของข้อมูล</b> · การจับคู่รายแบบจำลองอยู่ใน <code>csv/similar_work.csv</code> · "
-             "✓ = เปิดตรวจชื่อเรื่องและผู้แต่งแล้ว รายการอื่นมาจากผลค้นหา ควรเปิดตรวจก่อนอ้างในเล่ม</p><table style='font-size:8.4pt'><tr><th>รหัส</th><th>คล้ายเรื่อง</th>"
+             "✓ = ตรวจซ้ำแล้วเมื่อ 27 ต.ค. 2026 (ผู้แต่ง ปี ชื่อเรื่อง แหล่งตีพิมพ์ DOI และเนื้อหาตรงกับที่ระบุ เทียบกับ Crossref / DOI / arXiv / HAL)</p><table style='font-size:8.4pt'><tr><th>รหัส</th><th>คล้ายเรื่อง</th>"
              "<th>อ้างอิง</th><th>ตรวจ</th><th>แบบจำลอง</th></tr>")
     for x in SIMILAR:
         n = sum(x["id"] in "; ".join((q["similar_system"], q["similar_topic"], q["similar_method"])).split("; ")
