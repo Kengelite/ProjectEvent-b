@@ -1,6 +1,6 @@
 model_120  LiftMaintenance
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   attemptNo < 5
 
 2) Guard tree
@@ -10,7 +10,7 @@ model_120  LiftMaintenance
    เส้นทาง:
    a1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendlogJob_1
    b1   receivelogJob_1
    c1   sendvalidateJob_2
@@ -25,13 +25,13 @@ model_120  LiftMaintenance
    k2   checkloop_requestJob_3_loop1  (guard a1)
    l1   receivecancelFault_6
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
        ├── k1 → l1
        └── k2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendlogJob_1
        └── b1 receivelogJob_1
@@ -45,7 +45,7 @@ model_120  LiftMaintenance
                                        └── j1 receivesyncLock_5  (guard a1)
                                            ├── k1 sendcancelFault_6
                                            │   └── l1 receivecancelFault_6
-                                           └── k2 checkloop_requestJob_3_loop1  (guard a1)  ↺ กลับไป sendrequestJob_3
+                                           └── k2 checkloop_requestJob_3_loop1  (guard a1)  ↺ วนกลับไป sendrequestJob_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

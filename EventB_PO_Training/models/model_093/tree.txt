@@ -1,6 +1,6 @@
 model_093  FireSprinklerSystem
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   optIn = 1
 
 2) Guard tree
@@ -10,7 +10,7 @@ model_093  FireSprinklerSystem
    เส้นทาง:
    a1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendcheckValve_1
    b1   receivecheckValve_1
    c1   sendlogValve_2
@@ -24,11 +24,11 @@ model_093  FireSprinklerSystem
    k1   sendconfirmFire_6
    l1   receiveconfirmFire_6
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendcheckValve_1
        └── b1 receivecheckValve_1

@@ -1,6 +1,6 @@
 model_086  DormLaundry
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   cycleNo < 3
 
 2) Guard tree
@@ -10,7 +10,7 @@ model_086  DormLaundry
    เส้นทาง:
    a1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendackCredit_1
    b1   receiveackCredit_1
    c1   sendconfirmCredit_2
@@ -33,13 +33,13 @@ model_086  DormLaundry
    s1   sendqueryCredit_10
    t1   receivequeryCredit_10
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
        ├── i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
        └── i2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendackCredit_1
        └── b1 receiveackCredit_1
@@ -61,7 +61,7 @@ model_086  DormLaundry
                                    │                                   └── r1 receivecancelCycle_9
                                    │                                       └── s1 sendqueryCredit_10
                                    │                                           └── t1 receivequeryCredit_10
-                                   └── i2 checkloop_reserveMachine_3_loop1  (guard a1)  ↺ กลับไป sendreserveMachine_3
+                                   └── i2 checkloop_reserveMachine_3_loop1  (guard a1)  ↺ วนกลับไป sendreserveMachine_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1

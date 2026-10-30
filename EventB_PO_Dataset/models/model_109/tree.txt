@@ -1,6 +1,6 @@
 model_109  HospitalLabRequest
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   cycleNo < 8
    b1   cycleNo mod 3 = 0
    c1   attemptNo < 10
@@ -17,7 +17,7 @@ model_109  HospitalLabRequest
    a1 -> b1 -> c1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendcheckOrder_1
    b1   receivecheckOrder_1
    c1   sendrequestResult_2
@@ -43,7 +43,7 @@ model_109  HospitalLabRequest
    s2   checkloop_confirmOrder_3_loop1  (guard a1)
    t1   receivereserveSample_11
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
@@ -55,7 +55,7 @@ model_109  HospitalLabRequest
            ├── s1 → t1
            └── s2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendcheckOrder_1
        └── b1 receivecheckOrder_1
@@ -77,15 +77,15 @@ model_109  HospitalLabRequest
                            │                               │           └── r1 receiverequestSample_10  (guard a1)
                            │                               │               ├── s1 sendreserveSample_11
                            │                               │               │   └── t1 receivereserveSample_11
-                           │                               │               └── s2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ กลับไป sendconfirmOrder_3
-                           │                               └── o2 checkloop_ackSample_5_loop2  (guard a1 b1 c1)  ↺ กลับไป sendackSample_5
+                           │                               │               └── s2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ วนกลับไป sendconfirmOrder_3
+                           │                               └── o2 checkloop_ackSample_5_loop2  (guard a1 b1 c1)  ↺ วนกลับไป sendackSample_5
                            └── g2 sendreportSample_9  (guard a1 b2)
                                └── h2 receivereportSample_9  (guard a1 b2)
                                    └── q1 sendrequestSample_10  (guard a1)
                                        └── r1 receiverequestSample_10  (guard a1)
                                            ├── s1 sendreserveSample_11
                                            │   └── t1 receivereserveSample_11
-                                           └── s2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ กลับไป sendconfirmOrder_3
+                                           └── s2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ วนกลับไป sendconfirmOrder_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1

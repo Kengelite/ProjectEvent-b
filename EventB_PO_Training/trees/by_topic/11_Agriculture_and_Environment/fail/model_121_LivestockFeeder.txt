@@ -1,6 +1,6 @@
 model_121  LivestockFeeder
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   approved = 1
    b1   express = 1
    a2   approved = 0
@@ -15,7 +15,7 @@ model_121  LivestockFeeder
    a1 -> b1
    a2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreportRation_1
    b1   receivereportRation_1
    c1   sendsyncFeed_2
@@ -33,13 +33,13 @@ model_121  LivestockFeeder
    m1   sendconfirmRation_8
    n1   receiveconfirmRation_8
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1
        ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
        └── e2 → f2 → m1 → n1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreportRation_1
        └── b1 receivereportRation_1

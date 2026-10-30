@@ -1,6 +1,6 @@
 model_043  ThermostatControl
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   cycle < 5
    b1   overheat = 1
    b2   overheat = 0
@@ -15,7 +15,7 @@ model_043  ThermostatControl
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendstartHeating_1
    b1   receivestartHeating_1
    c1   sendheatingAck_2
@@ -32,7 +32,7 @@ model_043  ThermostatControl
    k2   checkloop_queryTemp_3_loop1  (guard a1)
    l1   receivestopHeating_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
        ├── i1 → j1
@@ -42,7 +42,7 @@ model_043  ThermostatControl
            ├── k1 → l1
            └── k2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendstartHeating_1
        └── b1 receivestartHeating_1
@@ -56,12 +56,12 @@ model_043  ThermostatControl
                                    │   └── j1 receivereducePower_5  (guard a1 b1)
                                    │       ├── k1 sendstopHeating_7
                                    │       │   └── l1 receivestopHeating_7
-                                   │       └── k2 checkloop_queryTemp_3_loop1  (guard a1)  ↺ กลับไป sendqueryTemp_3
+                                   │       └── k2 checkloop_queryTemp_3_loop1  (guard a1)  ↺ วนกลับไป sendqueryTemp_3
                                    └── i2 sendkeepPower_6  (guard a1 b2)
                                        └── j2 receivekeepPower_6  (guard a1 b2)
                                            ├── k1 sendstopHeating_7
                                            │   └── l1 receivestopHeating_7
-                                           └── k2 checkloop_queryTemp_3_loop1  (guard a1)  ↺ กลับไป sendqueryTemp_3
+                                           └── k2 checkloop_queryTemp_3_loop1  (guard a1)  ↺ วนกลับไป sendqueryTemp_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

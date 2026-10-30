@@ -1,6 +1,6 @@
 model_139  PatientIntakeForm
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   attemptNo < 5
    b1   attemptNo mod 2 = 0
 
@@ -12,7 +12,7 @@ model_139  PatientIntakeForm
    เส้นทาง:
    a1 -> b1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreleaseForm_1
    b1   receivereleaseForm_1
    c1   sendcancelForm_2
@@ -31,13 +31,13 @@ model_139  PatientIntakeForm
    o2   checkloop_confirmForm_3_loop1  (guard a1)
    p1   receiveassignRecord_8
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
        ├── o1 → p1
        └── o2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreleaseForm_1
        └── b1 receivereleaseForm_1
@@ -55,7 +55,7 @@ model_139  PatientIntakeForm
                                                        └── n1 receiveissueForm_7  (guard a1)
                                                            ├── o1 sendassignRecord_8
                                                            │   └── p1 receiveassignRecord_8
-                                                           └── o2 checkloop_confirmForm_3_loop1  (guard a1)  ↺ กลับไป sendconfirmForm_3
+                                                           └── o2 checkloop_confirmForm_3_loop1  (guard a1)  ↺ วนกลับไป sendconfirmForm_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

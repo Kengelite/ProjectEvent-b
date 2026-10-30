@@ -1,6 +1,6 @@
 model_181  SolarPanelMonitor
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   attemptNo < 8
    b1   attemptNo mod 2 = 0
    b2   attemptNo mod 2 ≠ 0
@@ -15,7 +15,7 @@ model_181  SolarPanelMonitor
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendackPower_1
    b1   receiveackPower_1
    c1   sendapproveExport_2
@@ -34,7 +34,7 @@ model_181  SolarPanelMonitor
    m2   checkloop_issuePower_3_loop1  (guard a1)
    n1   receivereserveExport_8
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1 → k1 → l1
@@ -44,7 +44,7 @@ model_181  SolarPanelMonitor
            ├── m1 → n1
            └── m2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendackPower_1
        └── b1 receiveackPower_1
@@ -60,14 +60,14 @@ model_181  SolarPanelMonitor
                            │                   └── l1 receivereportExport_7  (guard a1)
                            │                       ├── m1 sendreserveExport_8
                            │                       │   └── n1 receivereserveExport_8
-                           │                       └── m2 checkloop_issuePower_3_loop1  (guard a1)  ↺ กลับไป sendissuePower_3
+                           │                       └── m2 checkloop_issuePower_3_loop1  (guard a1)  ↺ วนกลับไป sendissuePower_3
                            └── g2 sendcheckPower_6  (guard a1 b2)
                                └── h2 receivecheckPower_6  (guard a1 b2)
                                    └── k1 sendreportExport_7  (guard a1)
                                        └── l1 receivereportExport_7  (guard a1)
                                            ├── m1 sendreserveExport_8
                                            │   └── n1 receivereserveExport_8
-                                           └── m2 checkloop_issuePower_3_loop1  (guard a1)  ↺ กลับไป sendissuePower_3
+                                           └── m2 checkloop_issuePower_3_loop1  (guard a1)  ↺ วนกลับไป sendissuePower_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

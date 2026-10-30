@@ -1,6 +1,6 @@
 model_001  Payment & Notification
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   Login = 1
    b1   amount_1 ≥ 1000
    b2   amount_1 < 1000
@@ -23,7 +23,7 @@ model_001  Payment & Notification
    a1 -> b2 -> c1
    c2 -> d1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsubmitPayment_1_opt1  (guard a1)
    a2   sendvalidatePayment_7_loop3  (guard c2)
    b1   receivesubmitPayment_1_opt1  (guard a1)
@@ -48,7 +48,7 @@ model_001  Payment & Notification
    m1   sendpaymentStatus_11
    n1   receivepaymentStatus_11
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    ├── a1 → b1 → c1 → d1
    │   ├── e1 → f1 → g1 → h1 → i1
@@ -57,7 +57,7 @@ model_001  Payment & Notification
        ├── k1 → l1 → m1 → n1
        └── k2
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    ├── a1 sendsubmitPayment_1_opt1  (guard a1)
    │   └── b1 receivesubmitPayment_1_opt1  (guard a1)

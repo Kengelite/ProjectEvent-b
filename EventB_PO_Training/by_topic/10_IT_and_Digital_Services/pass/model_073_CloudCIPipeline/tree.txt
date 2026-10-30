@@ -1,6 +1,6 @@
 model_073  CloudCIPipeline
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   useCache = 1
    b1   optIn = 1
    c1   retryNo < 11
@@ -14,7 +14,7 @@ model_073  CloudCIPipeline
    เส้นทาง:
    a1 -> b1 -> c1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreportImage_1
    b1   receivereportImage_1
    c1   sendissueImage_2
@@ -39,13 +39,13 @@ model_073  CloudCIPipeline
    u2   checkloop_logCommit_9_loop1  (guard c1)
    v1   receiveconfirmCommit_11
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
        ├── u1 → v1
        └── u2 ↺ q1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreportImage_1
        └── b1 receivereportImage_1
@@ -69,7 +69,7 @@ model_073  CloudCIPipeline
                                                                                └── t1 receivefetchBuild_10  (guard c1)
                                                                                    ├── u1 sendconfirmCommit_11
                                                                                    │   └── v1 receiveconfirmCommit_11
-                                                                                   └── u2 checkloop_logCommit_9_loop1  (guard c1)  ↺ กลับไป sendlogCommit_9
+                                                                                   └── u2 checkloop_logCommit_9_loop1  (guard c1)  ↺ วนกลับไป sendlogCommit_9
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1

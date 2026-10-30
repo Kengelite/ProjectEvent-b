@@ -18,31 +18,52 @@ pre.tree { font-family: Menlo, monospace; font-size: 8pt; line-height: 1.35; bac
 .model h4 .res-pass { color: #2e7d5b; } .model h4 .res-fail { color: #c0392b; }
 .cols { display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); gap: 10px; }
 .cols .lbl { font-size: 8.4pt; color: #5a6475; font-weight: bold; margin-top: 2px; }
-table.codes { font-size: 8.2pt; margin: 2px 0 4px; } table.codes td { padding: 1px 6px; }
+table.codes { font-size: 8.2pt; margin: 2px 0 4px; } table.codes td { padding: 1px 6px; line-height: 1.3; }
 table.codes td.k { font-family: Menlo, monospace; font-weight: bold; color: #2f5fa8; width: 34px; }
-.ecodes { font-family: Menlo, monospace; font-size: 7.4pt; columns: 2; column-gap: 12px; line-height: 1.35; margin: 2px 0 4px; overflow-wrap: anywhere; }
+table.ev { font-size: 7.6pt; } table.ev th { font-size: 7.6pt; padding: 1px 6px; }
+table.ev td { font-family: Menlo, monospace; overflow-wrap: anywhere; padding: 0 6px; line-height: 1.3; } table.ev td.g { color: #5a6475; width: 22%; }
 .paths { font-family: Menlo, monospace; font-size: 7.6pt; line-height: 1.4; overflow-wrap: normal; word-break: normal; }
 .none { color: #8a93a3; font-size: 8.6pt; }
 .rule { border-left: 4px solid #2f5fa8; background: #eef3fb; padding: 6px 10px; margin: 6px 0; }
+.rule ul { margin: 3px 0 0; padding-left: 18px; } .rule li { margin: 1px 0; }
 """
 
 
 def guard_block(t):
     gc = t["guard_codes"]
     if not gc:
-        return "<div class='none'>ไม่มีเงื่อนไขจากแผนภาพ (ลำดับข้อความอย่างเดียว)</div>"
+        return "<div class='none'>ไม่มีเงื่อนไขจากแผนภาพ</div>"
     rows = "".join(f"<tr><td class='k'>{c}</td><td>{esc(g)}</td></tr>" for c, g in gc.items())
     tree = "\n".join(["(root)"] + draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}"))
     return (f"<table class='codes'>{rows}</table><pre class='tree'>{esc(tree)}</pre>"
-            "<div class='lbl'>เส้นทาง</div><div class='paths'>" + "<br>".join(esc(p) for p in t["guard_paths"]) + "</div>")
+            "<div class='lbl'>เส้นทาง</div><div class='paths'>" + "<br>".join(path_html(p) for p in t["guard_paths"]) + "</div>")
+
+
+def path_html(p):
+    """A path that wraps only between steps, never inside an arrow."""
+    return esc(p).replace("-&gt;", "-\u2060&gt;")
 
 
 def event_block(t):
-    codes = "<br>".join(f"<b>{c}</b> {esc(n)}" + (f" (guard {' '.join(t['event_guards'][c])})" if t["event_guards"][c] else "")
-                        for c, n in t["event_codes"].items())
+    rows = "".join(f"<tr><td class='k'>{c}</td><td>{esc(n)}</td><td class='g'>{' '.join(t['event_guards'][c])}</td></tr>"
+                   for c, n in t["event_codes"].items())
     tree = "\n".join(["(root) INITIALISATION"] + draw_events_compact(t["event_tree"], width=8))
-    return (f"<div class='ecodes'>{codes}</div><pre class='tree'>{esc(tree)}</pre><div class='lbl'>เส้นทาง</div>"
-            "<div class='paths'>" + "<br>".join(esc(p) for p in t["event_paths"]) + "</div>")
+    return (f"<table class='codes ev'><tr><th>รหัส</th><th>event</th><th>guard</th></tr>{rows}</table>"
+            f"<pre class='tree'>{esc(tree)}</pre><div class='lbl'>เส้นทาง</div>"
+            "<div class='paths'>" + "<br>".join(path_html(p) for p in t["event_paths"]) + "</div>")
+
+
+GUARD_RULE = ("<div class='rule'><b>รหัส guard</b><ul>"
+              "<li><b>ตัวอักษร</b> คือจุดตัดสินใจ เงื่อนไขที่นิพจน์ด้านซ้ายเหมือนกันใช้ตัวอักษรเดียวกัน "
+              "เช่น <code>mode = GOLD</code> และ <code>mode = SILVER</code> เป็นตัว b ทั้งคู่</li>"
+              "<li><b>ตัวเลข</b> คือทางเลือกของจุดตัดสินใจนั้น เช่น b1, b2, b3</li>"
+              "<li>ตัวอักษรและตัวเลขเรียงตามลำดับที่พบในแบบจำลอง</li></ul></div>")
+EVENT_RULE = ("<div class='rule'><b>รหัส event</b> (send และ receive นับเป็นคนละ event)<ul>"
+              "<li><b>ตัวอักษร</b> คือลำดับขั้น event ที่ต่อกันเป็นเส้นตรงได้ตัวอักษรใหม่ทุกขั้น (a1 → b1 → c1)</li>"
+              "<li><b>ตัวเลข</b> คือทางเลือกที่จุดแยก event ขั้นเดียวกันของแต่ละกิ่งใช้ตัวอักษรเดียวกัน "
+              "เช่น กิ่ง GOLD, SILVER, BRONZE ได้ m1, m2, m3 และขั้นถัดไปได้ n1, n2, n3</li>"
+              "<li>ท้าย loop เป็นจุดแยกเช่นกัน คือทำต่อ (o1) หรือวนรอบใหม่ (o2)</li>"
+              "<li>event ที่กิ่งมารวมกันได้ตัวอักษรใหม่ (q1)</li></ul></div>")
 
 
 def render(rows, trees):
@@ -50,64 +71,61 @@ def render(rows, trees):
     n_guard = sum(bool(trees[r["id"]]["guard_codes"]) for r in have)
     gp = Counter(len(trees[r["id"]]["guard_paths"]) for r in have)
     h = ["<h1>Event tree และ Guard tree</h1>",
-         f"<div class='sub'>สกัดจากแบบจำลอง Event-B {len(have)} ตัว (model.txt ที่ได้จาก ChronoSeq-B โดยไม่แก้ไข) · "
-         f"มีเงื่อนไขจากแผนภาพ {n_guard} ตัว · ไม่มีเงื่อนไข {len(have) - n_guard} ตัว</div>"]
+         f"<div class='sub'>แบบจำลอง {len(have)} ตัว · มีเงื่อนไขจากแผนภาพ {n_guard} ตัว · "
+         f"ไม่มีเงื่อนไข {len(have) - n_guard} ตัว</div>"]
 
-    h.append("<h2>1. หลักการ</h2>")
-    h.append("<p>guard ในแบบจำลองแบ่งได้ 2 กลุ่ม</p><table><tr><th style='width:30%'>กลุ่ม</th><th>ตัวอย่าง</th><th style='width:18%'>ใช้ทำ</th></tr>"
-             "<tr><td>guard ควบคุมลำดับข้อความ (สูตรแปลงสร้างให้ทุกข้อความ)</td><td><code>m ∉ sentMessages</code>, "
+    h.append("<h2>1. ที่มาของ tree</h2>")
+    h.append("<p>tree ทั้งสองแบบสร้างจาก guard ในแบบจำลอง Event-B ที่ได้จาก ChronoSeq-B โดยไม่แก้ไขแบบจำลอง</p>"
+             "<p>guard ในแบบจำลองแบ่งเป็น 2 กลุ่ม ดังนี้</p>"
+             "<table><tr><th style='width:34%'>กลุ่ม</th><th>ตัวอย่าง</th><th style='width:16%'>ใช้สร้าง</th></tr>"
+             "<tr><td>guard ลำดับข้อความ (สูตรแปลงสร้างให้ทุกข้อความ)</td><td><code>m ∉ sentMessages</code>, "
              "<code>p ∈ receivedMessages</code>, <code>currentMessage = ∅</code></td><td>Event tree</td></tr>"
-             "<tr><td>guard เงื่อนไขจากแผนภาพ (loop / alt / opt)</td><td><code>cycleNo &lt; 8</code>, "
+             "<tr><td>guard เงื่อนไขจากแผนภาพ (loop, alt, opt)</td><td><code>cycleNo &lt; 8</code>, "
              "<code>mode = GOLD</code>, <code>cycleNo mod 3 = 0</code></td><td>Guard tree</td></tr></table>")
-    h.append("<div class='rule'><b>การตั้งรหัส guard</b><br>"
-             "• <b>ตัวอักษร</b> = จุดตัดสินใจ: guard ที่นิพจน์ด้านซ้ายเหมือนกันใช้ตัวอักษรเดียวกัน "
-             "(<code>mode = GOLD</code> กับ <code>mode = SILVER</code> เป็นตัว b ทั้งคู่)<br>"
-             "• <b>ตัวเลข</b> = ทางเลือกของจุดตัดสินใจนั้น เรียงตามลำดับที่พบในไฟล์ (b1, b2, b3)<br>"
-             "• ตัวอักษรเรียงตามลำดับที่พบในไฟล์ (a, b, c …)</div>")
-    h.append("<div class='rule'><b>การตั้งรหัส event</b> (ใช้หลักเดียวกับ guard · send และ receive เป็นคนละ event)<br>"
-             "• <b>ตัวอักษร</b> = ลำดับขั้น: event ที่ต่อกันเป็นเส้นตรงได้ตัวอักษรใหม่ทีละขั้น (a1 → b1 → c1)<br>"
-             "• <b>ตัวเลข</b> = ทางเลือกตรงจุดแยกกิ่ง: event ขั้นเดียวกันของแต่ละกิ่งใช้ตัวอักษรเดียวกัน "
-             "(กิ่ง GOLD / SILVER / BRONZE → m1 / m2 / m3 แล้วขั้นถัดไป n1 / n2 / n3) · ท้าย loop แยกเป็น "
-             "ทำต่อ (o1) กับวนรอบใหม่ (o2)<br>"
-             "• event ที่หลายกิ่งมารวมกันได้ตัวอักษรใหม่ (q1) · ในวงเล็บ (guard …) คือรหัส guard ของ event นั้น</div>")
-    h.append("<div class='rule'><b>การสร้าง tree</b><br>"
-             "• <b>Event tree</b>: send m → receive m และ receive p → send m เมื่อ send m มี guard "
-             "<code>p ∈ receivedMessages</code> · alt แตกเป็นหลายกิ่ง · หลัง alt ที่มี guard แบบ "
-             "<code>p ∈ receivedMessages ∨ q ∈ receivedMessages</code> ทุกกิ่งต่อด้วย event เดียวกัน · "
-             "event นับรอบ loop (checkloop) อยู่ท้าย loop และมีลูกศร ↺ กลับไปจุดเริ่ม loop<br>"
-             "• ในเอกสารนี้ event tree แสดงแบบย่อ: event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว (a1 → b1 → c1) "
-             "และแตกบรรทัดเฉพาะจุดที่แยกกิ่ง · รูปเต็มอยู่ใน <code>models/&lt;id&gt;/tree.txt</code><br>"
-             "• <b>Guard tree</b>: เดินตามแต่ละเส้นทางของ event tree แล้วเก็บรหัส guard ตามลำดับที่พบครั้งแรก "
-             "จึงได้ทั้งเงื่อนไขซ้อนกัน (loop ที่มี alt ข้างใน) และเงื่อนไขที่มาต่อกัน (opt แล้วตามด้วย alt)</div>")
 
-    h.append("<h2>2. ตัวอย่าง</h2>")
-    h.append("<p><b>ตัวอย่างหลักการ</b>: guard แรกคือ <code>age &gt; 50</code> และจุดถัดไปมี 2 ทางเลือก "
-             "<code>salary ≥ 500</code> กับ <code>salary &lt; 500</code></p>")
+    h.append("<h2>2. การตั้งรหัส</h2>" + GUARD_RULE + EVENT_RULE)
+
+    h.append("<h2>3. การสร้าง tree</h2><ul>"
+             "<li><b>Event tree</b> — receive ตามหลัง send ของข้อความเดียวกัน และ send ของข้อความ m ตามหลัง receive "
+             "ของข้อความ p เมื่อ send m มี guard <code>p ∈ receivedMessages</code></li>"
+             "<li>alt ทำให้ tree แยกกิ่ง และกิ่งกลับมารวมที่ event ที่มี guard "
+             "<code>p ∈ receivedMessages ∨ q ∈ receivedMessages</code></li>"
+             "<li>event นับรอบ loop อยู่ท้าย loop เครื่องหมาย ↺ ชี้กลับไปยัง event แรกของ loop</li>"
+             "<li><b>Guard tree</b> — ไล่ตามแต่ละเส้นทางของ event tree แล้วบันทึกรหัส guard ตามลำดับที่พบครั้งแรก "
+             "จึงแสดงได้ทั้งเงื่อนไขที่ซ้อนกัน (alt ใน loop) และเงื่อนไขที่ต่อกัน (opt ตามด้วย alt)</li>"
+             "<li>เอกสารนี้แสดง event tree แบบย่อ คือ event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว "
+             "และขึ้นบรรทัดใหม่เฉพาะที่จุดแยก รูปเต็มอยู่ใน <code>models/&lt;id&gt;/tree.txt</code></li></ul>")
+
+    h.append("<h2>4. ตัวอย่าง</h2>")
+    h.append("<p><b>ตัวอย่างพื้นฐาน</b> เงื่อนไขแรกคือ <code>age &gt; 50</code> จากนั้นมี 2 ทางเลือก คือ "
+             "<code>salary ≥ 500</code> และ <code>salary &lt; 500</code></p>")
     h.append("<table class='codes'><tr><td class='k'>a1</td><td>age &gt; 50</td></tr>"
              "<tr><td class='k'>b1</td><td>salary ≥ 500</td></tr><tr><td class='k'>b2</td><td>salary &lt; 500</td></tr></table>"
              "<pre class='tree'>(root)\n└── a1  age &gt; 50\n    ├── b1  salary ≥ 500\n    └── b2  salary &lt; 500\n\n"
              "เส้นทาง:  a1 -&gt; b1\n           a1 -&gt; b2</pre>")
-    for mid, why in (("model_141", "opt แล้วตามด้วย alt 3 ทาง (เงื่อนไขมาต่อกัน)"),
-                     ("model_109", "loop ที่มี alt อยู่ข้างใน และมี loop ซ้อนในกิ่งแรก (เงื่อนไขซ้อนกัน)")):
+    for mid, why in (("model_141", "opt ตามด้วย alt 3 ทาง (เงื่อนไขต่อกัน)"),
+                     ("model_109", "alt ใน loop และกิ่งแรกมี loop ซ้อน (เงื่อนไขซ้อนกัน)")):
         r = next(x for x in rows if x["id"] == mid)
         t = trees[mid]
         h.append(f"<div class='model'><h3>{mid} {esc(r['case'])} — {esc(why)}</h3>"
                  f"<div class='cols'><div><div class='lbl'>Guard tree</div>{guard_block(t)}</div>"
                  f"<div><div class='lbl'>Event tree</div>{event_block(t)}</div></div></div>")
 
-    h.append("<h2>3. สรุปทั้งชุด</h2>")
+    h.append("<h2>5. ภาพรวมทั้งชุด</h2>")
     h.append("<table><tr><th>จำนวนเส้นทางใน guard tree</th>" + "".join(f"<th>{k}</th>" for k in sorted(gp)) + "</tr>"
              "<tr><td>จำนวนแบบจำลอง</td>" + "".join(f"<td class='n'>{gp[k]}</td>" for k in sorted(gp)) + "</tr></table>")
-    h.append("<p>0 = ไม่มีเงื่อนไขจากแผนภาพ · ไฟล์ของแต่ละแบบจำลอง: <code>models/&lt;id&gt;/tree.txt</code> (รูป tree เต็ม) และ "
-             "<code>tree.json</code> · รวมทุกแบบจำลอง: <code>data/trees.jsonl</code>, <code>trees/guard_codes.csv</code>, "
-             "<code>trees/event_codes.csv</code> · "
-             "<b>model_001</b>: model.txt มีเฉพาะชื่อ event จึงอ่าน event และ guard จากไฟล์ proof obligation ของ Rodin (.bpo) แทน · "
-             "มี 1 event ที่ไฟล์ Rodin ไม่เก็บชื่อไว้ (แสดงเป็น unnamed_event_N, guard <code>retry &lt; 3</code>) · "
-             "แบบจำลองนี้แปลงด้วยสูตรรุ่นแรก ส่วน loop และ par จึงไม่มี guard อ้างข้อความก่อนหน้า event tree จึงแยกเป็นหลายกิ่งจาก root</p>")
+    h.append("<ul><li>0 คือแบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพ จึงมีเฉพาะ event tree</li>"
+             "<li>tree ของแต่ละแบบจำลองอยู่ใน <code>models/&lt;id&gt;/tree.txt</code> และ <code>tree.json</code> "
+             "ส่วนข้อมูลรวมทุกแบบจำลองอยู่ใน <code>data/trees.jsonl</code>, <code>trees/guard_codes.csv</code> "
+             "และ <code>trees/event_codes.csv</code></li>"
+             "<li><b>model_001</b> — model.txt มีเพียงชื่อ event จึงใช้ event และ guard จากไฟล์ .bpo ของ Rodin แทน "
+             "มี 1 event ที่ไม่มีชื่อในไฟล์ (unnamed_event_N, guard <code>retry &lt; 3</code>) "
+             "และเนื่องจากแปลงด้วยสูตรรุ่นแรก event tree จึงแยกเป็นหลายกิ่งจาก root</li></ul>")
 
-    h.append("<h2 style='break-before:page'>4. รหัสและเส้นทางของแต่ละแบบจำลอง</h2>")
-    h.append("<p>ซ้าย: รหัส guard, guard tree และเส้นทาง · ขวา: รหัส event (ในวงเล็บคือ guard ของ event นั้น), "
-             "event tree แบบย่อ และเส้นทาง · ↺ x = จบรอบ loop แล้วกลับไปที่ event x</p>")
+    h.append("<h2 style='break-before:page'>6. tree ของแต่ละแบบจำลอง</h2>")
+    h.append("<p>แต่ละแบบจำลองแสดง 2 ส่วน ด้านซ้ายคือ guard (รหัส, tree, เส้นทาง) ด้านขวาคือ event "
+             "(รหัส, tree แบบย่อ, เส้นทาง) คอลัมน์ guard ในตาราง event คือรหัส guard ของ event นั้น "
+             "และ ↺ x หมายถึงวนกลับไปที่ event x</p>")
     for code, (en, th) in TOPIC_NAMES.items():
         group = [r for r in have if r["topic"] == en]
         h.append(f"<h3>{esc(th)} · {esc(en)} ({len(group)})</h3>")
@@ -129,14 +147,15 @@ def main(out, rows, trees):
                        check=True, capture_output=True)
 
 
-CHECKS = [("C1", "ข้อความ", "ข้อความในแผนภาพตรงกับ event send / receive ใน Event-B ครบและเรียงลำดับเดียวกัน"),
-          ("C2", "guard ราย event", "เงื่อนไขที่ครอบแต่ละข้อความในแผนภาพ ตรงกับ guard ของ event send และ receive ของข้อความนั้น"),
-          ("C3", "รหัส guard", "มีรหัสครบทุกเงื่อนไขในแผนภาพ และไม่มีรหัสเกิน"),
-          ("C4", "ลำดับ event", "event ก่อนหน้าของทุก event ตรงกับลำดับที่ได้จากแผนภาพ รวมจุดแยกกิ่งและจุดรวมของ alt"),
-          ("C5", "loop", "event นับรอบ loop มีครบทุก loop มี guard ถูกต้อง อยู่ท้ายส่วนที่วน และย้อนกลับจุดเริ่มถูกต้อง"),
-          ("C6", "รหัส event", "1 event มี 1 รหัส · ทางเลือกตรงจุดแยกกิ่งใช้ตัวอักษรเดียวกันและเลขไม่ซ้ำ · เส้นตรงไม่ใช้ตัวอักษรซ้ำ"),
-          ("C7", "เส้นทาง guard", "เส้นทางใน guard tree ตรงกับทุกทางที่เป็นไปได้ในแผนภาพ"),
-          ("C8", "ไฟล์", "ไฟล์ในชุดเทรน (models/, data/trees.jsonl, trees/guard_codes.csv) ตรงกับต้นฉบับทุกไฟล์")]
+CHECKS = [("C1", "ข้อความ", "ทุกข้อความในแผนภาพมี event send และ receive ครบ และเรียงลำดับตรงกัน"),
+          ("C2", "guard ของ event", "เงื่อนไขที่ครอบข้อความในแผนภาพตรงกับ guard ของ event send และ receive ของข้อความนั้น"),
+          ("C3", "รหัส guard", "ทุกเงื่อนไขในแผนภาพมีรหัส และไม่มีรหัสเกิน"),
+          ("C4", "ลำดับ event", "event ก่อนหน้าของทุก event ตรงกับแผนภาพ รวมถึงจุดแยกและจุดรวมของ alt"),
+          ("C5", "loop", "ทุก loop มี event นับรอบ มี guard ถูกต้อง อยู่ท้าย loop และวนกลับไปยัง event แรกของ loop"),
+          ("C6", "รหัส event", "event หนึ่งมีรหัสเดียว ทางเลือกที่จุดแยกใช้ตัวอักษรเดียวกันโดยตัวเลขไม่ซ้ำ "
+                              "และเส้นตรงไม่ใช้ตัวอักษรซ้ำ"),
+          ("C7", "เส้นทาง guard", "เส้นทางใน guard tree ครบทุกทางที่เป็นไปได้ในแผนภาพ"),
+          ("C8", "ไฟล์", "ไฟล์ในชุดเทรน (models/, data/trees.jsonl, trees/guard_codes.csv) ตรงกับต้นฉบับ")]
 
 
 def summary(out, rows, trees, stats, check):
@@ -151,109 +170,111 @@ def summary(out, rows, trees, stats, check):
     gp = Counter(s["guard_paths"] for s in stats)
     ev = sorted(s["events"] for s in stats)
     h = ["<h1>สรุปงาน Event tree และ Guard tree</h1>",
-         f"<div class='sub'>{n} แบบจำลอง · ตรวจกับแผนภาพต้นฉบับ {len(diag)} แบบจำลอง และกับไฟล์ Rodin 1 แบบจำลอง (model_001)</div>",
+         f"<div class='sub'>แบบจำลอง {n} ตัว · ตรวจกับแผนภาพต้นฉบับ {len(diag)} ตัว "
+         f"และกับไฟล์ Rodin {n - len(diag)} ตัว (model_001)</div>",
          "<div class='kpi'>"
-         f"<div><b>{n}</b><span>แบบจำลองที่มี tree</span></div>"
-         f"<div><b>{ok} / {n}</b><span>ผ่านการตรวจทุกข้อ</span></div>"
-         f"<div><b>{sum(s['guard_codes'] for s in stats):,}</b><span>รหัส guard รวม</span></div>"
-         f"<div><b>{sum(s['events'] for s in stats):,}</b><span>รหัส event รวม</span></div></div>"]
+         f"<div><b>{n}</b><span>แบบจำลอง</span></div>"
+         f"<div><b>{ok} / {n}</b><span>ผ่านการตรวจครบทุกข้อ</span></div>"
+         f"<div><b>{sum(s['guard_codes'] for s in stats):,}</b><span>รหัส guard</span></div>"
+         f"<div><b>{sum(s['events'] for s in stats):,}</b><span>รหัส event</span></div></div>"]
 
-    h.append("<h2>1. งานนี้ทำอะไร</h2>")
-    h.append("<p>สกัด tree 2 แบบจากแบบจำลอง Event-B ทุกตัว โดยใช้ <code>model.txt</code> ที่ได้จาก ChronoSeq-B ตามเดิม ไม่แก้ไข "
-             "(model_001 มีเฉพาะชื่อ event จึงอ่านจากไฟล์ proof obligation ของ Rodin แทน)</p>"
-             "<table><tr><th style='width:18%'>tree</th><th>node คืออะไร</th><th style='width:34%'>ได้จาก</th></tr>"
-             "<tr><td>Event tree</td><td>event ของ Event-B (send และ receive แยกกัน) เรียงตามลำดับที่ทำงานได้</td>"
-             "<td>guard ควบคุมลำดับ เช่น <code>p ∈ receivedMessages</code></td></tr>"
-             "<tr><td>Guard tree</td><td>เงื่อนไขจากแผนภาพ (loop / alt / opt) เรียงตามลำดับที่พบเมื่อระบบทำงาน</td>"
+    h.append("<h2>1. ภาพรวม</h2>")
+    h.append("<p>สร้าง tree 2 แบบให้แบบจำลอง Event-B ทุกตัวที่ได้จาก ChronoSeq-B โดยใช้ guard ในแบบจำลองตามเดิม ไม่แก้ไข</p>"
+             "<table><tr><th style='width:16%'>tree</th><th>node</th><th style='width:38%'>สร้างจาก</th></tr>"
+             "<tr><td>Event tree</td><td>event ของ Event-B (send และ receive แยกกัน)</td>"
+             "<td>guard ลำดับข้อความ เช่น <code>p ∈ receivedMessages</code></td></tr>"
+             "<tr><td>Guard tree</td><td>เงื่อนไขจากแผนภาพ (loop, alt, opt)</td>"
              "<td>guard เงื่อนไข เช่น <code>mode = GOLD</code></td></tr></table>")
 
-    h.append("<h2>2. หลักการตั้งรหัส</h2>")
-    h.append("<table><tr><th style='width:14%'></th><th>ตัวอักษร</th><th>ตัวเลข</th><th style='width:26%'>ตัวอย่าง</th></tr>"
-             "<tr><td>guard</td><td>จุดตัดสินใจ: guard ที่นิพจน์ด้านซ้ายเหมือนกันใช้ตัวอักษรเดียวกัน</td>"
-             "<td>ทางเลือกของจุดนั้น</td><td><code>mode = GOLD</code> b1<br><code>mode = SILVER</code> b2</td></tr>"
-             "<tr><td>event</td><td>ลำดับขั้น: event ที่ต่อกันเป็นเส้นตรงได้ตัวอักษรใหม่ทีละขั้น</td>"
-             "<td>ทางเลือกตรงจุดแยกกิ่ง (alt หรือ วนรอบใหม่ / ทำต่อ)</td><td>m1 / m2 / m3 = event แรกของแต่ละกิ่ง</td></tr></table>")
-    h.append("<p>event ที่หลายกิ่งมารวมกันได้ตัวอักษรใหม่ · ถ้าทางเลือกหนึ่งเป็นจุดรวม ทางเลือกอื่นตรงจุดแยกนั้นใช้ตัวอักษรของจุดรวม "
-             "(รหัสจึงไม่ขึ้นกับลำดับที่อ่านกิ่ง)</p>")
-    from extract_trees import draw_events_compact
+    h.append("<h2>2. การตั้งรหัส</h2>")
+    h.append("<table><tr><th style='width:11%'></th><th>ตัวอักษร</th><th>ตัวเลข</th><th style='width:27%'>ตัวอย่าง</th></tr>"
+             "<tr><td>guard</td><td>จุดตัดสินใจ (เงื่อนไขที่นิพจน์ด้านซ้ายเหมือนกันใช้ตัวอักษรเดียวกัน)</td>"
+             "<td>ทางเลือกของจุดตัดสินใจ</td><td><code>mode = GOLD</code> → b1<br><code>mode = SILVER</code> → b2</td></tr>"
+             "<tr><td>event</td><td>ลำดับขั้น (event ที่ต่อกันเป็นเส้นตรงได้ตัวอักษรใหม่ทุกขั้น)</td>"
+             "<td>ทางเลือกที่จุดแยก (alt หรือท้าย loop)</td><td>event แรกของ 3 กิ่ง → m1, m2, m3</td></tr></table>")
+    h.append("<p>event ที่กิ่งมารวมกันได้ตัวอักษรใหม่ ถ้าทางเลือกใดเป็นจุดรวม ทางเลือกอื่นที่จุดแยกเดียวกันใช้ตัวอักษรนั้นด้วย "
+             "รหัสจึงเหมือนเดิมไม่ว่าจะไล่กิ่งใดก่อน</p>")
     t = trees["model_141"]
     gtree = "\n".join(["(root)"] + draw(t["guard_tree"], lambda c: f"{c}  {t['guard_codes'][c]}"))
     etree = "\n".join(["(root)"] + draw_events_compact(t["event_tree"], width=8))
-    h.append("<h3>ตัวอย่าง model_141 PharmacyDelivery (opt แล้วตามด้วย alt 3 ทาง)</h3>"
+    h.append("<h3>ตัวอย่าง: model_141 PharmacyDelivery (opt ตามด้วย alt 3 ทาง)</h3>"
              f"<div class='cols'><div><div class='lbl'>Guard tree</div><pre class='tree'>{esc(gtree)}</pre></div>"
              f"<div><div class='lbl'>Event tree</div><pre class='tree'>{esc(etree)}</pre></div></div>")
 
     h.append("<h2>3. การตรวจสอบความถูกต้อง</h2>")
-    h.append("<p><b>วิธีตรวจ:</b> อ่านแผนภาพ draw.io ต้นฉบับของแต่ละแบบจำลองด้วยตัวอ่านที่เขียนแยก ไม่ใช้โค้ดของตัวแปลงหรือตัวสกัด "
-             "(อ่านกรอบ alt / opt / loop / par เส้นแบ่งกิ่ง ข้อความเงื่อนไข และข้อความตามตำแหน่งบนแผนภาพ) "
-             "แล้วคำนวณว่า tree ต้องเป็นอย่างไร เทียบกับ tree ที่สกัดได้ 8 ข้อ "
-             "(<code>tools/verify_trees.py</code>)</p>")
-    h.append("<table class='keep'><tr><th style='width:7%'>ข้อ</th><th style='width:16%'>เรื่อง</th><th>สิ่งที่ตรวจ</th>"
-             "<th style='width:13%'>ผล</th></tr>")
+    h.append("<p>เขียนโปรแกรมตรวจแยกต่างหาก (<code>tools/verify_trees.py</code>) ให้อ่านแผนภาพ draw.io ต้นฉบับโดยตรง "
+             "ได้แก่ กรอบ alt, opt, loop, par เส้นแบ่งกิ่ง เงื่อนไข และข้อความ แล้วคำนวณ tree ที่ควรได้ "
+             "เทียบกับ tree ที่สร้างไว้ 8 ข้อ โปรแกรมนี้ไม่ใช้โค้ดของสูตรแปลงหรือของตัวสร้าง tree "
+             "การตรวจจึงเป็นอิสระจากงานที่ถูกตรวจ</p>")
+    h.append("<table class='keep'><tr><th style='width:7%'>ข้อ</th><th style='width:17%'>เรื่อง</th><th>สิ่งที่ตรวจ</th>"
+             "<th style='width:12%'>ผ่าน</th></tr>")
     for code, name, what in CHECKS:
         if code == "C8":
             good = not check["file_errors"]
-            cell = "ผ่านทุกไฟล์" if good else f"ผิด {len(check['file_errors'])} จุด"
+            cell = "ทุกไฟล์" if good else f"ไม่ตรง {len(check['file_errors'])} จุด"
         else:
             p_, tot = passed(code)
-            good, cell = p_ == tot, f"ผ่าน {p_} / {tot}"
+            good, cell = p_ == tot, f"{p_} / {tot}"
         h.append(f"<tr><td>{code}</td><td>{esc(name)}</td><td>{esc(what)}</td>"
                  f"<td class='{'ok' if good else 'bad'}'>{cell}</td></tr>")
     h.append("</table>")
-    h.append("<p>C2, C4, C5, C7 ตรวจได้เฉพาะแบบจำลองที่มีแผนภาพ (197 ตัว) · model_001 ตรวจ C1, C3 กับไฟล์ Rodin (.bpo) "
-             "· ผลรายแบบจำลองอยู่ใน <code>check.csv</code></p>")
+    h.append(f"<p>C2, C4, C5 และ C7 ต้องใช้แผนภาพ จึงตรวจ {len(diag)} ตัว ส่วน model_001 ไม่มีแผนภาพ "
+             "จึงตรวจ C1 และ C3 กับไฟล์ .bpo ของ Rodin แทน ผลรายแบบจำลองอยู่ใน <code>check.csv</code></p>")
     st = check["selftest"]
-    h.append(f"<h3>ทดสอบตัวตรวจ</h3><p>เพื่อยืนยันว่าตัวตรวจจับข้อผิดพลาดได้จริง จงใจทำ tree ที่ถูกต้องให้ผิด {len(st)} แบบ "
-             f"แล้วให้ตัวตรวจตรวจซ้ำ · จับได้ <b>{sum(x['caught'] for x in st)} / {len(st)}</b> แบบ</p>"
-             "<table><tr><th>ทำให้ผิดแบบ</th><th style='width:16%'>แบบจำลอง</th><th style='width:16%'>จับได้ที่ข้อ</th></tr>"
+    h.append(f"<h3>ทดสอบโปรแกรมตรวจ</h3><p>เพื่อยืนยันว่าโปรแกรมตรวจพบข้อผิดพลาดได้จริง ได้แก้ tree ที่ถูกต้องให้ผิดโดยเจตนา "
+             f"{len(st)} แบบ โปรแกรมตรวจพบ <b>{sum(x['caught'] for x in st)} จาก {len(st)}</b> แบบ</p>"
+             "<table><tr><th>ข้อผิดที่ใส่</th><th style='width:16%'>แบบจำลอง</th><th style='width:16%'>ตรวจพบในข้อ</th></tr>"
              + "".join(f"<tr><td>{esc(x['case'])}</td><td>{x['model']}</td>"
-                       f"<td class='{'ok' if x['caught'] else 'bad'}'>{x['by'] or 'จับไม่ได้'}</td></tr>" for x in st)
+                       f"<td class='{'ok' if x['caught'] else 'bad'}'>{x['by'] or 'ตรวจไม่พบ'}</td></tr>" for x in st)
              + "</table>")
-    h.append("<h3>ปัญหาที่พบระหว่างตรวจ และการแก้ไข</h3><table><tr><th style='width:30%'>ปัญหา</th><th>สาเหตุ</th>"
-             "<th style='width:26%'>การแก้ไข</th></tr>"
-             "<tr><td>รหัส event ตรงจุดแยกกิ่งใช้คนละตัวอักษร (model_015, model_036, model_038)</td>"
-             "<td>ทางเลือกหนึ่งเป็นจุดรวมของ alt ก่อนหน้า (มีตัวอักษรของตัวเอง) อีกทางเลือกเป็น event นับรอบ loop จึงได้ตัวอักษรใหม่</td>"
-             "<td>ปรับกฎ: ทางเลือกอื่นใช้ตัวอักษรของจุดรวม (k1 / k2) · ตรวจซ้ำผ่านทุกแบบจำลอง</td></tr>"
-             "<tr><td>model_001 ไม่มี tree ในรอบแรก</td><td>model.txt มีเฉพาะชื่อ event</td>"
-             "<td>อ่าน event และ guard จากไฟล์ Rodin (.bpo)</td></tr></table>")
+    h.append("<h3>ปัญหาที่พบและการแก้ไข</h3><table><tr><th style='width:30%'>ปัญหา</th><th>สาเหตุ</th>"
+             "<th style='width:28%'>การแก้ไข</th></tr>"
+             "<tr><td>รหัส event ที่จุดแยกเดียวกันใช้คนละตัวอักษร (model_015, model_036, model_038)</td>"
+             "<td>ทางเลือกหนึ่งเป็นจุดรวมของ alt ก่อนหน้า ซึ่งมีตัวอักษรของตัวเองอยู่แล้ว "
+             "อีกทางเลือกคือ event นับรอบ loop จึงได้ตัวอักษรใหม่</td>"
+             "<td>ให้ทางเลือกอื่นใช้ตัวอักษรของจุดรวม (k1, k2) ตรวจซ้ำแล้วผ่านทุกแบบจำลอง</td></tr>"
+             "<tr><td>model_001 ไม่มี tree ในรอบแรก</td><td>model.txt มีเพียงชื่อ event ไม่มี guard</td>"
+             "<td>ใช้ event และ guard จากไฟล์ .bpo ของ Rodin</td></tr></table>")
 
-    h.append("<h2>4. ข้อสังเกตจากการตรวจ (พฤติกรรมของสูตรแปลง)</h2><ul>"
-             "<li><b>par</b> — สูตรแปลงเรียงข้อความใน par ตามลำดับบนลงล่าง ไม่มี guard ที่ทำให้ทำงานพร้อมกัน event tree จึงเป็นเส้นตรง</li>"
-             "<li><b>opt</b> — ข้อความหลัง opt ต้องรอข้อความสุดท้ายใน opt ใน Event-B จึงข้าม opt ไม่ได้ tree ไม่มีกิ่ง “ไม่เข้า opt”</li>"
+    h.append("<h2>4. ข้อสังเกตเกี่ยวกับสูตรแปลง</h2>"
+             "<p>การตรวจพบลักษณะต่อไปนี้ของแบบจำลองที่ได้จากสูตรแปลง tree แสดงตามแบบจำลองจริงโดยไม่ปรับแก้</p><ul>"
+             "<li><b>par</b> — ข้อความใน par ถูกเรียงตามลำดับบนลงล่าง ไม่มี guard ที่ให้ทำงานพร้อมกัน "
+             "event tree จึงเป็นเส้นตรง</li>"
+             "<li><b>opt</b> — ข้อความหลัง opt ต้องรอข้อความสุดท้ายใน opt จึงข้าม opt ไม่ได้ "
+             "tree จึงไม่มีกิ่งที่ไม่เข้า opt</li>"
              "<li><b>loop</b> — ข้อความหลัง loop ต้องรอข้อความสุดท้ายใน loop จึงต้องทำอย่างน้อย 1 รอบ "
-             "การวนรอบใหม่แสดงด้วย event นับรอบ (↺)</li>"
-             "<li><b>model_001</b> — แปลงด้วยสูตรรุ่นแรก loop และ par ไม่มี guard อ้างข้อความก่อนหน้า tree จึงแยกเป็น 2 กิ่งจาก root "
-             "และมี 1 event ที่ไฟล์ Rodin ไม่เก็บชื่อ (unnamed_event_N)</li></ul>"
-             "<p>ข้อสังเกตเหล่านี้เป็นคุณสมบัติของแบบจำลองที่แปลงได้ tree แสดงตามแบบจำลองจริง ไม่ได้ปรับให้ต่างจาก Event-B</p>")
+             "รอบถัดไปแสดงด้วย ↺</li>"
+             "<li><b>model_001</b> — แปลงด้วยสูตรรุ่นแรก loop และ par ไม่มี guard ที่อ้างข้อความก่อนหน้า "
+             "event tree จึงแยกเป็น 2 กิ่งจาก root และมี 1 event ที่ไม่มีชื่อในไฟล์ Rodin (unnamed_event_N)</li></ul>")
 
     h.append("<h2>5. สถิติ</h2>")
     h.append("<table><tr><th>จำนวนเส้นทางใน guard tree</th>" + "".join(f"<th>{k}</th>" for k in sorted(gp)) + "</tr>"
              "<tr><td>จำนวนแบบจำลอง</td>" + "".join(f"<td class='n'>{gp[k]}</td>" for k in sorted(gp)) + "</tr></table>")
-    h.append("<table><tr><th>รายการ</th><th>ต่ำสุด</th><th>มัธยฐาน</th><th>สูงสุด</th><th>รวม</th></tr>"
+    h.append("<table><tr><th>ต่อแบบจำลอง</th><th>ต่ำสุด</th><th>มัธยฐาน</th><th>สูงสุด</th><th>รวมทั้งชุด</th></tr>"
              + "".join(f"<tr><td>{lbl}</td><td class='n'>{min(v)}</td><td class='n'>{sorted(v)[len(v) // 2]}</td>"
                        f"<td class='n'>{max(v)}</td><td class='n'>{sum(v):,}</td></tr>"
-                       for lbl, v in (("event ต่อแบบจำลอง", ev),
+                       for lbl, v in (("event", ev),
                                       ("เส้นทางใน event tree", [s["event_paths"] for s in stats]),
-                                      ("รหัส guard ต่อแบบจำลอง", [s["guard_codes"] for s in stats]),
-                                      ("loop ต่อแบบจำลอง", [s["loops"] for s in stats])))
+                                      ("รหัส guard", [s["guard_codes"] for s in stats]),
+                                      ("loop", [s["loops"] for s in stats])))
              + "</table>")
-    h.append(f"<p>แบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพ {gp[0]} ตัว มีเฉพาะ event tree (guard tree ว่าง)</p>")
+    h.append(f"<p>แบบจำลอง {gp[0]} ตัวไม่มีเงื่อนไขจากแผนภาพ จึงมีเฉพาะ event tree</p>")
 
     h.append("<h2>6. ไฟล์</h2>")
     tree = ["EventB_PO_Training/",
             "├── trees/",
             "│   ├── SUMMARY.pdf          ← เอกสารนี้",
-            "│   ├── TREES.pdf            ← หลักการ ตัวอย่าง และรหัส + tree ของทุกแบบจำลอง",
-            "│   ├── guard_codes.csv      ← รหัส guard ทุกแบบจำลอง (model_id, code, guard)",
-            "│   ├── event_codes.csv      ← รหัส event ทุกแบบจำลอง (model_id, code, event, guards)",
-            "│   ├── tree_summary.csv     ← ตัวเลขต่อแบบจำลอง + เส้นทาง guard + ผลตรวจ",
+            "│   ├── TREES.pdf            ← หลักการ ตัวอย่าง และ tree ของทุกแบบจำลอง",
+            "│   ├── guard_codes.csv      ← รหัส guard ของทุกแบบจำลอง",
+            "│   ├── event_codes.csv      ← รหัส event ของทุกแบบจำลอง",
+            "│   ├── tree_summary.csv     ← ตัวเลขสรุปรายแบบจำลอง",
             "│   ├── check.csv            ← ผลตรวจรายแบบจำลอง",
-            "│   └── by_topic/<หัวข้อ>/<pass|fail>/<model>.txt   ← tree ของแต่ละแบบจำลอง (รูปย่อ + รูปเต็ม)",
-            "├── models/<id>/tree.txt · tree.json   ← ชุดเดียวกัน อยู่คู่กับ model.txt",
-            "└── data/trees.jsonl                  ← ทุกแบบจำลองในไฟล์เดียว (สำหรับโปรแกรม)"]
+            "│   └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>.txt   ← tree ของแต่ละแบบจำลอง",
+            "├── models/<id>/tree.txt, tree.json   ← ชุดเดียวกัน เก็บคู่กับ model.txt",
+            "└── data/trees.jsonl                 ← ทุกแบบจำลองในไฟล์เดียว สำหรับใช้กับโปรแกรม"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
-    h.append("<p>สร้างใหม่ทั้งหมดด้วย <code>python tools/make_release.py</code> (สกัด → ตรวจ → สร้างเอกสาร) · "
-             "ตัวสกัด <code>tools/extract_trees.py</code> · ตัวตรวจ <code>tools/verify_trees.py</code></p>")
+    h.append("<p>สร้างใหม่ทั้งหมดได้ด้วยคำสั่ง <code>python tools/make_release.py</code> "
+             "ซึ่งจะสร้าง tree ตรวจความถูกต้อง และทำเอกสารตามลำดับ</p>")
 
     css = (CSS + EXTRA_CSS + ".kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 8px 0 4px; }"
            ".kpi div { border: 1px solid #cfd6e1; border-radius: 6px; padding: 6px 10px; }"

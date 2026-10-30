@@ -1,7 +1,7 @@
 model_092  FarmMilkingRobot
 
-1) รหัสเงื่อนไข (guard)
-   (ไม่มีเงื่อนไขจาก diagram)
+1) รหัส guard
+   (ไม่มีเงื่อนไขจากแผนภาพ)
 
 2) Guard tree
    (root)
@@ -9,7 +9,7 @@ model_092  FarmMilkingRobot
    เส้นทาง:
    -
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreserveYield_1
    b1   receivereserveYield_1
    c1   sendlogYield_2
@@ -23,11 +23,11 @@ model_092  FarmMilkingRobot
    k1   sendissueMilk_6
    l1   receiveissueMilk_6
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreserveYield_1
        └── b1 receivereserveYield_1

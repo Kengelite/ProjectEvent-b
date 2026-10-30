@@ -1,6 +1,6 @@
 model_030  OnlineAuction
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   roundNo < 5
 
 2) Guard tree
@@ -10,7 +10,7 @@ model_030  OnlineAuction
    เส้นทาง:
    a1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendplaceBid_1
    b1   receiveplaceBid_1
    c1   sendbidAccepted_2
@@ -27,13 +27,13 @@ model_030  OnlineAuction
    m1   sendwinnerNotice_7
    n1   receivewinnerNotice_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
        ├── i1 → j1 → k1 → l1 → m1 → n1
        └── i2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendplaceBid_1
        └── b1 receiveplaceBid_1
@@ -49,7 +49,7 @@ model_030  OnlineAuction
                                    │           └── l1 receivesaleConfirm_6
                                    │               └── m1 sendwinnerNotice_7
                                    │                   └── n1 receivewinnerNotice_7
-                                   └── i2 checkloop_outbidNotice_3_loop1  (guard a1)  ↺ กลับไป sendoutbidNotice_3
+                                   └── i2 checkloop_outbidNotice_3_loop1  (guard a1)  ↺ วนกลับไป sendoutbidNotice_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

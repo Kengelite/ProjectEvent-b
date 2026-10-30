@@ -1,6 +1,6 @@
 model_032  PackageTracking
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   customsCheck = 1
    b1   delivered = YES
    b2   delivered = NO
@@ -15,7 +15,7 @@ model_032  PackageTracking
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendcreateShipment_1
    b1   receivecreateShipment_1
    c1   sendpickupConfirm_2
@@ -39,13 +39,13 @@ model_032  PackageTracking
    s1   sendrateService_11
    t1   receiverateService_11
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
        ├── m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
        └── m2 → n2 → q1 → r1 → s1 → t1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendcreateShipment_1
        └── b1 receivecreateShipment_1

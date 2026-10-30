@@ -1,6 +1,6 @@
 model_179  SmartWasteBin
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   hasKey = 1
    a2   hasKey = 0
    b1   phase = GOLD
@@ -26,7 +26,7 @@ model_179  SmartWasteBin
    a2 -> b2
    a2 -> b3
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreserveRoute_1
    b1   receivereserveRoute_1
    c1   sendsendRoute_2
@@ -48,7 +48,7 @@ model_179  SmartWasteBin
    m1   sendreleaseRoute_10
    n1   receivereleaseRoute_10
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1
        ├── e1 → f1 → g1 → h1 → i1 → j1
@@ -60,7 +60,7 @@ model_179  SmartWasteBin
            ├── k2 → l2 → m1 → n1
            └── k3 → l3 → m1 → n1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreserveRoute_1
        └── b1 receivereserveRoute_1

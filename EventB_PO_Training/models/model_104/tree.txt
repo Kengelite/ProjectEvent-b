@@ -1,6 +1,6 @@
 model_104  GroceryDeliverySlot
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   retryNo < 8
    b1   retryNo mod 3 = 0
    b2   retryNo mod 3 ≠ 0
@@ -15,7 +15,7 @@ model_104  GroceryDeliverySlot
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendapproveOrder_1
    b1   receiveapproveOrder_1
    c1   sendfetchSlot_2
@@ -44,7 +44,7 @@ model_104  GroceryDeliverySlot
    w1   sendfetchDelivery_11  (guard a1 b2)
    x1   receivefetchDelivery_11  (guard a1 b2)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1
@@ -54,7 +54,7 @@ model_104  GroceryDeliverySlot
            ├── k1 → l1
            └── k2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendapproveOrder_1
        └── b1 receiveapproveOrder_1
@@ -68,7 +68,7 @@ model_104  GroceryDeliverySlot
                            │           └── j1 receivenotifySlot_12  (guard a1)
                            │               ├── k1 sendcancelSlot_13
                            │               │   └── l1 receivecancelSlot_13
-                           │               └── k2 checkloop_releaseOrder_3_loop1  (guard a1)  ↺ กลับไป sendreleaseOrder_3
+                           │               └── k2 checkloop_releaseOrder_3_loop1  (guard a1)  ↺ วนกลับไป sendreleaseOrder_3
                            └── g2 sendreportSlot_5  (guard a1 b2)
                                └── h2 receivereportSlot_5  (guard a1 b2)
                                    └── m1 sendsyncSlot_6  (guard a1 b2)
@@ -87,7 +87,7 @@ model_104  GroceryDeliverySlot
                                                                                        └── j1 receivenotifySlot_12  (guard a1)
                                                                                            ├── k1 sendcancelSlot_13
                                                                                            │   └── l1 receivecancelSlot_13
-                                                                                           └── k2 checkloop_releaseOrder_3_loop1  (guard a1)  ↺ กลับไป sendreleaseOrder_3
+                                                                                           └── k2 checkloop_releaseOrder_3_loop1  (guard a1)  ↺ วนกลับไป sendreleaseOrder_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

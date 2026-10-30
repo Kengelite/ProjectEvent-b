@@ -1,6 +1,6 @@
 model_025  InsuranceClaim
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   hasDocs = 1
    b1   claimAmount ≤ 5000
    b2   claimAmount > 5000
@@ -15,7 +15,7 @@ model_025  InsuranceClaim
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsubmitClaim_1
    b1   receivesubmitClaim_1
    c1   senduploadDocs_2_opt1  (guard a1)
@@ -37,13 +37,13 @@ model_025  InsuranceClaim
    q1   sendassessmentReport_7  (guard b2)
    r1   receiveassessmentReport_7  (guard b2)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1
        ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
        └── e2 → f2 → m1 → n1 → o1 → p1 → q1 → r1 → g1 → h1 → i1 → j1 → k1 → l1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendsubmitClaim_1
        └── b1 receivesubmitClaim_1

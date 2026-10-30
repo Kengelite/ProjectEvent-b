@@ -1,6 +1,6 @@
 model_036  ServerAutoScaling
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   checkNo < 12
    b1   cpu > 80
    b2   cpu ≤ 80
@@ -15,7 +15,7 @@ model_036  ServerAutoScaling
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendstartMonitoring_1
    b1   receivestartMonitoring_1
    c1   sendreportLoad_2  (guard a1)
@@ -32,7 +32,7 @@ model_036  ServerAutoScaling
    k2   checkloop_reportLoad_2_loop1  (guard a1)
    l1   receivestopMonitoring_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1
        ├── e1 → f1 → g1 → h1 → i1 → j1
@@ -42,7 +42,7 @@ model_036  ServerAutoScaling
            ├── k1 → l1
            └── k2 ↺ c1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendstartMonitoring_1
        └── b1 receivestartMonitoring_1
@@ -56,12 +56,12 @@ model_036  ServerAutoScaling
                    │                   └── j1 receiveregisterVM_5  (guard a1 b1)
                    │                       ├── k1 sendstopMonitoring_7
                    │                       │   └── l1 receivestopMonitoring_7
-                   │                       └── k2 checkloop_reportLoad_2_loop1  (guard a1)  ↺ กลับไป sendreportLoad_2
+                   │                       └── k2 checkloop_reportLoad_2_loop1  (guard a1)  ↺ วนกลับไป sendreportLoad_2
                    └── e2 sendkeepCapacity_6  (guard a1 b2)
                        └── f2 receivekeepCapacity_6  (guard a1 b2)
                            ├── k1 sendstopMonitoring_7
                            │   └── l1 receivestopMonitoring_7
-                           └── k2 checkloop_reportLoad_2_loop1  (guard a1)  ↺ กลับไป sendreportLoad_2
+                           └── k2 checkloop_reportLoad_2_loop1  (guard a1)  ↺ วนกลับไป sendreportLoad_2
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

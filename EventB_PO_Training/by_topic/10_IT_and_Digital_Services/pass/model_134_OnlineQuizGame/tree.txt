@@ -1,6 +1,6 @@
 model_134  OnlineQuizGame
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   attemptNo < 10
    b1   roundNo < 6
 
@@ -12,7 +12,7 @@ model_134  OnlineQuizGame
    เส้นทาง:
    a1 -> b1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendcheckRound_1
    b1   receivecheckRound_1
    c1   sendscheduleAnswer_2
@@ -40,7 +40,7 @@ model_134  OnlineQuizGame
    w2   checkloop_issueAnswer_6_loop2  (guard b1)
    x1   receivereserveRound_12
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
@@ -48,7 +48,7 @@ model_134  OnlineQuizGame
        │   └── w2 ↺ k1
        └── g2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendcheckRound_1
        └── b1 receivecheckRound_1
@@ -74,8 +74,8 @@ model_134  OnlineQuizGame
                            │                                                           └── v1 receivereportScore_11  (guard b1)
                            │                                                               ├── w1 sendreserveRound_12
                            │                                                               │   └── x1 receivereserveRound_12
-                           │                                                               └── w2 checkloop_issueAnswer_6_loop2  (guard b1)  ↺ กลับไป sendissueAnswer_6
-                           └── g2 checkloop_ackRound_3_loop1  (guard a1)  ↺ กลับไป sendackRound_3
+                           │                                                               └── w2 checkloop_issueAnswer_6_loop2  (guard b1)  ↺ วนกลับไป sendissueAnswer_6
+                           └── g2 checkloop_ackRound_3_loop1  (guard a1)  ↺ วนกลับไป sendackRound_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1

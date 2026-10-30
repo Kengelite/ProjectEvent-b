@@ -1,6 +1,6 @@
 model_114  InventoryReorder
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   retryNo < 12
    b1   retryNo mod 3 = 0
    c1   express = 1
@@ -14,7 +14,7 @@ model_114  InventoryReorder
    เส้นทาง:
    a1 -> b1 -> c1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendcheckInvoice_1
    b1   receivecheckInvoice_1
    c1   sendreportInvoice_2
@@ -39,13 +39,13 @@ model_114  InventoryReorder
    u2   checkloop_sendInvoice_3_loop1  (guard a1)
    v1   receivefetchOrder_11
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
        ├── u1 → v1
        └── u2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendcheckInvoice_1
        └── b1 receivecheckInvoice_1
@@ -69,7 +69,7 @@ model_114  InventoryReorder
                                                                                └── t1 receiveissueOrder_10  (guard a1)
                                                                                    ├── u1 sendfetchOrder_11
                                                                                    │   └── v1 receivefetchOrder_11
-                                                                                   └── u2 checkloop_sendInvoice_3_loop1  (guard a1)  ↺ กลับไป sendsendInvoice_3
+                                                                                   └── u2 checkloop_sendInvoice_3_loop1  (guard a1)  ↺ วนกลับไป sendsendInvoice_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1

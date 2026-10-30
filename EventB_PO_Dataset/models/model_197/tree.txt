@@ -1,6 +1,6 @@
 model_197  WaterLeakDetection
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   cycleNo < 10
    b1   cycleNo mod 2 = 0
 
@@ -12,7 +12,7 @@ model_197  WaterLeakDetection
    เส้นทาง:
    a1 -> b1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendfetchTicket_1
    b1   receivefetchTicket_1
    c1   sendupdateLeak_2
@@ -37,13 +37,13 @@ model_197  WaterLeakDetection
    u2   checkloop_reserveValve_3_loop1  (guard a1)
    v1   receivereportLeak_11
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
        ├── u1 → v1
        └── u2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendfetchTicket_1
        └── b1 receivefetchTicket_1
@@ -67,7 +67,7 @@ model_197  WaterLeakDetection
                                                                                └── t1 receiveackLeak_10  (guard a1)
                                                                                    ├── u1 sendreportLeak_11
                                                                                    │   └── v1 receivereportLeak_11
-                                                                                   └── u2 checkloop_reserveValve_3_loop1  (guard a1)  ↺ กลับไป sendreserveValve_3
+                                                                                   └── u2 checkloop_reserveValve_3_loop1  (guard a1)  ↺ วนกลับไป sendreserveValve_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1

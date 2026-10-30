@@ -1,6 +1,6 @@
 model_113  InsuranceTelematics
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   express = 1
    b1   roundNo < 6
    c1   urgent = 1
@@ -17,7 +17,7 @@ model_113  InsuranceTelematics
    a1 -> b1 -> c1
    a1 -> b1 -> c2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendconfirmRating_1
    b1   receiveconfirmRating_1
    c1   sendfetchPremium_2
@@ -40,7 +40,7 @@ model_113  InsuranceTelematics
    q1   sendqueryRating_10
    r1   receivequeryRating_10
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
        ├── i1 → j1 → k1 → l1 → m1 → n1
@@ -48,7 +48,7 @@ model_113  InsuranceTelematics
        │   └── o2 → p2 → q1 → r1
        └── i2 ↺ g1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendconfirmRating_1
        └── b1 receiveconfirmRating_1
@@ -72,7 +72,7 @@ model_113  InsuranceTelematics
                                    │                           └── p2 receiveschedulePremium_9  (guard c2)
                                    │                               └── q1 sendqueryRating_10
                                    │                                   └── r1 receivequeryRating_10
-                                   └── i2 checkloop_notifyRating_4_loop1  (guard a1 b1)  ↺ กลับไป sendnotifyRating_4_opt1
+                                   └── i2 checkloop_notifyRating_4_loop1  (guard a1 b1)  ↺ วนกลับไป sendnotifyRating_4_opt1
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1

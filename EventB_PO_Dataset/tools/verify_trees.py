@@ -306,11 +306,11 @@ def selftest():
     def cut_chain(t): node(t, "c1")["children"][0]["children"] = []
     def path_order(t): t["guard_paths"] = ["a1 -> b1", "a1 -> b2", "b3"]
     def same_number(t): node(t, "m2")["code"] = "m1"
-    cases = [("ลบ guard ออกจาก event", "model_109", drop_guard), ("ข้อความ guard ผิด", "model_109", wrong_text),
-             ("มีรหัส guard เกิน", "model_109", extra_code), ("ตัดกิ่ง alt ออก", "model_109", drop_branch),
-             ("loop ย้อนกลับผิดที่", "model_109", wrong_loop), ("ทางเลือกใช้คนละตัวอักษร", "model_109", other_letter),
-             ("เส้นทาง guard หาย", "model_109", lose_path), ("ลำดับ event ขาด", "model_109", cut_chain),
-             ("ลำดับใน guard path ผิด", "model_141", path_order), ("เลขทางเลือกซ้ำ", "model_141", same_number)]
+    cases = [("ลบ guard ของ event", "model_109", drop_guard), ("เปลี่ยนข้อความของ guard", "model_109", wrong_text),
+             ("เพิ่มรหัส guard ที่ไม่มีในแผนภาพ", "model_109", extra_code), ("ตัดกิ่ง alt ออก", "model_109", drop_branch),
+             ("ให้ loop วนกลับผิด event", "model_109", wrong_loop), ("ให้ทางเลือกที่จุดแยกใช้คนละตัวอักษร", "model_109", other_letter),
+             ("ลบเส้นทาง guard", "model_109", lose_path), ("ตัดลำดับ event", "model_109", cut_chain),
+             ("สลับลำดับในเส้นทาง guard", "model_141", path_order), ("ใช้ตัวเลขทางเลือกซ้ำ", "model_141", same_number)]
     out = []
     for name, mid, breaker in cases:
         t, diag = load(mid)

@@ -1,6 +1,6 @@
 model_038  SmartGreenhouse
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   cycleNo < 24
    b1   humidity < 40
    b2   humidity ≥ 40
@@ -15,7 +15,7 @@ model_038  SmartGreenhouse
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendstartCycle_1
    b1   receivestartCycle_1
    c1   sendreadClimate_2  (guard a1)
@@ -32,7 +32,7 @@ model_038  SmartGreenhouse
    k2   checkloop_readClimate_2_loop1  (guard a1)
    l1   receiveendCycle_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1
@@ -42,7 +42,7 @@ model_038  SmartGreenhouse
            ├── k1 → l1
            └── k2 ↺ c1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendstartCycle_1
        └── b1 receivestartCycle_1
@@ -56,12 +56,12 @@ model_038  SmartGreenhouse
                            │           └── j1 receivesprinklerOn_5  (guard a1 b1)
                            │               ├── k1 sendendCycle_7
                            │               │   └── l1 receiveendCycle_7
-                           │               └── k2 checkloop_readClimate_2_loop1  (guard a1)  ↺ กลับไป sendreadClimate_2
+                           │               └── k2 checkloop_readClimate_2_loop1  (guard a1)  ↺ วนกลับไป sendreadClimate_2
                            └── g2 sendstartFan_6  (guard a1 b2)
                                └── h2 receivestartFan_6  (guard a1 b2)
                                    ├── k1 sendendCycle_7
                                    │   └── l1 receiveendCycle_7
-                                   └── k2 checkloop_readClimate_2_loop1  (guard a1)  ↺ กลับไป sendreadClimate_2
+                                   └── k2 checkloop_readClimate_2_loop1  (guard a1)  ↺ วนกลับไป sendreadClimate_2
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

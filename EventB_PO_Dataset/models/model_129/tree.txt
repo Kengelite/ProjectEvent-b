@@ -1,6 +1,6 @@
 model_129  MuseumAudioGuide
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   useCache = 1
    b1   stepNo < 11
 
@@ -12,7 +12,7 @@ model_129  MuseumAudioGuide
    เส้นทาง:
    a1 -> b1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendconfirmTour_1
    b1   receiveconfirmTour_1
    c1   sendnotifyTour_2
@@ -29,13 +29,13 @@ model_129  MuseumAudioGuide
    m2   checkloop_checkTour_6_loop1  (guard b1)
    n1   receivevalidateAudio_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
        ├── m1 → n1
        └── m2 ↺ k1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendconfirmTour_1
        └── b1 receiveconfirmTour_1
@@ -51,7 +51,7 @@ model_129  MuseumAudioGuide
                                                └── l1 receivecheckTour_6  (guard b1)
                                                    ├── m1 sendvalidateAudio_7
                                                    │   └── n1 receivevalidateAudio_7
-                                                   └── m2 checkloop_checkTour_6_loop1  (guard b1)  ↺ กลับไป sendcheckTour_6
+                                                   └── m2 checkloop_checkTour_6_loop1  (guard b1)  ↺ วนกลับไป sendcheckTour_6
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

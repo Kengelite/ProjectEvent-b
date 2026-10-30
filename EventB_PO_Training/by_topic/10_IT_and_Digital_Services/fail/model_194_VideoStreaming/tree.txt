@@ -1,6 +1,6 @@
 model_194  VideoStreaming
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   stepNo < 7
    b1   stepNo mod 2 = 0
    b2   stepNo mod 2 ≠ 0
@@ -15,7 +15,7 @@ model_194  VideoStreaming
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreserveLicense_1
    b1   receivereserveLicense_1
    c1   sendreportChunk_2
@@ -44,7 +44,7 @@ model_194  VideoStreaming
    w1   sendapproveStream_6  (guard a1 b2)
    x1   receiveapproveStream_6  (guard a1 b2)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1
@@ -54,7 +54,7 @@ model_194  VideoStreaming
            ├── k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
            └── k2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreserveLicense_1
        └── b1 receivereserveLicense_1
@@ -78,7 +78,7 @@ model_194  VideoStreaming
                            │               │                                   └── t1 receivereleaseChunk_12
                            │               │                                       └── u1 sendrequestStream_13
                            │               │                                           └── v1 receiverequestStream_13
-                           │               └── k2 checkloop_reportStream_3_loop1  (guard a1)  ↺ กลับไป sendreportStream_3
+                           │               └── k2 checkloop_reportStream_3_loop1  (guard a1)  ↺ วนกลับไป sendreportStream_3
                            └── g2 sendsendChunk_5  (guard a1 b2)
                                └── h2 receivesendChunk_5  (guard a1 b2)
                                    └── w1 sendapproveStream_6  (guard a1 b2)
@@ -97,7 +97,7 @@ model_194  VideoStreaming
                                                    │                                   └── t1 receivereleaseChunk_12
                                                    │                                       └── u1 sendrequestStream_13
                                                    │                                           └── v1 receiverequestStream_13
-                                                   └── k2 checkloop_reportStream_3_loop1  (guard a1)  ↺ กลับไป sendreportStream_3
+                                                   └── k2 checkloop_reportStream_3_loop1  (guard a1)  ↺ วนกลับไป sendreportStream_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1

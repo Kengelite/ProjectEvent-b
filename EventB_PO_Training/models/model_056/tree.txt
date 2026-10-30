@@ -1,6 +1,6 @@
 model_056  BankBranchQueue
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   passNo < 11
 
 2) Guard tree
@@ -10,7 +10,7 @@ model_056  BankBranchQueue
    เส้นทาง:
    a1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendqueryCounter_1
    b1   receivequeryCounter_1
    c1   sendassignService_2
@@ -29,13 +29,13 @@ model_056  BankBranchQueue
    o2   checkloop_scheduleService_3_loop1  (guard a1)
    p1   receivequeryTicket_8
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
        ├── o1 → p1
        └── o2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendqueryCounter_1
        └── b1 receivequeryCounter_1
@@ -53,7 +53,7 @@ model_056  BankBranchQueue
                                                        └── n1 receivenotifyService_7  (guard a1)
                                                            ├── o1 sendqueryTicket_8
                                                            │   └── p1 receivequeryTicket_8
-                                                           └── o2 checkloop_scheduleService_3_loop1  (guard a1)  ↺ กลับไป sendscheduleService_3
+                                                           └── o2 checkloop_scheduleService_3_loop1  (guard a1)  ↺ วนกลับไป sendscheduleService_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

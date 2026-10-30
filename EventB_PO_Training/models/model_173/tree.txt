@@ -1,6 +1,6 @@
 model_173  SmartPillBox
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   needAck = 1
    b1   mode = GOLD
    b2   mode = SILVER
@@ -18,7 +18,7 @@ model_173  SmartPillBox
    a1 -> b2
    a1 -> b3
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsyncRefill_1
    b1   receivesyncRefill_1
    c1   sendvalidateRefill_2
@@ -44,14 +44,14 @@ model_173  SmartPillBox
    q1   sendapproveReminder_12
    r1   receiveapproveReminder_12
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
        ├── m1 → n1 → o1 → p1 → q1 → r1
        ├── m2 → n2 → o2 → p2 → q1 → r1
        └── m3 → n3 → q1 → r1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendsyncRefill_1
        └── b1 receivesyncRefill_1

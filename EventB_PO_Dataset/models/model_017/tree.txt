@@ -1,6 +1,6 @@
 model_017  EmergencyDispatch
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   priority = HIGH
    b1   updateCount < 4
    c1   trafficJam = 1
@@ -17,7 +17,7 @@ model_017  EmergencyDispatch
    a1 -> b1 -> c1
    a2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendreportEmergency_1
    b1   receivereportEmergency_1
    c1   sendaskDetails_2
@@ -38,7 +38,7 @@ model_017  EmergencyDispatch
    o1   sendcloseCase_9
    p1   receivecloseCase_9
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1 → k1 → l1
@@ -46,7 +46,7 @@ model_017  EmergencyDispatch
        │   └── m2 ↺ i1
        └── g2 → h2 → o1 → p1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendreportEmergency_1
        └── b1 receivereportEmergency_1
@@ -64,7 +64,7 @@ model_017  EmergencyDispatch
                            │                       │   └── n1 receivenotifyHospital_7  (guard a1)
                            │                       │       └── o1 sendcloseCase_9
                            │                       │           └── p1 receivecloseCase_9
-                           │                       └── m2 checkloop_sendLocation_5_loop1  (guard a1 b1)  ↺ กลับไป sendsendLocation_5
+                           │                       └── m2 checkloop_sendLocation_5_loop1  (guard a1 b1)  ↺ วนกลับไป sendsendLocation_5
                            └── g2 sendscheduleCallback_8  (guard a2)
                                └── h2 receivescheduleCallback_8  (guard a2)
                                    └── o1 sendcloseCase_9

@@ -1,6 +1,6 @@
 model_170  SmartHelmetMining
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   temp < 50
    a2   temp ≥ 50
 
@@ -13,7 +13,7 @@ model_170  SmartHelmetMining
    a1
    a2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsyncAlarm_1
    b1   receivesyncAlarm_1
    c1   sendackGas_2
@@ -27,13 +27,13 @@ model_170  SmartHelmetMining
    i1   sendreserveLocation_5  (guard a2)
    j1   receivereserveLocation_5  (guard a2)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1
        ├── e1 → f1 → g1 → h1
        └── e2 → f2 → i1 → j1 → g1 → h1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendsyncAlarm_1
        └── b1 receivesyncAlarm_1

@@ -1,6 +1,6 @@
 model_003  ATMWithdrawal
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   pinAttempt < 3
    b1   pinValid = 1
    b2   pinValid = 0
@@ -15,7 +15,7 @@ model_003  ATMWithdrawal
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendinsertCard_1
    b1   receiveinsertCard_1
    c1   sendrequestPIN_2
@@ -34,14 +34,14 @@ model_003  ATMWithdrawal
    m1   senddispenseCash_7  (guard b1)
    n1   receivedispenseCash_7  (guard b1)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
        ├── k1 → l1 → m1 → n1
        ├── k2 → l2
        └── k3 ↺ g1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendinsertCard_1
        └── b1 receiveinsertCard_1
@@ -59,7 +59,7 @@ model_003  ATMWithdrawal
                                            │           └── n1 receivedispenseCash_7  (guard b1)
                                            ├── k2 sendretainCard_8  (guard b2)
                                            │   └── l2 receiveretainCard_8  (guard b2)
-                                           └── k3 checkloop_invalidPIN_4_loop1  (guard a1)  ↺ กลับไป sendinvalidPIN_4
+                                           └── k3 checkloop_invalidPIN_4_loop1  (guard a1)  ↺ วนกลับไป sendinvalidPIN_4
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

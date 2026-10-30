@@ -1,6 +1,6 @@
 model_077  CourseAutoGrading
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   mode = MANUAL
    a2   mode = AUTO
    b1   t_obs ≤ 27
@@ -21,7 +21,7 @@ model_077  CourseAutoGrading
    a2 -> b1
    a2 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendissueFeedback_1
    b1   receiveissueFeedback_1
    c1   sendassignFeedback_2
@@ -45,7 +45,7 @@ model_077  CourseAutoGrading
    q1   sendcheckSubmission_5  (guard a2)
    r1   receivecheckSubmission_5  (guard a2)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1
        ├── e1 → f1 → g1 → h1 → i1 → j1
@@ -55,7 +55,7 @@ model_077  CourseAutoGrading
            ├── k1 → l1 → m1 → n1
            └── k2 → l2 → o1 → p1 → m1 → n1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendissueFeedback_1
        └── b1 receiveissueFeedback_1

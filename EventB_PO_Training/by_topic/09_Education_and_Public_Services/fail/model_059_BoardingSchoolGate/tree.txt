@@ -1,6 +1,6 @@
 model_059  BoardingSchoolGate
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   passNo < 5
    b1   urgent = 1
    b2   urgent = 0
@@ -15,7 +15,7 @@ model_059  BoardingSchoolGate
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsendPass_1
    b1   receivesendPass_1
    c1   sendscheduleNotice_2
@@ -38,7 +38,7 @@ model_059  BoardingSchoolGate
    o1   sendupdateExit_10
    p1   receiveupdateExit_10
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1
@@ -46,7 +46,7 @@ model_059  BoardingSchoolGate
        │   └── k2 → l2 → m2 → n2 → o1 → p1
        └── g2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendsendPass_1
        └── b1 receivesendPass_1
@@ -70,7 +70,7 @@ model_059  BoardingSchoolGate
                            │                           └── n2 receivesyncExit_9  (guard b2)
                            │                               └── o1 sendupdateExit_10
                            │                                   └── p1 receiveupdateExit_10
-                           └── g2 checkloop_requestExit_3_loop1  (guard a1)  ↺ กลับไป sendrequestExit_3
+                           └── g2 checkloop_requestExit_3_loop1  (guard a1)  ↺ วนกลับไป sendrequestExit_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

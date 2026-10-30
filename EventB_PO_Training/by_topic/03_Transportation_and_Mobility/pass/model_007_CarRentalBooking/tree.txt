@@ -1,6 +1,6 @@
 model_007  CarRentalBooking
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   searchCount < 3
    b1   insurance = 1
    c1   t_pay ≤ 10
@@ -17,7 +17,7 @@ model_007  CarRentalBooking
    a1 -> b1 -> c1
    a1 -> b1 -> c2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendopenApp_1
    b1   receiveopenApp_1
    c1   sendsearchCar_2  (guard a1)
@@ -36,7 +36,7 @@ model_007  CarRentalBooking
    n1   receiveconfirmBooking_7  (guard c1)
    n2   receivecancelBooking_8  (guard c2)
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1 → k1 → l1
@@ -44,7 +44,7 @@ model_007  CarRentalBooking
        │   └── m2 → n2
        └── g2 ↺ c1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendopenApp_1
        └── b1 receiveopenApp_1
@@ -62,7 +62,7 @@ model_007  CarRentalBooking
                            │                       │   └── n1 receiveconfirmBooking_7  (guard c1)
                            │                       └── m2 sendcancelBooking_8  (guard c2)
                            │                           └── n2 receivecancelBooking_8  (guard c2)
-                           └── g2 checkloop_searchCar_2_loop1  (guard a1)  ↺ กลับไป sendsearchCar_2
+                           └── g2 checkloop_searchCar_2_loop1  (guard a1)  ↺ วนกลับไป sendsearchCar_2
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

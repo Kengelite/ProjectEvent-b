@@ -1,6 +1,6 @@
 model_031  OnlineExam
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   questionNo < 20
    b1   autosaveCount < 3
 
@@ -12,7 +12,7 @@ model_031  OnlineExam
    เส้นทาง:
    a1 -> b1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendlogin_1
    b1   receivelogin_1
    c1   sendfetchQuestion_2  (guard a1)
@@ -32,7 +32,7 @@ model_031  OnlineExam
    o1   sendexamResult_8
    p1   receiveexamResult_8
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
        ├── k1 → l1
@@ -40,7 +40,7 @@ model_031  OnlineExam
        │   └── m2 ↺ c1
        └── k2 ↺ g1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendlogin_1
        └── b1 receivelogin_1
@@ -58,8 +58,8 @@ model_031  OnlineExam
                                            │       │   └── n1 receiveflagBehavior_7
                                            │       │       └── o1 sendexamResult_8
                                            │       │           └── p1 receiveexamResult_8
-                                           │       └── m2 checkloop_fetchQuestion_2_loop1  (guard a1)  ↺ กลับไป sendfetchQuestion_2
-                                           └── k2 checkloop_autosave_4_loop2  (guard a1 b1)  ↺ กลับไป sendautosave_4
+                                           │       └── m2 checkloop_fetchQuestion_2_loop1  (guard a1)  ↺ วนกลับไป sendfetchQuestion_2
+                                           └── k2 checkloop_autosave_4_loop2  (guard a1 b1)  ↺ วนกลับไป sendautosave_4
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

@@ -1,6 +1,6 @@
 model_011  ColdChainMonitor
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   tempBreach = 1
    a2   tempBreach = 0
 
@@ -13,7 +13,7 @@ model_011  ColdChainMonitor
    a1
    a2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendlogTemperature_1
    b1   receivelogTemperature_1
    c1   senduploadLog_2
@@ -29,13 +29,13 @@ model_011  ColdChainMonitor
    k1   sendcloseTrip_7
    l1   receivecloseTrip_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1 → k1 → l1
        └── g2 → h2 → k1 → l1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendlogTemperature_1
        └── b1 receivelogTemperature_1

@@ -1,6 +1,6 @@
 model_171  SmartLibraryShelf
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   roundNo < 12
    b1   roundNo mod 4 = 0
    c1   grade = ACTIVE
@@ -17,7 +17,7 @@ model_171  SmartLibraryShelf
    a1 -> b1 -> c1
    a1 -> b1 -> c2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsyncShelf_1
    b1   receivesyncShelf_1
    c1   sendreserveShelf_2
@@ -46,7 +46,7 @@ model_171  SmartLibraryShelf
    w1   sendreserveBook_13
    x1   receivereserveBook_13
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
        ├── o1 → p1 → q1 → r1
@@ -54,7 +54,7 @@ model_171  SmartLibraryShelf
        │   └── s2 → t2 → w1 → x1
        └── o2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendsyncShelf_1
        └── b1 receivesyncShelf_1
@@ -84,7 +84,7 @@ model_171  SmartLibraryShelf
                                                            │                   └── t2 receivecancelHold_12  (guard c2)
                                                            │                       └── w1 sendreserveBook_13
                                                            │                           └── x1 receivereserveBook_13
-                                                           └── o2 checkloop_notifyHold_3_loop1  (guard a1)  ↺ กลับไป sendnotifyHold_3
+                                                           └── o2 checkloop_notifyHold_3_loop1  (guard a1)  ↺ วนกลับไป sendnotifyHold_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1

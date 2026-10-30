@@ -1,6 +1,6 @@
 model_149  PublicWifiHotspot
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   optIn = 1
    b1   load < 10
    b2   load ≥ 10
@@ -15,7 +15,7 @@ model_149  PublicWifiHotspot
    a1 -> b1
    a1 -> b2
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendscheduleQuota_1
    b1   receivescheduleQuota_1
    c1   sendscheduleVoucher_2
@@ -41,13 +41,13 @@ model_149  PublicWifiHotspot
    u1   sendissueQuota_12
    v1   receiveissueQuota_12
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
        ├── o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
        └── o2 → p2 → s1 → t1 → u1 → v1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendscheduleQuota_1
        └── b1 receivescheduleQuota_1

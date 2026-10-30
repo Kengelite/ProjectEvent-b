@@ -1,6 +1,6 @@
 model_153  RemotePatientMonitor
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   passNo < 12
 
 2) Guard tree
@@ -10,7 +10,7 @@ model_153  RemotePatientMonitor
    เส้นทาง:
    a1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendsyncAlert_1
    b1   receivesyncAlert_1
    c1   sendcancelReport_2
@@ -39,13 +39,13 @@ model_153  RemotePatientMonitor
    y1   sendassignAlert_13
    z1   receiveassignAlert_13
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
        ├── i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1
        └── i2 ↺ e1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendsyncAlert_1
        └── b1 receivesyncAlert_1
@@ -73,7 +73,7 @@ model_153  RemotePatientMonitor
                                    │                                                           └── x1 receiveconfirmVital_12
                                    │                                                               └── y1 sendassignAlert_13
                                    │                                                                   └── z1 receiveassignAlert_13
-                                   └── i2 checkloop_approveVital_3_loop1  (guard a1)  ↺ กลับไป sendapproveVital_3
+                                   └── i2 checkloop_approveVital_3_loop1  (guard a1)  ↺ วนกลับไป sendapproveVital_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1

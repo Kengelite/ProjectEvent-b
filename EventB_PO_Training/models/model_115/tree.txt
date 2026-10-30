@@ -1,6 +1,6 @@
 model_115  IoTDoorbell
 
-1) รหัสเงื่อนไข (guard)
+1) รหัส guard
    a1   useCache = 1
    b1   needAck = 1
 
@@ -12,7 +12,7 @@ model_115  IoTDoorbell
    เส้นทาง:
    a1 -> b1
 
-3) รหัสเหตุการณ์ (event)
+3) รหัส event
    a1   sendapproveMessage_1
    b1   receiveapproveMessage_1
    c1   sendackVideo_2
@@ -28,11 +28,11 @@ model_115  IoTDoorbell
    m1   sendcheckVideo_7
    n1   receivecheckVideo_7
 
-4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
 
-   Event tree (เต็ม)
+   Event tree แบบเต็ม
    (root) INITIALISATION
    └── a1 sendapproveMessage_1
        └── b1 receiveapproveMessage_1

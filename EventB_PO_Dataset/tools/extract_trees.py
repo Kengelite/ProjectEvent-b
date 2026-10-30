@@ -226,7 +226,7 @@ def draw_events(t, pre=""):
     for k, c in enumerate(t["children"]):
         last = k == len(t["children"]) - 1
         g = f"  (guard {' '.join(c['guards'])})" if c["guards"] else ""
-        back = f"  ↺ กลับไป {c['loop_back_to']}" if "loop_back_to" in c else ""
+        back = f"  ↺ วนกลับไป {c['loop_back_to']}" if "loop_back_to" in c else ""
         out.append(f"{pre}{'└── ' if last else '├── '}{c['code']} {c['event']}{g}{back}")
         out += draw_events(c, pre + ("    " if last else "│   "))
     return out
@@ -254,17 +254,17 @@ def draw_events_compact(t, pre="", width=None):
 
 def text(model_id, case, t):
     gc = t["guard_codes"]
-    lines = [f"{model_id}  {case}", "", "1) รหัสเงื่อนไข (guard)"]
-    lines += [f"   {c:<4} {g}" for c, g in gc.items()] or ["   (ไม่มีเงื่อนไขจาก diagram)"]
+    lines = [f"{model_id}  {case}", "", "1) รหัส guard"]
+    lines += [f"   {c:<4} {g}" for c, g in gc.items()] or ["   (ไม่มีเงื่อนไขจากแผนภาพ)"]
     lines += ["", "2) Guard tree", "   (root)"]
     lines += ["   " + l for l in draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}")]
     lines += ["", "   เส้นทาง:"] + ([f"   {p}" for p in t["guard_paths"]] or ["   -"])
-    lines += ["", "3) รหัสเหตุการณ์ (event)"]
+    lines += ["", "3) รหัส event"]
     lines += [f"   {c:<4} {n}" + (f"  (guard {' '.join(t['event_guards'][c])})" if t["event_guards"][c] else "")
               for c, n in t["event_codes"].items()]
-    lines += ["", "4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)", "   (root) INITIALISATION"]
+    lines += ["", "4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)", "   (root) INITIALISATION"]
     lines += ["   " + l for l in draw_events_compact(t["event_tree"])]
-    lines += ["", "   Event tree (เต็ม)", "   (root) INITIALISATION"] + ["   " + l for l in draw_events(t["event_tree"])]
+    lines += ["", "   Event tree แบบเต็ม", "   (root) INITIALISATION"] + ["   " + l for l in draw_events(t["event_tree"])]
     lines += ["", "   เส้นทาง:"] + [f"   {p}" for p in t["event_paths"]]
     return "\n".join(lines) + "\n"
 
