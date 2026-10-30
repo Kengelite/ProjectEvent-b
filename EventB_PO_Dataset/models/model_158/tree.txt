@@ -16,81 +16,81 @@ model_158  RuralTelehealthKiosk
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreportVital_1
-   e2   receivereportVital_1
-   e3   sendvalidateVital_2
-   e4   receivevalidateVital_2
-   e5   sendfetchPrescription_3  [a1]
-   e6   receivefetchPrescription_3  [a1]
-   e7   sendschedulePrescription_4  [a1 b1]
-   e8   receiveschedulePrescription_4  [a1 b1]
-   e9   sendcancelPrescription_5  [a1 b1]
-   e10  receivecancelPrescription_5  [a1 b1]
-   e11  sendnotifyConsult_6  [a1 b1]
-   e12  receivenotifyConsult_6  [a1 b1]
-   e13  sendsendVital_7  [a1 b1]
-   e14  receivesendVital_7  [a1 b1]
-   e15  sendfetchVital_8  [a1 b1]
-   e16  receivefetchVital_8  [a1 b1]
-   e17  sendackConsult_9  [a1 b1]
-   e18  receiveackConsult_9  [a1 b1]
-   e19  sendupdateConsult_10  [a1 b1]
-   e20  receiveupdateConsult_10  [a1 b1]
-   e21  sendreportPrescription_11  [a1 b2]
-   e22  receivereportPrescription_11  [a1 b2]
-   e23  sendconfirmVital_12  [a1]
-   e24  receiveconfirmVital_12  [a1]
-   e25  sendreleaseVital_13
-   e26  receivereleaseVital_13
-   e27  checkloop_fetchPrescription_3_loop1  [a1]
+   a1   sendreportVital_1
+   b1   receivereportVital_1
+   c1   sendvalidateVital_2
+   d1   receivevalidateVital_2
+   e1   sendfetchPrescription_3  (guard a1)
+   f1   receivefetchPrescription_3  (guard a1)
+   g1   sendschedulePrescription_4  (guard a1 b1)
+   g2   sendreportPrescription_11  (guard a1 b2)
+   h1   receiveschedulePrescription_4  (guard a1 b1)
+   h2   receivereportPrescription_11  (guard a1 b2)
+   i1   sendcancelPrescription_5  (guard a1 b1)
+   j1   receivecancelPrescription_5  (guard a1 b1)
+   k1   sendnotifyConsult_6  (guard a1 b1)
+   l1   receivenotifyConsult_6  (guard a1 b1)
+   m1   sendsendVital_7  (guard a1 b1)
+   n1   receivesendVital_7  (guard a1 b1)
+   o1   sendfetchVital_8  (guard a1 b1)
+   p1   receivefetchVital_8  (guard a1 b1)
+   q1   sendackConsult_9  (guard a1 b1)
+   r1   receiveackConsult_9  (guard a1 b1)
+   s1   sendupdateConsult_10  (guard a1 b1)
+   t1   receiveupdateConsult_10  (guard a1 b1)
+   u1   sendconfirmVital_12  (guard a1)
+   v1   receiveconfirmVital_12  (guard a1)
+   w1   sendreleaseVital_13
+   w2   checkloop_fetchPrescription_3_loop1  (guard a1)
+   x1   receivereleaseVital_13
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e23 → e24
-       │   ├── e25 → e26
-       │   └── e27 ↺ e5
-       └── e21 → e22 → e23 → e24
-           ├── e25 → e26
-           └── e27 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       │   ├── w1 → x1
+       │   └── w2 ↺ e1
+       └── g2 → h2 → u1 → v1
+           ├── w1 → x1
+           └── w2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreportVital_1
-       └── e2 receivereportVital_1
-           └── e3 sendvalidateVital_2
-               └── e4 receivevalidateVital_2
-                   └── e5 sendfetchPrescription_3  [a1]
-                       └── e6 receivefetchPrescription_3  [a1]
-                           ├── e7 sendschedulePrescription_4  [a1 b1]
-                           │   └── e8 receiveschedulePrescription_4  [a1 b1]
-                           │       └── e9 sendcancelPrescription_5  [a1 b1]
-                           │           └── e10 receivecancelPrescription_5  [a1 b1]
-                           │               └── e11 sendnotifyConsult_6  [a1 b1]
-                           │                   └── e12 receivenotifyConsult_6  [a1 b1]
-                           │                       └── e13 sendsendVital_7  [a1 b1]
-                           │                           └── e14 receivesendVital_7  [a1 b1]
-                           │                               └── e15 sendfetchVital_8  [a1 b1]
-                           │                                   └── e16 receivefetchVital_8  [a1 b1]
-                           │                                       └── e17 sendackConsult_9  [a1 b1]
-                           │                                           └── e18 receiveackConsult_9  [a1 b1]
-                           │                                               └── e19 sendupdateConsult_10  [a1 b1]
-                           │                                                   └── e20 receiveupdateConsult_10  [a1 b1]
-                           │                                                       └── e23 sendconfirmVital_12  [a1]
-                           │                                                           └── e24 receiveconfirmVital_12  [a1]
-                           │                                                               ├── e25 sendreleaseVital_13
-                           │                                                               │   └── e26 receivereleaseVital_13
-                           │                                                               └── e27 checkloop_fetchPrescription_3_loop1  [a1]  ↺ กลับไป sendfetchPrescription_3
-                           └── e21 sendreportPrescription_11  [a1 b2]
-                               └── e22 receivereportPrescription_11  [a1 b2]
-                                   └── e23 sendconfirmVital_12  [a1]
-                                       └── e24 receiveconfirmVital_12  [a1]
-                                           ├── e25 sendreleaseVital_13
-                                           │   └── e26 receivereleaseVital_13
-                                           └── e27 checkloop_fetchPrescription_3_loop1  [a1]  ↺ กลับไป sendfetchPrescription_3
+   └── a1 sendreportVital_1
+       └── b1 receivereportVital_1
+           └── c1 sendvalidateVital_2
+               └── d1 receivevalidateVital_2
+                   └── e1 sendfetchPrescription_3  (guard a1)
+                       └── f1 receivefetchPrescription_3  (guard a1)
+                           ├── g1 sendschedulePrescription_4  (guard a1 b1)
+                           │   └── h1 receiveschedulePrescription_4  (guard a1 b1)
+                           │       └── i1 sendcancelPrescription_5  (guard a1 b1)
+                           │           └── j1 receivecancelPrescription_5  (guard a1 b1)
+                           │               └── k1 sendnotifyConsult_6  (guard a1 b1)
+                           │                   └── l1 receivenotifyConsult_6  (guard a1 b1)
+                           │                       └── m1 sendsendVital_7  (guard a1 b1)
+                           │                           └── n1 receivesendVital_7  (guard a1 b1)
+                           │                               └── o1 sendfetchVital_8  (guard a1 b1)
+                           │                                   └── p1 receivefetchVital_8  (guard a1 b1)
+                           │                                       └── q1 sendackConsult_9  (guard a1 b1)
+                           │                                           └── r1 receiveackConsult_9  (guard a1 b1)
+                           │                                               └── s1 sendupdateConsult_10  (guard a1 b1)
+                           │                                                   └── t1 receiveupdateConsult_10  (guard a1 b1)
+                           │                                                       └── u1 sendconfirmVital_12  (guard a1)
+                           │                                                           └── v1 receiveconfirmVital_12  (guard a1)
+                           │                                                               ├── w1 sendreleaseVital_13
+                           │                                                               │   └── x1 receivereleaseVital_13
+                           │                                                               └── w2 checkloop_fetchPrescription_3_loop1  (guard a1)  ↺ กลับไป sendfetchPrescription_3
+                           └── g2 sendreportPrescription_11  (guard a1 b2)
+                               └── h2 receivereportPrescription_11  (guard a1 b2)
+                                   └── u1 sendconfirmVital_12  (guard a1)
+                                       └── v1 receiveconfirmVital_12  (guard a1)
+                                           ├── w1 sendreleaseVital_13
+                                           │   └── x1 receivereleaseVital_13
+                                           └── w2 checkloop_fetchPrescription_3_loop1  (guard a1)  ↺ กลับไป sendfetchPrescription_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24 -> e25 -> e26
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24 -> e27 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e21 -> e22 -> e23 -> e24 -> e27 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> u1 -> v1 -> w2 ↺ e1

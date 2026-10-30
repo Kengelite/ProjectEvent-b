@@ -18,78 +18,78 @@ model_109  HospitalLabRequest
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendcheckOrder_1
-   e2   receivecheckOrder_1
-   e3   sendrequestResult_2
-   e4   receiverequestResult_2
-   e5   sendconfirmOrder_3  [a1]
-   e6   receiveconfirmOrder_3  [a1]
-   e7   sendscheduleOrder_4  [a1 b1]
-   e8   receivescheduleOrder_4  [a1 b1]
-   e9   sendackSample_5  [a1 b1 c1]
-   e10  receiveackSample_5  [a1 b1 c1]
-   e11  sendapproveSample_6  [a1 b1 c1]
-   e12  receiveapproveSample_6  [a1 b1 c1]
-   e13  sendissueResult_7  [a1 b1 c1]
-   e14  receiveissueResult_7  [a1 b1 c1]
-   e15  sendreportResult_8  [a1 b1]
-   e16  receivereportResult_8  [a1 b1]
-   e17  sendreportSample_9  [a1 b2]
-   e18  receivereportSample_9  [a1 b2]
-   e19  sendrequestSample_10  [a1]
-   e20  receiverequestSample_10  [a1]
-   e21  sendreserveSample_11
-   e22  receivereserveSample_11
-   e23  checkloop_confirmOrder_3_loop1  [a1]
-   e24  checkloop_ackSample_5_loop2  [a1 b1 c1]
+   a1   sendcheckOrder_1
+   b1   receivecheckOrder_1
+   c1   sendrequestResult_2
+   d1   receiverequestResult_2
+   e1   sendconfirmOrder_3  (guard a1)
+   f1   receiveconfirmOrder_3  (guard a1)
+   g1   sendscheduleOrder_4  (guard a1 b1)
+   g2   sendreportSample_9  (guard a1 b2)
+   h1   receivescheduleOrder_4  (guard a1 b1)
+   h2   receivereportSample_9  (guard a1 b2)
+   i1   sendackSample_5  (guard a1 b1 c1)
+   j1   receiveackSample_5  (guard a1 b1 c1)
+   k1   sendapproveSample_6  (guard a1 b1 c1)
+   l1   receiveapproveSample_6  (guard a1 b1 c1)
+   m1   sendissueResult_7  (guard a1 b1 c1)
+   n1   receiveissueResult_7  (guard a1 b1 c1)
+   o1   sendreportResult_8  (guard a1 b1)
+   o2   checkloop_ackSample_5_loop2  (guard a1 b1 c1)
+   p1   receivereportResult_8  (guard a1 b1)
+   q1   sendrequestSample_10  (guard a1)
+   r1   receiverequestSample_10  (guard a1)
+   s1   sendreserveSample_11
+   s2   checkloop_confirmOrder_3_loop1  (guard a1)
+   t1   receivereserveSample_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
-       │   ├── e15 → e16 → e19 → e20
-       │   │   ├── e21 → e22
-       │   │   └── e23 ↺ e5
-       │   └── e24 ↺ e9
-       └── e17 → e18 → e19 → e20
-           ├── e21 → e22
-           └── e23 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       │   ├── o1 → p1 → q1 → r1
+       │   │   ├── s1 → t1
+       │   │   └── s2 ↺ e1
+       │   └── o2 ↺ i1
+       └── g2 → h2 → q1 → r1
+           ├── s1 → t1
+           └── s2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendcheckOrder_1
-       └── e2 receivecheckOrder_1
-           └── e3 sendrequestResult_2
-               └── e4 receiverequestResult_2
-                   └── e5 sendconfirmOrder_3  [a1]
-                       └── e6 receiveconfirmOrder_3  [a1]
-                           ├── e7 sendscheduleOrder_4  [a1 b1]
-                           │   └── e8 receivescheduleOrder_4  [a1 b1]
-                           │       └── e9 sendackSample_5  [a1 b1 c1]
-                           │           └── e10 receiveackSample_5  [a1 b1 c1]
-                           │               └── e11 sendapproveSample_6  [a1 b1 c1]
-                           │                   └── e12 receiveapproveSample_6  [a1 b1 c1]
-                           │                       └── e13 sendissueResult_7  [a1 b1 c1]
-                           │                           └── e14 receiveissueResult_7  [a1 b1 c1]
-                           │                               ├── e15 sendreportResult_8  [a1 b1]
-                           │                               │   └── e16 receivereportResult_8  [a1 b1]
-                           │                               │       └── e19 sendrequestSample_10  [a1]
-                           │                               │           └── e20 receiverequestSample_10  [a1]
-                           │                               │               ├── e21 sendreserveSample_11
-                           │                               │               │   └── e22 receivereserveSample_11
-                           │                               │               └── e23 checkloop_confirmOrder_3_loop1  [a1]  ↺ กลับไป sendconfirmOrder_3
-                           │                               └── e24 checkloop_ackSample_5_loop2  [a1 b1 c1]  ↺ กลับไป sendackSample_5
-                           └── e17 sendreportSample_9  [a1 b2]
-                               └── e18 receivereportSample_9  [a1 b2]
-                                   └── e19 sendrequestSample_10  [a1]
-                                       └── e20 receiverequestSample_10  [a1]
-                                           ├── e21 sendreserveSample_11
-                                           │   └── e22 receivereserveSample_11
-                                           └── e23 checkloop_confirmOrder_3_loop1  [a1]  ↺ กลับไป sendconfirmOrder_3
+   └── a1 sendcheckOrder_1
+       └── b1 receivecheckOrder_1
+           └── c1 sendrequestResult_2
+               └── d1 receiverequestResult_2
+                   └── e1 sendconfirmOrder_3  (guard a1)
+                       └── f1 receiveconfirmOrder_3  (guard a1)
+                           ├── g1 sendscheduleOrder_4  (guard a1 b1)
+                           │   └── h1 receivescheduleOrder_4  (guard a1 b1)
+                           │       └── i1 sendackSample_5  (guard a1 b1 c1)
+                           │           └── j1 receiveackSample_5  (guard a1 b1 c1)
+                           │               └── k1 sendapproveSample_6  (guard a1 b1 c1)
+                           │                   └── l1 receiveapproveSample_6  (guard a1 b1 c1)
+                           │                       └── m1 sendissueResult_7  (guard a1 b1 c1)
+                           │                           └── n1 receiveissueResult_7  (guard a1 b1 c1)
+                           │                               ├── o1 sendreportResult_8  (guard a1 b1)
+                           │                               │   └── p1 receivereportResult_8  (guard a1 b1)
+                           │                               │       └── q1 sendrequestSample_10  (guard a1)
+                           │                               │           └── r1 receiverequestSample_10  (guard a1)
+                           │                               │               ├── s1 sendreserveSample_11
+                           │                               │               │   └── t1 receivereserveSample_11
+                           │                               │               └── s2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ กลับไป sendconfirmOrder_3
+                           │                               └── o2 checkloop_ackSample_5_loop2  (guard a1 b1 c1)  ↺ กลับไป sendackSample_5
+                           └── g2 sendreportSample_9  (guard a1 b2)
+                               └── h2 receivereportSample_9  (guard a1 b2)
+                                   └── q1 sendrequestSample_10  (guard a1)
+                                       └── r1 receiverequestSample_10  (guard a1)
+                                           ├── s1 sendreserveSample_11
+                                           │   └── t1 receivereserveSample_11
+                                           └── s2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ กลับไป sendconfirmOrder_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20 -> e23 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e24 ↺ e9
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ i1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> q1 -> r1 -> s2 ↺ e1

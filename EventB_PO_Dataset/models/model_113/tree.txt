@@ -18,63 +18,63 @@ model_113  InsuranceTelematics
    a1 -> b1 -> c2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendconfirmRating_1
-   e2   receiveconfirmRating_1
-   e3   sendfetchPremium_2
-   e4   receivefetchPremium_2
-   e5   sendsyncRating_3_opt1  [a1]
-   e6   receivesyncRating_3_opt1  [a1]
-   e7   sendnotifyRating_4_opt1  [a1 b1]
-   e8   receivenotifyRating_4_opt1  [a1 b1]
-   e9   sendconfirmTrip_5_opt1  [a1]
-   e10  receiveconfirmTrip_5_opt1  [a1]
-   e11  sendconfirmPremium_6
-   e12  receiveconfirmPremium_6
-   e13  sendackPremium_7
-   e14  receiveackPremium_7
-   e15  sendassignTrip_8  [c1]
-   e16  receiveassignTrip_8  [c1]
-   e17  sendschedulePremium_9  [c2]
-   e18  receiveschedulePremium_9  [c2]
-   e19  sendqueryRating_10
-   e20  receivequeryRating_10
-   e21  checkloop_notifyRating_4_loop1  [a1 b1]
+   a1   sendconfirmRating_1
+   b1   receiveconfirmRating_1
+   c1   sendfetchPremium_2
+   d1   receivefetchPremium_2
+   e1   sendsyncRating_3_opt1  (guard a1)
+   f1   receivesyncRating_3_opt1  (guard a1)
+   g1   sendnotifyRating_4_opt1  (guard a1 b1)
+   h1   receivenotifyRating_4_opt1  (guard a1 b1)
+   i1   sendconfirmTrip_5_opt1  (guard a1)
+   i2   checkloop_notifyRating_4_loop1  (guard a1 b1)
+   j1   receiveconfirmTrip_5_opt1  (guard a1)
+   k1   sendconfirmPremium_6
+   l1   receiveconfirmPremium_6
+   m1   sendackPremium_7
+   n1   receiveackPremium_7
+   o1   sendassignTrip_8  (guard c1)
+   o2   sendschedulePremium_9  (guard c2)
+   p1   receiveassignTrip_8  (guard c1)
+   p2   receiveschedulePremium_9  (guard c2)
+   q1   sendqueryRating_10
+   r1   receivequeryRating_10
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
-       ├── e9 → e10 → e11 → e12 → e13 → e14
-       │   ├── e15 → e16 → e19 → e20
-       │   └── e17 → e18 → e19 → e20
-       └── e21 ↺ e7
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1 → m1 → n1
+       │   ├── o1 → p1 → q1 → r1
+       │   └── o2 → p2 → q1 → r1
+       └── i2 ↺ g1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendconfirmRating_1
-       └── e2 receiveconfirmRating_1
-           └── e3 sendfetchPremium_2
-               └── e4 receivefetchPremium_2
-                   └── e5 sendsyncRating_3_opt1  [a1]
-                       └── e6 receivesyncRating_3_opt1  [a1]
-                           └── e7 sendnotifyRating_4_opt1  [a1 b1]
-                               └── e8 receivenotifyRating_4_opt1  [a1 b1]
-                                   ├── e9 sendconfirmTrip_5_opt1  [a1]
-                                   │   └── e10 receiveconfirmTrip_5_opt1  [a1]
-                                   │       └── e11 sendconfirmPremium_6
-                                   │           └── e12 receiveconfirmPremium_6
-                                   │               └── e13 sendackPremium_7
-                                   │                   └── e14 receiveackPremium_7
-                                   │                       ├── e15 sendassignTrip_8  [c1]
-                                   │                       │   └── e16 receiveassignTrip_8  [c1]
-                                   │                       │       └── e19 sendqueryRating_10
-                                   │                       │           └── e20 receivequeryRating_10
-                                   │                       └── e17 sendschedulePremium_9  [c2]
-                                   │                           └── e18 receiveschedulePremium_9  [c2]
-                                   │                               └── e19 sendqueryRating_10
-                                   │                                   └── e20 receivequeryRating_10
-                                   └── e21 checkloop_notifyRating_4_loop1  [a1 b1]  ↺ กลับไป sendnotifyRating_4_opt1
+   └── a1 sendconfirmRating_1
+       └── b1 receiveconfirmRating_1
+           └── c1 sendfetchPremium_2
+               └── d1 receivefetchPremium_2
+                   └── e1 sendsyncRating_3_opt1  (guard a1)
+                       └── f1 receivesyncRating_3_opt1  (guard a1)
+                           └── g1 sendnotifyRating_4_opt1  (guard a1 b1)
+                               └── h1 receivenotifyRating_4_opt1  (guard a1 b1)
+                                   ├── i1 sendconfirmTrip_5_opt1  (guard a1)
+                                   │   └── j1 receiveconfirmTrip_5_opt1  (guard a1)
+                                   │       └── k1 sendconfirmPremium_6
+                                   │           └── l1 receiveconfirmPremium_6
+                                   │               └── m1 sendackPremium_7
+                                   │                   └── n1 receiveackPremium_7
+                                   │                       ├── o1 sendassignTrip_8  (guard c1)
+                                   │                       │   └── p1 receiveassignTrip_8  (guard c1)
+                                   │                       │       └── q1 sendqueryRating_10
+                                   │                       │           └── r1 receivequeryRating_10
+                                   │                       └── o2 sendschedulePremium_9  (guard c2)
+                                   │                           └── p2 receiveschedulePremium_9  (guard c2)
+                                   │                               └── q1 sendqueryRating_10
+                                   │                                   └── r1 receivequeryRating_10
+                                   └── i2 checkloop_notifyRating_4_loop1  (guard a1 b1)  ↺ กลับไป sendnotifyRating_4_opt1
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e21 ↺ e7
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ g1

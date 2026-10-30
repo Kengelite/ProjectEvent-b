@@ -14,44 +14,44 @@ model_080  CropDroneSpraying
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendapproveArea_1
-   e2   receiveapproveArea_1
-   e3   sendcheckMission_2
-   e4   receivecheckMission_2
-   e5   sendsyncSpray_3  [a1]
-   e6   receivesyncSpray_3  [a1]
-   e7   sendassignSpray_4  [a2]
-   e8   receiveassignSpray_4  [a2]
-   e9   sendscheduleSpray_5
-   e10  receivescheduleSpray_5
-   e11  sendassignMission_6
-   e12  receiveassignMission_6
+   a1   sendapproveArea_1
+   b1   receiveapproveArea_1
+   c1   sendcheckMission_2
+   d1   receivecheckMission_2
+   e1   sendsyncSpray_3  (guard a1)
+   e2   sendassignSpray_4  (guard a2)
+   f1   receivesyncSpray_3  (guard a1)
+   f2   receiveassignSpray_4  (guard a2)
+   g1   sendscheduleSpray_5
+   h1   receivescheduleSpray_5
+   i1   sendassignMission_6
+   j1   receiveassignMission_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e9 → e10 → e11 → e12
-       └── e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → g1 → h1 → i1 → j1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendapproveArea_1
-       └── e2 receiveapproveArea_1
-           └── e3 sendcheckMission_2
-               └── e4 receivecheckMission_2
-                   ├── e5 sendsyncSpray_3  [a1]
-                   │   └── e6 receivesyncSpray_3  [a1]
-                   │       └── e9 sendscheduleSpray_5
-                   │           └── e10 receivescheduleSpray_5
-                   │               └── e11 sendassignMission_6
-                   │                   └── e12 receiveassignMission_6
-                   └── e7 sendassignSpray_4  [a2]
-                       └── e8 receiveassignSpray_4  [a2]
-                           └── e9 sendscheduleSpray_5
-                               └── e10 receivescheduleSpray_5
-                                   └── e11 sendassignMission_6
-                                       └── e12 receiveassignMission_6
+   └── a1 sendapproveArea_1
+       └── b1 receiveapproveArea_1
+           └── c1 sendcheckMission_2
+               └── d1 receivecheckMission_2
+                   ├── e1 sendsyncSpray_3  (guard a1)
+                   │   └── f1 receivesyncSpray_3  (guard a1)
+                   │       └── g1 sendscheduleSpray_5
+                   │           └── h1 receivescheduleSpray_5
+                   │               └── i1 sendassignMission_6
+                   │                   └── j1 receiveassignMission_6
+                   └── e2 sendassignSpray_4  (guard a2)
+                       └── f2 receiveassignSpray_4  (guard a2)
+                           └── g1 sendscheduleSpray_5
+                               └── h1 receivescheduleSpray_5
+                                   └── i1 sendassignMission_6
+                                       └── j1 receiveassignMission_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1

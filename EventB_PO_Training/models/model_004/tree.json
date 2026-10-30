@@ -4,48 +4,48 @@
   "a2": "riskFlag = 1"
  },
  "event_codes": {
-  "e1": "sendinitiateTransfer_1",
-  "e2": "receiveinitiateTransfer_1",
-  "e3": "sendcheckFraud_2",
-  "e4": "receivecheckFraud_2",
-  "e5": "sendriskScore_3",
-  "e6": "receiveriskScore_3",
-  "e7": "sendpostTransfer_4",
-  "e8": "receivepostTransfer_4",
-  "e9": "sendpostingDone_5",
-  "e10": "receivepostingDone_5",
-  "e11": "sendholdTransfer_6",
-  "e12": "receiveholdTransfer_6",
-  "e13": "sendtransferStatus_7",
-  "e14": "receivetransferStatus_7"
+  "a1": "sendinitiateTransfer_1",
+  "b1": "receiveinitiateTransfer_1",
+  "c1": "sendcheckFraud_2",
+  "d1": "receivecheckFraud_2",
+  "e1": "sendriskScore_3",
+  "f1": "receiveriskScore_3",
+  "g1": "sendpostTransfer_4",
+  "g2": "sendholdTransfer_6",
+  "h1": "receivepostTransfer_4",
+  "h2": "receiveholdTransfer_6",
+  "i1": "sendpostingDone_5",
+  "j1": "receivepostingDone_5",
+  "k1": "sendtransferStatus_7",
+  "l1": "receivetransferStatus_7"
  },
  "event_guards": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
   "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [],
-  "e6": [],
-  "e7": [
+  "f1": [],
+  "g1": [
    "a1"
   ],
-  "e8": [
-   "a1"
-  ],
-  "e9": [
-   "a1"
-  ],
-  "e10": [
-   "a1"
-  ],
-  "e11": [
+  "g2": [
    "a2"
   ],
-  "e12": [
+  "h1": [
+   "a1"
+  ],
+  "h2": [
    "a2"
   ],
-  "e13": [],
-  "e14": []
+  "i1": [
+   "a1"
+  ],
+  "j1": [
+   "a1"
+  ],
+  "k1": [],
+  "l1": []
  },
  "guard_tree": {
   "a1": {},
@@ -62,70 +62,70 @@
   "children": [
    {
     "event": "sendinitiateTransfer_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveinitiateTransfer_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendcheckFraud_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivecheckFraud_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendriskScore_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [],
             "children": [
              {
               "event": "receiveriskScore_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [],
               "children": [
                {
                 "event": "sendpostTransfer_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivepostTransfer_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendpostingDone_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receivepostingDone_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendtransferStatus_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivetransferStatus_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -141,26 +141,26 @@
                },
                {
                 "event": "sendholdTransfer_6",
-                "code": "e11",
+                "code": "g2",
                 "guards": [
                  "a2"
                 ],
                 "children": [
                  {
                   "event": "receiveholdTransfer_6",
-                  "code": "e12",
+                  "code": "h2",
                   "guards": [
                    "a2"
                   ],
                   "children": [
                    {
                     "event": "sendtransferStatus_7",
-                    "code": "e13",
+                    "code": "k1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivetransferStatus_7",
-                      "code": "e14",
+                      "code": "l1",
                       "guards": [],
                       "children": []
                      }
@@ -185,8 +185,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

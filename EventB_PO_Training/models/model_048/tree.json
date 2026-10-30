@@ -4,64 +4,64 @@
   "b1": "lowBattery = 1"
  },
  "event_codes": {
-  "e1": "sendstartShift_1",
-  "e2": "receivestartShift_1",
-  "e3": "sendassignTaskA_2",
-  "e4": "receiveassignTaskA_2",
-  "e5": "sendassignTaskB_3",
-  "e6": "receiveassignTaskB_3",
-  "e7": "sendtaskDone_4",
-  "e8": "receivetaskDone_4",
-  "e9": "sendreserveDock_5_opt1",
-  "e10": "receivereserveDock_5_opt1",
-  "e11": "senddockReady_6_opt1",
-  "e12": "receivedockReady_6_opt1",
-  "e13": "sendendShift_7",
-  "e14": "receiveendShift_7",
-  "e15": "checkloop_assignTaskA_2_loop1"
+  "a1": "sendstartShift_1",
+  "b1": "receivestartShift_1",
+  "c1": "sendassignTaskA_2",
+  "d1": "receiveassignTaskA_2",
+  "e1": "sendassignTaskB_3",
+  "f1": "receiveassignTaskB_3",
+  "g1": "sendtaskDone_4",
+  "h1": "receivetaskDone_4",
+  "i1": "sendreserveDock_5_opt1",
+  "j1": "receivereserveDock_5_opt1",
+  "k1": "senddockReady_6_opt1",
+  "l1": "receivedockReady_6_opt1",
+  "m1": "sendendShift_7",
+  "m2": "checkloop_assignTaskA_2_loop1",
+  "n1": "receiveendShift_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [
+  "a1": [],
+  "b1": [],
+  "c1": [
    "a1"
   ],
-  "e4": [
+  "d1": [
    "a1"
   ],
-  "e5": [
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "i1": [
    "a1",
    "b1"
   ],
-  "e10": [
+  "j1": [
    "a1",
    "b1"
   ],
-  "e11": [
+  "k1": [
    "a1",
    "b1"
   ],
-  "e12": [
+  "l1": [
    "a1",
    "b1"
   ],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "m1": [],
+  "m2": [
    "a1"
-  ]
+  ],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -78,59 +78,59 @@
   "children": [
    {
     "event": "sendstartShift_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivestartShift_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendassignTaskA_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [
          "a1"
         ],
         "children": [
          {
           "event": "receiveassignTaskA_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [
            "a1"
           ],
           "children": [
            {
             "event": "sendassignTaskB_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveassignTaskB_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendtaskDone_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivetaskDone_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendreserveDock_5_opt1",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -138,7 +138,7 @@
                     "children": [
                      {
                       "event": "receivereserveDock_5_opt1",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -146,7 +146,7 @@
                       "children": [
                        {
                         "event": "senddockReady_6_opt1",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "a1",
                          "b1"
@@ -154,7 +154,7 @@
                         "children": [
                          {
                           "event": "receivedockReady_6_opt1",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "a1",
                            "b1"
@@ -162,12 +162,12 @@
                           "children": [
                            {
                             "event": "sendendShift_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receiveendShift_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -175,12 +175,12 @@
                            },
                            {
                             "event": "checkloop_assignTaskA_2_loop1",
-                            "code": "e15",
+                            "code": "m2",
                             "guards": [
                              "a1"
                             ],
                             "loop_back_to": "sendassignTaskA_2",
-                            "loop_back_to_code": "e3",
+                            "loop_back_to_code": "c1",
                             "children": []
                            }
                           ]
@@ -210,8 +210,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 ↺ e3"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ c1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

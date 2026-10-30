@@ -16,81 +16,81 @@ model_104  GroceryDeliverySlot
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendapproveOrder_1
-   e2   receiveapproveOrder_1
-   e3   sendfetchSlot_2
-   e4   receivefetchSlot_2
-   e5   sendreleaseOrder_3  [a1]
-   e6   receivereleaseOrder_3  [a1]
-   e7   sendqueryOrder_4  [a1 b1]
-   e8   receivequeryOrder_4  [a1 b1]
-   e9   sendreportSlot_5  [a1 b2]
-   e10  receivereportSlot_5  [a1 b2]
-   e11  sendsyncSlot_6  [a1 b2]
-   e12  receivesyncSlot_6  [a1 b2]
-   e13  sendnotifyOrder_7  [a1 b2]
-   e14  receivenotifyOrder_7  [a1 b2]
-   e15  sendreportDelivery_8  [a1 b2]
-   e16  receivereportDelivery_8  [a1 b2]
-   e17  sendreserveOrder_9  [a1 b2]
-   e18  receivereserveOrder_9  [a1 b2]
-   e19  sendassignDelivery_10  [a1 b2]
-   e20  receiveassignDelivery_10  [a1 b2]
-   e21  sendfetchDelivery_11  [a1 b2]
-   e22  receivefetchDelivery_11  [a1 b2]
-   e23  sendnotifySlot_12  [a1]
-   e24  receivenotifySlot_12  [a1]
-   e25  sendcancelSlot_13
-   e26  receivecancelSlot_13
-   e27  checkloop_releaseOrder_3_loop1  [a1]
+   a1   sendapproveOrder_1
+   b1   receiveapproveOrder_1
+   c1   sendfetchSlot_2
+   d1   receivefetchSlot_2
+   e1   sendreleaseOrder_3  (guard a1)
+   f1   receivereleaseOrder_3  (guard a1)
+   g1   sendqueryOrder_4  (guard a1 b1)
+   g2   sendreportSlot_5  (guard a1 b2)
+   h1   receivequeryOrder_4  (guard a1 b1)
+   h2   receivereportSlot_5  (guard a1 b2)
+   i1   sendnotifySlot_12  (guard a1)
+   j1   receivenotifySlot_12  (guard a1)
+   k1   sendcancelSlot_13
+   k2   checkloop_releaseOrder_3_loop1  (guard a1)
+   l1   receivecancelSlot_13
+   m1   sendsyncSlot_6  (guard a1 b2)
+   n1   receivesyncSlot_6  (guard a1 b2)
+   o1   sendnotifyOrder_7  (guard a1 b2)
+   p1   receivenotifyOrder_7  (guard a1 b2)
+   q1   sendreportDelivery_8  (guard a1 b2)
+   r1   receivereportDelivery_8  (guard a1 b2)
+   s1   sendreserveOrder_9  (guard a1 b2)
+   t1   receivereserveOrder_9  (guard a1 b2)
+   u1   sendassignDelivery_10  (guard a1 b2)
+   v1   receiveassignDelivery_10  (guard a1 b2)
+   w1   sendfetchDelivery_11  (guard a1 b2)
+   x1   receivefetchDelivery_11  (guard a1 b2)
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e23 → e24
-       │   ├── e25 → e26
-       │   └── e27 ↺ e5
-       └── e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24
-           ├── e25 → e26
-           └── e27 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1
+       │   ├── k1 → l1
+       │   └── k2 ↺ e1
+       └── g2 → h2 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → i1 → j1
+           ├── k1 → l1
+           └── k2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendapproveOrder_1
-       └── e2 receiveapproveOrder_1
-           └── e3 sendfetchSlot_2
-               └── e4 receivefetchSlot_2
-                   └── e5 sendreleaseOrder_3  [a1]
-                       └── e6 receivereleaseOrder_3  [a1]
-                           ├── e7 sendqueryOrder_4  [a1 b1]
-                           │   └── e8 receivequeryOrder_4  [a1 b1]
-                           │       └── e23 sendnotifySlot_12  [a1]
-                           │           └── e24 receivenotifySlot_12  [a1]
-                           │               ├── e25 sendcancelSlot_13
-                           │               │   └── e26 receivecancelSlot_13
-                           │               └── e27 checkloop_releaseOrder_3_loop1  [a1]  ↺ กลับไป sendreleaseOrder_3
-                           └── e9 sendreportSlot_5  [a1 b2]
-                               └── e10 receivereportSlot_5  [a1 b2]
-                                   └── e11 sendsyncSlot_6  [a1 b2]
-                                       └── e12 receivesyncSlot_6  [a1 b2]
-                                           └── e13 sendnotifyOrder_7  [a1 b2]
-                                               └── e14 receivenotifyOrder_7  [a1 b2]
-                                                   └── e15 sendreportDelivery_8  [a1 b2]
-                                                       └── e16 receivereportDelivery_8  [a1 b2]
-                                                           └── e17 sendreserveOrder_9  [a1 b2]
-                                                               └── e18 receivereserveOrder_9  [a1 b2]
-                                                                   └── e19 sendassignDelivery_10  [a1 b2]
-                                                                       └── e20 receiveassignDelivery_10  [a1 b2]
-                                                                           └── e21 sendfetchDelivery_11  [a1 b2]
-                                                                               └── e22 receivefetchDelivery_11  [a1 b2]
-                                                                                   └── e23 sendnotifySlot_12  [a1]
-                                                                                       └── e24 receivenotifySlot_12  [a1]
-                                                                                           ├── e25 sendcancelSlot_13
-                                                                                           │   └── e26 receivecancelSlot_13
-                                                                                           └── e27 checkloop_releaseOrder_3_loop1  [a1]  ↺ กลับไป sendreleaseOrder_3
+   └── a1 sendapproveOrder_1
+       └── b1 receiveapproveOrder_1
+           └── c1 sendfetchSlot_2
+               └── d1 receivefetchSlot_2
+                   └── e1 sendreleaseOrder_3  (guard a1)
+                       └── f1 receivereleaseOrder_3  (guard a1)
+                           ├── g1 sendqueryOrder_4  (guard a1 b1)
+                           │   └── h1 receivequeryOrder_4  (guard a1 b1)
+                           │       └── i1 sendnotifySlot_12  (guard a1)
+                           │           └── j1 receivenotifySlot_12  (guard a1)
+                           │               ├── k1 sendcancelSlot_13
+                           │               │   └── l1 receivecancelSlot_13
+                           │               └── k2 checkloop_releaseOrder_3_loop1  (guard a1)  ↺ กลับไป sendreleaseOrder_3
+                           └── g2 sendreportSlot_5  (guard a1 b2)
+                               └── h2 receivereportSlot_5  (guard a1 b2)
+                                   └── m1 sendsyncSlot_6  (guard a1 b2)
+                                       └── n1 receivesyncSlot_6  (guard a1 b2)
+                                           └── o1 sendnotifyOrder_7  (guard a1 b2)
+                                               └── p1 receivenotifyOrder_7  (guard a1 b2)
+                                                   └── q1 sendreportDelivery_8  (guard a1 b2)
+                                                       └── r1 receivereportDelivery_8  (guard a1 b2)
+                                                           └── s1 sendreserveOrder_9  (guard a1 b2)
+                                                               └── t1 receivereserveOrder_9  (guard a1 b2)
+                                                                   └── u1 sendassignDelivery_10  (guard a1 b2)
+                                                                       └── v1 receiveassignDelivery_10  (guard a1 b2)
+                                                                           └── w1 sendfetchDelivery_11  (guard a1 b2)
+                                                                               └── x1 receivefetchDelivery_11  (guard a1 b2)
+                                                                                   └── i1 sendnotifySlot_12  (guard a1)
+                                                                                       └── j1 receivenotifySlot_12  (guard a1)
+                                                                                           ├── k1 sendcancelSlot_13
+                                                                                           │   └── l1 receivecancelSlot_13
+                                                                                           └── k2 checkloop_releaseOrder_3_loop1  (guard a1)  ↺ กลับไป sendreleaseOrder_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e23 -> e24 -> e25 -> e26
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e23 -> e24 -> e27 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e27 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> i1 -> j1 -> k2 ↺ e1

@@ -4,60 +4,60 @@
   "b1": "attemptNo mod 4 = 0"
  },
  "event_codes": {
-  "e1": "sendackItem_1",
-  "e2": "receiveackItem_1",
-  "e3": "sendreportCharge_2",
-  "e4": "receivereportCharge_2",
-  "e5": "sendassignItem_3",
-  "e6": "receiveassignItem_3",
-  "e7": "sendfetchItem_4_opt1",
-  "e8": "receivefetchItem_4_opt1",
-  "e9": "sendsendRestock_5_opt1",
-  "e10": "receivesendRestock_5_opt1",
-  "e11": "sendreserveCharge_6",
-  "e12": "receivereserveCharge_6",
-  "e13": "sendlogRestock_7",
-  "e14": "receivelogRestock_7",
-  "e15": "checkloop_assignItem_3_loop1"
+  "a1": "sendackItem_1",
+  "b1": "receiveackItem_1",
+  "c1": "sendreportCharge_2",
+  "d1": "receivereportCharge_2",
+  "e1": "sendassignItem_3",
+  "f1": "receiveassignItem_3",
+  "g1": "sendfetchItem_4_opt1",
+  "h1": "receivefetchItem_4_opt1",
+  "i1": "sendsendRestock_5_opt1",
+  "j1": "receivesendRestock_5_opt1",
+  "k1": "sendreserveCharge_6",
+  "l1": "receivereserveCharge_6",
+  "m1": "sendlogRestock_7",
+  "m2": "checkloop_assignItem_3_loop1",
+  "n1": "receivelogRestock_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1",
    "b1"
   ],
-  "e8": [
+  "h1": [
    "a1",
    "b1"
   ],
-  "e9": [
+  "i1": [
    "a1",
    "b1"
   ],
-  "e10": [
+  "j1": [
    "a1",
    "b1"
   ],
-  "e11": [
+  "k1": [
    "a1"
   ],
-  "e12": [
+  "l1": [
    "a1"
   ],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "m1": [],
+  "m2": [
    "a1"
-  ]
+  ],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -74,41 +74,41 @@
   "children": [
    {
     "event": "sendackItem_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveackItem_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendreportCharge_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivereportCharge_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendassignItem_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveassignItem_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendfetchItem_4_opt1",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -116,7 +116,7 @@
                 "children": [
                  {
                   "event": "receivefetchItem_4_opt1",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -124,7 +124,7 @@
                   "children": [
                    {
                     "event": "sendsendRestock_5_opt1",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -132,7 +132,7 @@
                     "children": [
                      {
                       "event": "receivesendRestock_5_opt1",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -140,26 +140,26 @@
                       "children": [
                        {
                         "event": "sendreserveCharge_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "a1"
                         ],
                         "children": [
                          {
                           "event": "receivereserveCharge_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "a1"
                           ],
                           "children": [
                            {
                             "event": "sendlogRestock_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivelogRestock_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -167,12 +167,12 @@
                            },
                            {
                             "event": "checkloop_assignItem_3_loop1",
-                            "code": "e15",
+                            "code": "m2",
                             "guards": [
                              "a1"
                             ],
                             "loop_back_to": "sendassignItem_3",
-                            "loop_back_to_code": "e5",
+                            "loop_back_to_code": "e1",
                             "children": []
                            }
                           ]
@@ -202,8 +202,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

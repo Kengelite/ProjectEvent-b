@@ -5,64 +5,64 @@
   "b1": "stepNo < 3"
  },
  "event_codes": {
-  "e1": "sendreportItem_1",
-  "e2": "receivereportItem_1",
-  "e3": "sendassignItem_2",
-  "e4": "receiveassignItem_2",
-  "e5": "sendcancelItem_3",
-  "e6": "receivecancelItem_3",
-  "e7": "sendscheduleItem_4",
-  "e8": "receivescheduleItem_4",
-  "e9": "sendnotifyReceipt_5",
-  "e10": "receivenotifyReceipt_5",
-  "e11": "sendissueItem_6",
-  "e12": "receiveissueItem_6",
-  "e13": "sendissueReceipt_7",
-  "e14": "receiveissueReceipt_7",
-  "e15": "sendassignReceipt_8",
-  "e16": "receiveassignReceipt_8",
-  "e17": "sendreportReceipt_9",
-  "e18": "receivereportReceipt_9",
-  "e19": "checkloop_issueReceipt_7_loop1"
+  "a1": "sendreportItem_1",
+  "b1": "receivereportItem_1",
+  "c1": "sendassignItem_2",
+  "d1": "receiveassignItem_2",
+  "e1": "sendcancelItem_3",
+  "e2": "sendscheduleItem_4",
+  "f1": "receivecancelItem_3",
+  "f2": "receivescheduleItem_4",
+  "g1": "sendnotifyReceipt_5",
+  "h1": "receivenotifyReceipt_5",
+  "i1": "sendissueItem_6",
+  "j1": "receiveissueItem_6",
+  "k1": "sendissueReceipt_7",
+  "l1": "receiveissueReceipt_7",
+  "m1": "sendassignReceipt_8",
+  "n1": "receiveassignReceipt_8",
+  "o1": "sendreportReceipt_9",
+  "o2": "checkloop_issueReceipt_7_loop1",
+  "p1": "receivereportReceipt_9"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
    "a2"
   ],
-  "e8": [
-   "a2"
-  ],
-  "e9": [],
-  "e10": [],
-  "e11": [],
-  "e12": [],
-  "e13": [
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e14": [
+  "l1": [
    "b1"
   ],
-  "e15": [
+  "m1": [
    "b1"
   ],
-  "e16": [
+  "n1": [
    "b1"
   ],
-  "e17": [],
-  "e18": [],
-  "e19": [
+  "o1": [],
+  "o2": [
    "b1"
-  ]
+  ],
+  "p1": []
  },
  "guard_tree": {
   "a1": {
@@ -83,94 +83,94 @@
   "children": [
    {
     "event": "sendreportItem_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivereportItem_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendassignItem_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveassignItem_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendcancelItem_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivecancelItem_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendnotifyReceipt_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivenotifyReceipt_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendissueItem_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveissueItem_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendissueReceipt_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receiveissueReceipt_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendassignReceipt_8",
-                            "code": "e15",
+                            "code": "m1",
                             "guards": [
                              "b1"
                             ],
                             "children": [
                              {
                               "event": "receiveassignReceipt_8",
-                              "code": "e16",
+                              "code": "n1",
                               "guards": [
                                "b1"
                               ],
                               "children": [
                                {
                                 "event": "sendreportReceipt_9",
-                                "code": "e17",
+                                "code": "o1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivereportReceipt_9",
-                                  "code": "e18",
+                                  "code": "p1",
                                   "guards": [],
                                   "children": []
                                  }
@@ -178,12 +178,12 @@
                                },
                                {
                                 "event": "checkloop_issueReceipt_7_loop1",
-                                "code": "e19",
+                                "code": "o2",
                                 "guards": [
                                  "b1"
                                 ],
                                 "loop_back_to": "sendissueReceipt_7",
-                                "loop_back_to_code": "e13",
+                                "loop_back_to_code": "k1",
                                 "children": []
                                }
                               ]
@@ -208,74 +208,74 @@
            },
            {
             "event": "sendscheduleItem_4",
-            "code": "e7",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receivescheduleItem_4",
-              "code": "e8",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendnotifyReceipt_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivenotifyReceipt_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendissueItem_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveissueItem_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendissueReceipt_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receiveissueReceipt_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendassignReceipt_8",
-                            "code": "e15",
+                            "code": "m1",
                             "guards": [
                              "b1"
                             ],
                             "children": [
                              {
                               "event": "receiveassignReceipt_8",
-                              "code": "e16",
+                              "code": "n1",
                               "guards": [
                                "b1"
                               ],
                               "children": [
                                {
                                 "event": "sendreportReceipt_9",
-                                "code": "e17",
+                                "code": "o1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivereportReceipt_9",
-                                  "code": "e18",
+                                  "code": "p1",
                                   "guards": [],
                                   "children": []
                                  }
@@ -283,12 +283,12 @@
                                },
                                {
                                 "event": "checkloop_issueReceipt_7_loop1",
-                                "code": "e19",
+                                "code": "o2",
                                 "guards": [
                                  "b1"
                                 ],
                                 "loop_back_to": "sendissueReceipt_7",
-                                "loop_back_to_code": "e13",
+                                "loop_back_to_code": "k1",
                                 "children": []
                                }
                               ]
@@ -322,10 +322,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e13",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e13"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ k1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ k1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

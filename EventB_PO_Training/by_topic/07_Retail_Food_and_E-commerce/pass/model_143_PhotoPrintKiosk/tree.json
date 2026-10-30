@@ -4,44 +4,44 @@
   "a2": "t_obs > 13"
  },
  "event_codes": {
-  "e1": "sendcheckPrint_1",
-  "e2": "receivecheckPrint_1",
-  "e3": "sendassignPrint_2",
-  "e4": "receiveassignPrint_2",
-  "e5": "sendassignOrder_3",
-  "e6": "receiveassignOrder_3",
-  "e7": "sendreservePhoto_4",
-  "e8": "receivereservePhoto_4",
-  "e9": "sendupdatePhoto_5",
-  "e10": "receiveupdatePhoto_5",
-  "e11": "sendschedulePrint_6",
-  "e12": "receiveschedulePrint_6"
+  "a1": "sendcheckPrint_1",
+  "b1": "receivecheckPrint_1",
+  "c1": "sendassignPrint_2",
+  "d1": "receiveassignPrint_2",
+  "e1": "sendassignOrder_3",
+  "e2": "sendupdatePhoto_5",
+  "f1": "receiveassignOrder_3",
+  "f2": "receiveupdatePhoto_5",
+  "g1": "sendreservePhoto_4",
+  "h1": "receivereservePhoto_4",
+  "i1": "sendschedulePrint_6",
+  "j1": "receiveschedulePrint_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
-   "a1"
-  ],
-  "e7": [
-   "a1"
-  ],
-  "e8": [
-   "a1"
-  ],
-  "e9": [
+  "e2": [
    "a2"
   ],
-  "e10": [
+  "f1": [
+   "a1"
+  ],
+  "f2": [
    "a2"
   ],
-  "e11": [],
-  "e12": []
+  "g1": [
+   "a1"
+  ],
+  "h1": [
+   "a1"
+  ],
+  "i1": [],
+  "j1": []
  },
  "guard_tree": {
   "a1": {},
@@ -58,60 +58,60 @@
   "children": [
    {
     "event": "sendcheckPrint_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivecheckPrint_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendassignPrint_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveassignPrint_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendassignOrder_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveassignOrder_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendreservePhoto_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivereservePhoto_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendschedulePrint_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveschedulePrint_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -127,26 +127,26 @@
            },
            {
             "event": "sendupdatePhoto_5",
-            "code": "e9",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receiveupdatePhoto_5",
-              "code": "e10",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendschedulePrint_6",
-                "code": "e11",
+                "code": "i1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receiveschedulePrint_6",
-                  "code": "e12",
+                  "code": "j1",
                   "guards": [],
                   "children": []
                  }
@@ -167,8 +167,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12",
-  "e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

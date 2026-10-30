@@ -13,62 +13,62 @@ model_197  WaterLeakDetection
    a1 -> b1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendfetchTicket_1
-   e2   receivefetchTicket_1
-   e3   sendupdateLeak_2
-   e4   receiveupdateLeak_2
-   e5   sendreserveValve_3  [a1]
-   e6   receivereserveValve_3  [a1]
-   e7   sendreleaseLeak_4_opt1  [a1 b1]
-   e8   receivereleaseLeak_4_opt1  [a1 b1]
-   e9   sendreleaseTicket_5  [a1]
-   e10  receivereleaseTicket_5  [a1]
-   e11  sendreportValve_6  [a1]
-   e12  receivereportValve_6  [a1]
-   e13  sendsyncTicket_7  [a1]
-   e14  receivesyncTicket_7  [a1]
-   e15  sendissueTicket_8  [a1]
-   e16  receiveissueTicket_8  [a1]
-   e17  sendcancelLeak_9  [a1]
-   e18  receivecancelLeak_9  [a1]
-   e19  sendackLeak_10  [a1]
-   e20  receiveackLeak_10  [a1]
-   e21  sendreportLeak_11
-   e22  receivereportLeak_11
-   e23  checkloop_reserveValve_3_loop1  [a1]
+   a1   sendfetchTicket_1
+   b1   receivefetchTicket_1
+   c1   sendupdateLeak_2
+   d1   receiveupdateLeak_2
+   e1   sendreserveValve_3  (guard a1)
+   f1   receivereserveValve_3  (guard a1)
+   g1   sendreleaseLeak_4_opt1  (guard a1 b1)
+   h1   receivereleaseLeak_4_opt1  (guard a1 b1)
+   i1   sendreleaseTicket_5  (guard a1)
+   j1   receivereleaseTicket_5  (guard a1)
+   k1   sendreportValve_6  (guard a1)
+   l1   receivereportValve_6  (guard a1)
+   m1   sendsyncTicket_7  (guard a1)
+   n1   receivesyncTicket_7  (guard a1)
+   o1   sendissueTicket_8  (guard a1)
+   p1   receiveissueTicket_8  (guard a1)
+   q1   sendcancelLeak_9  (guard a1)
+   r1   receivecancelLeak_9  (guard a1)
+   s1   sendackLeak_10  (guard a1)
+   t1   receiveackLeak_10  (guard a1)
+   u1   sendreportLeak_11
+   u2   checkloop_reserveValve_3_loop1  (guard a1)
+   v1   receivereportLeak_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20
-       ├── e21 → e22
-       └── e23 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+       ├── u1 → v1
+       └── u2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendfetchTicket_1
-       └── e2 receivefetchTicket_1
-           └── e3 sendupdateLeak_2
-               └── e4 receiveupdateLeak_2
-                   └── e5 sendreserveValve_3  [a1]
-                       └── e6 receivereserveValve_3  [a1]
-                           └── e7 sendreleaseLeak_4_opt1  [a1 b1]
-                               └── e8 receivereleaseLeak_4_opt1  [a1 b1]
-                                   └── e9 sendreleaseTicket_5  [a1]
-                                       └── e10 receivereleaseTicket_5  [a1]
-                                           └── e11 sendreportValve_6  [a1]
-                                               └── e12 receivereportValve_6  [a1]
-                                                   └── e13 sendsyncTicket_7  [a1]
-                                                       └── e14 receivesyncTicket_7  [a1]
-                                                           └── e15 sendissueTicket_8  [a1]
-                                                               └── e16 receiveissueTicket_8  [a1]
-                                                                   └── e17 sendcancelLeak_9  [a1]
-                                                                       └── e18 receivecancelLeak_9  [a1]
-                                                                           └── e19 sendackLeak_10  [a1]
-                                                                               └── e20 receiveackLeak_10  [a1]
-                                                                                   ├── e21 sendreportLeak_11
-                                                                                   │   └── e22 receivereportLeak_11
-                                                                                   └── e23 checkloop_reserveValve_3_loop1  [a1]  ↺ กลับไป sendreserveValve_3
+   └── a1 sendfetchTicket_1
+       └── b1 receivefetchTicket_1
+           └── c1 sendupdateLeak_2
+               └── d1 receiveupdateLeak_2
+                   └── e1 sendreserveValve_3  (guard a1)
+                       └── f1 receivereserveValve_3  (guard a1)
+                           └── g1 sendreleaseLeak_4_opt1  (guard a1 b1)
+                               └── h1 receivereleaseLeak_4_opt1  (guard a1 b1)
+                                   └── i1 sendreleaseTicket_5  (guard a1)
+                                       └── j1 receivereleaseTicket_5  (guard a1)
+                                           └── k1 sendreportValve_6  (guard a1)
+                                               └── l1 receivereportValve_6  (guard a1)
+                                                   └── m1 sendsyncTicket_7  (guard a1)
+                                                       └── n1 receivesyncTicket_7  (guard a1)
+                                                           └── o1 sendissueTicket_8  (guard a1)
+                                                               └── p1 receiveissueTicket_8  (guard a1)
+                                                                   └── q1 sendcancelLeak_9  (guard a1)
+                                                                       └── r1 receivecancelLeak_9  (guard a1)
+                                                                           └── s1 sendackLeak_10  (guard a1)
+                                                                               └── t1 receiveackLeak_10  (guard a1)
+                                                                                   ├── u1 sendreportLeak_11
+                                                                                   │   └── v1 receivereportLeak_11
+                                                                                   └── u2 checkloop_reserveValve_3_loop1  (guard a1)  ↺ กลับไป sendreserveValve_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ e1

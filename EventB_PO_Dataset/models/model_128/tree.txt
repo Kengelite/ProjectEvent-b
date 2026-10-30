@@ -14,46 +14,46 @@ model_128  MobileTopUp
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendnotifyCredit_1
-   e2   receivenotifyCredit_1
-   e3   sendconfirmBundle_2
-   e4   receiveconfirmBundle_2
-   e5   sendreportBundle_3  [a1]
-   e6   receivereportBundle_3  [a1]
-   e7   sendackCredit_4  [a1]
-   e8   receiveackCredit_4  [a1]
-   e9   sendcheckBundle_5  [a2]
-   e10  receivecheckBundle_5  [a2]
-   e11  sendassignCredit_6  [a2]
-   e12  receiveassignCredit_6  [a2]
-   e13  sendreleaseTopup_7
-   e14  receivereleaseTopup_7
+   a1   sendnotifyCredit_1
+   b1   receivenotifyCredit_1
+   c1   sendconfirmBundle_2
+   d1   receiveconfirmBundle_2
+   e1   sendreportBundle_3  (guard a1)
+   e2   sendcheckBundle_5  (guard a2)
+   f1   receivereportBundle_3  (guard a1)
+   f2   receivecheckBundle_5  (guard a2)
+   g1   sendackCredit_4  (guard a1)
+   g2   sendassignCredit_6  (guard a2)
+   h1   receiveackCredit_4  (guard a1)
+   h2   receiveassignCredit_6  (guard a2)
+   i1   sendreleaseTopup_7
+   j1   receivereleaseTopup_7
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e7 → e8 → e13 → e14
-       └── e9 → e10 → e11 → e12 → e13 → e14
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → g2 → h2 → i1 → j1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendnotifyCredit_1
-       └── e2 receivenotifyCredit_1
-           └── e3 sendconfirmBundle_2
-               └── e4 receiveconfirmBundle_2
-                   ├── e5 sendreportBundle_3  [a1]
-                   │   └── e6 receivereportBundle_3  [a1]
-                   │       └── e7 sendackCredit_4  [a1]
-                   │           └── e8 receiveackCredit_4  [a1]
-                   │               └── e13 sendreleaseTopup_7
-                   │                   └── e14 receivereleaseTopup_7
-                   └── e9 sendcheckBundle_5  [a2]
-                       └── e10 receivecheckBundle_5  [a2]
-                           └── e11 sendassignCredit_6  [a2]
-                               └── e12 receiveassignCredit_6  [a2]
-                                   └── e13 sendreleaseTopup_7
-                                       └── e14 receivereleaseTopup_7
+   └── a1 sendnotifyCredit_1
+       └── b1 receivenotifyCredit_1
+           └── c1 sendconfirmBundle_2
+               └── d1 receiveconfirmBundle_2
+                   ├── e1 sendreportBundle_3  (guard a1)
+                   │   └── f1 receivereportBundle_3  (guard a1)
+                   │       └── g1 sendackCredit_4  (guard a1)
+                   │           └── h1 receiveackCredit_4  (guard a1)
+                   │               └── i1 sendreleaseTopup_7
+                   │                   └── j1 receivereleaseTopup_7
+                   └── e2 sendcheckBundle_5  (guard a2)
+                       └── f2 receivecheckBundle_5  (guard a2)
+                           └── g2 sendassignCredit_6  (guard a2)
+                               └── h2 receiveassignCredit_6  (guard a2)
+                                   └── i1 sendreleaseTopup_7
+                                       └── j1 receivereleaseTopup_7
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13 -> e14
-   e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1

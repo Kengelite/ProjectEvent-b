@@ -11,37 +11,37 @@ model_154  RentalScooter
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendfetchBattery_1
-   e2   receivefetchBattery_1
-   e3   sendrequestBattery_2
-   e4   receiverequestBattery_2
-   e5   sendupdateUnlock_3_opt1  [a1]
-   e6   receiveupdateUnlock_3_opt1  [a1]
-   e7   sendissueTrip_4
-   e8   receiveissueTrip_4
-   e9   sendscheduleTrip_5
-   e10  receivescheduleTrip_5
-   e11  sendfetchTrip_6
-   e12  receivefetchTrip_6
+   a1   sendfetchBattery_1
+   b1   receivefetchBattery_1
+   c1   sendrequestBattery_2
+   d1   receiverequestBattery_2
+   e1   sendupdateUnlock_3_opt1  (guard a1)
+   f1   receiveupdateUnlock_3_opt1  (guard a1)
+   g1   sendissueTrip_4
+   h1   receiveissueTrip_4
+   i1   sendscheduleTrip_5
+   j1   receivescheduleTrip_5
+   k1   sendfetchTrip_6
+   l1   receivefetchTrip_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendfetchBattery_1
-       └── e2 receivefetchBattery_1
-           └── e3 sendrequestBattery_2
-               └── e4 receiverequestBattery_2
-                   └── e5 sendupdateUnlock_3_opt1  [a1]
-                       └── e6 receiveupdateUnlock_3_opt1  [a1]
-                           └── e7 sendissueTrip_4
-                               └── e8 receiveissueTrip_4
-                                   └── e9 sendscheduleTrip_5
-                                       └── e10 receivescheduleTrip_5
-                                           └── e11 sendfetchTrip_6
-                                               └── e12 receivefetchTrip_6
+   └── a1 sendfetchBattery_1
+       └── b1 receivefetchBattery_1
+           └── c1 sendrequestBattery_2
+               └── d1 receiverequestBattery_2
+                   └── e1 sendupdateUnlock_3_opt1  (guard a1)
+                       └── f1 receiveupdateUnlock_3_opt1  (guard a1)
+                           └── g1 sendissueTrip_4
+                               └── h1 receiveissueTrip_4
+                                   └── i1 sendscheduleTrip_5
+                                       └── j1 receivescheduleTrip_5
+                                           └── k1 sendfetchTrip_6
+                                               └── l1 receivefetchTrip_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

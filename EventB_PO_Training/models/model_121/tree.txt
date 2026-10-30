@@ -16,50 +16,50 @@ model_121  LivestockFeeder
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreportRation_1
-   e2   receivereportRation_1
-   e3   sendsyncFeed_2
-   e4   receivesyncFeed_2
-   e5   sendackFeed_3  [a1]
-   e6   receiveackFeed_3  [a1]
-   e7   sendupdateRation_4_opt1  [a1 b1]
-   e8   receiveupdateRation_4_opt1  [a1 b1]
-   e9   sendqueryRation_5_opt1  [a1 b1]
-   e10  receivequeryRation_5_opt1  [a1 b1]
-   e11  sendconfirmFeed_6  [a1]
-   e12  receiveconfirmFeed_6  [a1]
-   e13  sendcancelRation_7  [a2]
-   e14  receivecancelRation_7  [a2]
-   e15  sendconfirmRation_8
-   e16  receiveconfirmRation_8
+   a1   sendreportRation_1
+   b1   receivereportRation_1
+   c1   sendsyncFeed_2
+   d1   receivesyncFeed_2
+   e1   sendackFeed_3  (guard a1)
+   e2   sendcancelRation_7  (guard a2)
+   f1   receiveackFeed_3  (guard a1)
+   f2   receivecancelRation_7  (guard a2)
+   g1   sendupdateRation_4_opt1  (guard a1 b1)
+   h1   receiveupdateRation_4_opt1  (guard a1 b1)
+   i1   sendqueryRation_5_opt1  (guard a1 b1)
+   j1   receivequeryRation_5_opt1  (guard a1 b1)
+   k1   sendconfirmFeed_6  (guard a1)
+   l1   receiveconfirmFeed_6  (guard a1)
+   m1   sendconfirmRation_8
+   n1   receiveconfirmRation_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e15 → e16
-       └── e13 → e14 → e15 → e16
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       └── e2 → f2 → m1 → n1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreportRation_1
-       └── e2 receivereportRation_1
-           └── e3 sendsyncFeed_2
-               └── e4 receivesyncFeed_2
-                   ├── e5 sendackFeed_3  [a1]
-                   │   └── e6 receiveackFeed_3  [a1]
-                   │       └── e7 sendupdateRation_4_opt1  [a1 b1]
-                   │           └── e8 receiveupdateRation_4_opt1  [a1 b1]
-                   │               └── e9 sendqueryRation_5_opt1  [a1 b1]
-                   │                   └── e10 receivequeryRation_5_opt1  [a1 b1]
-                   │                       └── e11 sendconfirmFeed_6  [a1]
-                   │                           └── e12 receiveconfirmFeed_6  [a1]
-                   │                               └── e15 sendconfirmRation_8
-                   │                                   └── e16 receiveconfirmRation_8
-                   └── e13 sendcancelRation_7  [a2]
-                       └── e14 receivecancelRation_7  [a2]
-                           └── e15 sendconfirmRation_8
-                               └── e16 receiveconfirmRation_8
+   └── a1 sendreportRation_1
+       └── b1 receivereportRation_1
+           └── c1 sendsyncFeed_2
+               └── d1 receivesyncFeed_2
+                   ├── e1 sendackFeed_3  (guard a1)
+                   │   └── f1 receiveackFeed_3  (guard a1)
+                   │       └── g1 sendupdateRation_4_opt1  (guard a1 b1)
+                   │           └── h1 receiveupdateRation_4_opt1  (guard a1 b1)
+                   │               └── i1 sendqueryRation_5_opt1  (guard a1 b1)
+                   │                   └── j1 receivequeryRation_5_opt1  (guard a1 b1)
+                   │                       └── k1 sendconfirmFeed_6  (guard a1)
+                   │                           └── l1 receiveconfirmFeed_6  (guard a1)
+                   │                               └── m1 sendconfirmRation_8
+                   │                                   └── n1 receiveconfirmRation_8
+                   └── e2 sendcancelRation_7  (guard a2)
+                       └── f2 receivecancelRation_7  (guard a2)
+                           └── m1 sendconfirmRation_8
+                               └── n1 receiveconfirmRation_8
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e13 -> e14 -> e15 -> e16
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1

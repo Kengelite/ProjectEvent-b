@@ -4,52 +4,52 @@
   "b1": "wantSnack = 1"
  },
  "event_codes": {
-  "e1": "sendselectMovie_1",
-  "e2": "receiveselectMovie_1",
-  "e3": "sendshowtimes_2",
-  "e4": "receiveshowtimes_2",
-  "e5": "sendpickSeat_3",
-  "e6": "receivepickSeat_3",
-  "e7": "sendseatStatus_4",
-  "e8": "receiveseatStatus_4",
-  "e9": "sendreserveSeat_5",
-  "e10": "receivereserveSeat_5",
-  "e11": "sendaddSnack_6_opt1",
-  "e12": "receiveaddSnack_6_opt1",
-  "e13": "sendissueTicket_7",
-  "e14": "receiveissueTicket_7",
-  "e15": "checkloop_pickSeat_3_loop1"
+  "a1": "sendselectMovie_1",
+  "b1": "receiveselectMovie_1",
+  "c1": "sendshowtimes_2",
+  "d1": "receiveshowtimes_2",
+  "e1": "sendpickSeat_3",
+  "f1": "receivepickSeat_3",
+  "g1": "sendseatStatus_4",
+  "h1": "receiveseatStatus_4",
+  "i1": "sendreserveSeat_5",
+  "i2": "checkloop_pickSeat_3_loop1",
+  "j1": "receivereserveSeat_5",
+  "k1": "sendaddSnack_6_opt1",
+  "l1": "receiveaddSnack_6_opt1",
+  "m1": "sendissueTicket_7",
+  "n1": "receiveissueTicket_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "h1": [
    "a1"
   ],
-  "e9": [],
-  "e10": [],
-  "e11": [
+  "i1": [],
+  "i2": [
+   "a1"
+  ],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e12": [
+  "l1": [
    "b1"
   ],
-  "e13": [],
-  "e14": [],
-  "e15": [
-   "a1"
-  ]
+  "m1": [],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -66,84 +66,84 @@
   "children": [
    {
     "event": "sendselectMovie_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveselectMovie_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendshowtimes_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveshowtimes_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendpickSeat_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivepickSeat_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendseatStatus_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receiveseatStatus_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendreserveSeat_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivereserveSeat_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendaddSnack_6_opt1",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receiveaddSnack_6_opt1",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendissueTicket_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receiveissueTicket_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -159,12 +159,12 @@
                    },
                    {
                     "event": "checkloop_pickSeat_3_loop1",
-                    "code": "e15",
+                    "code": "i2",
                     "guards": [
                      "a1"
                     ],
                     "loop_back_to": "sendpickSeat_3",
-                    "loop_back_to_code": "e5",
+                    "loop_back_to_code": "e1",
                     "children": []
                    }
                   ]
@@ -186,8 +186,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

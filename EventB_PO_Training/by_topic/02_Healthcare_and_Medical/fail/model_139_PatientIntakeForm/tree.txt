@@ -13,50 +13,50 @@ model_139  PatientIntakeForm
    a1 -> b1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreleaseForm_1
-   e2   receivereleaseForm_1
-   e3   sendcancelForm_2
-   e4   receivecancelForm_2
-   e5   sendconfirmForm_3  [a1]
-   e6   receiveconfirmForm_3  [a1]
-   e7   sendreportForm_4_opt1  [a1 b1]
-   e8   receivereportForm_4_opt1  [a1 b1]
-   e9   sendscheduleConsent_5  [a1]
-   e10  receivescheduleConsent_5  [a1]
-   e11  sendconfirmConsent_6  [a1]
-   e12  receiveconfirmConsent_6  [a1]
-   e13  sendissueForm_7  [a1]
-   e14  receiveissueForm_7  [a1]
-   e15  sendassignRecord_8
-   e16  receiveassignRecord_8
-   e17  checkloop_confirmForm_3_loop1  [a1]
+   a1   sendreleaseForm_1
+   b1   receivereleaseForm_1
+   c1   sendcancelForm_2
+   d1   receivecancelForm_2
+   e1   sendconfirmForm_3  (guard a1)
+   f1   receiveconfirmForm_3  (guard a1)
+   g1   sendreportForm_4_opt1  (guard a1 b1)
+   h1   receivereportForm_4_opt1  (guard a1 b1)
+   i1   sendscheduleConsent_5  (guard a1)
+   j1   receivescheduleConsent_5  (guard a1)
+   k1   sendconfirmConsent_6  (guard a1)
+   l1   receiveconfirmConsent_6  (guard a1)
+   m1   sendissueForm_7  (guard a1)
+   n1   receiveissueForm_7  (guard a1)
+   o1   sendassignRecord_8
+   o2   checkloop_confirmForm_3_loop1  (guard a1)
+   p1   receiveassignRecord_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
-       ├── e15 → e16
-       └── e17 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1
+       └── o2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreleaseForm_1
-       └── e2 receivereleaseForm_1
-           └── e3 sendcancelForm_2
-               └── e4 receivecancelForm_2
-                   └── e5 sendconfirmForm_3  [a1]
-                       └── e6 receiveconfirmForm_3  [a1]
-                           └── e7 sendreportForm_4_opt1  [a1 b1]
-                               └── e8 receivereportForm_4_opt1  [a1 b1]
-                                   └── e9 sendscheduleConsent_5  [a1]
-                                       └── e10 receivescheduleConsent_5  [a1]
-                                           └── e11 sendconfirmConsent_6  [a1]
-                                               └── e12 receiveconfirmConsent_6  [a1]
-                                                   └── e13 sendissueForm_7  [a1]
-                                                       └── e14 receiveissueForm_7  [a1]
-                                                           ├── e15 sendassignRecord_8
-                                                           │   └── e16 receiveassignRecord_8
-                                                           └── e17 checkloop_confirmForm_3_loop1  [a1]  ↺ กลับไป sendconfirmForm_3
+   └── a1 sendreleaseForm_1
+       └── b1 receivereleaseForm_1
+           └── c1 sendcancelForm_2
+               └── d1 receivecancelForm_2
+                   └── e1 sendconfirmForm_3  (guard a1)
+                       └── f1 receiveconfirmForm_3  (guard a1)
+                           └── g1 sendreportForm_4_opt1  (guard a1 b1)
+                               └── h1 receivereportForm_4_opt1  (guard a1 b1)
+                                   └── i1 sendscheduleConsent_5  (guard a1)
+                                       └── j1 receivescheduleConsent_5  (guard a1)
+                                           └── k1 sendconfirmConsent_6  (guard a1)
+                                               └── l1 receiveconfirmConsent_6  (guard a1)
+                                                   └── m1 sendissueForm_7  (guard a1)
+                                                       └── n1 receiveissueForm_7  (guard a1)
+                                                           ├── o1 sendassignRecord_8
+                                                           │   └── p1 receiveassignRecord_8
+                                                           └── o2 checkloop_confirmForm_3_loop1  (guard a1)  ↺ กลับไป sendconfirmForm_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ e1

@@ -4,48 +4,48 @@
   "b1": "stepNo < 11"
  },
  "event_codes": {
-  "e1": "sendconfirmTour_1",
-  "e2": "receiveconfirmTour_1",
-  "e3": "sendnotifyTour_2",
-  "e4": "receivenotifyTour_2",
-  "e5": "sendreserveTour_3_opt1",
-  "e6": "receivereserveTour_3_opt1",
-  "e7": "sendcancelTour_4",
-  "e8": "receivecancelTour_4",
-  "e9": "sendvalidateTour_5",
-  "e10": "receivevalidateTour_5",
-  "e11": "sendcheckTour_6",
-  "e12": "receivecheckTour_6",
-  "e13": "sendvalidateAudio_7",
-  "e14": "receivevalidateAudio_7",
-  "e15": "checkloop_checkTour_6_loop1"
+  "a1": "sendconfirmTour_1",
+  "b1": "receiveconfirmTour_1",
+  "c1": "sendnotifyTour_2",
+  "d1": "receivenotifyTour_2",
+  "e1": "sendreserveTour_3_opt1",
+  "f1": "receivereserveTour_3_opt1",
+  "g1": "sendcancelTour_4",
+  "h1": "receivecancelTour_4",
+  "i1": "sendvalidateTour_5",
+  "j1": "receivevalidateTour_5",
+  "k1": "sendcheckTour_6",
+  "l1": "receivecheckTour_6",
+  "m1": "sendvalidateAudio_7",
+  "m2": "checkloop_checkTour_6_loop1",
+  "n1": "receivevalidateAudio_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [],
-  "e8": [],
-  "e9": [],
-  "e10": [],
-  "e11": [
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e12": [
+  "l1": [
    "b1"
   ],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "m1": [],
+  "m2": [
    "b1"
-  ]
+  ],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -62,80 +62,80 @@
   "children": [
    {
     "event": "sendconfirmTour_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveconfirmTour_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendnotifyTour_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivenotifyTour_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendreserveTour_3_opt1",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivereserveTour_3_opt1",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendcancelTour_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivecancelTour_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendvalidateTour_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivevalidateTour_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendcheckTour_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receivecheckTour_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendvalidateAudio_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivevalidateAudio_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -143,12 +143,12 @@
                            },
                            {
                             "event": "checkloop_checkTour_6_loop1",
-                            "code": "e15",
+                            "code": "m2",
                             "guards": [
                              "b1"
                             ],
                             "loop_back_to": "sendcheckTour_6",
-                            "loop_back_to_code": "e11",
+                            "loop_back_to_code": "k1",
                             "children": []
                            }
                           ]
@@ -178,8 +178,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 ↺ e11"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ k1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

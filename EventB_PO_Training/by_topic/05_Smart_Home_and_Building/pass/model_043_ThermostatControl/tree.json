@@ -5,58 +5,58 @@
   "b2": "overheat = 0"
  },
  "event_codes": {
-  "e1": "sendstartHeating_1",
-  "e2": "receivestartHeating_1",
-  "e3": "sendheatingAck_2",
-  "e4": "receiveheatingAck_2",
-  "e5": "sendqueryTemp_3",
-  "e6": "receivequeryTemp_3",
-  "e7": "sendtempReport_4",
-  "e8": "receivetempReport_4",
-  "e9": "sendreducePower_5",
-  "e10": "receivereducePower_5",
-  "e11": "sendkeepPower_6",
-  "e12": "receivekeepPower_6",
-  "e13": "sendstopHeating_7",
-  "e14": "receivestopHeating_7",
-  "e15": "checkloop_queryTemp_3_loop1"
+  "a1": "sendstartHeating_1",
+  "b1": "receivestartHeating_1",
+  "c1": "sendheatingAck_2",
+  "d1": "receiveheatingAck_2",
+  "e1": "sendqueryTemp_3",
+  "f1": "receivequeryTemp_3",
+  "g1": "sendtempReport_4",
+  "h1": "receivetempReport_4",
+  "i1": "sendreducePower_5",
+  "i2": "sendkeepPower_6",
+  "j1": "receivereducePower_5",
+  "j2": "receivekeepPower_6",
+  "k1": "sendstopHeating_7",
+  "l1": "receivestopHeating_7",
+  "m1": "checkloop_queryTemp_3_loop1"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "i1": [
    "a1",
    "b1"
   ],
-  "e10": [
+  "i2": [
+   "a1",
+   "b2"
+  ],
+  "j1": [
    "a1",
    "b1"
   ],
-  "e11": [
+  "j2": [
    "a1",
    "b2"
   ],
-  "e12": [
-   "a1",
-   "b2"
-  ],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "k1": [],
+  "l1": [],
+  "m1": [
    "a1"
   ]
  },
@@ -77,55 +77,55 @@
   "children": [
    {
     "event": "sendstartHeating_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivestartHeating_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendheatingAck_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveheatingAck_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendqueryTemp_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivequeryTemp_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendtempReport_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivetempReport_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendreducePower_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -133,7 +133,7 @@
                     "children": [
                      {
                       "event": "receivereducePower_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -141,12 +141,12 @@
                       "children": [
                        {
                         "event": "sendstopHeating_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivestopHeating_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -154,12 +154,12 @@
                        },
                        {
                         "event": "checkloop_queryTemp_3_loop1",
-                        "code": "e15",
+                        "code": "m1",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendqueryTemp_3",
-                        "loop_back_to_code": "e5",
+                        "loop_back_to_code": "e1",
                         "children": []
                        }
                       ]
@@ -168,7 +168,7 @@
                    },
                    {
                     "event": "sendkeepPower_6",
-                    "code": "e11",
+                    "code": "i2",
                     "guards": [
                      "a1",
                      "b2"
@@ -176,7 +176,7 @@
                     "children": [
                      {
                       "event": "receivekeepPower_6",
-                      "code": "e12",
+                      "code": "j2",
                       "guards": [
                        "a1",
                        "b2"
@@ -184,12 +184,12 @@
                       "children": [
                        {
                         "event": "sendstopHeating_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivestopHeating_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -197,12 +197,12 @@
                        },
                        {
                         "event": "checkloop_queryTemp_3_loop1",
-                        "code": "e15",
+                        "code": "m1",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendqueryTemp_3",
-                        "loop_back_to_code": "e5",
+                        "loop_back_to_code": "e1",
                         "children": []
                        }
                       ]
@@ -228,10 +228,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 ↺ e5",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12 -> e15 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> m1 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> m1 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

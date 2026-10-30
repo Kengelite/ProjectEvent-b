@@ -5,70 +5,70 @@
   "b2": "retryNo mod 3 ≠ 0"
  },
  "event_codes": {
-  "e1": "sendvalidateFeed_1",
-  "e2": "receivevalidateFeed_1",
-  "e3": "sendassignAudio_2",
-  "e4": "receiveassignAudio_2",
-  "e5": "sendsendEpisode_3",
-  "e6": "receivesendEpisode_3",
-  "e7": "sendreserveEpisode_4",
-  "e8": "receivereserveEpisode_4",
-  "e9": "sendissueAudio_5",
-  "e10": "receiveissueAudio_5",
-  "e11": "sendcheckFeed_6",
-  "e12": "receivecheckFeed_6",
-  "e13": "sendsendAudio_7",
-  "e14": "receivesendAudio_7",
-  "e15": "sendlogAudio_8",
-  "e16": "receivelogAudio_8",
-  "e17": "checkloop_sendEpisode_3_loop1"
+  "a1": "sendvalidateFeed_1",
+  "b1": "receivevalidateFeed_1",
+  "c1": "sendassignAudio_2",
+  "d1": "receiveassignAudio_2",
+  "e1": "sendsendEpisode_3",
+  "f1": "receivesendEpisode_3",
+  "g1": "sendreserveEpisode_4",
+  "g2": "sendcheckFeed_6",
+  "h1": "receivereserveEpisode_4",
+  "h2": "receivecheckFeed_6",
+  "i1": "sendissueAudio_5",
+  "j1": "receiveissueAudio_5",
+  "k1": "sendsendAudio_7",
+  "l1": "receivesendAudio_7",
+  "m1": "sendlogAudio_8",
+  "m2": "checkloop_sendEpisode_3_loop1",
+  "n1": "receivelogAudio_8"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1",
    "b1"
   ],
-  "e8": [
-   "a1",
-   "b1"
-  ],
-  "e9": [
-   "a1",
-   "b1"
-  ],
-  "e10": [
-   "a1",
-   "b1"
-  ],
-  "e11": [
+  "g2": [
    "a1",
    "b2"
   ],
-  "e12": [
+  "h1": [
+   "a1",
+   "b1"
+  ],
+  "h2": [
    "a1",
    "b2"
   ],
-  "e13": [
+  "i1": [
+   "a1",
+   "b1"
+  ],
+  "j1": [
+   "a1",
+   "b1"
+  ],
+  "k1": [
    "a1"
   ],
-  "e14": [
+  "l1": [
    "a1"
   ],
-  "e15": [],
-  "e16": [],
-  "e17": [
+  "m1": [],
+  "m2": [
    "a1"
-  ]
+  ],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -87,41 +87,41 @@
   "children": [
    {
     "event": "sendvalidateFeed_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivevalidateFeed_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendassignAudio_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveassignAudio_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendsendEpisode_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivesendEpisode_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendreserveEpisode_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -129,7 +129,7 @@
                 "children": [
                  {
                   "event": "receivereserveEpisode_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -137,7 +137,7 @@
                   "children": [
                    {
                     "event": "sendissueAudio_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -145,7 +145,7 @@
                     "children": [
                      {
                       "event": "receiveissueAudio_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -153,26 +153,26 @@
                       "children": [
                        {
                         "event": "sendsendAudio_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [
                          "a1"
                         ],
                         "children": [
                          {
                           "event": "receivesendAudio_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [
                            "a1"
                           ],
                           "children": [
                            {
                             "event": "sendlogAudio_8",
-                            "code": "e15",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivelogAudio_8",
-                              "code": "e16",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -180,12 +180,12 @@
                            },
                            {
                             "event": "checkloop_sendEpisode_3_loop1",
-                            "code": "e17",
+                            "code": "m2",
                             "guards": [
                              "a1"
                             ],
                             "loop_back_to": "sendsendEpisode_3",
-                            "loop_back_to_code": "e5",
+                            "loop_back_to_code": "e1",
                             "children": []
                            }
                           ]
@@ -202,7 +202,7 @@
                },
                {
                 "event": "sendcheckFeed_6",
-                "code": "e11",
+                "code": "g2",
                 "guards": [
                  "a1",
                  "b2"
@@ -210,7 +210,7 @@
                 "children": [
                  {
                   "event": "receivecheckFeed_6",
-                  "code": "e12",
+                  "code": "h2",
                   "guards": [
                    "a1",
                    "b2"
@@ -218,26 +218,26 @@
                   "children": [
                    {
                     "event": "sendsendAudio_7",
-                    "code": "e13",
+                    "code": "k1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receivesendAudio_7",
-                      "code": "e14",
+                      "code": "l1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendlogAudio_8",
-                        "code": "e15",
+                        "code": "m1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivelogAudio_8",
-                          "code": "e16",
+                          "code": "n1",
                           "guards": [],
                           "children": []
                          }
@@ -245,12 +245,12 @@
                        },
                        {
                         "event": "checkloop_sendEpisode_3_loop1",
-                        "code": "e17",
+                        "code": "m2",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendsendEpisode_3",
-                        "loop_back_to_code": "e5",
+                        "loop_back_to_code": "e1",
                         "children": []
                        }
                       ]
@@ -276,10 +276,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

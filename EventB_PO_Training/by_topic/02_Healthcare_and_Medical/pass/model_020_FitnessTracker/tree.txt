@@ -11,38 +11,38 @@ model_020  FitnessTracker
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendpairDevice_1
-   e2   receivepairDevice_1
-   e3   sendpairOK_2
-   e4   receivepairOK_2
-   e5   sendsyncSteps_3  [a1]
-   e6   receivesyncSteps_3  [a1]
-   e7   sendsyncAck_4  [a1]
-   e8   receivesyncAck_4  [a1]
-   e9   sendshowDashboard_5
-   e10  receiveshowDashboard_5
-   e11  checkloop_syncSteps_3_loop1  [a1]
+   a1   sendpairDevice_1
+   b1   receivepairDevice_1
+   c1   sendpairOK_2
+   d1   receivepairOK_2
+   e1   sendsyncSteps_3  (guard a1)
+   f1   receivesyncSteps_3  (guard a1)
+   g1   sendsyncAck_4  (guard a1)
+   h1   receivesyncAck_4  (guard a1)
+   i1   sendshowDashboard_5
+   i2   checkloop_syncSteps_3_loop1  (guard a1)
+   j1   receiveshowDashboard_5
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
-       ├── e9 → e10
-       └── e11 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1
+       └── i2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendpairDevice_1
-       └── e2 receivepairDevice_1
-           └── e3 sendpairOK_2
-               └── e4 receivepairOK_2
-                   └── e5 sendsyncSteps_3  [a1]
-                       └── e6 receivesyncSteps_3  [a1]
-                           └── e7 sendsyncAck_4  [a1]
-                               └── e8 receivesyncAck_4  [a1]
-                                   ├── e9 sendshowDashboard_5
-                                   │   └── e10 receiveshowDashboard_5
-                                   └── e11 checkloop_syncSteps_3_loop1  [a1]  ↺ กลับไป sendsyncSteps_3
+   └── a1 sendpairDevice_1
+       └── b1 receivepairDevice_1
+           └── c1 sendpairOK_2
+               └── d1 receivepairOK_2
+                   └── e1 sendsyncSteps_3  (guard a1)
+                       └── f1 receivesyncSteps_3  (guard a1)
+                           └── g1 sendsyncAck_4  (guard a1)
+                               └── h1 receivesyncAck_4  (guard a1)
+                                   ├── i1 sendshowDashboard_5
+                                   │   └── j1 receiveshowDashboard_5
+                                   └── i2 checkloop_syncSteps_3_loop1  (guard a1)  ↺ กลับไป sendsyncSteps_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1

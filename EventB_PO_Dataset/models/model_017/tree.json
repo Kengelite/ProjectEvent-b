@@ -6,75 +6,75 @@
   "a2": "priority = LOW"
  },
  "event_codes": {
-  "e1": "sendreportEmergency_1",
-  "e2": "receivereportEmergency_1",
-  "e3": "sendaskDetails_2",
-  "e4": "receiveaskDetails_2",
-  "e5": "sendprovideDetails_3",
-  "e6": "receiveprovideDetails_3",
-  "e7": "senddispatchAmbulance_4",
-  "e8": "receivedispatchAmbulance_4",
-  "e9": "sendsendLocation_5",
-  "e10": "receivesendLocation_5",
-  "e11": "sendrerouteRequest_6_opt1",
-  "e12": "receivererouteRequest_6_opt1",
-  "e13": "sendnotifyHospital_7",
-  "e14": "receivenotifyHospital_7",
-  "e15": "sendscheduleCallback_8",
-  "e16": "receivescheduleCallback_8",
-  "e17": "sendcloseCase_9",
-  "e18": "receivecloseCase_9",
-  "e19": "checkloop_sendLocation_5_loop1"
+  "a1": "sendreportEmergency_1",
+  "b1": "receivereportEmergency_1",
+  "c1": "sendaskDetails_2",
+  "d1": "receiveaskDetails_2",
+  "e1": "sendprovideDetails_3",
+  "f1": "receiveprovideDetails_3",
+  "g1": "senddispatchAmbulance_4",
+  "g2": "sendscheduleCallback_8",
+  "h1": "receivedispatchAmbulance_4",
+  "h2": "receivescheduleCallback_8",
+  "i1": "sendsendLocation_5",
+  "j1": "receivesendLocation_5",
+  "k1": "sendrerouteRequest_6_opt1",
+  "l1": "receivererouteRequest_6_opt1",
+  "m1": "sendnotifyHospital_7",
+  "m2": "checkloop_sendLocation_5_loop1",
+  "n1": "receivenotifyHospital_7",
+  "o1": "sendcloseCase_9",
+  "p1": "receivecloseCase_9"
  },
  "event_guards": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
   "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [],
-  "e6": [],
-  "e7": [
+  "f1": [],
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "g2": [
+   "a2"
+  ],
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "h2": [
+   "a2"
+  ],
+  "i1": [
    "a1",
    "b1"
   ],
-  "e10": [
+  "j1": [
    "a1",
    "b1"
   ],
-  "e11": [
+  "k1": [
    "a1",
    "b1",
    "c1"
   ],
-  "e12": [
+  "l1": [
    "a1",
    "b1",
    "c1"
   ],
-  "e13": [
+  "m1": [
    "a1"
   ],
-  "e14": [
-   "a1"
-  ],
-  "e15": [
-   "a2"
-  ],
-  "e16": [
-   "a2"
-  ],
-  "e17": [],
-  "e18": [],
-  "e19": [
+  "m2": [
    "a1",
    "b1"
-  ]
+  ],
+  "n1": [
+   "a1"
+  ],
+  "o1": [],
+  "p1": []
  },
  "guard_tree": {
   "a1": {
@@ -95,51 +95,51 @@
   "children": [
    {
     "event": "sendreportEmergency_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivereportEmergency_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendaskDetails_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveaskDetails_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendprovideDetails_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [],
             "children": [
              {
               "event": "receiveprovideDetails_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [],
               "children": [
                {
                 "event": "senddispatchAmbulance_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivedispatchAmbulance_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendsendLocation_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -147,7 +147,7 @@
                     "children": [
                      {
                       "event": "receivesendLocation_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -155,7 +155,7 @@
                       "children": [
                        {
                         "event": "sendrerouteRequest_6_opt1",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "a1",
                          "b1",
@@ -164,7 +164,7 @@
                         "children": [
                          {
                           "event": "receivererouteRequest_6_opt1",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "a1",
                            "b1",
@@ -173,26 +173,26 @@
                           "children": [
                            {
                             "event": "sendnotifyHospital_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [
                              "a1"
                             ],
                             "children": [
                              {
                               "event": "receivenotifyHospital_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [
                                "a1"
                               ],
                               "children": [
                                {
                                 "event": "sendcloseCase_9",
-                                "code": "e17",
+                                "code": "o1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivecloseCase_9",
-                                  "code": "e18",
+                                  "code": "p1",
                                   "guards": [],
                                   "children": []
                                  }
@@ -204,13 +204,13 @@
                            },
                            {
                             "event": "checkloop_sendLocation_5_loop1",
-                            "code": "e19",
+                            "code": "m2",
                             "guards": [
                              "a1",
                              "b1"
                             ],
                             "loop_back_to": "sendsendLocation_5",
-                            "loop_back_to_code": "e9",
+                            "loop_back_to_code": "i1",
                             "children": []
                            }
                           ]
@@ -227,26 +227,26 @@
                },
                {
                 "event": "sendscheduleCallback_8",
-                "code": "e15",
+                "code": "g2",
                 "guards": [
                  "a2"
                 ],
                 "children": [
                  {
                   "event": "receivescheduleCallback_8",
-                  "code": "e16",
+                  "code": "h2",
                   "guards": [
                    "a2"
                   ],
                   "children": [
                    {
                     "event": "sendcloseCase_9",
-                    "code": "e17",
+                    "code": "o1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivecloseCase_9",
-                      "code": "e18",
+                      "code": "p1",
                       "guards": [],
                       "children": []
                      }
@@ -271,9 +271,9 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e19 ↺ e9",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e15 -> e16 -> e17 -> e18"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ i1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> o1 -> p1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

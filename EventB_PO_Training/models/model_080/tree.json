@@ -4,40 +4,40 @@
   "a2": "t_obs > 11"
  },
  "event_codes": {
-  "e1": "sendapproveArea_1",
-  "e2": "receiveapproveArea_1",
-  "e3": "sendcheckMission_2",
-  "e4": "receivecheckMission_2",
-  "e5": "sendsyncSpray_3",
-  "e6": "receivesyncSpray_3",
-  "e7": "sendassignSpray_4",
-  "e8": "receiveassignSpray_4",
-  "e9": "sendscheduleSpray_5",
-  "e10": "receivescheduleSpray_5",
-  "e11": "sendassignMission_6",
-  "e12": "receiveassignMission_6"
+  "a1": "sendapproveArea_1",
+  "b1": "receiveapproveArea_1",
+  "c1": "sendcheckMission_2",
+  "d1": "receivecheckMission_2",
+  "e1": "sendsyncSpray_3",
+  "e2": "sendassignSpray_4",
+  "f1": "receivesyncSpray_3",
+  "f2": "receiveassignSpray_4",
+  "g1": "sendscheduleSpray_5",
+  "h1": "receivescheduleSpray_5",
+  "i1": "sendassignMission_6",
+  "j1": "receiveassignMission_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
    "a2"
   ],
-  "e8": [
-   "a2"
-  ],
-  "e9": [],
-  "e10": [],
-  "e11": [],
-  "e12": []
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": []
  },
  "guard_tree": {
   "a1": {},
@@ -54,56 +54,56 @@
   "children": [
    {
     "event": "sendapproveArea_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveapproveArea_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendcheckMission_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivecheckMission_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendsyncSpray_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivesyncSpray_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendscheduleSpray_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivescheduleSpray_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendassignMission_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveassignMission_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -119,36 +119,36 @@
            },
            {
             "event": "sendassignSpray_4",
-            "code": "e7",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receiveassignSpray_4",
-              "code": "e8",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendscheduleSpray_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivescheduleSpray_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendassignMission_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveassignMission_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -173,8 +173,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

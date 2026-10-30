@@ -10,29 +10,29 @@ model_019  FerryTicketGate
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendtapTicket_1
-   e2   receivetapTicket_1
-   e3   sendvalidate_2
-   e4   receivevalidate_2
-   e5   sendopenBarrier_3
-   e6   receiveopenBarrier_3
-   e7   sendpassThrough_4
-   e8   receivepassThrough_4
+   a1   sendtapTicket_1
+   b1   receivetapTicket_1
+   c1   sendvalidate_2
+   d1   receivevalidate_2
+   e1   sendopenBarrier_3
+   f1   receiveopenBarrier_3
+   g1   sendpassThrough_4
+   h1   receivepassThrough_4
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendtapTicket_1
-       └── e2 receivetapTicket_1
-           └── e3 sendvalidate_2
-               └── e4 receivevalidate_2
-                   └── e5 sendopenBarrier_3
-                       └── e6 receiveopenBarrier_3
-                           └── e7 sendpassThrough_4
-                               └── e8 receivepassThrough_4
+   └── a1 sendtapTicket_1
+       └── b1 receivetapTicket_1
+           └── c1 sendvalidate_2
+               └── d1 receivevalidate_2
+                   └── e1 sendopenBarrier_3
+                       └── f1 receiveopenBarrier_3
+                           └── g1 sendpassThrough_4
+                               └── h1 receivepassThrough_4
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1

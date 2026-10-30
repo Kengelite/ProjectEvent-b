@@ -21,7 +21,7 @@ pre.tree { font-family: Menlo, monospace; font-size: 8pt; line-height: 1.35; bac
 table.codes { font-size: 8.2pt; margin: 2px 0 4px; } table.codes td { padding: 1px 6px; }
 table.codes td.k { font-family: Menlo, monospace; font-weight: bold; color: #2f5fa8; width: 34px; }
 .ecodes { font-family: Menlo, monospace; font-size: 7.4pt; columns: 2; column-gap: 12px; line-height: 1.35; margin: 2px 0 4px; overflow-wrap: anywhere; }
-.paths { font-family: Menlo, monospace; font-size: 7.6pt; line-height: 1.4; overflow-wrap: anywhere; }
+.paths { font-family: Menlo, monospace; font-size: 7.6pt; line-height: 1.4; overflow-wrap: normal; word-break: normal; }
 .none { color: #8a93a3; font-size: 8.6pt; }
 .rule { border-left: 4px solid #2f5fa8; background: #eef3fb; padding: 6px 10px; margin: 6px 0; }
 """
@@ -38,7 +38,7 @@ def guard_block(t):
 
 
 def event_block(t):
-    codes = "<br>".join(f"<b>{c}</b> {esc(n)}" + (f" [{' '.join(t['event_guards'][c])}]" if t["event_guards"][c] else "")
+    codes = "<br>".join(f"<b>{c}</b> {esc(n)}" + (f" (guard {' '.join(t['event_guards'][c])})" if t["event_guards"][c] else "")
                         for c, n in t["event_codes"].items())
     tree = "\n".join(["(root) INITIALISATION"] + draw_events_compact(t["event_tree"], width=8))
     return (f"<div class='ecodes'>{codes}</div><pre class='tree'>{esc(tree)}</pre><div class='lbl'>เส้นทาง</div>"
@@ -64,12 +64,18 @@ def render(rows, trees):
              "(<code>mode = GOLD</code> กับ <code>mode = SILVER</code> เป็นตัว b ทั้งคู่)<br>"
              "• <b>ตัวเลข</b> = ทางเลือกของจุดตัดสินใจนั้น เรียงตามลำดับที่พบในไฟล์ (b1, b2, b3)<br>"
              "• ตัวอักษรเรียงตามลำดับที่พบในไฟล์ (a, b, c …)</div>")
+    h.append("<div class='rule'><b>การตั้งรหัส event</b> (ใช้หลักเดียวกับ guard · send และ receive เป็นคนละ event)<br>"
+             "• <b>ตัวอักษร</b> = ลำดับขั้น: event ที่ต่อกันเป็นเส้นตรงได้ตัวอักษรใหม่ทีละขั้น (a1 → b1 → c1)<br>"
+             "• <b>ตัวเลข</b> = ทางเลือกตรงจุดแยกกิ่ง: event ขั้นเดียวกันของแต่ละกิ่งใช้ตัวอักษรเดียวกัน "
+             "(กิ่ง GOLD / SILVER / BRONZE → m1 / m2 / m3 แล้วขั้นถัดไป n1 / n2 / n3) · ท้าย loop แยกเป็น "
+             "ทำต่อ (o1) กับวนรอบใหม่ (o2)<br>"
+             "• event ที่หลายกิ่งมารวมกันได้ตัวอักษรใหม่ (q1) · ในวงเล็บ (guard …) คือรหัส guard ของ event นั้น</div>")
     h.append("<div class='rule'><b>การสร้าง tree</b><br>"
              "• <b>Event tree</b>: send m → receive m และ receive p → send m เมื่อ send m มี guard "
              "<code>p ∈ receivedMessages</code> · alt แตกเป็นหลายกิ่ง · หลัง alt ที่มี guard แบบ "
              "<code>p ∈ receivedMessages ∨ q ∈ receivedMessages</code> ทุกกิ่งต่อด้วย event เดียวกัน · "
-             "event นับรอบ loop (checkloop) อยู่ท้าย loop และมีลูกศร ↺ กลับไปจุดเริ่ม loop · event ใช้รหัส e1, e2 … ตามลำดับในไฟล์<br>"
-             "• ในเอกสารนี้ event tree แสดงแบบย่อ: event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว (e1 → e2 → e3) "
+             "event นับรอบ loop (checkloop) อยู่ท้าย loop และมีลูกศร ↺ กลับไปจุดเริ่ม loop<br>"
+             "• ในเอกสารนี้ event tree แสดงแบบย่อ: event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว (a1 → b1 → c1) "
              "และแตกบรรทัดเฉพาะจุดที่แยกกิ่ง · รูปเต็มอยู่ใน <code>models/&lt;id&gt;/tree.txt</code><br>"
              "• <b>Guard tree</b>: เดินตามแต่ละเส้นทางของ event tree แล้วเก็บรหัส guard ตามลำดับที่พบครั้งแรก "
              "จึงได้ทั้งเงื่อนไขซ้อนกัน (loop ที่มี alt ข้างใน) และเงื่อนไขที่มาต่อกัน (opt แล้วตามด้วย alt)</div>")
@@ -100,7 +106,7 @@ def render(rows, trees):
 
     h.append("<h2 style='break-before:page'>4. รหัสและเส้นทางของแต่ละแบบจำลอง</h2>")
     h.append("<p>ซ้าย: รหัส guard, guard tree และเส้นทาง · ขวา: รหัส event (ในวงเล็บคือ guard ของ event นั้น), "
-             "event tree แบบย่อ และเส้นทาง · ↺ eN = จบรอบ loop แล้วกลับไปที่ eN</p>")
+             "event tree แบบย่อ และเส้นทาง · ↺ x = จบรอบ loop แล้วกลับไปที่ event x</p>")
     for code, (en, th) in TOPIC_NAMES.items():
         group = [r for r in have if r["topic"] == en]
         h.append(f"<h3>{esc(th)} · {esc(en)} ({len(group)})</h3>")

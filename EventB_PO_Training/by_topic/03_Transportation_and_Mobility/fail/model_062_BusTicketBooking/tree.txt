@@ -13,50 +13,50 @@ model_062  BusTicketBooking
    a1 -> b1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendvalidateSeat_1
-   e2   receivevalidateSeat_1
-   e3   sendlogTicket_2
-   e4   receivelogTicket_2
-   e5   sendsendSeat_3  [a1]
-   e6   receivesendSeat_3  [a1]
-   e7   sendreserveSeat_4_opt1  [a1 b1]
-   e8   receivereserveSeat_4_opt1  [a1 b1]
-   e9   sendrequestRoute_5_opt1  [a1 b1]
-   e10  receiverequestRoute_5_opt1  [a1 b1]
-   e11  sendlogSeat_6  [a1]
-   e12  receivelogSeat_6  [a1]
-   e13  sendscheduleTicket_7  [a1]
-   e14  receivescheduleTicket_7  [a1]
-   e15  sendapproveSeat_8
-   e16  receiveapproveSeat_8
-   e17  checkloop_sendSeat_3_loop1  [a1]
+   a1   sendvalidateSeat_1
+   b1   receivevalidateSeat_1
+   c1   sendlogTicket_2
+   d1   receivelogTicket_2
+   e1   sendsendSeat_3  (guard a1)
+   f1   receivesendSeat_3  (guard a1)
+   g1   sendreserveSeat_4_opt1  (guard a1 b1)
+   h1   receivereserveSeat_4_opt1  (guard a1 b1)
+   i1   sendrequestRoute_5_opt1  (guard a1 b1)
+   j1   receiverequestRoute_5_opt1  (guard a1 b1)
+   k1   sendlogSeat_6  (guard a1)
+   l1   receivelogSeat_6  (guard a1)
+   m1   sendscheduleTicket_7  (guard a1)
+   n1   receivescheduleTicket_7  (guard a1)
+   o1   sendapproveSeat_8
+   o2   checkloop_sendSeat_3_loop1  (guard a1)
+   p1   receiveapproveSeat_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
-       ├── e15 → e16
-       └── e17 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1
+       └── o2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendvalidateSeat_1
-       └── e2 receivevalidateSeat_1
-           └── e3 sendlogTicket_2
-               └── e4 receivelogTicket_2
-                   └── e5 sendsendSeat_3  [a1]
-                       └── e6 receivesendSeat_3  [a1]
-                           └── e7 sendreserveSeat_4_opt1  [a1 b1]
-                               └── e8 receivereserveSeat_4_opt1  [a1 b1]
-                                   └── e9 sendrequestRoute_5_opt1  [a1 b1]
-                                       └── e10 receiverequestRoute_5_opt1  [a1 b1]
-                                           └── e11 sendlogSeat_6  [a1]
-                                               └── e12 receivelogSeat_6  [a1]
-                                                   └── e13 sendscheduleTicket_7  [a1]
-                                                       └── e14 receivescheduleTicket_7  [a1]
-                                                           ├── e15 sendapproveSeat_8
-                                                           │   └── e16 receiveapproveSeat_8
-                                                           └── e17 checkloop_sendSeat_3_loop1  [a1]  ↺ กลับไป sendsendSeat_3
+   └── a1 sendvalidateSeat_1
+       └── b1 receivevalidateSeat_1
+           └── c1 sendlogTicket_2
+               └── d1 receivelogTicket_2
+                   └── e1 sendsendSeat_3  (guard a1)
+                       └── f1 receivesendSeat_3  (guard a1)
+                           └── g1 sendreserveSeat_4_opt1  (guard a1 b1)
+                               └── h1 receivereserveSeat_4_opt1  (guard a1 b1)
+                                   └── i1 sendrequestRoute_5_opt1  (guard a1 b1)
+                                       └── j1 receiverequestRoute_5_opt1  (guard a1 b1)
+                                           └── k1 sendlogSeat_6  (guard a1)
+                                               └── l1 receivelogSeat_6  (guard a1)
+                                                   └── m1 sendscheduleTicket_7  (guard a1)
+                                                       └── n1 receivescheduleTicket_7  (guard a1)
+                                                           ├── o1 sendapproveSeat_8
+                                                           │   └── p1 receiveapproveSeat_8
+                                                           └── o2 checkloop_sendSeat_3_loop1  (guard a1)  ↺ กลับไป sendsendSeat_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ e1

@@ -4,44 +4,44 @@
   "b1": "express = 1"
  },
  "event_codes": {
-  "e1": "sendlogDim_1",
-  "e2": "receivelogDim_1",
-  "e3": "sendsyncSchedule_2",
-  "e4": "receivesyncSchedule_2",
-  "e5": "sendreleaseOccupancy_3_opt1",
-  "e6": "receivereleaseOccupancy_3_opt1",
-  "e7": "sendapproveOccupancy_4",
-  "e8": "receiveapproveOccupancy_4",
-  "e9": "sendlogSchedule_5",
-  "e10": "receivelogSchedule_5",
-  "e11": "sendqueryDim_6_opt2",
-  "e12": "receivequeryDim_6_opt2",
-  "e13": "sendfetchSchedule_7",
-  "e14": "receivefetchSchedule_7"
+  "a1": "sendlogDim_1",
+  "b1": "receivelogDim_1",
+  "c1": "sendsyncSchedule_2",
+  "d1": "receivesyncSchedule_2",
+  "e1": "sendreleaseOccupancy_3_opt1",
+  "f1": "receivereleaseOccupancy_3_opt1",
+  "g1": "sendapproveOccupancy_4",
+  "h1": "receiveapproveOccupancy_4",
+  "i1": "sendlogSchedule_5",
+  "j1": "receivelogSchedule_5",
+  "k1": "sendqueryDim_6_opt2",
+  "l1": "receivequeryDim_6_opt2",
+  "m1": "sendfetchSchedule_7",
+  "n1": "receivefetchSchedule_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [],
-  "e8": [],
-  "e9": [],
-  "e10": [],
-  "e11": [
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e12": [
+  "l1": [
    "b1"
   ],
-  "e13": [],
-  "e14": []
+  "m1": [],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -58,80 +58,80 @@
   "children": [
    {
     "event": "sendlogDim_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivelogDim_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendsyncSchedule_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivesyncSchedule_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendreleaseOccupancy_3_opt1",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivereleaseOccupancy_3_opt1",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendapproveOccupancy_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receiveapproveOccupancy_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendlogSchedule_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivelogSchedule_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendqueryDim_6_opt2",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receivequeryDim_6_opt2",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendfetchSchedule_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivefetchSchedule_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -164,7 +164,7 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

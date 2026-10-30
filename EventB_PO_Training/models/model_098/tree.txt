@@ -25,99 +25,99 @@ model_098  ForestFireSensor
    a2 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreleaseAlert_1
-   e2   receivereleaseAlert_1
-   e3   sendschedulePatrol_2
-   e4   receiveschedulePatrol_2
-   e5   sendsyncPatrol_3  [a1]
-   e6   receivesyncPatrol_3  [a1]
-   e7   sendcancelAlert_4  [a2]
-   e8   receivecancelAlert_4  [a2]
-   e9   sendissueSmoke_5
-   e10  receiveissueSmoke_5
-   e11  sendnotifyAlert_6
-   e12  receivenotifyAlert_6
-   e13  sendreserveAlert_7  [b1]
-   e14  receivereserveAlert_7  [b1]
-   e15  sendvalidateSmoke_8  [b1 c1]
-   e16  receivevalidateSmoke_8  [b1 c1]
-   e17  sendcheckAlert_9  [b1 c1]
-   e18  receivecheckAlert_9  [b1 c1]
-   e19  sendassignAlert_10  [b1]
-   e20  receiveassignAlert_10  [b1]
-   e21  sendscheduleSmoke_11  [b2]
-   e22  receivescheduleSmoke_11  [b2]
-   e23  sendqueryPatrol_12
-   e24  receivequeryPatrol_12
-   e25  checkloop_validateSmoke_8_loop1  [b1 c1]
+   a1   sendreleaseAlert_1
+   b1   receivereleaseAlert_1
+   c1   sendschedulePatrol_2
+   d1   receiveschedulePatrol_2
+   e1   sendsyncPatrol_3  (guard a1)
+   e2   sendcancelAlert_4  (guard a2)
+   f1   receivesyncPatrol_3  (guard a1)
+   f2   receivecancelAlert_4  (guard a2)
+   g1   sendissueSmoke_5
+   h1   receiveissueSmoke_5
+   i1   sendnotifyAlert_6
+   j1   receivenotifyAlert_6
+   k1   sendreserveAlert_7  (guard b1)
+   k2   sendscheduleSmoke_11  (guard b2)
+   l1   receivereserveAlert_7  (guard b1)
+   l2   receivescheduleSmoke_11  (guard b2)
+   m1   sendvalidateSmoke_8  (guard b1 c1)
+   n1   receivevalidateSmoke_8  (guard b1 c1)
+   o1   sendcheckAlert_9  (guard b1 c1)
+   p1   receivecheckAlert_9  (guard b1 c1)
+   q1   sendassignAlert_10  (guard b1)
+   q2   checkloop_validateSmoke_8_loop1  (guard b1 c1)
+   r1   receiveassignAlert_10  (guard b1)
+   s1   sendqueryPatrol_12
+   t1   receivequeryPatrol_12
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e9 → e10 → e11 → e12
-       │   ├── e13 → e14 → e15 → e16 → e17 → e18
-       │   │   ├── e19 → e20 → e23 → e24
-       │   │   └── e25 ↺ e15
-       │   └── e21 → e22 → e23 → e24
-       └── e7 → e8 → e9 → e10 → e11 → e12
-           ├── e13 → e14 → e15 → e16 → e17 → e18
-           │   ├── e19 → e20 → e23 → e24
-           │   └── e25 ↺ e15
-           └── e21 → e22 → e23 → e24
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       │   ├── k1 → l1 → m1 → n1 → o1 → p1
+       │   │   ├── q1 → r1 → s1 → t1
+       │   │   └── q2 ↺ m1
+       │   └── k2 → l2 → s1 → t1
+       └── e2 → f2 → g1 → h1 → i1 → j1
+           ├── k1 → l1 → m1 → n1 → o1 → p1
+           │   ├── q1 → r1 → s1 → t1
+           │   └── q2 ↺ m1
+           └── k2 → l2 → s1 → t1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreleaseAlert_1
-       └── e2 receivereleaseAlert_1
-           └── e3 sendschedulePatrol_2
-               └── e4 receiveschedulePatrol_2
-                   ├── e5 sendsyncPatrol_3  [a1]
-                   │   └── e6 receivesyncPatrol_3  [a1]
-                   │       └── e9 sendissueSmoke_5
-                   │           └── e10 receiveissueSmoke_5
-                   │               └── e11 sendnotifyAlert_6
-                   │                   └── e12 receivenotifyAlert_6
-                   │                       ├── e13 sendreserveAlert_7  [b1]
-                   │                       │   └── e14 receivereserveAlert_7  [b1]
-                   │                       │       └── e15 sendvalidateSmoke_8  [b1 c1]
-                   │                       │           └── e16 receivevalidateSmoke_8  [b1 c1]
-                   │                       │               └── e17 sendcheckAlert_9  [b1 c1]
-                   │                       │                   └── e18 receivecheckAlert_9  [b1 c1]
-                   │                       │                       ├── e19 sendassignAlert_10  [b1]
-                   │                       │                       │   └── e20 receiveassignAlert_10  [b1]
-                   │                       │                       │       └── e23 sendqueryPatrol_12
-                   │                       │                       │           └── e24 receivequeryPatrol_12
-                   │                       │                       └── e25 checkloop_validateSmoke_8_loop1  [b1 c1]  ↺ กลับไป sendvalidateSmoke_8
-                   │                       └── e21 sendscheduleSmoke_11  [b2]
-                   │                           └── e22 receivescheduleSmoke_11  [b2]
-                   │                               └── e23 sendqueryPatrol_12
-                   │                                   └── e24 receivequeryPatrol_12
-                   └── e7 sendcancelAlert_4  [a2]
-                       └── e8 receivecancelAlert_4  [a2]
-                           └── e9 sendissueSmoke_5
-                               └── e10 receiveissueSmoke_5
-                                   └── e11 sendnotifyAlert_6
-                                       └── e12 receivenotifyAlert_6
-                                           ├── e13 sendreserveAlert_7  [b1]
-                                           │   └── e14 receivereserveAlert_7  [b1]
-                                           │       └── e15 sendvalidateSmoke_8  [b1 c1]
-                                           │           └── e16 receivevalidateSmoke_8  [b1 c1]
-                                           │               └── e17 sendcheckAlert_9  [b1 c1]
-                                           │                   └── e18 receivecheckAlert_9  [b1 c1]
-                                           │                       ├── e19 sendassignAlert_10  [b1]
-                                           │                       │   └── e20 receiveassignAlert_10  [b1]
-                                           │                       │       └── e23 sendqueryPatrol_12
-                                           │                       │           └── e24 receivequeryPatrol_12
-                                           │                       └── e25 checkloop_validateSmoke_8_loop1  [b1 c1]  ↺ กลับไป sendvalidateSmoke_8
-                                           └── e21 sendscheduleSmoke_11  [b2]
-                                               └── e22 receivescheduleSmoke_11  [b2]
-                                                   └── e23 sendqueryPatrol_12
-                                                       └── e24 receivequeryPatrol_12
+   └── a1 sendreleaseAlert_1
+       └── b1 receivereleaseAlert_1
+           └── c1 sendschedulePatrol_2
+               └── d1 receiveschedulePatrol_2
+                   ├── e1 sendsyncPatrol_3  (guard a1)
+                   │   └── f1 receivesyncPatrol_3  (guard a1)
+                   │       └── g1 sendissueSmoke_5
+                   │           └── h1 receiveissueSmoke_5
+                   │               └── i1 sendnotifyAlert_6
+                   │                   └── j1 receivenotifyAlert_6
+                   │                       ├── k1 sendreserveAlert_7  (guard b1)
+                   │                       │   └── l1 receivereserveAlert_7  (guard b1)
+                   │                       │       └── m1 sendvalidateSmoke_8  (guard b1 c1)
+                   │                       │           └── n1 receivevalidateSmoke_8  (guard b1 c1)
+                   │                       │               └── o1 sendcheckAlert_9  (guard b1 c1)
+                   │                       │                   └── p1 receivecheckAlert_9  (guard b1 c1)
+                   │                       │                       ├── q1 sendassignAlert_10  (guard b1)
+                   │                       │                       │   └── r1 receiveassignAlert_10  (guard b1)
+                   │                       │                       │       └── s1 sendqueryPatrol_12
+                   │                       │                       │           └── t1 receivequeryPatrol_12
+                   │                       │                       └── q2 checkloop_validateSmoke_8_loop1  (guard b1 c1)  ↺ กลับไป sendvalidateSmoke_8
+                   │                       └── k2 sendscheduleSmoke_11  (guard b2)
+                   │                           └── l2 receivescheduleSmoke_11  (guard b2)
+                   │                               └── s1 sendqueryPatrol_12
+                   │                                   └── t1 receivequeryPatrol_12
+                   └── e2 sendcancelAlert_4  (guard a2)
+                       └── f2 receivecancelAlert_4  (guard a2)
+                           └── g1 sendissueSmoke_5
+                               └── h1 receiveissueSmoke_5
+                                   └── i1 sendnotifyAlert_6
+                                       └── j1 receivenotifyAlert_6
+                                           ├── k1 sendreserveAlert_7  (guard b1)
+                                           │   └── l1 receivereserveAlert_7  (guard b1)
+                                           │       └── m1 sendvalidateSmoke_8  (guard b1 c1)
+                                           │           └── n1 receivevalidateSmoke_8  (guard b1 c1)
+                                           │               └── o1 sendcheckAlert_9  (guard b1 c1)
+                                           │                   └── p1 receivecheckAlert_9  (guard b1 c1)
+                                           │                       ├── q1 sendassignAlert_10  (guard b1)
+                                           │                       │   └── r1 receiveassignAlert_10  (guard b1)
+                                           │                       │       └── s1 sendqueryPatrol_12
+                                           │                       │           └── t1 receivequeryPatrol_12
+                                           │                       └── q2 checkloop_validateSmoke_8_loop1  (guard b1 c1)  ↺ กลับไป sendvalidateSmoke_8
+                                           └── k2 sendscheduleSmoke_11  (guard b2)
+                                               └── l2 receivescheduleSmoke_11  (guard b2)
+                                                   └── s1 sendqueryPatrol_12
+                                                       └── t1 receivequeryPatrol_12
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e25 ↺ e15
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e25 ↺ e15
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ m1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ m1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> s1 -> t1

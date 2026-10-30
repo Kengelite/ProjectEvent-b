@@ -4,48 +4,48 @@
   "a2": "stockUnits < 2"
  },
  "event_codes": {
-  "e1": "sendrequestBlood_1",
-  "e2": "receiverequestBlood_1",
-  "e3": "sendcrossMatch_2",
-  "e4": "receivecrossMatch_2",
-  "e5": "sendprepareCourier_3",
-  "e6": "receiveprepareCourier_3",
-  "e7": "senddeliverBlood_4",
-  "e8": "receivedeliverBlood_4",
-  "e9": "sendbackorder_5",
-  "e10": "receivebackorder_5",
-  "e11": "sendconfirmReceipt_6",
-  "e12": "receiveconfirmReceipt_6"
+  "a1": "sendrequestBlood_1",
+  "b1": "receiverequestBlood_1",
+  "c1": "sendcrossMatch_2",
+  "c2": "sendbackorder_5",
+  "d1": "receivecrossMatch_2",
+  "d2": "receivebackorder_5",
+  "e1": "sendprepareCourier_3",
+  "f1": "receiveprepareCourier_3",
+  "g1": "senddeliverBlood_4",
+  "h1": "receivedeliverBlood_4",
+  "i1": "sendconfirmReceipt_6",
+  "j1": "receiveconfirmReceipt_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [
+  "a1": [],
+  "b1": [],
+  "c1": [
    "a1"
   ],
-  "e4": [
-   "a1"
-  ],
-  "e5": [
-   "a1"
-  ],
-  "e6": [
-   "a1"
-  ],
-  "e7": [
-   "a1"
-  ],
-  "e8": [
-   "a1"
-  ],
-  "e9": [
+  "c2": [
    "a2"
   ],
-  "e10": [
+  "d1": [
+   "a1"
+  ],
+  "d2": [
    "a2"
   ],
-  "e11": [],
-  "e12": []
+  "e1": [
+   "a1"
+  ],
+  "f1": [
+   "a1"
+  ],
+  "g1": [
+   "a1"
+  ],
+  "h1": [
+   "a1"
+  ],
+  "i1": [],
+  "j1": []
  },
  "guard_tree": {
   "a1": {},
@@ -62,64 +62,64 @@
   "children": [
    {
     "event": "sendrequestBlood_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiverequestBlood_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendcrossMatch_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [
          "a1"
         ],
         "children": [
          {
           "event": "receivecrossMatch_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [
            "a1"
           ],
           "children": [
            {
             "event": "sendprepareCourier_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveprepareCourier_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "senddeliverBlood_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivedeliverBlood_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendconfirmReceipt_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveconfirmReceipt_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -139,26 +139,26 @@
        },
        {
         "event": "sendbackorder_5",
-        "code": "e9",
+        "code": "c2",
         "guards": [
          "a2"
         ],
         "children": [
          {
           "event": "receivebackorder_5",
-          "code": "e10",
+          "code": "d2",
           "guards": [
            "a2"
           ],
           "children": [
            {
             "event": "sendconfirmReceipt_6",
-            "code": "e11",
+            "code": "i1",
             "guards": [],
             "children": [
              {
               "event": "receiveconfirmReceipt_6",
-              "code": "e12",
+              "code": "j1",
               "guards": [],
               "children": []
              }
@@ -175,8 +175,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12",
-  "e1 -> e2 -> e9 -> e10 -> e11 -> e12"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c2 -> d2 -> i1 -> j1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

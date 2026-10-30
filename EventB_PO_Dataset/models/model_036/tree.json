@@ -5,66 +5,66 @@
   "b2": "cpu ≤ 80"
  },
  "event_codes": {
-  "e1": "sendstartMonitoring_1",
-  "e2": "receivestartMonitoring_1",
-  "e3": "sendreportLoad_2",
-  "e4": "receivereportLoad_2",
-  "e5": "sendaddVM_3",
-  "e6": "receiveaddVM_3",
-  "e7": "sendvmReady_4",
-  "e8": "receivevmReady_4",
-  "e9": "sendregisterVM_5",
-  "e10": "receiveregisterVM_5",
-  "e11": "sendkeepCapacity_6",
-  "e12": "receivekeepCapacity_6",
-  "e13": "sendstopMonitoring_7",
-  "e14": "receivestopMonitoring_7",
-  "e15": "checkloop_reportLoad_2_loop1"
+  "a1": "sendstartMonitoring_1",
+  "b1": "receivestartMonitoring_1",
+  "c1": "sendreportLoad_2",
+  "d1": "receivereportLoad_2",
+  "e1": "sendaddVM_3",
+  "e2": "sendkeepCapacity_6",
+  "f1": "receiveaddVM_3",
+  "f2": "receivekeepCapacity_6",
+  "g1": "sendvmReady_4",
+  "h1": "receivevmReady_4",
+  "i1": "sendregisterVM_5",
+  "j1": "receiveregisterVM_5",
+  "k1": "sendstopMonitoring_7",
+  "l1": "receivestopMonitoring_7",
+  "m1": "checkloop_reportLoad_2_loop1"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [
+  "a1": [],
+  "b1": [],
+  "c1": [
    "a1"
   ],
-  "e4": [
+  "d1": [
    "a1"
   ],
-  "e5": [
+  "e1": [
    "a1",
    "b1"
   ],
-  "e6": [
-   "a1",
-   "b1"
-  ],
-  "e7": [
-   "a1",
-   "b1"
-  ],
-  "e8": [
-   "a1",
-   "b1"
-  ],
-  "e9": [
-   "a1",
-   "b1"
-  ],
-  "e10": [
-   "a1",
-   "b1"
-  ],
-  "e11": [
+  "e2": [
    "a1",
    "b2"
   ],
-  "e12": [
+  "f1": [
+   "a1",
+   "b1"
+  ],
+  "f2": [
    "a1",
    "b2"
   ],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "g1": [
+   "a1",
+   "b1"
+  ],
+  "h1": [
+   "a1",
+   "b1"
+  ],
+  "i1": [
+   "a1",
+   "b1"
+  ],
+  "j1": [
+   "a1",
+   "b1"
+  ],
+  "k1": [],
+  "l1": [],
+  "m1": [
    "a1"
   ]
  },
@@ -85,31 +85,31 @@
   "children": [
    {
     "event": "sendstartMonitoring_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivestartMonitoring_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendreportLoad_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [
          "a1"
         ],
         "children": [
          {
           "event": "receivereportLoad_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [
            "a1"
           ],
           "children": [
            {
             "event": "sendaddVM_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1",
              "b1"
@@ -117,7 +117,7 @@
             "children": [
              {
               "event": "receiveaddVM_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1",
                "b1"
@@ -125,7 +125,7 @@
               "children": [
                {
                 "event": "sendvmReady_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -133,7 +133,7 @@
                 "children": [
                  {
                   "event": "receivevmReady_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -141,7 +141,7 @@
                   "children": [
                    {
                     "event": "sendregisterVM_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -149,7 +149,7 @@
                     "children": [
                      {
                       "event": "receiveregisterVM_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -157,12 +157,12 @@
                       "children": [
                        {
                         "event": "sendstopMonitoring_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivestopMonitoring_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -170,12 +170,12 @@
                        },
                        {
                         "event": "checkloop_reportLoad_2_loop1",
-                        "code": "e15",
+                        "code": "m1",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendreportLoad_2",
-                        "loop_back_to_code": "e3",
+                        "loop_back_to_code": "c1",
                         "children": []
                        }
                       ]
@@ -192,7 +192,7 @@
            },
            {
             "event": "sendkeepCapacity_6",
-            "code": "e11",
+            "code": "e2",
             "guards": [
              "a1",
              "b2"
@@ -200,7 +200,7 @@
             "children": [
              {
               "event": "receivekeepCapacity_6",
-              "code": "e12",
+              "code": "f2",
               "guards": [
                "a1",
                "b2"
@@ -208,12 +208,12 @@
               "children": [
                {
                 "event": "sendstopMonitoring_7",
-                "code": "e13",
+                "code": "k1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivestopMonitoring_7",
-                  "code": "e14",
+                  "code": "l1",
                   "guards": [],
                   "children": []
                  }
@@ -221,12 +221,12 @@
                },
                {
                 "event": "checkloop_reportLoad_2_loop1",
-                "code": "e15",
+                "code": "m1",
                 "guards": [
                  "a1"
                 ],
                 "loop_back_to": "sendreportLoad_2",
-                "loop_back_to_code": "e3",
+                "loop_back_to_code": "c1",
                 "children": []
                }
               ]
@@ -244,10 +244,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 ↺ e3",
-  "e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e15 ↺ e3"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> m1 ↺ c1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 ↺ c1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

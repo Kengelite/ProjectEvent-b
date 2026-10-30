@@ -14,42 +14,42 @@ model_160  SchoolBusTracking
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendupdateArrival_1
-   e2   receiveupdateArrival_1
-   e3   sendconfirmStop_2
-   e4   receiveconfirmStop_2
-   e5   sendreportBus_3  [a1]
-   e6   receivereportBus_3  [a1]
-   e7   sendcancelStop_4  [a1]
-   e8   receivecancelStop_4  [a1]
-   e9   sendsyncBus_5  [a2]
-   e10  receivesyncBus_5  [a2]
-   e11  sendcheckBus_6
-   e12  receivecheckBus_6
+   a1   sendupdateArrival_1
+   b1   receiveupdateArrival_1
+   c1   sendconfirmStop_2
+   d1   receiveconfirmStop_2
+   e1   sendreportBus_3  (guard a1)
+   e2   sendsyncBus_5  (guard a2)
+   f1   receivereportBus_3  (guard a1)
+   f2   receivesyncBus_5  (guard a2)
+   g1   sendcancelStop_4  (guard a1)
+   h1   receivecancelStop_4  (guard a1)
+   i1   sendcheckBus_6
+   j1   receivecheckBus_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e7 → e8 → e11 → e12
-       └── e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → i1 → j1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendupdateArrival_1
-       └── e2 receiveupdateArrival_1
-           └── e3 sendconfirmStop_2
-               └── e4 receiveconfirmStop_2
-                   ├── e5 sendreportBus_3  [a1]
-                   │   └── e6 receivereportBus_3  [a1]
-                   │       └── e7 sendcancelStop_4  [a1]
-                   │           └── e8 receivecancelStop_4  [a1]
-                   │               └── e11 sendcheckBus_6
-                   │                   └── e12 receivecheckBus_6
-                   └── e9 sendsyncBus_5  [a2]
-                       └── e10 receivesyncBus_5  [a2]
-                           └── e11 sendcheckBus_6
-                               └── e12 receivecheckBus_6
+   └── a1 sendupdateArrival_1
+       └── b1 receiveupdateArrival_1
+           └── c1 sendconfirmStop_2
+               └── d1 receiveconfirmStop_2
+                   ├── e1 sendreportBus_3  (guard a1)
+                   │   └── f1 receivereportBus_3  (guard a1)
+                   │       └── g1 sendcancelStop_4  (guard a1)
+                   │           └── h1 receivecancelStop_4  (guard a1)
+                   │               └── i1 sendcheckBus_6
+                   │                   └── j1 receivecheckBus_6
+                   └── e2 sendsyncBus_5  (guard a2)
+                       └── f2 receivesyncBus_5  (guard a2)
+                           └── i1 sendcheckBus_6
+                               └── j1 receivecheckBus_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12
-   e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1

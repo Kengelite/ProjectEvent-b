@@ -14,62 +14,62 @@ model_176  SmartStreetLight
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendcancelDim_1
-   e2   receivecancelDim_1
-   e3   sendqueryDim_2
-   e4   receivequeryDim_2
-   e5   sendrequestFault_3
-   e6   receiverequestFault_3
-   e7   sendreleaseLamp_4
-   e8   receivereleaseLamp_4
-   e9   sendsendDim_5
-   e10  receivesendDim_5
-   e11  sendlogLamp_6
-   e12  receivelogLamp_6
-   e13  sendconfirmDim_7
-   e14  receiveconfirmDim_7
-   e15  sendconfirmFault_8  [a1]
-   e16  receiveconfirmFault_8  [a1]
-   e17  sendnotifyDim_9  [a1]
-   e18  receivenotifyDim_9  [a1]
-   e19  sendapproveDim_10  [a2]
-   e20  receiveapproveDim_10  [a2]
-   e21  sendackFault_11
-   e22  receiveackFault_11
+   a1   sendcancelDim_1
+   b1   receivecancelDim_1
+   c1   sendqueryDim_2
+   d1   receivequeryDim_2
+   e1   sendrequestFault_3
+   f1   receiverequestFault_3
+   g1   sendreleaseLamp_4
+   h1   receivereleaseLamp_4
+   i1   sendsendDim_5
+   j1   receivesendDim_5
+   k1   sendlogLamp_6
+   l1   receivelogLamp_6
+   m1   sendconfirmDim_7
+   n1   receiveconfirmDim_7
+   o1   sendconfirmFault_8  (guard a1)
+   o2   sendapproveDim_10  (guard a2)
+   p1   receiveconfirmFault_8  (guard a1)
+   p2   receiveapproveDim_10  (guard a2)
+   q1   sendnotifyDim_9  (guard a1)
+   r1   receivenotifyDim_9  (guard a1)
+   s1   sendackFault_11
+   t1   receiveackFault_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
-       ├── e15 → e16 → e17 → e18 → e21 → e22
-       └── e19 → e20 → e21 → e22
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1 → q1 → r1 → s1 → t1
+       └── o2 → p2 → s1 → t1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendcancelDim_1
-       └── e2 receivecancelDim_1
-           └── e3 sendqueryDim_2
-               └── e4 receivequeryDim_2
-                   └── e5 sendrequestFault_3
-                       └── e6 receiverequestFault_3
-                           └── e7 sendreleaseLamp_4
-                               └── e8 receivereleaseLamp_4
-                                   └── e9 sendsendDim_5
-                                       └── e10 receivesendDim_5
-                                           └── e11 sendlogLamp_6
-                                               └── e12 receivelogLamp_6
-                                                   └── e13 sendconfirmDim_7
-                                                       └── e14 receiveconfirmDim_7
-                                                           ├── e15 sendconfirmFault_8  [a1]
-                                                           │   └── e16 receiveconfirmFault_8  [a1]
-                                                           │       └── e17 sendnotifyDim_9  [a1]
-                                                           │           └── e18 receivenotifyDim_9  [a1]
-                                                           │               └── e21 sendackFault_11
-                                                           │                   └── e22 receiveackFault_11
-                                                           └── e19 sendapproveDim_10  [a2]
-                                                               └── e20 receiveapproveDim_10  [a2]
-                                                                   └── e21 sendackFault_11
-                                                                       └── e22 receiveackFault_11
+   └── a1 sendcancelDim_1
+       └── b1 receivecancelDim_1
+           └── c1 sendqueryDim_2
+               └── d1 receivequeryDim_2
+                   └── e1 sendrequestFault_3
+                       └── f1 receiverequestFault_3
+                           └── g1 sendreleaseLamp_4
+                               └── h1 receivereleaseLamp_4
+                                   └── i1 sendsendDim_5
+                                       └── j1 receivesendDim_5
+                                           └── k1 sendlogLamp_6
+                                               └── l1 receivelogLamp_6
+                                                   └── m1 sendconfirmDim_7
+                                                       └── n1 receiveconfirmDim_7
+                                                           ├── o1 sendconfirmFault_8  (guard a1)
+                                                           │   └── p1 receiveconfirmFault_8  (guard a1)
+                                                           │       └── q1 sendnotifyDim_9  (guard a1)
+                                                           │           └── r1 receivenotifyDim_9  (guard a1)
+                                                           │               └── s1 sendackFault_11
+                                                           │                   └── t1 receiveackFault_11
+                                                           └── o2 sendapproveDim_10  (guard a2)
+                                                               └── p2 receiveapproveDim_10  (guard a2)
+                                                                   └── s1 sendackFault_11
+                                                                       └── t1 receiveackFault_11
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20 -> e21 -> e22
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> s1 -> t1

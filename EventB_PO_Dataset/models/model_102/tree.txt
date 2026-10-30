@@ -10,37 +10,37 @@ model_102  GolfCartFleet
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendfetchFee_1
-   e2   receivefetchFee_1
-   e3   sendscheduleRound_2
-   e4   receivescheduleRound_2
-   e5   sendfetchCart_3
-   e6   receivefetchCart_3
-   e7   sendconfirmCart_4
-   e8   receiveconfirmCart_4
-   e9   sendapproveCart_5
-   e10  receiveapproveCart_5
-   e11  sendissueCart_6
-   e12  receiveissueCart_6
+   a1   sendfetchFee_1
+   b1   receivefetchFee_1
+   c1   sendscheduleRound_2
+   d1   receivescheduleRound_2
+   e1   sendfetchCart_3
+   f1   receivefetchCart_3
+   g1   sendconfirmCart_4
+   h1   receiveconfirmCart_4
+   i1   sendapproveCart_5
+   j1   receiveapproveCart_5
+   k1   sendissueCart_6
+   l1   receiveissueCart_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendfetchFee_1
-       └── e2 receivefetchFee_1
-           └── e3 sendscheduleRound_2
-               └── e4 receivescheduleRound_2
-                   └── e5 sendfetchCart_3
-                       └── e6 receivefetchCart_3
-                           └── e7 sendconfirmCart_4
-                               └── e8 receiveconfirmCart_4
-                                   └── e9 sendapproveCart_5
-                                       └── e10 receiveapproveCart_5
-                                           └── e11 sendissueCart_6
-                                               └── e12 receiveissueCart_6
+   └── a1 sendfetchFee_1
+       └── b1 receivefetchFee_1
+           └── c1 sendscheduleRound_2
+               └── d1 receivescheduleRound_2
+                   └── e1 sendfetchCart_3
+                       └── f1 receivefetchCart_3
+                           └── g1 sendconfirmCart_4
+                               └── h1 receiveconfirmCart_4
+                                   └── i1 sendapproveCart_5
+                                       └── j1 receiveapproveCart_5
+                                           └── k1 sendissueCart_6
+                                               └── l1 receiveissueCart_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

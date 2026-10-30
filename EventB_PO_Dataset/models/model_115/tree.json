@@ -4,44 +4,44 @@
   "b1": "needAck = 1"
  },
  "event_codes": {
-  "e1": "sendapproveMessage_1",
-  "e2": "receiveapproveMessage_1",
-  "e3": "sendackVideo_2",
-  "e4": "receiveackVideo_2",
-  "e5": "sendassignVideo_3_opt1",
-  "e6": "receiveassignVideo_3_opt1",
-  "e7": "sendnotifyRing_4",
-  "e8": "receivenotifyRing_4",
-  "e9": "sendreserveMessage_5",
-  "e10": "receivereserveMessage_5",
-  "e11": "sendrequestRing_6_opt2",
-  "e12": "receiverequestRing_6_opt2",
-  "e13": "sendcheckVideo_7",
-  "e14": "receivecheckVideo_7"
+  "a1": "sendapproveMessage_1",
+  "b1": "receiveapproveMessage_1",
+  "c1": "sendackVideo_2",
+  "d1": "receiveackVideo_2",
+  "e1": "sendassignVideo_3_opt1",
+  "f1": "receiveassignVideo_3_opt1",
+  "g1": "sendnotifyRing_4",
+  "h1": "receivenotifyRing_4",
+  "i1": "sendreserveMessage_5",
+  "j1": "receivereserveMessage_5",
+  "k1": "sendrequestRing_6_opt2",
+  "l1": "receiverequestRing_6_opt2",
+  "m1": "sendcheckVideo_7",
+  "n1": "receivecheckVideo_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [],
-  "e8": [],
-  "e9": [],
-  "e10": [],
-  "e11": [
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e12": [
+  "l1": [
    "b1"
   ],
-  "e13": [],
-  "e14": []
+  "m1": [],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -58,80 +58,80 @@
   "children": [
    {
     "event": "sendapproveMessage_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveapproveMessage_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendackVideo_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveackVideo_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendassignVideo_3_opt1",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveassignVideo_3_opt1",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendnotifyRing_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivenotifyRing_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendreserveMessage_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivereserveMessage_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendrequestRing_6_opt2",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receiverequestRing_6_opt2",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendcheckVideo_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivecheckVideo_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -164,7 +164,7 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

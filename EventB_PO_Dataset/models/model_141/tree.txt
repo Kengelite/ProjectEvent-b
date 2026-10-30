@@ -19,70 +19,70 @@ model_141  PharmacyDelivery
    a1 -> b3
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendsyncSignature_1
-   e2   receivesyncSignature_1
-   e3   sendvalidateSignature_2
-   e4   receivevalidateSignature_2
-   e5   sendfetchRoute_3_opt1  [a1]
-   e6   receivefetchRoute_3_opt1  [a1]
-   e7   sendqueryRoute_4_opt1  [a1]
-   e8   receivequeryRoute_4_opt1  [a1]
-   e9   sendconfirmRoute_5
-   e10  receiveconfirmRoute_5
-   e11  sendissuePackage_6
-   e12  receiveissuePackage_6
-   e13  sendcancelSignature_7  [b1]
-   e14  receivecancelSignature_7  [b1]
-   e15  sendconfirmPackage_8  [b1]
-   e16  receiveconfirmPackage_8  [b1]
-   e17  sendqueryPackage_9  [b2]
-   e18  receivequeryPackage_9  [b2]
-   e19  sendackSignature_10  [b2]
-   e20  receiveackSignature_10  [b2]
-   e21  sendscheduleSignature_11  [b3]
-   e22  receivescheduleSignature_11  [b3]
-   e23  sendapproveRoute_12
-   e24  receiveapproveRoute_12
+   a1   sendsyncSignature_1
+   b1   receivesyncSignature_1
+   c1   sendvalidateSignature_2
+   d1   receivevalidateSignature_2
+   e1   sendfetchRoute_3_opt1  (guard a1)
+   f1   receivefetchRoute_3_opt1  (guard a1)
+   g1   sendqueryRoute_4_opt1  (guard a1)
+   h1   receivequeryRoute_4_opt1  (guard a1)
+   i1   sendconfirmRoute_5
+   j1   receiveconfirmRoute_5
+   k1   sendissuePackage_6
+   l1   receiveissuePackage_6
+   m1   sendcancelSignature_7  (guard b1)
+   m2   sendqueryPackage_9  (guard b2)
+   m3   sendscheduleSignature_11  (guard b3)
+   n1   receivecancelSignature_7  (guard b1)
+   n2   receivequeryPackage_9  (guard b2)
+   n3   receivescheduleSignature_11  (guard b3)
+   o1   sendconfirmPackage_8  (guard b1)
+   o2   sendackSignature_10  (guard b2)
+   p1   receiveconfirmPackage_8  (guard b1)
+   p2   receiveackSignature_10  (guard b2)
+   q1   sendapproveRoute_12
+   r1   receiveapproveRoute_12
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
-       ├── e13 → e14 → e15 → e16 → e23 → e24
-       ├── e17 → e18 → e19 → e20 → e23 → e24
-       └── e21 → e22 → e23 → e24
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1 → o1 → p1 → q1 → r1
+       ├── m2 → n2 → o2 → p2 → q1 → r1
+       └── m3 → n3 → q1 → r1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendsyncSignature_1
-       └── e2 receivesyncSignature_1
-           └── e3 sendvalidateSignature_2
-               └── e4 receivevalidateSignature_2
-                   └── e5 sendfetchRoute_3_opt1  [a1]
-                       └── e6 receivefetchRoute_3_opt1  [a1]
-                           └── e7 sendqueryRoute_4_opt1  [a1]
-                               └── e8 receivequeryRoute_4_opt1  [a1]
-                                   └── e9 sendconfirmRoute_5
-                                       └── e10 receiveconfirmRoute_5
-                                           └── e11 sendissuePackage_6
-                                               └── e12 receiveissuePackage_6
-                                                   ├── e13 sendcancelSignature_7  [b1]
-                                                   │   └── e14 receivecancelSignature_7  [b1]
-                                                   │       └── e15 sendconfirmPackage_8  [b1]
-                                                   │           └── e16 receiveconfirmPackage_8  [b1]
-                                                   │               └── e23 sendapproveRoute_12
-                                                   │                   └── e24 receiveapproveRoute_12
-                                                   ├── e17 sendqueryPackage_9  [b2]
-                                                   │   └── e18 receivequeryPackage_9  [b2]
-                                                   │       └── e19 sendackSignature_10  [b2]
-                                                   │           └── e20 receiveackSignature_10  [b2]
-                                                   │               └── e23 sendapproveRoute_12
-                                                   │                   └── e24 receiveapproveRoute_12
-                                                   └── e21 sendscheduleSignature_11  [b3]
-                                                       └── e22 receivescheduleSignature_11  [b3]
-                                                           └── e23 sendapproveRoute_12
-                                                               └── e24 receiveapproveRoute_12
+   └── a1 sendsyncSignature_1
+       └── b1 receivesyncSignature_1
+           └── c1 sendvalidateSignature_2
+               └── d1 receivevalidateSignature_2
+                   └── e1 sendfetchRoute_3_opt1  (guard a1)
+                       └── f1 receivefetchRoute_3_opt1  (guard a1)
+                           └── g1 sendqueryRoute_4_opt1  (guard a1)
+                               └── h1 receivequeryRoute_4_opt1  (guard a1)
+                                   └── i1 sendconfirmRoute_5
+                                       └── j1 receiveconfirmRoute_5
+                                           └── k1 sendissuePackage_6
+                                               └── l1 receiveissuePackage_6
+                                                   ├── m1 sendcancelSignature_7  (guard b1)
+                                                   │   └── n1 receivecancelSignature_7  (guard b1)
+                                                   │       └── o1 sendconfirmPackage_8  (guard b1)
+                                                   │           └── p1 receiveconfirmPackage_8  (guard b1)
+                                                   │               └── q1 sendapproveRoute_12
+                                                   │                   └── r1 receiveapproveRoute_12
+                                                   ├── m2 sendqueryPackage_9  (guard b2)
+                                                   │   └── n2 receivequeryPackage_9  (guard b2)
+                                                   │       └── o2 sendackSignature_10  (guard b2)
+                                                   │           └── p2 receiveackSignature_10  (guard b2)
+                                                   │               └── q1 sendapproveRoute_12
+                                                   │                   └── r1 receiveapproveRoute_12
+                                                   └── m3 sendscheduleSignature_11  (guard b3)
+                                                       └── n3 receivescheduleSignature_11  (guard b3)
+                                                           └── q1 sendapproveRoute_12
+                                                               └── r1 receiveapproveRoute_12
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> o2 -> p2 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m3 -> n3 -> q1 -> r1

@@ -4,52 +4,52 @@
   "a2": "t_obs > 4"
  },
  "event_codes": {
-  "e1": "sendsendBadge_1",
-  "e2": "receivesendBadge_1",
-  "e3": "sendcheckBadge_2",
-  "e4": "receivecheckBadge_2",
-  "e5": "sendqueryVisit_3",
-  "e6": "receivequeryVisit_3",
-  "e7": "sendreleasePass_4",
-  "e8": "receivereleasePass_4",
-  "e9": "sendnotifyPass_5",
-  "e10": "receivenotifyPass_5",
-  "e11": "sendvalidateVisit_6",
-  "e12": "receivevalidateVisit_6",
-  "e13": "sendsendPass_7",
-  "e14": "receivesendPass_7"
+  "a1": "sendsendBadge_1",
+  "b1": "receivesendBadge_1",
+  "c1": "sendcheckBadge_2",
+  "d1": "receivecheckBadge_2",
+  "e1": "sendqueryVisit_3",
+  "e2": "sendnotifyPass_5",
+  "f1": "receivequeryVisit_3",
+  "f2": "receivenotifyPass_5",
+  "g1": "sendreleasePass_4",
+  "g2": "sendvalidateVisit_6",
+  "h1": "receivereleasePass_4",
+  "h2": "receivevalidateVisit_6",
+  "i1": "sendsendPass_7",
+  "j1": "receivesendPass_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
+   "a2"
+  ],
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "g2": [
+   "a2"
+  ],
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "h2": [
    "a2"
   ],
-  "e10": [
-   "a2"
-  ],
-  "e11": [
-   "a2"
-  ],
-  "e12": [
-   "a2"
-  ],
-  "e13": [],
-  "e14": []
+  "i1": [],
+  "j1": []
  },
  "guard_tree": {
   "a1": {},
@@ -66,60 +66,60 @@
   "children": [
    {
     "event": "sendsendBadge_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivesendBadge_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendcheckBadge_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivecheckBadge_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendqueryVisit_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivequeryVisit_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendreleasePass_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receivereleasePass_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendsendPass_7",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivesendPass_7",
-                      "code": "e14",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -135,40 +135,40 @@
            },
            {
             "event": "sendnotifyPass_5",
-            "code": "e9",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receivenotifyPass_5",
-              "code": "e10",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendvalidateVisit_6",
-                "code": "e11",
+                "code": "g2",
                 "guards": [
                  "a2"
                 ],
                 "children": [
                  {
                   "event": "receivevalidateVisit_6",
-                  "code": "e12",
+                  "code": "h2",
                   "guards": [
                    "a2"
                   ],
                   "children": [
                    {
                     "event": "sendsendPass_7",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivesendPass_7",
-                      "code": "e14",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -193,8 +193,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

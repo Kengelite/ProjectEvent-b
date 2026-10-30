@@ -5,63 +5,63 @@
   "b2": "pinValid = 0"
  },
  "event_codes": {
-  "e1": "sendinsertCard_1",
-  "e2": "receiveinsertCard_1",
-  "e3": "sendrequestPIN_2",
-  "e4": "receiverequestPIN_2",
-  "e5": "sendenterPIN_3",
-  "e6": "receiveenterPIN_3",
-  "e7": "sendinvalidPIN_4",
-  "e8": "receiveinvalidPIN_4",
-  "e9": "sendreenterPIN_5",
-  "e10": "receivereenterPIN_5",
-  "e11": "sendselectAmount_6",
-  "e12": "receiveselectAmount_6",
-  "e13": "senddispenseCash_7",
-  "e14": "receivedispenseCash_7",
-  "e15": "sendretainCard_8",
-  "e16": "receiveretainCard_8",
-  "e17": "checkloop_invalidPIN_4_loop1"
+  "a1": "sendinsertCard_1",
+  "b1": "receiveinsertCard_1",
+  "c1": "sendrequestPIN_2",
+  "d1": "receiverequestPIN_2",
+  "e1": "sendenterPIN_3",
+  "f1": "receiveenterPIN_3",
+  "g1": "sendinvalidPIN_4",
+  "h1": "receiveinvalidPIN_4",
+  "i1": "sendreenterPIN_5",
+  "j1": "receivereenterPIN_5",
+  "k1": "sendselectAmount_6",
+  "k2": "sendretainCard_8",
+  "k3": "checkloop_invalidPIN_4_loop1",
+  "l1": "receiveselectAmount_6",
+  "l2": "receiveretainCard_8",
+  "m1": "senddispenseCash_7",
+  "n1": "receivedispenseCash_7"
  },
  "event_guards": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
   "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [],
-  "e6": [],
-  "e7": [
+  "f1": [],
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "i1": [
    "a1"
   ],
-  "e10": [
+  "j1": [
    "a1"
   ],
-  "e11": [
+  "k1": [
    "b1"
   ],
-  "e12": [
-   "b1"
-  ],
-  "e13": [
-   "b1"
-  ],
-  "e14": [
-   "b1"
-  ],
-  "e15": [
+  "k2": [
    "b2"
   ],
-  "e16": [
+  "k3": [
+   "a1"
+  ],
+  "l1": [
+   "b1"
+  ],
+  "l2": [
    "b2"
   ],
-  "e17": [
-   "a1"
+  "m1": [
+   "b1"
+  ],
+  "n1": [
+   "b1"
   ]
  },
  "guard_tree": {
@@ -81,86 +81,86 @@
   "children": [
    {
     "event": "sendinsertCard_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveinsertCard_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendrequestPIN_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiverequestPIN_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendenterPIN_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [],
             "children": [
              {
               "event": "receiveenterPIN_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [],
               "children": [
                {
                 "event": "sendinvalidPIN_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receiveinvalidPIN_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendreenterPIN_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receivereenterPIN_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendselectAmount_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receiveselectAmount_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "senddispenseCash_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [
                              "b1"
                             ],
                             "children": [
                              {
                               "event": "receivedispenseCash_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [
                                "b1"
                               ],
@@ -174,14 +174,14 @@
                        },
                        {
                         "event": "sendretainCard_8",
-                        "code": "e15",
+                        "code": "k2",
                         "guards": [
                          "b2"
                         ],
                         "children": [
                          {
                           "event": "receiveretainCard_8",
-                          "code": "e16",
+                          "code": "l2",
                           "guards": [
                            "b2"
                           ],
@@ -191,12 +191,12 @@
                        },
                        {
                         "event": "checkloop_invalidPIN_4_loop1",
-                        "code": "e17",
+                        "code": "k3",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendinvalidPIN_4",
-                        "loop_back_to_code": "e7",
+                        "loop_back_to_code": "g1",
                         "children": []
                        }
                       ]
@@ -222,9 +222,9 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e17 ↺ e7"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k3 ↺ g1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

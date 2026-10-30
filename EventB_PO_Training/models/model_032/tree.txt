@@ -16,64 +16,64 @@ model_032  PackageTracking
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendcreateShipment_1
-   e2   receivecreateShipment_1
-   e3   sendpickupConfirm_2
-   e4   receivepickupConfirm_2
-   e5   sendarriveHub_3
-   e6   receivearriveHub_3
-   e7   sendscanIn_4
-   e8   receivescanIn_4
-   e9   sendcustomsHold_5_opt1  [a1]
-   e10  receivecustomsHold_5_opt1  [a1]
-   e11  senddispatchOut_6
-   e12  receivedispatchOut_6
-   e13  senddeliver_7  [b1]
-   e14  receivedeliver_7  [b1]
-   e15  sendsignReceipt_8  [b1]
-   e16  receivesignReceipt_8  [b1]
-   e17  sendleaveNotice_9  [b2]
-   e18  receiveleaveNotice_9  [b2]
-   e19  sendcloseShipment_10
-   e20  receivecloseShipment_10
-   e21  sendrateService_11
-   e22  receiverateService_11
+   a1   sendcreateShipment_1
+   b1   receivecreateShipment_1
+   c1   sendpickupConfirm_2
+   d1   receivepickupConfirm_2
+   e1   sendarriveHub_3
+   f1   receivearriveHub_3
+   g1   sendscanIn_4
+   h1   receivescanIn_4
+   i1   sendcustomsHold_5_opt1  (guard a1)
+   j1   receivecustomsHold_5_opt1  (guard a1)
+   k1   senddispatchOut_6
+   l1   receivedispatchOut_6
+   m1   senddeliver_7  (guard b1)
+   m2   sendleaveNotice_9  (guard b2)
+   n1   receivedeliver_7  (guard b1)
+   n2   receiveleaveNotice_9  (guard b2)
+   o1   sendsignReceipt_8  (guard b1)
+   p1   receivesignReceipt_8  (guard b1)
+   q1   sendcloseShipment_10
+   r1   receivecloseShipment_10
+   s1   sendrateService_11
+   t1   receiverateService_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
-       ├── e13 → e14 → e15 → e16 → e19 → e20 → e21 → e22
-       └── e17 → e18 → e19 → e20 → e21 → e22
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+       └── m2 → n2 → q1 → r1 → s1 → t1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendcreateShipment_1
-       └── e2 receivecreateShipment_1
-           └── e3 sendpickupConfirm_2
-               └── e4 receivepickupConfirm_2
-                   └── e5 sendarriveHub_3
-                       └── e6 receivearriveHub_3
-                           └── e7 sendscanIn_4
-                               └── e8 receivescanIn_4
-                                   └── e9 sendcustomsHold_5_opt1  [a1]
-                                       └── e10 receivecustomsHold_5_opt1  [a1]
-                                           └── e11 senddispatchOut_6
-                                               └── e12 receivedispatchOut_6
-                                                   ├── e13 senddeliver_7  [b1]
-                                                   │   └── e14 receivedeliver_7  [b1]
-                                                   │       └── e15 sendsignReceipt_8  [b1]
-                                                   │           └── e16 receivesignReceipt_8  [b1]
-                                                   │               └── e19 sendcloseShipment_10
-                                                   │                   └── e20 receivecloseShipment_10
-                                                   │                       └── e21 sendrateService_11
-                                                   │                           └── e22 receiverateService_11
-                                                   └── e17 sendleaveNotice_9  [b2]
-                                                       └── e18 receiveleaveNotice_9  [b2]
-                                                           └── e19 sendcloseShipment_10
-                                                               └── e20 receivecloseShipment_10
-                                                                   └── e21 sendrateService_11
-                                                                       └── e22 receiverateService_11
+   └── a1 sendcreateShipment_1
+       └── b1 receivecreateShipment_1
+           └── c1 sendpickupConfirm_2
+               └── d1 receivepickupConfirm_2
+                   └── e1 sendarriveHub_3
+                       └── f1 receivearriveHub_3
+                           └── g1 sendscanIn_4
+                               └── h1 receivescanIn_4
+                                   └── i1 sendcustomsHold_5_opt1  (guard a1)
+                                       └── j1 receivecustomsHold_5_opt1  (guard a1)
+                                           └── k1 senddispatchOut_6
+                                               └── l1 receivedispatchOut_6
+                                                   ├── m1 senddeliver_7  (guard b1)
+                                                   │   └── n1 receivedeliver_7  (guard b1)
+                                                   │       └── o1 sendsignReceipt_8  (guard b1)
+                                                   │           └── p1 receivesignReceipt_8  (guard b1)
+                                                   │               └── q1 sendcloseShipment_10
+                                                   │                   └── r1 receivecloseShipment_10
+                                                   │                       └── s1 sendrateService_11
+                                                   │                           └── t1 receiverateService_11
+                                                   └── m2 sendleaveNotice_9  (guard b2)
+                                                       └── n2 receiveleaveNotice_9  (guard b2)
+                                                           └── q1 sendcloseShipment_10
+                                                               └── r1 receivecloseShipment_10
+                                                                   └── s1 sendrateService_11
+                                                                       └── t1 receiverateService_11
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> q1 -> r1 -> s1 -> t1

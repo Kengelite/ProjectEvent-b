@@ -11,45 +11,45 @@ model_008  ChatMessaging
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendsendText_1
-   e2   receivesendText_1
-   e3   senddeliverText_2
-   e4   receivedeliverText_2
-   e5   sendreadReceipt_3
-   e6   receivereadReceipt_3
-   e7   sendforwardReceipt_4
-   e8   receiveforwardReceipt_4
-   e9   sendtypingIndicator_5_opt1  [a1]
-   e10  receivetypingIndicator_5_opt1  [a1]
-   e11  sendrelayTyping_6_opt1  [a1]
-   e12  receiverelayTyping_6_opt1  [a1]
-   e13  sendreplyText_7
-   e14  receivereplyText_7
-   e15  senddeliverReply_8
-   e16  receivedeliverReply_8
+   a1   sendsendText_1
+   b1   receivesendText_1
+   c1   senddeliverText_2
+   d1   receivedeliverText_2
+   e1   sendreadReceipt_3
+   f1   receivereadReceipt_3
+   g1   sendforwardReceipt_4
+   h1   receiveforwardReceipt_4
+   i1   sendtypingIndicator_5_opt1  (guard a1)
+   j1   receivetypingIndicator_5_opt1  (guard a1)
+   k1   sendrelayTyping_6_opt1  (guard a1)
+   l1   receiverelayTyping_6_opt1  (guard a1)
+   m1   sendreplyText_7
+   n1   receivereplyText_7
+   o1   senddeliverReply_8
+   p1   receivedeliverReply_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendsendText_1
-       └── e2 receivesendText_1
-           └── e3 senddeliverText_2
-               └── e4 receivedeliverText_2
-                   └── e5 sendreadReceipt_3
-                       └── e6 receivereadReceipt_3
-                           └── e7 sendforwardReceipt_4
-                               └── e8 receiveforwardReceipt_4
-                                   └── e9 sendtypingIndicator_5_opt1  [a1]
-                                       └── e10 receivetypingIndicator_5_opt1  [a1]
-                                           └── e11 sendrelayTyping_6_opt1  [a1]
-                                               └── e12 receiverelayTyping_6_opt1  [a1]
-                                                   └── e13 sendreplyText_7
-                                                       └── e14 receivereplyText_7
-                                                           └── e15 senddeliverReply_8
-                                                               └── e16 receivedeliverReply_8
+   └── a1 sendsendText_1
+       └── b1 receivesendText_1
+           └── c1 senddeliverText_2
+               └── d1 receivedeliverText_2
+                   └── e1 sendreadReceipt_3
+                       └── f1 receivereadReceipt_3
+                           └── g1 sendforwardReceipt_4
+                               └── h1 receiveforwardReceipt_4
+                                   └── i1 sendtypingIndicator_5_opt1  (guard a1)
+                                       └── j1 receivetypingIndicator_5_opt1  (guard a1)
+                                           └── k1 sendrelayTyping_6_opt1  (guard a1)
+                                               └── l1 receiverelayTyping_6_opt1  (guard a1)
+                                                   └── m1 sendreplyText_7
+                                                       └── n1 receivereplyText_7
+                                                           └── o1 senddeliverReply_8
+                                                               └── p1 receivedeliverReply_8
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

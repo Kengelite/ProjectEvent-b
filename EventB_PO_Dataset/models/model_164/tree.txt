@@ -16,61 +16,61 @@ model_164  SmartAquarium
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendvalidatePh_1
-   e2   receivevalidatePh_1
-   e3   sendupdateFeed_2
-   e4   receiveupdateFeed_2
-   e5   sendreportFeed_3  [a1]
-   e6   receivereportFeed_3  [a1]
-   e7   sendapproveLight_4  [a1 b1]
-   e8   receiveapproveLight_4  [a1 b1]
-   e9   sendqueryFeed_5  [a1 b1]
-   e10  receivequeryFeed_5  [a1 b1]
-   e11  sendnotifyFeed_6  [a1 b2]
-   e12  receivenotifyFeed_6  [a1 b2]
-   e13  sendsendLight_7  [a1]
-   e14  receivesendLight_7  [a1]
-   e15  sendsyncLight_8
-   e16  receivesyncLight_8
-   e17  checkloop_reportFeed_3_loop1  [a1]
+   a1   sendvalidatePh_1
+   b1   receivevalidatePh_1
+   c1   sendupdateFeed_2
+   d1   receiveupdateFeed_2
+   e1   sendreportFeed_3  (guard a1)
+   f1   receivereportFeed_3  (guard a1)
+   g1   sendapproveLight_4  (guard a1 b1)
+   g2   sendnotifyFeed_6  (guard a1 b2)
+   h1   receiveapproveLight_4  (guard a1 b1)
+   h2   receivenotifyFeed_6  (guard a1 b2)
+   i1   sendqueryFeed_5  (guard a1 b1)
+   j1   receivequeryFeed_5  (guard a1 b1)
+   k1   sendsendLight_7  (guard a1)
+   l1   receivesendLight_7  (guard a1)
+   m1   sendsyncLight_8
+   m2   checkloop_reportFeed_3_loop1  (guard a1)
+   n1   receivesyncLight_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e13 → e14
-       │   ├── e15 → e16
-       │   └── e17 ↺ e5
-       └── e11 → e12 → e13 → e14
-           ├── e15 → e16
-           └── e17 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1
+       │   └── m2 ↺ e1
+       └── g2 → h2 → k1 → l1
+           ├── m1 → n1
+           └── m2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendvalidatePh_1
-       └── e2 receivevalidatePh_1
-           └── e3 sendupdateFeed_2
-               └── e4 receiveupdateFeed_2
-                   └── e5 sendreportFeed_3  [a1]
-                       └── e6 receivereportFeed_3  [a1]
-                           ├── e7 sendapproveLight_4  [a1 b1]
-                           │   └── e8 receiveapproveLight_4  [a1 b1]
-                           │       └── e9 sendqueryFeed_5  [a1 b1]
-                           │           └── e10 receivequeryFeed_5  [a1 b1]
-                           │               └── e13 sendsendLight_7  [a1]
-                           │                   └── e14 receivesendLight_7  [a1]
-                           │                       ├── e15 sendsyncLight_8
-                           │                       │   └── e16 receivesyncLight_8
-                           │                       └── e17 checkloop_reportFeed_3_loop1  [a1]  ↺ กลับไป sendreportFeed_3
-                           └── e11 sendnotifyFeed_6  [a1 b2]
-                               └── e12 receivenotifyFeed_6  [a1 b2]
-                                   └── e13 sendsendLight_7  [a1]
-                                       └── e14 receivesendLight_7  [a1]
-                                           ├── e15 sendsyncLight_8
-                                           │   └── e16 receivesyncLight_8
-                                           └── e17 checkloop_reportFeed_3_loop1  [a1]  ↺ กลับไป sendreportFeed_3
+   └── a1 sendvalidatePh_1
+       └── b1 receivevalidatePh_1
+           └── c1 sendupdateFeed_2
+               └── d1 receiveupdateFeed_2
+                   └── e1 sendreportFeed_3  (guard a1)
+                       └── f1 receivereportFeed_3  (guard a1)
+                           ├── g1 sendapproveLight_4  (guard a1 b1)
+                           │   └── h1 receiveapproveLight_4  (guard a1 b1)
+                           │       └── i1 sendqueryFeed_5  (guard a1 b1)
+                           │           └── j1 receivequeryFeed_5  (guard a1 b1)
+                           │               └── k1 sendsendLight_7  (guard a1)
+                           │                   └── l1 receivesendLight_7  (guard a1)
+                           │                       ├── m1 sendsyncLight_8
+                           │                       │   └── n1 receivesyncLight_8
+                           │                       └── m2 checkloop_reportFeed_3_loop1  (guard a1)  ↺ กลับไป sendreportFeed_3
+                           └── g2 sendnotifyFeed_6  (guard a1 b2)
+                               └── h2 receivenotifyFeed_6  (guard a1 b2)
+                                   └── k1 sendsendLight_7  (guard a1)
+                                       └── l1 receivesendLight_7  (guard a1)
+                                           ├── m1 sendsyncLight_8
+                                           │   └── n1 receivesyncLight_8
+                                           └── m2 checkloop_reportFeed_3_loop1  (guard a1)  ↺ กลับไป sendreportFeed_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1

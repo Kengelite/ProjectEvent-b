@@ -8,7 +8,9 @@ by branch: mode = GOLD → b1, mode = SILVER → b2. An event's guards are liste
 gives one path (a1 -> b1 -> c1) and the paths together form the tree.
 
 Event tree: send m → receive m, and receive p → send m when send m has the guard p ∈ receivedMessages.
-Events are coded e1, e2, ... in file order. A loop-counter event hangs under the last event of its loop body.
+A loop-counter event hangs under the last event of its loop body. Events are coded like guards: the letter is
+the step, the number the alternative where the tree branches (an alt, or loop-again vs. go on). Events at the
+same step of sibling branches share a letter (m1 / m2 / m3); an event where branches merge starts a new letter.
 
 Writes models/<id>/tree.json and tree.txt. model_001's model.txt has event names only, so its events and guards
 are read from the Rodin proof-obligation file (.bpo) instead; one of its events has no name there.
@@ -89,9 +91,44 @@ def guard_codes(events):
     return codes
 
 
+def event_codes(children):
+    """Letter = step, number = alternative. Walk depth-first from the root; the k-th event after branch point B
+    (before any merge) gets the letter of slot (B, k), every other event a letter of its own."""
+    parents = {}
+    for p, cs in children.items():
+        for c in cs:
+            parents.setdefault(c, []).append(p)
+    slot, letter, count, code = {}, {}, {}, {}
+    def visit(n):
+        for c in children[n]:
+            if c in code:
+                continue
+            ps = parents[c]
+            if len(ps) > 1:
+                key = ("own", c)
+            elif len(children[ps[0]]) > 1:
+                key = (ps[0], 0)
+            elif ps[0] in slot and slot[ps[0]][0] != "own":
+                key = (slot[ps[0]][0], slot[ps[0]][1] + 1)
+            else:
+                key = ("own", c)
+            slot[c] = key
+            if key not in letter:
+                letter[key] = letters(len(letter))
+            count[key] = count.get(key, 0) + 1
+            code[c] = f"{letter[key]}{count[key]}"
+            visit(c)
+    visit("ROOT")
+    return code
+
+
+def code_order(c):
+    m = re.fullmatch(r"([a-z]+)(\d+)", c)
+    return (len(m.group(1)), m.group(1), int(m.group(2)))
+
+
 def build(events):
     codes = guard_codes(events)
-    ev_code = {name: f"e{k + 1}" for k, (name, _) in enumerate(events)}
     path = {name: [codes[g] for g in guards if g in codes] for name, guards in events}
 
     # event tree
@@ -130,6 +167,7 @@ def build(events):
         loops[name] = back or (body[0] if body else None)
         for n in ends:
             children[n].append(name)
+    ev_code = event_codes(children)
     def expand(n):
         return {"event": n, "code": ev_code.get(n, "root"), "guards": path.get(n, []),
                 **({"loop_back_to": loops[n], "loop_back_to_code": ev_code.get(loops[n])} if n in loops else {}),
@@ -160,10 +198,12 @@ def build(events):
         for c in seq:
             node = node.setdefault(c, {})
     guard_paths = [" -> ".join(seq) for seq in guard_runs]
-    unplaced = [n for n, _ in events if n != "INITIALISATION" and n not in kind and n not in loops]
+    unplaced = [n for n, _ in events if n not in ev_code]
+    order = sorted(ev_code.values(), key=code_order)
+    name_of = {c: n for n, c in ev_code.items()}
     return {"guard_codes": {c: g for g, c in codes.items()},
-            "event_codes": {c: n for n, c in ev_code.items()},
-            "event_guards": {ev_code[n]: path[n] for n, _ in events},
+            "event_codes": {c: name_of[c] for c in order},
+            "event_guards": {c: path[name_of[c]] for c in order},
             "guard_tree": root, "guard_paths": guard_paths,
             "event_tree": etree, "event_paths": event_paths, "unplaced_events": unplaced}
 
@@ -182,7 +222,7 @@ def draw_events(t, pre=""):
     out = []
     for k, c in enumerate(t["children"]):
         last = k == len(t["children"]) - 1
-        g = f"  [{' '.join(c['guards'])}]" if c["guards"] else ""
+        g = f"  (guard {' '.join(c['guards'])})" if c["guards"] else ""
         back = f"  ↺ กลับไป {c['loop_back_to']}" if "loop_back_to" in c else ""
         out.append(f"{pre}{'└── ' if last else '├── '}{c['code']} {c['event']}{g}{back}")
         out += draw_events(c, pre + ("    " if last else "│   "))
@@ -217,7 +257,7 @@ def text(model_id, case, t):
     lines += ["   " + l for l in draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}")]
     lines += ["", "   เส้นทาง:"] + ([f"   {p}" for p in t["guard_paths"]] or ["   -"])
     lines += ["", "3) รหัสเหตุการณ์ (event)"]
-    lines += [f"   {c:<4} {n}" + (f"  [{' '.join(t['event_guards'][c])}]" if t["event_guards"][c] else "")
+    lines += [f"   {c:<4} {n}" + (f"  (guard {' '.join(t['event_guards'][c])})" if t["event_guards"][c] else "")
               for c, n in t["event_codes"].items()]
     lines += ["", "4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)", "   (root) INITIALISATION"]
     lines += ["   " + l for l in draw_events_compact(t["event_tree"])]

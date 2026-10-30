@@ -7,68 +7,68 @@
   "b3": "phase = BRONZE"
  },
  "event_codes": {
-  "e1": "sendreserveRoute_1",
-  "e2": "receivereserveRoute_1",
-  "e3": "sendsendRoute_2",
-  "e4": "receivesendRoute_2",
-  "e5": "sendassignRoute_3",
-  "e6": "receiveassignRoute_3",
-  "e7": "sendreservePickup_4",
-  "e8": "receivereservePickup_4",
-  "e9": "sendscheduleFill_5",
-  "e10": "receivescheduleFill_5",
-  "e11": "sendupdatePickup_6",
-  "e12": "receiveupdatePickup_6",
-  "e13": "sendlogPickup_7",
-  "e14": "receivelogPickup_7",
-  "e15": "sendissueRoute_8",
-  "e16": "receiveissueRoute_8",
-  "e17": "sendsyncPickup_9",
-  "e18": "receivesyncPickup_9",
-  "e19": "sendreleaseRoute_10",
-  "e20": "receivereleaseRoute_10"
+  "a1": "sendreserveRoute_1",
+  "b1": "receivereserveRoute_1",
+  "c1": "sendsendRoute_2",
+  "d1": "receivesendRoute_2",
+  "e1": "sendassignRoute_3",
+  "e2": "sendreservePickup_4",
+  "f1": "receiveassignRoute_3",
+  "f2": "receivereservePickup_4",
+  "g1": "sendscheduleFill_5",
+  "h1": "receivescheduleFill_5",
+  "i1": "sendupdatePickup_6",
+  "j1": "receiveupdatePickup_6",
+  "k1": "sendlogPickup_7",
+  "k2": "sendissueRoute_8",
+  "k3": "sendsyncPickup_9",
+  "l1": "receivelogPickup_7",
+  "l2": "receiveissueRoute_8",
+  "l3": "receivesyncPickup_9",
+  "m1": "sendreleaseRoute_10",
+  "n1": "receivereleaseRoute_10"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
    "a2"
   ],
-  "e8": [
-   "a2"
-  ],
-  "e9": [],
-  "e10": [],
-  "e11": [],
-  "e12": [],
-  "e13": [
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e14": [
+  "k2": [
+   "b2"
+  ],
+  "k3": [
+   "b3"
+  ],
+  "l1": [
    "b1"
   ],
-  "e15": [
+  "l2": [
    "b2"
   ],
-  "e16": [
-   "b2"
-  ],
-  "e17": [
+  "l3": [
    "b3"
   ],
-  "e18": [
-   "b3"
-  ],
-  "e19": [],
-  "e20": []
+  "m1": [],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -97,80 +97,80 @@
   "children": [
    {
     "event": "sendreserveRoute_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivereserveRoute_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendsendRoute_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivesendRoute_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendassignRoute_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveassignRoute_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendscheduleFill_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivescheduleFill_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendupdatePickup_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveupdatePickup_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendlogPickup_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receivelogPickup_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseRoute_10",
-                            "code": "e19",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseRoute_10",
-                              "code": "e20",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -182,26 +182,26 @@
                        },
                        {
                         "event": "sendissueRoute_8",
-                        "code": "e15",
+                        "code": "k2",
                         "guards": [
                          "b2"
                         ],
                         "children": [
                          {
                           "event": "receiveissueRoute_8",
-                          "code": "e16",
+                          "code": "l2",
                           "guards": [
                            "b2"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseRoute_10",
-                            "code": "e19",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseRoute_10",
-                              "code": "e20",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -213,26 +213,26 @@
                        },
                        {
                         "event": "sendsyncPickup_9",
-                        "code": "e17",
+                        "code": "k3",
                         "guards": [
                          "b3"
                         ],
                         "children": [
                          {
                           "event": "receivesyncPickup_9",
-                          "code": "e18",
+                          "code": "l3",
                           "guards": [
                            "b3"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseRoute_10",
-                            "code": "e19",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseRoute_10",
-                              "code": "e20",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -256,60 +256,60 @@
            },
            {
             "event": "sendreservePickup_4",
-            "code": "e7",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receivereservePickup_4",
-              "code": "e8",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendscheduleFill_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivescheduleFill_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendupdatePickup_6",
-                    "code": "e11",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveupdatePickup_6",
-                      "code": "e12",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendlogPickup_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receivelogPickup_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseRoute_10",
-                            "code": "e19",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseRoute_10",
-                              "code": "e20",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -321,26 +321,26 @@
                        },
                        {
                         "event": "sendissueRoute_8",
-                        "code": "e15",
+                        "code": "k2",
                         "guards": [
                          "b2"
                         ],
                         "children": [
                          {
                           "event": "receiveissueRoute_8",
-                          "code": "e16",
+                          "code": "l2",
                           "guards": [
                            "b2"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseRoute_10",
-                            "code": "e19",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseRoute_10",
-                              "code": "e20",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -352,26 +352,26 @@
                        },
                        {
                         "event": "sendsyncPickup_9",
-                        "code": "e17",
+                        "code": "k3",
                         "guards": [
                          "b3"
                         ],
                         "children": [
                          {
                           "event": "receivesyncPickup_9",
-                          "code": "e18",
+                          "code": "l3",
                           "guards": [
                            "b3"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseRoute_10",
-                            "code": "e19",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseRoute_10",
-                              "code": "e20",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -404,12 +404,12 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

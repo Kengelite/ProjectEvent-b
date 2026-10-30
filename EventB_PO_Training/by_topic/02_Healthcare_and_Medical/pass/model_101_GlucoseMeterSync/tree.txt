@@ -11,69 +11,69 @@ model_101  GlucoseMeterSync
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendconfirmInsulin_1
-   e2   receiveconfirmInsulin_1
-   e3   sendsyncReading_2
-   e4   receivesyncReading_2
-   e5   sendupdateAlert_3
-   e6   receiveupdateAlert_3
-   e7   sendqueryReading_4
-   e8   receivequeryReading_4
-   e9   sendnotifyAlert_5
-   e10  receivenotifyAlert_5
-   e11  sendreleaseAlert_6
-   e12  receivereleaseAlert_6
-   e13  sendqueryAlert_7
-   e14  receivequeryAlert_7
-   e15  sendreleaseInsulin_8_opt1  [a1]
-   e16  receivereleaseInsulin_8_opt1  [a1]
-   e17  sendrequestAlert_9_opt1  [a1]
-   e18  receiverequestAlert_9_opt1  [a1]
-   e19  sendreportInsulin_10_opt1  [a1]
-   e20  receivereportInsulin_10_opt1  [a1]
-   e21  sendupdateInsulin_11_opt1  [a1]
-   e22  receiveupdateInsulin_11_opt1  [a1]
-   e23  sendsendAlert_12_opt1  [a1]
-   e24  receivesendAlert_12_opt1  [a1]
-   e25  sendapproveAlert_13_opt1  [a1]
-   e26  receiveapproveAlert_13_opt1  [a1]
-   e27  sendreserveAlert_14
-   e28  receivereserveAlert_14
+   a1   sendconfirmInsulin_1
+   b1   receiveconfirmInsulin_1
+   c1   sendsyncReading_2
+   d1   receivesyncReading_2
+   e1   sendupdateAlert_3
+   f1   receiveupdateAlert_3
+   g1   sendqueryReading_4
+   h1   receivequeryReading_4
+   i1   sendnotifyAlert_5
+   j1   receivenotifyAlert_5
+   k1   sendreleaseAlert_6
+   l1   receivereleaseAlert_6
+   m1   sendqueryAlert_7
+   n1   receivequeryAlert_7
+   o1   sendreleaseInsulin_8_opt1  (guard a1)
+   p1   receivereleaseInsulin_8_opt1  (guard a1)
+   q1   sendrequestAlert_9_opt1  (guard a1)
+   r1   receiverequestAlert_9_opt1  (guard a1)
+   s1   sendreportInsulin_10_opt1  (guard a1)
+   t1   receivereportInsulin_10_opt1  (guard a1)
+   u1   sendupdateInsulin_11_opt1  (guard a1)
+   v1   receiveupdateInsulin_11_opt1  (guard a1)
+   w1   sendsendAlert_12_opt1  (guard a1)
+   x1   receivesendAlert_12_opt1  (guard a1)
+   y1   sendapproveAlert_13_opt1  (guard a1)
+   z1   receiveapproveAlert_13_opt1  (guard a1)
+   aa1  sendreserveAlert_14
+   ab1  receivereserveAlert_14
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e25 → e26 → e27 → e28
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1 → aa1 → ab1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendconfirmInsulin_1
-       └── e2 receiveconfirmInsulin_1
-           └── e3 sendsyncReading_2
-               └── e4 receivesyncReading_2
-                   └── e5 sendupdateAlert_3
-                       └── e6 receiveupdateAlert_3
-                           └── e7 sendqueryReading_4
-                               └── e8 receivequeryReading_4
-                                   └── e9 sendnotifyAlert_5
-                                       └── e10 receivenotifyAlert_5
-                                           └── e11 sendreleaseAlert_6
-                                               └── e12 receivereleaseAlert_6
-                                                   └── e13 sendqueryAlert_7
-                                                       └── e14 receivequeryAlert_7
-                                                           └── e15 sendreleaseInsulin_8_opt1  [a1]
-                                                               └── e16 receivereleaseInsulin_8_opt1  [a1]
-                                                                   └── e17 sendrequestAlert_9_opt1  [a1]
-                                                                       └── e18 receiverequestAlert_9_opt1  [a1]
-                                                                           └── e19 sendreportInsulin_10_opt1  [a1]
-                                                                               └── e20 receivereportInsulin_10_opt1  [a1]
-                                                                                   └── e21 sendupdateInsulin_11_opt1  [a1]
-                                                                                       └── e22 receiveupdateInsulin_11_opt1  [a1]
-                                                                                           └── e23 sendsendAlert_12_opt1  [a1]
-                                                                                               └── e24 receivesendAlert_12_opt1  [a1]
-                                                                                                   └── e25 sendapproveAlert_13_opt1  [a1]
-                                                                                                       └── e26 receiveapproveAlert_13_opt1  [a1]
-                                                                                                           └── e27 sendreserveAlert_14
-                                                                                                               └── e28 receivereserveAlert_14
+   └── a1 sendconfirmInsulin_1
+       └── b1 receiveconfirmInsulin_1
+           └── c1 sendsyncReading_2
+               └── d1 receivesyncReading_2
+                   └── e1 sendupdateAlert_3
+                       └── f1 receiveupdateAlert_3
+                           └── g1 sendqueryReading_4
+                               └── h1 receivequeryReading_4
+                                   └── i1 sendnotifyAlert_5
+                                       └── j1 receivenotifyAlert_5
+                                           └── k1 sendreleaseAlert_6
+                                               └── l1 receivereleaseAlert_6
+                                                   └── m1 sendqueryAlert_7
+                                                       └── n1 receivequeryAlert_7
+                                                           └── o1 sendreleaseInsulin_8_opt1  (guard a1)
+                                                               └── p1 receivereleaseInsulin_8_opt1  (guard a1)
+                                                                   └── q1 sendrequestAlert_9_opt1  (guard a1)
+                                                                       └── r1 receiverequestAlert_9_opt1  (guard a1)
+                                                                           └── s1 sendreportInsulin_10_opt1  (guard a1)
+                                                                               └── t1 receivereportInsulin_10_opt1  (guard a1)
+                                                                                   └── u1 sendupdateInsulin_11_opt1  (guard a1)
+                                                                                       └── v1 receiveupdateInsulin_11_opt1  (guard a1)
+                                                                                           └── w1 sendsendAlert_12_opt1  (guard a1)
+                                                                                               └── x1 receivesendAlert_12_opt1  (guard a1)
+                                                                                                   └── y1 sendapproveAlert_13_opt1  (guard a1)
+                                                                                                       └── z1 receiveapproveAlert_13_opt1  (guard a1)
+                                                                                                           └── aa1 sendreserveAlert_14
+                                                                                                               └── ab1 receivereserveAlert_14
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26 -> e27 -> e28
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1 -> aa1 -> ab1

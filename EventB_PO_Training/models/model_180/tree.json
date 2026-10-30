@@ -3,40 +3,40 @@
   "a1": "roundNo < 12"
  },
  "event_codes": {
-  "e1": "sendassignReport_1",
-  "e2": "receiveassignReport_1",
-  "e3": "sendsendNutrient_2",
-  "e4": "receivesendNutrient_2",
-  "e5": "sendreleaseReport_3",
-  "e6": "receivereleaseReport_3",
-  "e7": "sendcancelNutrient_4",
-  "e8": "receivecancelNutrient_4",
-  "e9": "sendquerySample_5",
-  "e10": "receivequerySample_5",
-  "e11": "sendnotifyReport_6",
-  "e12": "receivenotifyReport_6",
-  "e13": "checkloop_releaseReport_3_loop1"
+  "a1": "sendassignReport_1",
+  "b1": "receiveassignReport_1",
+  "c1": "sendsendNutrient_2",
+  "d1": "receivesendNutrient_2",
+  "e1": "sendreleaseReport_3",
+  "f1": "receivereleaseReport_3",
+  "g1": "sendcancelNutrient_4",
+  "g2": "checkloop_releaseReport_3_loop1",
+  "h1": "receivecancelNutrient_4",
+  "i1": "sendquerySample_5",
+  "j1": "receivequerySample_5",
+  "k1": "sendnotifyReport_6",
+  "l1": "receivenotifyReport_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [],
-  "e8": [],
-  "e9": [],
-  "e10": [],
-  "e11": [],
-  "e12": [],
-  "e13": [
+  "g1": [],
+  "g2": [
    "a1"
-  ]
+  ],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
  },
  "guard_tree": {
   "a1": {}
@@ -51,66 +51,66 @@
   "children": [
    {
     "event": "sendassignReport_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveassignReport_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendsendNutrient_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivesendNutrient_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendreleaseReport_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivereleaseReport_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendcancelNutrient_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivecancelNutrient_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendquerySample_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivequerySample_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendnotifyReport_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivenotifyReport_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -126,12 +126,12 @@
                },
                {
                 "event": "checkloop_releaseReport_3_loop1",
-                "code": "e13",
+                "code": "g2",
                 "guards": [
                  "a1"
                 ],
                 "loop_back_to": "sendreleaseReport_3",
-                "loop_back_to_code": "e5",
+                "loop_back_to_code": "e1",
                 "children": []
                }
               ]
@@ -149,8 +149,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e13 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

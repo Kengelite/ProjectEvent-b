@@ -10,65 +10,65 @@ model_159  SatelliteGroundStation
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendupdateTelemetry_1
-   e2   receiveupdateTelemetry_1
-   e3   sendlogCommand_2
-   e4   receivelogCommand_2
-   e5   sendrequestCommand_3
-   e6   receiverequestCommand_3
-   e7   sendassignTelemetry_4
-   e8   receiveassignTelemetry_4
-   e9   sendcheckCommand_5
-   e10  receivecheckCommand_5
-   e11  sendreleasePass_6
-   e12  receivereleasePass_6
-   e13  sendreportPass_7
-   e14  receivereportPass_7
-   e15  sendupdateCommand_8
-   e16  receiveupdateCommand_8
-   e17  sendschedulePass_9
-   e18  receiveschedulePass_9
-   e19  sendsendTelemetry_10
-   e20  receivesendTelemetry_10
-   e21  sendscheduleTelemetry_11
-   e22  receivescheduleTelemetry_11
-   e23  sendvalidatePass_12
-   e24  receivevalidatePass_12
-   e25  sendconfirmCommand_13
-   e26  receiveconfirmCommand_13
+   a1   sendupdateTelemetry_1
+   b1   receiveupdateTelemetry_1
+   c1   sendlogCommand_2
+   d1   receivelogCommand_2
+   e1   sendrequestCommand_3
+   f1   receiverequestCommand_3
+   g1   sendassignTelemetry_4
+   h1   receiveassignTelemetry_4
+   i1   sendcheckCommand_5
+   j1   receivecheckCommand_5
+   k1   sendreleasePass_6
+   l1   receivereleasePass_6
+   m1   sendreportPass_7
+   n1   receivereportPass_7
+   o1   sendupdateCommand_8
+   p1   receiveupdateCommand_8
+   q1   sendschedulePass_9
+   r1   receiveschedulePass_9
+   s1   sendsendTelemetry_10
+   t1   receivesendTelemetry_10
+   u1   sendscheduleTelemetry_11
+   v1   receivescheduleTelemetry_11
+   w1   sendvalidatePass_12
+   x1   receivevalidatePass_12
+   y1   sendconfirmCommand_13
+   z1   receiveconfirmCommand_13
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e25 → e26
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendupdateTelemetry_1
-       └── e2 receiveupdateTelemetry_1
-           └── e3 sendlogCommand_2
-               └── e4 receivelogCommand_2
-                   └── e5 sendrequestCommand_3
-                       └── e6 receiverequestCommand_3
-                           └── e7 sendassignTelemetry_4
-                               └── e8 receiveassignTelemetry_4
-                                   └── e9 sendcheckCommand_5
-                                       └── e10 receivecheckCommand_5
-                                           └── e11 sendreleasePass_6
-                                               └── e12 receivereleasePass_6
-                                                   └── e13 sendreportPass_7
-                                                       └── e14 receivereportPass_7
-                                                           └── e15 sendupdateCommand_8
-                                                               └── e16 receiveupdateCommand_8
-                                                                   └── e17 sendschedulePass_9
-                                                                       └── e18 receiveschedulePass_9
-                                                                           └── e19 sendsendTelemetry_10
-                                                                               └── e20 receivesendTelemetry_10
-                                                                                   └── e21 sendscheduleTelemetry_11
-                                                                                       └── e22 receivescheduleTelemetry_11
-                                                                                           └── e23 sendvalidatePass_12
-                                                                                               └── e24 receivevalidatePass_12
-                                                                                                   └── e25 sendconfirmCommand_13
-                                                                                                       └── e26 receiveconfirmCommand_13
+   └── a1 sendupdateTelemetry_1
+       └── b1 receiveupdateTelemetry_1
+           └── c1 sendlogCommand_2
+               └── d1 receivelogCommand_2
+                   └── e1 sendrequestCommand_3
+                       └── f1 receiverequestCommand_3
+                           └── g1 sendassignTelemetry_4
+                               └── h1 receiveassignTelemetry_4
+                                   └── i1 sendcheckCommand_5
+                                       └── j1 receivecheckCommand_5
+                                           └── k1 sendreleasePass_6
+                                               └── l1 receivereleasePass_6
+                                                   └── m1 sendreportPass_7
+                                                       └── n1 receivereportPass_7
+                                                           └── o1 sendupdateCommand_8
+                                                               └── p1 receiveupdateCommand_8
+                                                                   └── q1 sendschedulePass_9
+                                                                       └── r1 receiveschedulePass_9
+                                                                           └── s1 sendsendTelemetry_10
+                                                                               └── t1 receivesendTelemetry_10
+                                                                                   └── u1 sendscheduleTelemetry_11
+                                                                                       └── v1 receivescheduleTelemetry_11
+                                                                                           └── w1 sendvalidatePass_12
+                                                                                               └── x1 receivevalidatePass_12
+                                                                                                   └── y1 sendconfirmCommand_13
+                                                                                                       └── z1 receiveconfirmCommand_13
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1

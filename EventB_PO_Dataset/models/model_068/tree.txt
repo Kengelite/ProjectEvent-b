@@ -10,37 +10,37 @@ model_068  CarRentalReturn
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendapproveDamage_1
-   e2   receiveapproveDamage_1
-   e3   sendfetchCar_2
-   e4   receivefetchCar_2
-   e5   sendvalidateDamage_3
-   e6   receivevalidateDamage_3
-   e7   sendcancelCar_4
-   e8   receivecancelCar_4
-   e9   sendfetchDamage_5
-   e10  receivefetchDamage_5
-   e11  sendqueryInvoice_6
-   e12  receivequeryInvoice_6
+   a1   sendapproveDamage_1
+   b1   receiveapproveDamage_1
+   c1   sendfetchCar_2
+   d1   receivefetchCar_2
+   e1   sendvalidateDamage_3
+   f1   receivevalidateDamage_3
+   g1   sendcancelCar_4
+   h1   receivecancelCar_4
+   i1   sendfetchDamage_5
+   j1   receivefetchDamage_5
+   k1   sendqueryInvoice_6
+   l1   receivequeryInvoice_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendapproveDamage_1
-       └── e2 receiveapproveDamage_1
-           └── e3 sendfetchCar_2
-               └── e4 receivefetchCar_2
-                   └── e5 sendvalidateDamage_3
-                       └── e6 receivevalidateDamage_3
-                           └── e7 sendcancelCar_4
-                               └── e8 receivecancelCar_4
-                                   └── e9 sendfetchDamage_5
-                                       └── e10 receivefetchDamage_5
-                                           └── e11 sendqueryInvoice_6
-                                               └── e12 receivequeryInvoice_6
+   └── a1 sendapproveDamage_1
+       └── b1 receiveapproveDamage_1
+           └── c1 sendfetchCar_2
+               └── d1 receivefetchCar_2
+                   └── e1 sendvalidateDamage_3
+                       └── f1 receivevalidateDamage_3
+                           └── g1 sendcancelCar_4
+                               └── h1 receivecancelCar_4
+                                   └── i1 sendfetchDamage_5
+                                       └── j1 receivefetchDamage_5
+                                           └── k1 sendqueryInvoice_6
+                                               └── l1 receivequeryInvoice_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

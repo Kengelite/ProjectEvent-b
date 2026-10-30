@@ -4,73 +4,73 @@
   "b1": "autosaveCount < 3"
  },
  "event_codes": {
-  "e1": "sendlogin_1",
-  "e2": "receivelogin_1",
-  "e3": "sendfetchQuestion_2",
-  "e4": "receivefetchQuestion_2",
-  "e5": "sendquestionData_3",
-  "e6": "receivequestionData_3",
-  "e7": "sendautosave_4",
-  "e8": "receiveautosave_4",
-  "e9": "sendsaveAck_5",
-  "e10": "receivesaveAck_5",
-  "e11": "sendsubmitAnswer_6",
-  "e12": "receivesubmitAnswer_6",
-  "e13": "sendflagBehavior_7",
-  "e14": "receiveflagBehavior_7",
-  "e15": "sendexamResult_8",
-  "e16": "receiveexamResult_8",
-  "e17": "checkloop_fetchQuestion_2_loop1",
-  "e18": "checkloop_autosave_4_loop2"
+  "a1": "sendlogin_1",
+  "b1": "receivelogin_1",
+  "c1": "sendfetchQuestion_2",
+  "d1": "receivefetchQuestion_2",
+  "e1": "sendquestionData_3",
+  "f1": "receivequestionData_3",
+  "g1": "sendautosave_4",
+  "h1": "receiveautosave_4",
+  "i1": "sendsaveAck_5",
+  "j1": "receivesaveAck_5",
+  "k1": "sendsubmitAnswer_6",
+  "k2": "checkloop_autosave_4_loop2",
+  "l1": "receivesubmitAnswer_6",
+  "m1": "sendflagBehavior_7",
+  "m2": "checkloop_fetchQuestion_2_loop1",
+  "n1": "receiveflagBehavior_7",
+  "o1": "sendexamResult_8",
+  "p1": "receiveexamResult_8"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [
+  "a1": [],
+  "b1": [],
+  "c1": [
    "a1"
   ],
-  "e4": [
+  "d1": [
    "a1"
   ],
-  "e5": [
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1",
    "b1"
   ],
-  "e8": [
+  "h1": [
    "a1",
    "b1"
   ],
-  "e9": [
+  "i1": [
    "a1",
    "b1"
   ],
-  "e10": [
+  "j1": [
    "a1",
    "b1"
   ],
-  "e11": [
+  "k1": [
    "a1"
   ],
-  "e12": [
-   "a1"
-  ],
-  "e13": [],
-  "e14": [],
-  "e15": [],
-  "e16": [],
-  "e17": [
-   "a1"
-  ],
-  "e18": [
+  "k2": [
    "a1",
    "b1"
-  ]
+  ],
+  "l1": [
+   "a1"
+  ],
+  "m1": [],
+  "m2": [
+   "a1"
+  ],
+  "n1": [],
+  "o1": [],
+  "p1": []
  },
  "guard_tree": {
   "a1": {
@@ -87,45 +87,45 @@
   "children": [
    {
     "event": "sendlogin_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivelogin_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendfetchQuestion_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [
          "a1"
         ],
         "children": [
          {
           "event": "receivefetchQuestion_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [
            "a1"
           ],
           "children": [
            {
             "event": "sendquestionData_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivequestionData_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendautosave_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -133,7 +133,7 @@
                 "children": [
                  {
                   "event": "receiveautosave_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -141,7 +141,7 @@
                   "children": [
                    {
                     "event": "sendsaveAck_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1",
                      "b1"
@@ -149,7 +149,7 @@
                     "children": [
                      {
                       "event": "receivesaveAck_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1",
                        "b1"
@@ -157,36 +157,36 @@
                       "children": [
                        {
                         "event": "sendsubmitAnswer_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "a1"
                         ],
                         "children": [
                          {
                           "event": "receivesubmitAnswer_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "a1"
                           ],
                           "children": [
                            {
                             "event": "sendflagBehavior_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receiveflagBehavior_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": [
                                {
                                 "event": "sendexamResult_8",
-                                "code": "e15",
+                                "code": "o1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receiveexamResult_8",
-                                  "code": "e16",
+                                  "code": "p1",
                                   "guards": [],
                                   "children": []
                                  }
@@ -198,12 +198,12 @@
                            },
                            {
                             "event": "checkloop_fetchQuestion_2_loop1",
-                            "code": "e17",
+                            "code": "m2",
                             "guards": [
                              "a1"
                             ],
                             "loop_back_to": "sendfetchQuestion_2",
-                            "loop_back_to_code": "e3",
+                            "loop_back_to_code": "c1",
                             "children": []
                            }
                           ]
@@ -212,13 +212,13 @@
                        },
                        {
                         "event": "checkloop_autosave_4_loop2",
-                        "code": "e18",
+                        "code": "k2",
                         "guards": [
                          "a1",
                          "b1"
                         ],
                         "loop_back_to": "sendautosave_4",
-                        "loop_back_to_code": "e7",
+                        "loop_back_to_code": "g1",
                         "children": []
                        }
                       ]
@@ -244,9 +244,9 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 ↺ e3",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e18 ↺ e7"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ c1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ g1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

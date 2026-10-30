@@ -5,89 +5,89 @@
   "b2": "stepNo mod 2 ≠ 0"
  },
  "event_codes": {
-  "e1": "sendreserveLicense_1",
-  "e2": "receivereserveLicense_1",
-  "e3": "sendreportChunk_2",
-  "e4": "receivereportChunk_2",
-  "e5": "sendreportStream_3",
-  "e6": "receivereportStream_3",
-  "e7": "sendvalidateStream_4",
-  "e8": "receivevalidateStream_4",
-  "e9": "sendsendChunk_5",
-  "e10": "receivesendChunk_5",
-  "e11": "sendapproveStream_6",
-  "e12": "receiveapproveStream_6",
-  "e13": "sendackChunk_7",
-  "e14": "receiveackChunk_7",
-  "e15": "sendscheduleLicense_8",
-  "e16": "receivescheduleLicense_8",
-  "e17": "sendfetchStream_9",
-  "e18": "receivefetchStream_9",
-  "e19": "sendscheduleStream_10",
-  "e20": "receivescheduleStream_10",
-  "e21": "sendupdateStream_11",
-  "e22": "receiveupdateStream_11",
-  "e23": "sendreleaseChunk_12",
-  "e24": "receivereleaseChunk_12",
-  "e25": "sendrequestStream_13",
-  "e26": "receiverequestStream_13",
-  "e27": "checkloop_reportStream_3_loop1"
+  "a1": "sendreserveLicense_1",
+  "b1": "receivereserveLicense_1",
+  "c1": "sendreportChunk_2",
+  "d1": "receivereportChunk_2",
+  "e1": "sendreportStream_3",
+  "f1": "receivereportStream_3",
+  "g1": "sendvalidateStream_4",
+  "g2": "sendsendChunk_5",
+  "h1": "receivevalidateStream_4",
+  "h2": "receivesendChunk_5",
+  "i1": "sendackChunk_7",
+  "j1": "receiveackChunk_7",
+  "k1": "sendscheduleLicense_8",
+  "k2": "checkloop_reportStream_3_loop1",
+  "l1": "receivescheduleLicense_8",
+  "m1": "sendfetchStream_9",
+  "n1": "receivefetchStream_9",
+  "o1": "sendscheduleStream_10",
+  "p1": "receivescheduleStream_10",
+  "q1": "sendupdateStream_11",
+  "r1": "receiveupdateStream_11",
+  "s1": "sendreleaseChunk_12",
+  "t1": "receivereleaseChunk_12",
+  "u1": "sendrequestStream_13",
+  "v1": "receiverequestStream_13",
+  "w1": "sendapproveStream_6",
+  "x1": "receiveapproveStream_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1",
    "b1"
   ],
-  "e8": [
+  "g2": [
+   "a1",
+   "b2"
+  ],
+  "h1": [
    "a1",
    "b1"
   ],
-  "e9": [
+  "h2": [
    "a1",
    "b2"
   ],
-  "e10": [
-   "a1",
-   "b2"
-  ],
-  "e11": [
-   "a1",
-   "b2"
-  ],
-  "e12": [
-   "a1",
-   "b2"
-  ],
-  "e13": [
+  "i1": [
    "a1"
   ],
-  "e14": [
+  "j1": [
    "a1"
   ],
-  "e15": [],
-  "e16": [],
-  "e17": [],
-  "e18": [],
-  "e19": [],
-  "e20": [],
-  "e21": [],
-  "e22": [],
-  "e23": [],
-  "e24": [],
-  "e25": [],
-  "e26": [],
-  "e27": [
+  "k1": [],
+  "k2": [
    "a1"
+  ],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": [],
+  "u1": [],
+  "v1": [],
+  "w1": [
+   "a1",
+   "b2"
+  ],
+  "x1": [
+   "a1",
+   "b2"
   ]
  },
  "guard_tree": {
@@ -107,41 +107,41 @@
   "children": [
    {
     "event": "sendreserveLicense_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivereserveLicense_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendreportChunk_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivereportChunk_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendreportStream_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivereportStream_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendvalidateStream_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -149,7 +149,7 @@
                 "children": [
                  {
                   "event": "receivevalidateStream_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -157,76 +157,76 @@
                   "children": [
                    {
                     "event": "sendackChunk_7",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receiveackChunk_7",
-                      "code": "e14",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendscheduleLicense_8",
-                        "code": "e15",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivescheduleLicense_8",
-                          "code": "e16",
+                          "code": "l1",
                           "guards": [],
                           "children": [
                            {
                             "event": "sendfetchStream_9",
-                            "code": "e17",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivefetchStream_9",
-                              "code": "e18",
+                              "code": "n1",
                               "guards": [],
                               "children": [
                                {
                                 "event": "sendscheduleStream_10",
-                                "code": "e19",
+                                "code": "o1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivescheduleStream_10",
-                                  "code": "e20",
+                                  "code": "p1",
                                   "guards": [],
                                   "children": [
                                    {
                                     "event": "sendupdateStream_11",
-                                    "code": "e21",
+                                    "code": "q1",
                                     "guards": [],
                                     "children": [
                                      {
                                       "event": "receiveupdateStream_11",
-                                      "code": "e22",
+                                      "code": "r1",
                                       "guards": [],
                                       "children": [
                                        {
                                         "event": "sendreleaseChunk_12",
-                                        "code": "e23",
+                                        "code": "s1",
                                         "guards": [],
                                         "children": [
                                          {
                                           "event": "receivereleaseChunk_12",
-                                          "code": "e24",
+                                          "code": "t1",
                                           "guards": [],
                                           "children": [
                                            {
                                             "event": "sendrequestStream_13",
-                                            "code": "e25",
+                                            "code": "u1",
                                             "guards": [],
                                             "children": [
                                              {
                                               "event": "receiverequestStream_13",
-                                              "code": "e26",
+                                              "code": "v1",
                                               "guards": [],
                                               "children": []
                                              }
@@ -254,12 +254,12 @@
                        },
                        {
                         "event": "checkloop_reportStream_3_loop1",
-                        "code": "e27",
+                        "code": "k2",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendreportStream_3",
-                        "loop_back_to_code": "e5",
+                        "loop_back_to_code": "e1",
                         "children": []
                        }
                       ]
@@ -272,7 +272,7 @@
                },
                {
                 "event": "sendsendChunk_5",
-                "code": "e9",
+                "code": "g2",
                 "guards": [
                  "a1",
                  "b2"
@@ -280,7 +280,7 @@
                 "children": [
                  {
                   "event": "receivesendChunk_5",
-                  "code": "e10",
+                  "code": "h2",
                   "guards": [
                    "a1",
                    "b2"
@@ -288,7 +288,7 @@
                   "children": [
                    {
                     "event": "sendapproveStream_6",
-                    "code": "e11",
+                    "code": "w1",
                     "guards": [
                      "a1",
                      "b2"
@@ -296,7 +296,7 @@
                     "children": [
                      {
                       "event": "receiveapproveStream_6",
-                      "code": "e12",
+                      "code": "x1",
                       "guards": [
                        "a1",
                        "b2"
@@ -304,76 +304,76 @@
                       "children": [
                        {
                         "event": "sendackChunk_7",
-                        "code": "e13",
+                        "code": "i1",
                         "guards": [
                          "a1"
                         ],
                         "children": [
                          {
                           "event": "receiveackChunk_7",
-                          "code": "e14",
+                          "code": "j1",
                           "guards": [
                            "a1"
                           ],
                           "children": [
                            {
                             "event": "sendscheduleLicense_8",
-                            "code": "e15",
+                            "code": "k1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivescheduleLicense_8",
-                              "code": "e16",
+                              "code": "l1",
                               "guards": [],
                               "children": [
                                {
                                 "event": "sendfetchStream_9",
-                                "code": "e17",
+                                "code": "m1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivefetchStream_9",
-                                  "code": "e18",
+                                  "code": "n1",
                                   "guards": [],
                                   "children": [
                                    {
                                     "event": "sendscheduleStream_10",
-                                    "code": "e19",
+                                    "code": "o1",
                                     "guards": [],
                                     "children": [
                                      {
                                       "event": "receivescheduleStream_10",
-                                      "code": "e20",
+                                      "code": "p1",
                                       "guards": [],
                                       "children": [
                                        {
                                         "event": "sendupdateStream_11",
-                                        "code": "e21",
+                                        "code": "q1",
                                         "guards": [],
                                         "children": [
                                          {
                                           "event": "receiveupdateStream_11",
-                                          "code": "e22",
+                                          "code": "r1",
                                           "guards": [],
                                           "children": [
                                            {
                                             "event": "sendreleaseChunk_12",
-                                            "code": "e23",
+                                            "code": "s1",
                                             "guards": [],
                                             "children": [
                                              {
                                               "event": "receivereleaseChunk_12",
-                                              "code": "e24",
+                                              "code": "t1",
                                               "guards": [],
                                               "children": [
                                                {
                                                 "event": "sendrequestStream_13",
-                                                "code": "e25",
+                                                "code": "u1",
                                                 "guards": [],
                                                 "children": [
                                                  {
                                                   "event": "receiverequestStream_13",
-                                                  "code": "e26",
+                                                  "code": "v1",
                                                   "guards": [],
                                                   "children": []
                                                  }
@@ -401,12 +401,12 @@
                            },
                            {
                             "event": "checkloop_reportStream_3_loop1",
-                            "code": "e27",
+                            "code": "k2",
                             "guards": [
                              "a1"
                             ],
                             "loop_back_to": "sendreportStream_3",
-                            "loop_back_to_code": "e5",
+                            "loop_back_to_code": "e1",
                             "children": []
                            }
                           ]
@@ -436,10 +436,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13 -> e14 -> e27 ↺ e5",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e27 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> w1 -> x1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> w1 -> x1 -> i1 -> j1 -> k2 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

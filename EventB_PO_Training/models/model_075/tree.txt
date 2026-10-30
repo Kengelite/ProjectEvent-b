@@ -15,68 +15,68 @@ model_075  ConcessionStandOrder
    a1 -> b1 -> c1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendsyncPickup_1
-   e2   receivesyncPickup_1
-   e3   sendreportPickup_2
-   e4   receivereportPickup_2
-   e5   sendconfirmOrder_3  [a1]
-   e6   receiveconfirmOrder_3  [a1]
-   e7   sendapproveSnack_4
-   e8   receiveapproveSnack_4
-   e9   sendassignOrder_5
-   e10  receiveassignOrder_5
-   e11  sendscheduleSnack_6  [b1]
-   e12  receivescheduleSnack_6  [b1]
-   e13  sendnotifySnack_7  [b1 c1]
-   e14  receivenotifySnack_7  [b1 c1]
-   e15  sendnotifyPickup_8  [b1 c1]
-   e16  receivenotifyPickup_8  [b1 c1]
-   e17  sendschedulePickup_9  [b1]
-   e18  receiveschedulePickup_9  [b1]
-   e19  sendupdatePickup_10
-   e20  receiveupdatePickup_10
-   e21  checkloop_confirmOrder_3_loop1  [a1]
-   e22  checkloop_scheduleSnack_6_loop2  [b1]
-   e23  checkloop_notifySnack_7_loop3  [b1 c1]
+   a1   sendsyncPickup_1
+   b1   receivesyncPickup_1
+   c1   sendreportPickup_2
+   d1   receivereportPickup_2
+   e1   sendconfirmOrder_3  (guard a1)
+   f1   receiveconfirmOrder_3  (guard a1)
+   g1   sendapproveSnack_4
+   g2   checkloop_confirmOrder_3_loop1  (guard a1)
+   h1   receiveapproveSnack_4
+   i1   sendassignOrder_5
+   j1   receiveassignOrder_5
+   k1   sendscheduleSnack_6  (guard b1)
+   l1   receivescheduleSnack_6  (guard b1)
+   m1   sendnotifySnack_7  (guard b1 c1)
+   n1   receivenotifySnack_7  (guard b1 c1)
+   o1   sendnotifyPickup_8  (guard b1 c1)
+   p1   receivenotifyPickup_8  (guard b1 c1)
+   q1   sendschedulePickup_9  (guard b1)
+   q2   checkloop_notifySnack_7_loop3  (guard b1 c1)
+   r1   receiveschedulePickup_9  (guard b1)
+   s1   sendupdatePickup_10
+   s2   checkloop_scheduleSnack_6_loop2  (guard b1)
+   t1   receiveupdatePickup_10
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
-       │   ├── e17 → e18
-       │   │   ├── e19 → e20
-       │   │   └── e22 ↺ e11
-       │   └── e23 ↺ e13
-       └── e21 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+       │   ├── q1 → r1
+       │   │   ├── s1 → t1
+       │   │   └── s2 ↺ k1
+       │   └── q2 ↺ m1
+       └── g2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendsyncPickup_1
-       └── e2 receivesyncPickup_1
-           └── e3 sendreportPickup_2
-               └── e4 receivereportPickup_2
-                   └── e5 sendconfirmOrder_3  [a1]
-                       └── e6 receiveconfirmOrder_3  [a1]
-                           ├── e7 sendapproveSnack_4
-                           │   └── e8 receiveapproveSnack_4
-                           │       └── e9 sendassignOrder_5
-                           │           └── e10 receiveassignOrder_5
-                           │               └── e11 sendscheduleSnack_6  [b1]
-                           │                   └── e12 receivescheduleSnack_6  [b1]
-                           │                       └── e13 sendnotifySnack_7  [b1 c1]
-                           │                           └── e14 receivenotifySnack_7  [b1 c1]
-                           │                               └── e15 sendnotifyPickup_8  [b1 c1]
-                           │                                   └── e16 receivenotifyPickup_8  [b1 c1]
-                           │                                       ├── e17 sendschedulePickup_9  [b1]
-                           │                                       │   └── e18 receiveschedulePickup_9  [b1]
-                           │                                       │       ├── e19 sendupdatePickup_10
-                           │                                       │       │   └── e20 receiveupdatePickup_10
-                           │                                       │       └── e22 checkloop_scheduleSnack_6_loop2  [b1]  ↺ กลับไป sendscheduleSnack_6
-                           │                                       └── e23 checkloop_notifySnack_7_loop3  [b1 c1]  ↺ กลับไป sendnotifySnack_7
-                           └── e21 checkloop_confirmOrder_3_loop1  [a1]  ↺ กลับไป sendconfirmOrder_3
+   └── a1 sendsyncPickup_1
+       └── b1 receivesyncPickup_1
+           └── c1 sendreportPickup_2
+               └── d1 receivereportPickup_2
+                   └── e1 sendconfirmOrder_3  (guard a1)
+                       └── f1 receiveconfirmOrder_3  (guard a1)
+                           ├── g1 sendapproveSnack_4
+                           │   └── h1 receiveapproveSnack_4
+                           │       └── i1 sendassignOrder_5
+                           │           └── j1 receiveassignOrder_5
+                           │               └── k1 sendscheduleSnack_6  (guard b1)
+                           │                   └── l1 receivescheduleSnack_6  (guard b1)
+                           │                       └── m1 sendnotifySnack_7  (guard b1 c1)
+                           │                           └── n1 receivenotifySnack_7  (guard b1 c1)
+                           │                               └── o1 sendnotifyPickup_8  (guard b1 c1)
+                           │                                   └── p1 receivenotifyPickup_8  (guard b1 c1)
+                           │                                       ├── q1 sendschedulePickup_9  (guard b1)
+                           │                                       │   └── r1 receiveschedulePickup_9  (guard b1)
+                           │                                       │       ├── s1 sendupdatePickup_10
+                           │                                       │       │   └── t1 receiveupdatePickup_10
+                           │                                       │       └── s2 checkloop_scheduleSnack_6_loop2  (guard b1)  ↺ กลับไป sendscheduleSnack_6
+                           │                                       └── q2 checkloop_notifySnack_7_loop3  (guard b1 c1)  ↺ กลับไป sendnotifySnack_7
+                           └── g2 checkloop_confirmOrder_3_loop1  (guard a1)  ↺ กลับไป sendconfirmOrder_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e22 ↺ e11
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 ↺ e13
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e21 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ k1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ m1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ e1

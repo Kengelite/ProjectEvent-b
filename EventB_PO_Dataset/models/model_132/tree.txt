@@ -10,37 +10,37 @@ model_132  OnlineDonation
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendsendReceipt_1
-   e2   receivesendReceipt_1
-   e3   sendqueryGift_2
-   e4   receivequeryGift_2
-   e5   sendapproveReceipt_3
-   e6   receiveapproveReceipt_3
-   e7   sendnotifyReceipt_4
-   e8   receivenotifyReceipt_4
-   e9   sendapproveGift_5
-   e10  receiveapproveGift_5
-   e11  sendrequestGift_6
-   e12  receiverequestGift_6
+   a1   sendsendReceipt_1
+   b1   receivesendReceipt_1
+   c1   sendqueryGift_2
+   d1   receivequeryGift_2
+   e1   sendapproveReceipt_3
+   f1   receiveapproveReceipt_3
+   g1   sendnotifyReceipt_4
+   h1   receivenotifyReceipt_4
+   i1   sendapproveGift_5
+   j1   receiveapproveGift_5
+   k1   sendrequestGift_6
+   l1   receiverequestGift_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendsendReceipt_1
-       └── e2 receivesendReceipt_1
-           └── e3 sendqueryGift_2
-               └── e4 receivequeryGift_2
-                   └── e5 sendapproveReceipt_3
-                       └── e6 receiveapproveReceipt_3
-                           └── e7 sendnotifyReceipt_4
-                               └── e8 receivenotifyReceipt_4
-                                   └── e9 sendapproveGift_5
-                                       └── e10 receiveapproveGift_5
-                                           └── e11 sendrequestGift_6
-                                               └── e12 receiverequestGift_6
+   └── a1 sendsendReceipt_1
+       └── b1 receivesendReceipt_1
+           └── c1 sendqueryGift_2
+               └── d1 receivequeryGift_2
+                   └── e1 sendapproveReceipt_3
+                       └── f1 receiveapproveReceipt_3
+                           └── g1 sendnotifyReceipt_4
+                               └── h1 receivenotifyReceipt_4
+                                   └── i1 sendapproveGift_5
+                                       └── j1 receiveapproveGift_5
+                                           └── k1 sendrequestGift_6
+                                               └── l1 receiverequestGift_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

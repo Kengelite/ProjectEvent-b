@@ -14,46 +14,46 @@ model_002  AirportBaggage
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendtagBag_1
-   e2   receivetagBag_1
-   e3   sendrouteBag_2
-   e4   receiverouteBag_2
-   e5   sendsorted_3
-   e6   receivesorted_3
-   e7   sendloadBag_4  [a1]
-   e8   receiveloadBag_4  [a1]
-   e9   sendloadedAck_5  [a1]
-   e10  receiveloadedAck_5  [a1]
-   e11  senddivertBag_6  [a2]
-   e12  receivedivertBag_6  [a2]
-   e13  sendmanifestUpdate_7
-   e14  receivemanifestUpdate_7
+   a1   sendtagBag_1
+   b1   receivetagBag_1
+   c1   sendrouteBag_2
+   d1   receiverouteBag_2
+   e1   sendsorted_3
+   f1   receivesorted_3
+   g1   sendloadBag_4  (guard a1)
+   g2   senddivertBag_6  (guard a2)
+   h1   receiveloadBag_4  (guard a1)
+   h2   receivedivertBag_6  (guard a2)
+   i1   sendloadedAck_5  (guard a1)
+   j1   receiveloadedAck_5  (guard a1)
+   k1   sendmanifestUpdate_7
+   l1   receivemanifestUpdate_7
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e13 → e14
-       └── e11 → e12 → e13 → e14
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendtagBag_1
-       └── e2 receivetagBag_1
-           └── e3 sendrouteBag_2
-               └── e4 receiverouteBag_2
-                   └── e5 sendsorted_3
-                       └── e6 receivesorted_3
-                           ├── e7 sendloadBag_4  [a1]
-                           │   └── e8 receiveloadBag_4  [a1]
-                           │       └── e9 sendloadedAck_5  [a1]
-                           │           └── e10 receiveloadedAck_5  [a1]
-                           │               └── e13 sendmanifestUpdate_7
-                           │                   └── e14 receivemanifestUpdate_7
-                           └── e11 senddivertBag_6  [a2]
-                               └── e12 receivedivertBag_6  [a2]
-                                   └── e13 sendmanifestUpdate_7
-                                       └── e14 receivemanifestUpdate_7
+   └── a1 sendtagBag_1
+       └── b1 receivetagBag_1
+           └── c1 sendrouteBag_2
+               └── d1 receiverouteBag_2
+                   └── e1 sendsorted_3
+                       └── f1 receivesorted_3
+                           ├── g1 sendloadBag_4  (guard a1)
+                           │   └── h1 receiveloadBag_4  (guard a1)
+                           │       └── i1 sendloadedAck_5  (guard a1)
+                           │           └── j1 receiveloadedAck_5  (guard a1)
+                           │               └── k1 sendmanifestUpdate_7
+                           │                   └── l1 receivemanifestUpdate_7
+                           └── g2 senddivertBag_6  (guard a2)
+                               └── h2 receivedivertBag_6  (guard a2)
+                                   └── k1 sendmanifestUpdate_7
+                                       └── l1 receivemanifestUpdate_7
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1

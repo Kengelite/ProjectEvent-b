@@ -20,84 +20,84 @@ model_123  MarathonTiming
    a1 -> b1 -> c2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreleaseSplit_1
-   e2   receivereleaseSplit_1
-   e3   sendquerySplit_2
-   e4   receivequerySplit_2
-   e5   sendcancelBib_3  [a1]
-   e6   receivecancelBib_3  [a1]
-   e7   sendrequestBib_4_opt1  [a1 b1]
-   e8   receiverequestBib_4_opt1  [a1 b1]
-   e9   sendrequestFinish_5  [a1]
-   e10  receiverequestFinish_5  [a1]
-   e11  sendassignSplit_6  [a1]
-   e12  receiveassignSplit_6  [a1]
-   e13  sendcancelFinish_7
-   e14  receivecancelFinish_7
-   e15  sendsendFinish_8
-   e16  receivesendFinish_8
-   e17  sendfetchFinish_9  [c1]
-   e18  receivefetchFinish_9  [c1]
-   e19  sendreserveSplit_10  [c1 d1]
-   e20  receivereserveSplit_10  [c1 d1]
-   e21  sendreserveFinish_11  [c1 d1]
-   e22  receivereserveFinish_11  [c1 d1]
-   e23  sendvalidateFinish_12  [c1]
-   e24  receivevalidateFinish_12  [c1]
-   e25  sendreleaseFinish_13  [c2]
-   e26  receivereleaseFinish_13  [c2]
-   e27  sendsendBib_14
-   e28  receivesendBib_14
-   e29  checkloop_cancelBib_3_loop1  [a1]
-   e30  checkloop_reserveSplit_10_loop2  [c1 d1]
+   a1   sendreleaseSplit_1
+   b1   receivereleaseSplit_1
+   c1   sendquerySplit_2
+   d1   receivequerySplit_2
+   e1   sendcancelBib_3  (guard a1)
+   f1   receivecancelBib_3  (guard a1)
+   g1   sendrequestBib_4_opt1  (guard a1 b1)
+   h1   receiverequestBib_4_opt1  (guard a1 b1)
+   i1   sendrequestFinish_5  (guard a1)
+   j1   receiverequestFinish_5  (guard a1)
+   k1   sendassignSplit_6  (guard a1)
+   l1   receiveassignSplit_6  (guard a1)
+   m1   sendcancelFinish_7
+   m2   checkloop_cancelBib_3_loop1  (guard a1)
+   n1   receivecancelFinish_7
+   o1   sendsendFinish_8
+   p1   receivesendFinish_8
+   q1   sendfetchFinish_9  (guard c1)
+   q2   sendreleaseFinish_13  (guard c2)
+   r1   receivefetchFinish_9  (guard c1)
+   r2   receivereleaseFinish_13  (guard c2)
+   s1   sendreserveSplit_10  (guard c1 d1)
+   t1   receivereserveSplit_10  (guard c1 d1)
+   u1   sendreserveFinish_11  (guard c1 d1)
+   v1   receivereserveFinish_11  (guard c1 d1)
+   w1   sendvalidateFinish_12  (guard c1)
+   w2   checkloop_reserveSplit_10_loop2  (guard c1 d1)
+   x1   receivevalidateFinish_12  (guard c1)
+   y1   sendsendBib_14
+   z1   receivesendBib_14
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
-       ├── e13 → e14 → e15 → e16
-       │   ├── e17 → e18 → e19 → e20 → e21 → e22
-       │   │   ├── e23 → e24 → e27 → e28
-       │   │   └── e30 ↺ e19
-       │   └── e25 → e26 → e27 → e28
-       └── e29 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1 → o1 → p1
+       │   ├── q1 → r1 → s1 → t1 → u1 → v1
+       │   │   ├── w1 → x1 → y1 → z1
+       │   │   └── w2 ↺ s1
+       │   └── q2 → r2 → y1 → z1
+       └── m2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreleaseSplit_1
-       └── e2 receivereleaseSplit_1
-           └── e3 sendquerySplit_2
-               └── e4 receivequerySplit_2
-                   └── e5 sendcancelBib_3  [a1]
-                       └── e6 receivecancelBib_3  [a1]
-                           └── e7 sendrequestBib_4_opt1  [a1 b1]
-                               └── e8 receiverequestBib_4_opt1  [a1 b1]
-                                   └── e9 sendrequestFinish_5  [a1]
-                                       └── e10 receiverequestFinish_5  [a1]
-                                           └── e11 sendassignSplit_6  [a1]
-                                               └── e12 receiveassignSplit_6  [a1]
-                                                   ├── e13 sendcancelFinish_7
-                                                   │   └── e14 receivecancelFinish_7
-                                                   │       └── e15 sendsendFinish_8
-                                                   │           └── e16 receivesendFinish_8
-                                                   │               ├── e17 sendfetchFinish_9  [c1]
-                                                   │               │   └── e18 receivefetchFinish_9  [c1]
-                                                   │               │       └── e19 sendreserveSplit_10  [c1 d1]
-                                                   │               │           └── e20 receivereserveSplit_10  [c1 d1]
-                                                   │               │               └── e21 sendreserveFinish_11  [c1 d1]
-                                                   │               │                   └── e22 receivereserveFinish_11  [c1 d1]
-                                                   │               │                       ├── e23 sendvalidateFinish_12  [c1]
-                                                   │               │                       │   └── e24 receivevalidateFinish_12  [c1]
-                                                   │               │                       │       └── e27 sendsendBib_14
-                                                   │               │                       │           └── e28 receivesendBib_14
-                                                   │               │                       └── e30 checkloop_reserveSplit_10_loop2  [c1 d1]  ↺ กลับไป sendreserveSplit_10
-                                                   │               └── e25 sendreleaseFinish_13  [c2]
-                                                   │                   └── e26 receivereleaseFinish_13  [c2]
-                                                   │                       └── e27 sendsendBib_14
-                                                   │                           └── e28 receivesendBib_14
-                                                   └── e29 checkloop_cancelBib_3_loop1  [a1]  ↺ กลับไป sendcancelBib_3
+   └── a1 sendreleaseSplit_1
+       └── b1 receivereleaseSplit_1
+           └── c1 sendquerySplit_2
+               └── d1 receivequerySplit_2
+                   └── e1 sendcancelBib_3  (guard a1)
+                       └── f1 receivecancelBib_3  (guard a1)
+                           └── g1 sendrequestBib_4_opt1  (guard a1 b1)
+                               └── h1 receiverequestBib_4_opt1  (guard a1 b1)
+                                   └── i1 sendrequestFinish_5  (guard a1)
+                                       └── j1 receiverequestFinish_5  (guard a1)
+                                           └── k1 sendassignSplit_6  (guard a1)
+                                               └── l1 receiveassignSplit_6  (guard a1)
+                                                   ├── m1 sendcancelFinish_7
+                                                   │   └── n1 receivecancelFinish_7
+                                                   │       └── o1 sendsendFinish_8
+                                                   │           └── p1 receivesendFinish_8
+                                                   │               ├── q1 sendfetchFinish_9  (guard c1)
+                                                   │               │   └── r1 receivefetchFinish_9  (guard c1)
+                                                   │               │       └── s1 sendreserveSplit_10  (guard c1 d1)
+                                                   │               │           └── t1 receivereserveSplit_10  (guard c1 d1)
+                                                   │               │               └── u1 sendreserveFinish_11  (guard c1 d1)
+                                                   │               │                   └── v1 receivereserveFinish_11  (guard c1 d1)
+                                                   │               │                       ├── w1 sendvalidateFinish_12  (guard c1)
+                                                   │               │                       │   └── x1 receivevalidateFinish_12  (guard c1)
+                                                   │               │                       │       └── y1 sendsendBib_14
+                                                   │               │                       │           └── z1 receivesendBib_14
+                                                   │               │                       └── w2 checkloop_reserveSplit_10_loop2  (guard c1 d1)  ↺ กลับไป sendreserveSplit_10
+                                                   │               └── q2 sendreleaseFinish_13  (guard c2)
+                                                   │                   └── r2 receivereleaseFinish_13  (guard c2)
+                                                   │                       └── y1 sendsendBib_14
+                                                   │                           └── z1 receivesendBib_14
+                                                   └── m2 checkloop_cancelBib_3_loop1  (guard a1)  ↺ กลับไป sendcancelBib_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e27 -> e28
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e30 ↺ e19
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e25 -> e26 -> e27 -> e28
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e29 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ s1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 -> r2 -> y1 -> z1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1

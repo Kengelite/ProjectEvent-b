@@ -5,58 +5,58 @@
   "a2": "fine > 100"
  },
  "event_codes": {
-  "e1": "sendscanCard_1",
-  "e2": "receivescanCard_1",
-  "e3": "sendcheckMember_2",
-  "e4": "receivecheckMember_2",
-  "e5": "sendmemberInfo_3",
-  "e6": "receivememberInfo_3",
-  "e7": "sendborrowBook_4",
-  "e8": "receiveborrowBook_4",
-  "e9": "sendrecordLoan_5",
-  "e10": "receiverecordLoan_5",
-  "e11": "sendsetReminder_6_opt1",
-  "e12": "receivesetReminder_6_opt1",
-  "e13": "sendrejectLoan_7",
-  "e14": "receiverejectLoan_7",
-  "e15": "sendlogout_8",
-  "e16": "receivelogout_8"
+  "a1": "sendscanCard_1",
+  "b1": "receivescanCard_1",
+  "c1": "sendcheckMember_2",
+  "d1": "receivecheckMember_2",
+  "e1": "sendmemberInfo_3",
+  "f1": "receivememberInfo_3",
+  "g1": "sendborrowBook_4",
+  "g2": "sendrejectLoan_7",
+  "h1": "receiveborrowBook_4",
+  "h2": "receiverejectLoan_7",
+  "i1": "sendrecordLoan_5",
+  "j1": "receiverecordLoan_5",
+  "k1": "sendsetReminder_6_opt1",
+  "l1": "receivesetReminder_6_opt1",
+  "m1": "sendlogout_8",
+  "n1": "receivelogout_8"
  },
  "event_guards": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
   "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [],
-  "e6": [],
-  "e7": [
+  "f1": [],
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "g2": [
+   "a2"
+  ],
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "h2": [
+   "a2"
+  ],
+  "i1": [
    "a1"
   ],
-  "e10": [
+  "j1": [
    "a1"
   ],
-  "e11": [
+  "k1": [
    "a1",
    "b1"
   ],
-  "e12": [
+  "l1": [
    "a1",
    "b1"
   ],
-  "e13": [
-   "a2"
-  ],
-  "e14": [
-   "a2"
-  ],
-  "e15": [],
-  "e16": []
+  "m1": [],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -75,65 +75,65 @@
   "children": [
    {
     "event": "sendscanCard_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivescanCard_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendcheckMember_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivecheckMember_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendmemberInfo_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [],
             "children": [
              {
               "event": "receivememberInfo_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [],
               "children": [
                {
                 "event": "sendborrowBook_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receiveborrowBook_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendrecordLoan_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receiverecordLoan_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendsetReminder_6_opt1",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [
                          "a1",
                          "b1"
@@ -141,7 +141,7 @@
                         "children": [
                          {
                           "event": "receivesetReminder_6_opt1",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [
                            "a1",
                            "b1"
@@ -149,12 +149,12 @@
                           "children": [
                            {
                             "event": "sendlogout_8",
-                            "code": "e15",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivelogout_8",
-                              "code": "e16",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -174,26 +174,26 @@
                },
                {
                 "event": "sendrejectLoan_7",
-                "code": "e13",
+                "code": "g2",
                 "guards": [
                  "a2"
                 ],
                 "children": [
                  {
                   "event": "receiverejectLoan_7",
-                  "code": "e14",
+                  "code": "h2",
                   "guards": [
                    "a2"
                   ],
                   "children": [
                    {
                     "event": "sendlogout_8",
-                    "code": "e15",
+                    "code": "m1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivelogout_8",
-                      "code": "e16",
+                      "code": "n1",
                       "guards": [],
                       "children": []
                      }
@@ -218,8 +218,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e13 -> e14 -> e15 -> e16"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

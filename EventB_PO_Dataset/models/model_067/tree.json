@@ -4,50 +4,50 @@
   "b1": "useCache = 1"
  },
  "event_codes": {
-  "e1": "sendsyncManifest_1",
-  "e2": "receivesyncManifest_1",
-  "e3": "sendassignContainer_2",
-  "e4": "receiveassignContainer_2",
-  "e5": "sendackContainer_3",
-  "e6": "receiveackContainer_3",
-  "e7": "sendupdateManifest_4_opt1",
-  "e8": "receiveupdateManifest_4_opt1",
-  "e9": "sendupdateBerth_5",
-  "e10": "receiveupdateBerth_5",
-  "e11": "sendreleaseContainer_6",
-  "e12": "receivereleaseContainer_6",
-  "e13": "checkloop_ackContainer_3_loop1"
+  "a1": "sendsyncManifest_1",
+  "b1": "receivesyncManifest_1",
+  "c1": "sendassignContainer_2",
+  "d1": "receiveassignContainer_2",
+  "e1": "sendackContainer_3",
+  "f1": "receiveackContainer_3",
+  "g1": "sendupdateManifest_4_opt1",
+  "h1": "receiveupdateManifest_4_opt1",
+  "i1": "sendupdateBerth_5",
+  "j1": "receiveupdateBerth_5",
+  "k1": "sendreleaseContainer_6",
+  "k2": "checkloop_ackContainer_3_loop1",
+  "l1": "receivereleaseContainer_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1",
    "b1"
   ],
-  "e8": [
+  "h1": [
    "a1",
    "b1"
   ],
-  "e9": [
+  "i1": [
    "a1"
   ],
-  "e10": [
+  "j1": [
    "a1"
   ],
-  "e11": [],
-  "e12": [],
-  "e13": [
+  "k1": [],
+  "k2": [
    "a1"
-  ]
+  ],
+  "l1": []
  },
  "guard_tree": {
   "a1": {
@@ -64,41 +64,41 @@
   "children": [
    {
     "event": "sendsyncManifest_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivesyncManifest_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendassignContainer_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveassignContainer_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendackContainer_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveackContainer_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendupdateManifest_4_opt1",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -106,7 +106,7 @@
                 "children": [
                  {
                   "event": "receiveupdateManifest_4_opt1",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -114,26 +114,26 @@
                   "children": [
                    {
                     "event": "sendupdateBerth_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receiveupdateBerth_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendreleaseContainer_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivereleaseContainer_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -141,12 +141,12 @@
                        },
                        {
                         "event": "checkloop_ackContainer_3_loop1",
-                        "code": "e13",
+                        "code": "k2",
                         "guards": [
                          "a1"
                         ],
                         "loop_back_to": "sendackContainer_3",
-                        "loop_back_to_code": "e5",
+                        "loop_back_to_code": "e1",
                         "children": []
                        }
                       ]
@@ -172,8 +172,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 ↺ e5"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

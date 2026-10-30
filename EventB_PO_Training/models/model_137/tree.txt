@@ -11,42 +11,42 @@ model_137  ParkingPermitPortal
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendfetchPermit_1
-   e2   receivefetchPermit_1
-   e3   sendapprovePlate_2
-   e4   receiveapprovePlate_2
-   e5   sendqueryFine_3  [a1]
-   e6   receivequeryFine_3  [a1]
-   e7   sendconfirmPlate_4  [a1]
-   e8   receiveconfirmPlate_4  [a1]
-   e9   sendfetchPlate_5  [a1]
-   e10  receivefetchPlate_5  [a1]
-   e11  sendreservePermit_6
-   e12  receivereservePermit_6
-   e13  checkloop_queryFine_3_loop1  [a1]
+   a1   sendfetchPermit_1
+   b1   receivefetchPermit_1
+   c1   sendapprovePlate_2
+   d1   receiveapprovePlate_2
+   e1   sendqueryFine_3  (guard a1)
+   f1   receivequeryFine_3  (guard a1)
+   g1   sendconfirmPlate_4  (guard a1)
+   h1   receiveconfirmPlate_4  (guard a1)
+   i1   sendfetchPlate_5  (guard a1)
+   j1   receivefetchPlate_5  (guard a1)
+   k1   sendreservePermit_6
+   k2   checkloop_queryFine_3_loop1  (guard a1)
+   l1   receivereservePermit_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10
-       ├── e11 → e12
-       └── e13 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
+       ├── k1 → l1
+       └── k2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendfetchPermit_1
-       └── e2 receivefetchPermit_1
-           └── e3 sendapprovePlate_2
-               └── e4 receiveapprovePlate_2
-                   └── e5 sendqueryFine_3  [a1]
-                       └── e6 receivequeryFine_3  [a1]
-                           └── e7 sendconfirmPlate_4  [a1]
-                               └── e8 receiveconfirmPlate_4  [a1]
-                                   └── e9 sendfetchPlate_5  [a1]
-                                       └── e10 receivefetchPlate_5  [a1]
-                                           ├── e11 sendreservePermit_6
-                                           │   └── e12 receivereservePermit_6
-                                           └── e13 checkloop_queryFine_3_loop1  [a1]  ↺ กลับไป sendqueryFine_3
+   └── a1 sendfetchPermit_1
+       └── b1 receivefetchPermit_1
+           └── c1 sendapprovePlate_2
+               └── d1 receiveapprovePlate_2
+                   └── e1 sendqueryFine_3  (guard a1)
+                       └── f1 receivequeryFine_3  (guard a1)
+                           └── g1 sendconfirmPlate_4  (guard a1)
+                               └── h1 receiveconfirmPlate_4  (guard a1)
+                                   └── i1 sendfetchPlate_5  (guard a1)
+                                       └── j1 receivefetchPlate_5  (guard a1)
+                                           ├── k1 sendreservePermit_6
+                                           │   └── l1 receivereservePermit_6
+                                           └── k2 checkloop_queryFine_3_loop1  (guard a1)  ↺ กลับไป sendqueryFine_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1

@@ -8,92 +8,92 @@
   "d1": "par_1 = 2"
  },
  "event_codes": {
-  "e1": "sendsubmitPayment_1_opt1",
-  "e2": "receivesubmitPayment_1_opt1",
-  "e3": "sendpaymentDetails_2_opt1",
-  "e4": "receivePaymentDetails_2_opt1",
-  "e5": "sendprocessLargePayment_3_alt2",
-  "e6": "receiveprocessLargePayment_3_alt2",
-  "e7": "sendapprovalRequired_4_alt2",
-  "e8": "reciveapprovalRequired_4_alt2",
-  "e9": "sendProcessStandarddPayment_5_alt2",
-  "e10": "receiveProcessStandarddPayment_5_alt2",
-  "e11": "sendpaymentConfirmation_6_alt2",
-  "e12": "recivepaymentConfirmation_6_alt2",
-  "e13": "unnamed_event_N",
-  "e14": "sendvalidatePayment_7_loop3",
-  "e15": "receivevalidatePayment_7_loop3",
-  "e16": "sendvalidationResult_8_loop3",
-  "e17": "recivevalidationResult_8_loop3",
-  "e18": "sendsendSMSNotification_9_par4",
-  "e19": "sendsendEmailNotification_10_par4",
-  "e20": "receivedsendSMSNotification_9_par4",
-  "e21": "receivedsendEmailNotification_10_par4",
-  "e22": "sendpaymentStatus_11",
-  "e23": "receivepaymentStatus_11"
+  "a1": "sendsubmitPayment_1_opt1",
+  "a2": "sendvalidatePayment_7_loop3",
+  "b1": "receivesubmitPayment_1_opt1",
+  "b2": "receivevalidatePayment_7_loop3",
+  "c1": "sendpaymentDetails_2_opt1",
+  "c2": "sendvalidationResult_8_loop3",
+  "d1": "receivePaymentDetails_2_opt1",
+  "d2": "recivevalidationResult_8_loop3",
+  "e1": "sendprocessLargePayment_3_alt2",
+  "e2": "sendProcessStandarddPayment_5_alt2",
+  "f1": "receiveprocessLargePayment_3_alt2",
+  "f2": "receiveProcessStandarddPayment_5_alt2",
+  "g1": "sendapprovalRequired_4_alt2",
+  "g2": "sendpaymentConfirmation_6_alt2",
+  "h1": "reciveapprovalRequired_4_alt2",
+  "h2": "recivepaymentConfirmation_6_alt2",
+  "i1": "unnamed_event_N",
+  "j1": "sendsendSMSNotification_9_par4",
+  "k1": "sendsendEmailNotification_10_par4",
+  "k2": "receivedsendSMSNotification_9_par4",
+  "l1": "receivedsendEmailNotification_10_par4",
+  "m1": "sendpaymentStatus_11",
+  "n1": "receivepaymentStatus_11"
  },
  "event_guards": {
-  "e1": [
+  "a1": [
    "a1"
+  ],
+  "a2": [
+   "c2"
+  ],
+  "b1": [
+   "a1"
+  ],
+  "b2": [
+   "c2"
+  ],
+  "c1": [
+   "a1"
+  ],
+  "c2": [
+   "c2"
+  ],
+  "d1": [
+   "a1"
+  ],
+  "d2": [
+   "c2"
+  ],
+  "e1": [
+   "b1"
   ],
   "e2": [
-   "a1"
-  ],
-  "e3": [
-   "a1"
-  ],
-  "e4": [
-   "a1"
-  ],
-  "e5": [
-   "b1"
-  ],
-  "e6": [
-   "b1"
-  ],
-  "e7": [
-   "b1"
-  ],
-  "e8": [
-   "b1"
-  ],
-  "e9": [
    "b2"
   ],
-  "e10": [
+  "f1": [
+   "b1"
+  ],
+  "f2": [
    "b2"
   ],
-  "e11": [
+  "g1": [
+   "b1"
+  ],
+  "g2": [
    "b2"
   ],
-  "e12": [
+  "h1": [
+   "b1"
+  ],
+  "h2": [
    "b2"
   ],
-  "e13": [
+  "i1": [
    "c1"
   ],
-  "e14": [
-   "c2"
-  ],
-  "e15": [
-   "c2"
-  ],
-  "e16": [
-   "c2"
-  ],
-  "e17": [
-   "c2"
-  ],
-  "e18": [],
-  "e19": [],
-  "e20": [
+  "j1": [],
+  "k1": [],
+  "k2": [
    "d1"
   ],
-  "e21": [
+  "l1": [
    "d1"
   ],
-  "e22": [],
-  "e23": []
+  "m1": [],
+  "n1": []
  },
  "guard_tree": {
   "a1": {
@@ -120,63 +120,63 @@
   "children": [
    {
     "event": "sendsubmitPayment_1_opt1",
-    "code": "e1",
+    "code": "a1",
     "guards": [
      "a1"
     ],
     "children": [
      {
       "event": "receivesubmitPayment_1_opt1",
-      "code": "e2",
+      "code": "b1",
       "guards": [
        "a1"
       ],
       "children": [
        {
         "event": "sendpaymentDetails_2_opt1",
-        "code": "e3",
+        "code": "c1",
         "guards": [
          "a1"
         ],
         "children": [
          {
           "event": "receivePaymentDetails_2_opt1",
-          "code": "e4",
+          "code": "d1",
           "guards": [
            "a1"
           ],
           "children": [
            {
             "event": "sendprocessLargePayment_3_alt2",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "b1"
             ],
             "children": [
              {
               "event": "receiveprocessLargePayment_3_alt2",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "b1"
               ],
               "children": [
                {
                 "event": "sendapprovalRequired_4_alt2",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "b1"
                 ],
                 "children": [
                  {
                   "event": "reciveapprovalRequired_4_alt2",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "b1"
                   ],
                   "children": [
                    {
                     "event": "unnamed_event_N",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [
                      "c1"
                     ],
@@ -192,35 +192,35 @@
            },
            {
             "event": "sendProcessStandarddPayment_5_alt2",
-            "code": "e9",
+            "code": "e2",
             "guards": [
              "b2"
             ],
             "children": [
              {
               "event": "receiveProcessStandarddPayment_5_alt2",
-              "code": "e10",
+              "code": "f2",
               "guards": [
                "b2"
               ],
               "children": [
                {
                 "event": "sendpaymentConfirmation_6_alt2",
-                "code": "e11",
+                "code": "g2",
                 "guards": [
                  "b2"
                 ],
                 "children": [
                  {
                   "event": "recivepaymentConfirmation_6_alt2",
-                  "code": "e12",
+                  "code": "h2",
                   "guards": [
                    "b2"
                   ],
                   "children": [
                    {
                     "event": "unnamed_event_N",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [
                      "c1"
                     ],
@@ -244,57 +244,57 @@
    },
    {
     "event": "sendvalidatePayment_7_loop3",
-    "code": "e14",
+    "code": "a2",
     "guards": [
      "c2"
     ],
     "children": [
      {
       "event": "receivevalidatePayment_7_loop3",
-      "code": "e15",
+      "code": "b2",
       "guards": [
        "c2"
       ],
       "children": [
        {
         "event": "sendvalidationResult_8_loop3",
-        "code": "e16",
+        "code": "c2",
         "guards": [
          "c2"
         ],
         "children": [
          {
           "event": "recivevalidationResult_8_loop3",
-          "code": "e17",
+          "code": "d2",
           "guards": [
            "c2"
           ],
           "children": [
            {
             "event": "sendsendSMSNotification_9_par4",
-            "code": "e18",
+            "code": "j1",
             "guards": [],
             "children": [
              {
               "event": "sendsendEmailNotification_10_par4",
-              "code": "e19",
+              "code": "k1",
               "guards": [],
               "children": [
                {
                 "event": "receivedsendEmailNotification_10_par4",
-                "code": "e21",
+                "code": "l1",
                 "guards": [
                  "d1"
                 ],
                 "children": [
                  {
                   "event": "sendpaymentStatus_11",
-                  "code": "e22",
+                  "code": "m1",
                   "guards": [],
                   "children": [
                    {
                     "event": "receivepaymentStatus_11",
-                    "code": "e23",
+                    "code": "n1",
                     "guards": [],
                     "children": []
                    }
@@ -306,7 +306,7 @@
              },
              {
               "event": "receivedsendSMSNotification_9_par4",
-              "code": "e20",
+              "code": "k2",
               "guards": [
                "d1"
               ],
@@ -325,10 +325,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13",
-  "e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12 -> e13",
-  "e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e21 -> e22 -> e23",
-  "e14 -> e15 -> e16 -> e17 -> e18 -> e20"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1",
+  "a2 -> b2 -> c2 -> d2 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a2 -> b2 -> c2 -> d2 -> j1 -> k2"
  ],
  "unplaced_events": [],
  "source": "rodin .bpo (model.txt has event names only)"

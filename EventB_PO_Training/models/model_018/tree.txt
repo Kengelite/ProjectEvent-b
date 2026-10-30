@@ -13,54 +13,54 @@ model_018  FactoryRobotArm
    a1 -> b1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendstartBatch_1
-   e2   receivestartBatch_1
-   e3   sendinitArm_2
-   e4   receiveinitArm_2
-   e5   sendcalibrateCamera_3
-   e6   receivecalibrateCamera_3
-   e7   sendlogStart_4
-   e8   receivelogStart_4
-   e9   sendpickItem_5  [a1]
-   e10  receivepickItem_5  [a1]
-   e11  sendinspectItem_6  [a1]
-   e12  receiveinspectItem_6  [a1]
-   e13  sendinspectionResult_7  [a1]
-   e14  receiveinspectionResult_7  [a1]
-   e15  senddiscardItem_8_opt1  [a1 b1]
-   e16  receivediscardItem_8_opt1  [a1 b1]
-   e17  sendreportSummary_9
-   e18  receivereportSummary_9
-   e19  checkloop_pickItem_5_loop1  [a1]
+   a1   sendstartBatch_1
+   b1   receivestartBatch_1
+   c1   sendinitArm_2
+   d1   receiveinitArm_2
+   e1   sendcalibrateCamera_3
+   f1   receivecalibrateCamera_3
+   g1   sendlogStart_4
+   h1   receivelogStart_4
+   i1   sendpickItem_5  (guard a1)
+   j1   receivepickItem_5  (guard a1)
+   k1   sendinspectItem_6  (guard a1)
+   l1   receiveinspectItem_6  (guard a1)
+   m1   sendinspectionResult_7  (guard a1)
+   n1   receiveinspectionResult_7  (guard a1)
+   o1   senddiscardItem_8_opt1  (guard a1 b1)
+   p1   receivediscardItem_8_opt1  (guard a1 b1)
+   q1   sendreportSummary_9
+   q2   checkloop_pickItem_5_loop1  (guard a1)
+   r1   receivereportSummary_9
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
-       ├── e17 → e18
-       └── e19 ↺ e9
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+       ├── q1 → r1
+       └── q2 ↺ i1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendstartBatch_1
-       └── e2 receivestartBatch_1
-           └── e3 sendinitArm_2
-               └── e4 receiveinitArm_2
-                   └── e5 sendcalibrateCamera_3
-                       └── e6 receivecalibrateCamera_3
-                           └── e7 sendlogStart_4
-                               └── e8 receivelogStart_4
-                                   └── e9 sendpickItem_5  [a1]
-                                       └── e10 receivepickItem_5  [a1]
-                                           └── e11 sendinspectItem_6  [a1]
-                                               └── e12 receiveinspectItem_6  [a1]
-                                                   └── e13 sendinspectionResult_7  [a1]
-                                                       └── e14 receiveinspectionResult_7  [a1]
-                                                           └── e15 senddiscardItem_8_opt1  [a1 b1]
-                                                               └── e16 receivediscardItem_8_opt1  [a1 b1]
-                                                                   ├── e17 sendreportSummary_9
-                                                                   │   └── e18 receivereportSummary_9
-                                                                   └── e19 checkloop_pickItem_5_loop1  [a1]  ↺ กลับไป sendpickItem_5
+   └── a1 sendstartBatch_1
+       └── b1 receivestartBatch_1
+           └── c1 sendinitArm_2
+               └── d1 receiveinitArm_2
+                   └── e1 sendcalibrateCamera_3
+                       └── f1 receivecalibrateCamera_3
+                           └── g1 sendlogStart_4
+                               └── h1 receivelogStart_4
+                                   └── i1 sendpickItem_5  (guard a1)
+                                       └── j1 receivepickItem_5  (guard a1)
+                                           └── k1 sendinspectItem_6  (guard a1)
+                                               └── l1 receiveinspectItem_6  (guard a1)
+                                                   └── m1 sendinspectionResult_7  (guard a1)
+                                                       └── n1 receiveinspectionResult_7  (guard a1)
+                                                           └── o1 senddiscardItem_8_opt1  (guard a1 b1)
+                                                               └── p1 receivediscardItem_8_opt1  (guard a1 b1)
+                                                                   ├── q1 sendreportSummary_9
+                                                                   │   └── r1 receivereportSummary_9
+                                                                   └── q2 checkloop_pickItem_5_loop1  (guard a1)  ↺ กลับไป sendpickItem_5
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e9
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ i1

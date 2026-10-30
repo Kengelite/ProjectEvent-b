@@ -19,88 +19,88 @@ model_168  SmartFridgeInventory
    a1 -> b2 -> c1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendapproveOrder_1
-   e2   receiveapproveOrder_1
-   e3   sendassignExpiry_2
-   e4   receiveassignExpiry_2
-   e5   sendsendOrder_3  [a1]
-   e6   receivesendOrder_3  [a1]
-   e7   sendassignItem_4  [a1 b1]
-   e8   receiveassignItem_4  [a1 b1]
-   e9   sendscheduleOrder_5  [a1 b1]
-   e10  receivescheduleOrder_5  [a1 b1]
-   e11  sendlogOrder_6  [a1 b2]
-   e12  receivelogOrder_6  [a1 b2]
-   e13  sendapproveExpiry_7  [a1]
-   e14  receiveapproveExpiry_7  [a1]
-   e15  sendqueryItem_8
-   e16  receivequeryItem_8
-   e17  sendcheckOrder_9
-   e18  receivecheckOrder_9
-   e19  sendissueExpiry_10  [c1]
-   e20  receiveissueExpiry_10  [c1]
-   e21  sendsyncOrder_11
-   e22  receivesyncOrder_11
-   e23  checkloop_sendOrder_3_loop1  [a1]
-   e24  checkloop_issueExpiry_10_loop2  [c1]
+   a1   sendapproveOrder_1
+   b1   receiveapproveOrder_1
+   c1   sendassignExpiry_2
+   d1   receiveassignExpiry_2
+   e1   sendsendOrder_3  (guard a1)
+   f1   receivesendOrder_3  (guard a1)
+   g1   sendassignItem_4  (guard a1 b1)
+   g2   sendlogOrder_6  (guard a1 b2)
+   h1   receiveassignItem_4  (guard a1 b1)
+   h2   receivelogOrder_6  (guard a1 b2)
+   i1   sendscheduleOrder_5  (guard a1 b1)
+   j1   receivescheduleOrder_5  (guard a1 b1)
+   k1   sendapproveExpiry_7  (guard a1)
+   l1   receiveapproveExpiry_7  (guard a1)
+   m1   sendqueryItem_8
+   m2   checkloop_sendOrder_3_loop1  (guard a1)
+   n1   receivequeryItem_8
+   o1   sendcheckOrder_9
+   p1   receivecheckOrder_9
+   q1   sendissueExpiry_10  (guard c1)
+   r1   receiveissueExpiry_10  (guard c1)
+   s1   sendsyncOrder_11
+   s2   checkloop_issueExpiry_10_loop2  (guard c1)
+   t1   receivesyncOrder_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e13 → e14
-       │   ├── e15 → e16 → e17 → e18 → e19 → e20
-       │   │   ├── e21 → e22
-       │   │   └── e24 ↺ e19
-       │   └── e23 ↺ e5
-       └── e11 → e12 → e13 → e14
-           ├── e15 → e16 → e17 → e18 → e19 → e20
-           │   ├── e21 → e22
-           │   └── e24 ↺ e19
-           └── e23 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1 → o1 → p1 → q1 → r1
+       │   │   ├── s1 → t1
+       │   │   └── s2 ↺ q1
+       │   └── m2 ↺ e1
+       └── g2 → h2 → k1 → l1
+           ├── m1 → n1 → o1 → p1 → q1 → r1
+           │   ├── s1 → t1
+           │   └── s2 ↺ q1
+           └── m2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendapproveOrder_1
-       └── e2 receiveapproveOrder_1
-           └── e3 sendassignExpiry_2
-               └── e4 receiveassignExpiry_2
-                   └── e5 sendsendOrder_3  [a1]
-                       └── e6 receivesendOrder_3  [a1]
-                           ├── e7 sendassignItem_4  [a1 b1]
-                           │   └── e8 receiveassignItem_4  [a1 b1]
-                           │       └── e9 sendscheduleOrder_5  [a1 b1]
-                           │           └── e10 receivescheduleOrder_5  [a1 b1]
-                           │               └── e13 sendapproveExpiry_7  [a1]
-                           │                   └── e14 receiveapproveExpiry_7  [a1]
-                           │                       ├── e15 sendqueryItem_8
-                           │                       │   └── e16 receivequeryItem_8
-                           │                       │       └── e17 sendcheckOrder_9
-                           │                       │           └── e18 receivecheckOrder_9
-                           │                       │               └── e19 sendissueExpiry_10  [c1]
-                           │                       │                   └── e20 receiveissueExpiry_10  [c1]
-                           │                       │                       ├── e21 sendsyncOrder_11
-                           │                       │                       │   └── e22 receivesyncOrder_11
-                           │                       │                       └── e24 checkloop_issueExpiry_10_loop2  [c1]  ↺ กลับไป sendissueExpiry_10
-                           │                       └── e23 checkloop_sendOrder_3_loop1  [a1]  ↺ กลับไป sendsendOrder_3
-                           └── e11 sendlogOrder_6  [a1 b2]
-                               └── e12 receivelogOrder_6  [a1 b2]
-                                   └── e13 sendapproveExpiry_7  [a1]
-                                       └── e14 receiveapproveExpiry_7  [a1]
-                                           ├── e15 sendqueryItem_8
-                                           │   └── e16 receivequeryItem_8
-                                           │       └── e17 sendcheckOrder_9
-                                           │           └── e18 receivecheckOrder_9
-                                           │               └── e19 sendissueExpiry_10  [c1]
-                                           │                   └── e20 receiveissueExpiry_10  [c1]
-                                           │                       ├── e21 sendsyncOrder_11
-                                           │                       │   └── e22 receivesyncOrder_11
-                                           │                       └── e24 checkloop_issueExpiry_10_loop2  [c1]  ↺ กลับไป sendissueExpiry_10
-                                           └── e23 checkloop_sendOrder_3_loop1  [a1]  ↺ กลับไป sendsendOrder_3
+   └── a1 sendapproveOrder_1
+       └── b1 receiveapproveOrder_1
+           └── c1 sendassignExpiry_2
+               └── d1 receiveassignExpiry_2
+                   └── e1 sendsendOrder_3  (guard a1)
+                       └── f1 receivesendOrder_3  (guard a1)
+                           ├── g1 sendassignItem_4  (guard a1 b1)
+                           │   └── h1 receiveassignItem_4  (guard a1 b1)
+                           │       └── i1 sendscheduleOrder_5  (guard a1 b1)
+                           │           └── j1 receivescheduleOrder_5  (guard a1 b1)
+                           │               └── k1 sendapproveExpiry_7  (guard a1)
+                           │                   └── l1 receiveapproveExpiry_7  (guard a1)
+                           │                       ├── m1 sendqueryItem_8
+                           │                       │   └── n1 receivequeryItem_8
+                           │                       │       └── o1 sendcheckOrder_9
+                           │                       │           └── p1 receivecheckOrder_9
+                           │                       │               └── q1 sendissueExpiry_10  (guard c1)
+                           │                       │                   └── r1 receiveissueExpiry_10  (guard c1)
+                           │                       │                       ├── s1 sendsyncOrder_11
+                           │                       │                       │   └── t1 receivesyncOrder_11
+                           │                       │                       └── s2 checkloop_issueExpiry_10_loop2  (guard c1)  ↺ กลับไป sendissueExpiry_10
+                           │                       └── m2 checkloop_sendOrder_3_loop1  (guard a1)  ↺ กลับไป sendsendOrder_3
+                           └── g2 sendlogOrder_6  (guard a1 b2)
+                               └── h2 receivelogOrder_6  (guard a1 b2)
+                                   └── k1 sendapproveExpiry_7  (guard a1)
+                                       └── l1 receiveapproveExpiry_7  (guard a1)
+                                           ├── m1 sendqueryItem_8
+                                           │   └── n1 receivequeryItem_8
+                                           │       └── o1 sendcheckOrder_9
+                                           │           └── p1 receivecheckOrder_9
+                                           │               └── q1 sendissueExpiry_10  (guard c1)
+                                           │                   └── r1 receiveissueExpiry_10  (guard c1)
+                                           │                       ├── s1 sendsyncOrder_11
+                                           │                       │   └── t1 receivesyncOrder_11
+                                           │                       └── s2 checkloop_issueExpiry_10_loop2  (guard c1)  ↺ กลับไป sendissueExpiry_10
+                                           └── m2 checkloop_sendOrder_3_loop1  (guard a1)  ↺ กลับไป sendsendOrder_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e24 ↺ e19
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e23 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e24 ↺ e19
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e23 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ q1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ q1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1

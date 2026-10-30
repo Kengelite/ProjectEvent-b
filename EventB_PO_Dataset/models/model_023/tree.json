@@ -4,52 +4,52 @@
   "a2": "severity = NORMAL"
  },
  "event_codes": {
-  "e1": "sendregisterPatient_1",
-  "e2": "receiveregisterPatient_1",
-  "e3": "sendmeasureVitals_2",
-  "e4": "receivemeasureVitals_2",
-  "e5": "sendcallDoctor_3",
-  "e6": "receivecallDoctor_3",
-  "e7": "sendorderLabTest_4",
-  "e8": "receiveorderLabTest_4",
-  "e9": "sendprescribeDrug_5",
-  "e10": "receiveprescribeDrug_5",
-  "e11": "sendscheduleVisit_6",
-  "e12": "receivescheduleVisit_6",
-  "e13": "senddischargeNote_7",
-  "e14": "receivedischargeNote_7"
+  "a1": "sendregisterPatient_1",
+  "b1": "receiveregisterPatient_1",
+  "c1": "sendmeasureVitals_2",
+  "d1": "receivemeasureVitals_2",
+  "e1": "sendcallDoctor_3",
+  "e2": "sendscheduleVisit_6",
+  "f1": "receivecallDoctor_3",
+  "f2": "receivescheduleVisit_6",
+  "g1": "sendorderLabTest_4",
+  "h1": "receiveorderLabTest_4",
+  "i1": "sendprescribeDrug_5",
+  "j1": "receiveprescribeDrug_5",
+  "k1": "senddischargeNote_7",
+  "l1": "receivedischargeNote_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
-   "a1"
-  ],
-  "e7": [
-   "a1"
-  ],
-  "e8": [
-   "a1"
-  ],
-  "e9": [
-   "a1"
-  ],
-  "e10": [
-   "a1"
-  ],
-  "e11": [
+  "e2": [
    "a2"
   ],
-  "e12": [
+  "f1": [
+   "a1"
+  ],
+  "f2": [
    "a2"
   ],
-  "e13": [],
-  "e14": []
+  "g1": [
+   "a1"
+  ],
+  "h1": [
+   "a1"
+  ],
+  "i1": [
+   "a1"
+  ],
+  "j1": [
+   "a1"
+  ],
+  "k1": [],
+  "l1": []
  },
  "guard_tree": {
   "a1": {},
@@ -66,74 +66,74 @@
   "children": [
    {
     "event": "sendregisterPatient_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveregisterPatient_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendmeasureVitals_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivemeasureVitals_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendcallDoctor_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivecallDoctor_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendorderLabTest_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receiveorderLabTest_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendprescribeDrug_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receiveprescribeDrug_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "senddischargeNote_7",
-                        "code": "e13",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivedischargeNote_7",
-                          "code": "e14",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -153,26 +153,26 @@
            },
            {
             "event": "sendscheduleVisit_6",
-            "code": "e11",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receivescheduleVisit_6",
-              "code": "e12",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "senddischargeNote_7",
-                "code": "e13",
+                "code": "k1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivedischargeNote_7",
-                  "code": "e14",
+                  "code": "l1",
                   "guards": [],
                   "children": []
                  }
@@ -193,8 +193,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e13 -> e14"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> k1 -> l1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

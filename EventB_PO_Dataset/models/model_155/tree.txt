@@ -15,54 +15,54 @@ model_155  RestaurantReservation
    a1 -> b1 -> c1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendfetchMenu_1
-   e2   receivefetchMenu_1
-   e3   sendreserveTable_2
-   e4   receivereserveTable_2
-   e5   sendqueryBooking_3_opt1  [a1]
-   e6   receivequeryBooking_3_opt1  [a1]
-   e7   sendsyncMenu_4
-   e8   receivesyncMenu_4
-   e9   sendlogMenu_5
-   e10  receivelogMenu_5
-   e11  sendapproveMenu_6  [b1]
-   e12  receiveapproveMenu_6  [b1]
-   e13  sendackBooking_7_opt2  [b1 c1]
-   e14  receiveackBooking_7_opt2  [b1 c1]
-   e15  sendreportMenu_8  [b1]
-   e16  receivereportMenu_8  [b1]
-   e17  sendassignBooking_9
-   e18  receiveassignBooking_9
-   e19  checkloop_approveMenu_6_loop1  [b1]
+   a1   sendfetchMenu_1
+   b1   receivefetchMenu_1
+   c1   sendreserveTable_2
+   d1   receivereserveTable_2
+   e1   sendqueryBooking_3_opt1  (guard a1)
+   f1   receivequeryBooking_3_opt1  (guard a1)
+   g1   sendsyncMenu_4
+   h1   receivesyncMenu_4
+   i1   sendlogMenu_5
+   j1   receivelogMenu_5
+   k1   sendapproveMenu_6  (guard b1)
+   l1   receiveapproveMenu_6  (guard b1)
+   m1   sendackBooking_7_opt2  (guard b1 c1)
+   n1   receiveackBooking_7_opt2  (guard b1 c1)
+   o1   sendreportMenu_8  (guard b1)
+   p1   receivereportMenu_8  (guard b1)
+   q1   sendassignBooking_9
+   q2   checkloop_approveMenu_6_loop1  (guard b1)
+   r1   receiveassignBooking_9
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
-       ├── e17 → e18
-       └── e19 ↺ e11
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+       ├── q1 → r1
+       └── q2 ↺ k1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendfetchMenu_1
-       └── e2 receivefetchMenu_1
-           └── e3 sendreserveTable_2
-               └── e4 receivereserveTable_2
-                   └── e5 sendqueryBooking_3_opt1  [a1]
-                       └── e6 receivequeryBooking_3_opt1  [a1]
-                           └── e7 sendsyncMenu_4
-                               └── e8 receivesyncMenu_4
-                                   └── e9 sendlogMenu_5
-                                       └── e10 receivelogMenu_5
-                                           └── e11 sendapproveMenu_6  [b1]
-                                               └── e12 receiveapproveMenu_6  [b1]
-                                                   └── e13 sendackBooking_7_opt2  [b1 c1]
-                                                       └── e14 receiveackBooking_7_opt2  [b1 c1]
-                                                           └── e15 sendreportMenu_8  [b1]
-                                                               └── e16 receivereportMenu_8  [b1]
-                                                                   ├── e17 sendassignBooking_9
-                                                                   │   └── e18 receiveassignBooking_9
-                                                                   └── e19 checkloop_approveMenu_6_loop1  [b1]  ↺ กลับไป sendapproveMenu_6
+   └── a1 sendfetchMenu_1
+       └── b1 receivefetchMenu_1
+           └── c1 sendreserveTable_2
+               └── d1 receivereserveTable_2
+                   └── e1 sendqueryBooking_3_opt1  (guard a1)
+                       └── f1 receivequeryBooking_3_opt1  (guard a1)
+                           └── g1 sendsyncMenu_4
+                               └── h1 receivesyncMenu_4
+                                   └── i1 sendlogMenu_5
+                                       └── j1 receivelogMenu_5
+                                           └── k1 sendapproveMenu_6  (guard b1)
+                                               └── l1 receiveapproveMenu_6  (guard b1)
+                                                   └── m1 sendackBooking_7_opt2  (guard b1 c1)
+                                                       └── n1 receiveackBooking_7_opt2  (guard b1 c1)
+                                                           └── o1 sendreportMenu_8  (guard b1)
+                                                               └── p1 receivereportMenu_8  (guard b1)
+                                                                   ├── q1 sendassignBooking_9
+                                                                   │   └── r1 receiveassignBooking_9
+                                                                   └── q2 checkloop_approveMenu_6_loop1  (guard b1)  ↺ กลับไป sendapproveMenu_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e11
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ k1

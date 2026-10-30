@@ -14,46 +14,46 @@ model_029  MedicationDispenser
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendscheduleDose_1
-   e2   receivescheduleDose_1
-   e3   senddoseAlert_2
-   e4   receivedoseAlert_2
-   e5   sendconfirmIntake_3
-   e6   receiveconfirmIntake_3
-   e7   sendlogDose_4  [a1]
-   e8   receivelogDose_4  [a1]
-   e9   sendlogAck_5  [a1]
-   e10  receivelogAck_5  [a1]
-   e11  sendescalateMissed_6  [a2]
-   e12  receiveescalateMissed_6  [a2]
-   e13  sendrefillCheck_7
-   e14  receiverefillCheck_7
+   a1   sendscheduleDose_1
+   b1   receivescheduleDose_1
+   c1   senddoseAlert_2
+   d1   receivedoseAlert_2
+   e1   sendconfirmIntake_3
+   f1   receiveconfirmIntake_3
+   g1   sendlogDose_4  (guard a1)
+   g2   sendescalateMissed_6  (guard a2)
+   h1   receivelogDose_4  (guard a1)
+   h2   receiveescalateMissed_6  (guard a2)
+   i1   sendlogAck_5  (guard a1)
+   j1   receivelogAck_5  (guard a1)
+   k1   sendrefillCheck_7
+   l1   receiverefillCheck_7
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e13 → e14
-       └── e11 → e12 → e13 → e14
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendscheduleDose_1
-       └── e2 receivescheduleDose_1
-           └── e3 senddoseAlert_2
-               └── e4 receivedoseAlert_2
-                   └── e5 sendconfirmIntake_3
-                       └── e6 receiveconfirmIntake_3
-                           ├── e7 sendlogDose_4  [a1]
-                           │   └── e8 receivelogDose_4  [a1]
-                           │       └── e9 sendlogAck_5  [a1]
-                           │           └── e10 receivelogAck_5  [a1]
-                           │               └── e13 sendrefillCheck_7
-                           │                   └── e14 receiverefillCheck_7
-                           └── e11 sendescalateMissed_6  [a2]
-                               └── e12 receiveescalateMissed_6  [a2]
-                                   └── e13 sendrefillCheck_7
-                                       └── e14 receiverefillCheck_7
+   └── a1 sendscheduleDose_1
+       └── b1 receivescheduleDose_1
+           └── c1 senddoseAlert_2
+               └── d1 receivedoseAlert_2
+                   └── e1 sendconfirmIntake_3
+                       └── f1 receiveconfirmIntake_3
+                           ├── g1 sendlogDose_4  (guard a1)
+                           │   └── h1 receivelogDose_4  (guard a1)
+                           │       └── i1 sendlogAck_5  (guard a1)
+                           │           └── j1 receivelogAck_5  (guard a1)
+                           │               └── k1 sendrefillCheck_7
+                           │                   └── l1 receiverefillCheck_7
+                           └── g2 sendescalateMissed_6  (guard a2)
+                               └── h2 receiveescalateMissed_6  (guard a2)
+                                   └── k1 sendrefillCheck_7
+                                       └── l1 receiverefillCheck_7
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1

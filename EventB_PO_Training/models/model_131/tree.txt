@@ -16,77 +16,77 @@ model_131  OnlineBankingOTP
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendconfirmTransfer_1
-   e2   receiveconfirmTransfer_1
-   e3   sendsendOtp_2
-   e4   receivesendOtp_2
-   e5   sendsendTransfer_3  [a1]
-   e6   receivesendTransfer_3  [a1]
-   e7   sendvalidateAccount_4  [a1 b1]
-   e8   receivevalidateAccount_4  [a1 b1]
-   e9   sendupdateOtp_5  [a1 b1]
-   e10  receiveupdateOtp_5  [a1 b1]
-   e11  sendsyncOtp_6  [a1 b2]
-   e12  receivesyncOtp_6  [a1 b2]
-   e13  sendapproveOtp_7  [a1 b2]
-   e14  receiveapproveOtp_7  [a1 b2]
-   e15  sendcancelTransfer_8  [a1]
-   e16  receivecancelTransfer_8  [a1]
-   e17  sendapproveAccount_9  [a1]
-   e18  receiveapproveAccount_9  [a1]
-   e19  sendsendAccount_10  [a1]
-   e20  receivesendAccount_10  [a1]
-   e21  sendissueOtp_11
-   e22  receiveissueOtp_11
-   e23  checkloop_sendTransfer_3_loop1  [a1]
+   a1   sendconfirmTransfer_1
+   b1   receiveconfirmTransfer_1
+   c1   sendsendOtp_2
+   d1   receivesendOtp_2
+   e1   sendsendTransfer_3  (guard a1)
+   f1   receivesendTransfer_3  (guard a1)
+   g1   sendvalidateAccount_4  (guard a1 b1)
+   g2   sendsyncOtp_6  (guard a1 b2)
+   h1   receivevalidateAccount_4  (guard a1 b1)
+   h2   receivesyncOtp_6  (guard a1 b2)
+   i1   sendupdateOtp_5  (guard a1 b1)
+   i2   sendapproveOtp_7  (guard a1 b2)
+   j1   receiveupdateOtp_5  (guard a1 b1)
+   j2   receiveapproveOtp_7  (guard a1 b2)
+   k1   sendcancelTransfer_8  (guard a1)
+   l1   receivecancelTransfer_8  (guard a1)
+   m1   sendapproveAccount_9  (guard a1)
+   n1   receiveapproveAccount_9  (guard a1)
+   o1   sendsendAccount_10  (guard a1)
+   p1   receivesendAccount_10  (guard a1)
+   q1   sendissueOtp_11
+   q2   checkloop_sendTransfer_3_loop1  (guard a1)
+   r1   receiveissueOtp_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e15 → e16 → e17 → e18 → e19 → e20
-       │   ├── e21 → e22
-       │   └── e23 ↺ e5
-       └── e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20
-           ├── e21 → e22
-           └── e23 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+       │   ├── q1 → r1
+       │   └── q2 ↺ e1
+       └── g2 → h2 → i2 → j2 → k1 → l1 → m1 → n1 → o1 → p1
+           ├── q1 → r1
+           └── q2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendconfirmTransfer_1
-       └── e2 receiveconfirmTransfer_1
-           └── e3 sendsendOtp_2
-               └── e4 receivesendOtp_2
-                   └── e5 sendsendTransfer_3  [a1]
-                       └── e6 receivesendTransfer_3  [a1]
-                           ├── e7 sendvalidateAccount_4  [a1 b1]
-                           │   └── e8 receivevalidateAccount_4  [a1 b1]
-                           │       └── e9 sendupdateOtp_5  [a1 b1]
-                           │           └── e10 receiveupdateOtp_5  [a1 b1]
-                           │               └── e15 sendcancelTransfer_8  [a1]
-                           │                   └── e16 receivecancelTransfer_8  [a1]
-                           │                       └── e17 sendapproveAccount_9  [a1]
-                           │                           └── e18 receiveapproveAccount_9  [a1]
-                           │                               └── e19 sendsendAccount_10  [a1]
-                           │                                   └── e20 receivesendAccount_10  [a1]
-                           │                                       ├── e21 sendissueOtp_11
-                           │                                       │   └── e22 receiveissueOtp_11
-                           │                                       └── e23 checkloop_sendTransfer_3_loop1  [a1]  ↺ กลับไป sendsendTransfer_3
-                           └── e11 sendsyncOtp_6  [a1 b2]
-                               └── e12 receivesyncOtp_6  [a1 b2]
-                                   └── e13 sendapproveOtp_7  [a1 b2]
-                                       └── e14 receiveapproveOtp_7  [a1 b2]
-                                           └── e15 sendcancelTransfer_8  [a1]
-                                               └── e16 receivecancelTransfer_8  [a1]
-                                                   └── e17 sendapproveAccount_9  [a1]
-                                                       └── e18 receiveapproveAccount_9  [a1]
-                                                           └── e19 sendsendAccount_10  [a1]
-                                                               └── e20 receivesendAccount_10  [a1]
-                                                                   ├── e21 sendissueOtp_11
-                                                                   │   └── e22 receiveissueOtp_11
-                                                                   └── e23 checkloop_sendTransfer_3_loop1  [a1]  ↺ กลับไป sendsendTransfer_3
+   └── a1 sendconfirmTransfer_1
+       └── b1 receiveconfirmTransfer_1
+           └── c1 sendsendOtp_2
+               └── d1 receivesendOtp_2
+                   └── e1 sendsendTransfer_3  (guard a1)
+                       └── f1 receivesendTransfer_3  (guard a1)
+                           ├── g1 sendvalidateAccount_4  (guard a1 b1)
+                           │   └── h1 receivevalidateAccount_4  (guard a1 b1)
+                           │       └── i1 sendupdateOtp_5  (guard a1 b1)
+                           │           └── j1 receiveupdateOtp_5  (guard a1 b1)
+                           │               └── k1 sendcancelTransfer_8  (guard a1)
+                           │                   └── l1 receivecancelTransfer_8  (guard a1)
+                           │                       └── m1 sendapproveAccount_9  (guard a1)
+                           │                           └── n1 receiveapproveAccount_9  (guard a1)
+                           │                               └── o1 sendsendAccount_10  (guard a1)
+                           │                                   └── p1 receivesendAccount_10  (guard a1)
+                           │                                       ├── q1 sendissueOtp_11
+                           │                                       │   └── r1 receiveissueOtp_11
+                           │                                       └── q2 checkloop_sendTransfer_3_loop1  (guard a1)  ↺ กลับไป sendsendTransfer_3
+                           └── g2 sendsyncOtp_6  (guard a1 b2)
+                               └── h2 receivesyncOtp_6  (guard a1 b2)
+                                   └── i2 sendapproveOtp_7  (guard a1 b2)
+                                       └── j2 receiveapproveOtp_7  (guard a1 b2)
+                                           └── k1 sendcancelTransfer_8  (guard a1)
+                                               └── l1 receivecancelTransfer_8  (guard a1)
+                                                   └── m1 sendapproveAccount_9  (guard a1)
+                                                       └── n1 receiveapproveAccount_9  (guard a1)
+                                                           └── o1 sendsendAccount_10  (guard a1)
+                                                               └── p1 receivesendAccount_10  (guard a1)
+                                                                   ├── q1 sendissueOtp_11
+                                                                   │   └── r1 receiveissueOtp_11
+                                                                   └── q2 checkloop_sendTransfer_3_loop1  (guard a1)  ↺ กลับไป sendsendTransfer_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ e1

@@ -10,65 +10,65 @@ model_066  CanteenPayment
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendupdateBalance_1
-   e2   receiveupdateBalance_1
-   e3   sendlogTopup_2
-   e4   receivelogTopup_2
-   e5   sendrequestTopup_3
-   e6   receiverequestTopup_3
-   e7   sendassignBalance_4
-   e8   receiveassignBalance_4
-   e9   sendcheckTopup_5
-   e10  receivecheckTopup_5
-   e11  sendreleaseMeal_6
-   e12  receivereleaseMeal_6
-   e13  sendreportMeal_7
-   e14  receivereportMeal_7
-   e15  sendupdateTopup_8
-   e16  receiveupdateTopup_8
-   e17  sendscheduleMeal_9
-   e18  receivescheduleMeal_9
-   e19  sendsendBalance_10
-   e20  receivesendBalance_10
-   e21  sendscheduleBalance_11
-   e22  receivescheduleBalance_11
-   e23  sendvalidateMeal_12
-   e24  receivevalidateMeal_12
-   e25  sendconfirmTopup_13
-   e26  receiveconfirmTopup_13
+   a1   sendupdateBalance_1
+   b1   receiveupdateBalance_1
+   c1   sendlogTopup_2
+   d1   receivelogTopup_2
+   e1   sendrequestTopup_3
+   f1   receiverequestTopup_3
+   g1   sendassignBalance_4
+   h1   receiveassignBalance_4
+   i1   sendcheckTopup_5
+   j1   receivecheckTopup_5
+   k1   sendreleaseMeal_6
+   l1   receivereleaseMeal_6
+   m1   sendreportMeal_7
+   n1   receivereportMeal_7
+   o1   sendupdateTopup_8
+   p1   receiveupdateTopup_8
+   q1   sendscheduleMeal_9
+   r1   receivescheduleMeal_9
+   s1   sendsendBalance_10
+   t1   receivesendBalance_10
+   u1   sendscheduleBalance_11
+   v1   receivescheduleBalance_11
+   w1   sendvalidateMeal_12
+   x1   receivevalidateMeal_12
+   y1   sendconfirmTopup_13
+   z1   receiveconfirmTopup_13
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e25 → e26
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendupdateBalance_1
-       └── e2 receiveupdateBalance_1
-           └── e3 sendlogTopup_2
-               └── e4 receivelogTopup_2
-                   └── e5 sendrequestTopup_3
-                       └── e6 receiverequestTopup_3
-                           └── e7 sendassignBalance_4
-                               └── e8 receiveassignBalance_4
-                                   └── e9 sendcheckTopup_5
-                                       └── e10 receivecheckTopup_5
-                                           └── e11 sendreleaseMeal_6
-                                               └── e12 receivereleaseMeal_6
-                                                   └── e13 sendreportMeal_7
-                                                       └── e14 receivereportMeal_7
-                                                           └── e15 sendupdateTopup_8
-                                                               └── e16 receiveupdateTopup_8
-                                                                   └── e17 sendscheduleMeal_9
-                                                                       └── e18 receivescheduleMeal_9
-                                                                           └── e19 sendsendBalance_10
-                                                                               └── e20 receivesendBalance_10
-                                                                                   └── e21 sendscheduleBalance_11
-                                                                                       └── e22 receivescheduleBalance_11
-                                                                                           └── e23 sendvalidateMeal_12
-                                                                                               └── e24 receivevalidateMeal_12
-                                                                                                   └── e25 sendconfirmTopup_13
-                                                                                                       └── e26 receiveconfirmTopup_13
+   └── a1 sendupdateBalance_1
+       └── b1 receiveupdateBalance_1
+           └── c1 sendlogTopup_2
+               └── d1 receivelogTopup_2
+                   └── e1 sendrequestTopup_3
+                       └── f1 receiverequestTopup_3
+                           └── g1 sendassignBalance_4
+                               └── h1 receiveassignBalance_4
+                                   └── i1 sendcheckTopup_5
+                                       └── j1 receivecheckTopup_5
+                                           └── k1 sendreleaseMeal_6
+                                               └── l1 receivereleaseMeal_6
+                                                   └── m1 sendreportMeal_7
+                                                       └── n1 receivereportMeal_7
+                                                           └── o1 sendupdateTopup_8
+                                                               └── p1 receiveupdateTopup_8
+                                                                   └── q1 sendscheduleMeal_9
+                                                                       └── r1 receivescheduleMeal_9
+                                                                           └── s1 sendsendBalance_10
+                                                                               └── t1 receivesendBalance_10
+                                                                                   └── u1 sendscheduleBalance_11
+                                                                                       └── v1 receivescheduleBalance_11
+                                                                                           └── w1 sendvalidateMeal_12
+                                                                                               └── x1 receivevalidateMeal_12
+                                                                                                   └── y1 sendconfirmTopup_13
+                                                                                                       └── z1 receiveconfirmTopup_13
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1

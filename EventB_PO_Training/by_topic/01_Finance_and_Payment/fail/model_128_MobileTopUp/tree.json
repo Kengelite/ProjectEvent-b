@@ -4,52 +4,52 @@
   "a2": "t_obs > 13"
  },
  "event_codes": {
-  "e1": "sendnotifyCredit_1",
-  "e2": "receivenotifyCredit_1",
-  "e3": "sendconfirmBundle_2",
-  "e4": "receiveconfirmBundle_2",
-  "e5": "sendreportBundle_3",
-  "e6": "receivereportBundle_3",
-  "e7": "sendackCredit_4",
-  "e8": "receiveackCredit_4",
-  "e9": "sendcheckBundle_5",
-  "e10": "receivecheckBundle_5",
-  "e11": "sendassignCredit_6",
-  "e12": "receiveassignCredit_6",
-  "e13": "sendreleaseTopup_7",
-  "e14": "receivereleaseTopup_7"
+  "a1": "sendnotifyCredit_1",
+  "b1": "receivenotifyCredit_1",
+  "c1": "sendconfirmBundle_2",
+  "d1": "receiveconfirmBundle_2",
+  "e1": "sendreportBundle_3",
+  "e2": "sendcheckBundle_5",
+  "f1": "receivereportBundle_3",
+  "f2": "receivecheckBundle_5",
+  "g1": "sendackCredit_4",
+  "g2": "sendassignCredit_6",
+  "h1": "receiveackCredit_4",
+  "h2": "receiveassignCredit_6",
+  "i1": "sendreleaseTopup_7",
+  "j1": "receivereleaseTopup_7"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
+   "a2"
+  ],
+  "g1": [
    "a1"
   ],
-  "e8": [
+  "g2": [
+   "a2"
+  ],
+  "h1": [
    "a1"
   ],
-  "e9": [
+  "h2": [
    "a2"
   ],
-  "e10": [
-   "a2"
-  ],
-  "e11": [
-   "a2"
-  ],
-  "e12": [
-   "a2"
-  ],
-  "e13": [],
-  "e14": []
+  "i1": [],
+  "j1": []
  },
  "guard_tree": {
   "a1": {},
@@ -66,60 +66,60 @@
   "children": [
    {
     "event": "sendnotifyCredit_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivenotifyCredit_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendconfirmBundle_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveconfirmBundle_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendreportBundle_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivereportBundle_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendackCredit_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receiveackCredit_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "sendreleaseTopup_7",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivereleaseTopup_7",
-                      "code": "e14",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -135,40 +135,40 @@
            },
            {
             "event": "sendcheckBundle_5",
-            "code": "e9",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receivecheckBundle_5",
-              "code": "e10",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendassignCredit_6",
-                "code": "e11",
+                "code": "g2",
                 "guards": [
                  "a2"
                 ],
                 "children": [
                  {
                   "event": "receiveassignCredit_6",
-                  "code": "e12",
+                  "code": "h2",
                   "guards": [
                    "a2"
                   ],
                   "children": [
                    {
                     "event": "sendreleaseTopup_7",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivereleaseTopup_7",
-                      "code": "e14",
+                      "code": "j1",
                       "guards": [],
                       "children": []
                      }
@@ -193,8 +193,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13 -> e14",
-  "e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

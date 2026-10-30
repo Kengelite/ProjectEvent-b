@@ -19,85 +19,85 @@ model_090  EventCheckInQR
    a1 -> b2 -> c1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreleaseBadge_1
-   e2   receivereleaseBadge_1
-   e3   sendsyncBadge_2
-   e4   receivesyncBadge_2
-   e5   sendnotifyEntry_3  [a1]
-   e6   receivenotifyEntry_3  [a1]
-   e7   sendsendBadge_4  [a1 b1]
-   e8   receivesendBadge_4  [a1 b1]
-   e9   sendreportEntry_5  [a1 b1]
-   e10  receivereportEntry_5  [a1 b1]
-   e11  sendupdateBadge_6  [a1 b2]
-   e12  receiveupdateBadge_6  [a1 b2]
-   e13  sendsyncPass_7  [a1]
-   e14  receivesyncPass_7  [a1]
-   e15  sendfetchBadge_8
-   e16  receivefetchBadge_8
-   e17  sendreportBadge_9
-   e18  receivereportBadge_9
-   e19  sendassignEntry_10_opt1  [c1]
-   e20  receiveassignEntry_10_opt1  [c1]
-   e21  sendlogEntry_11_opt1  [c1]
-   e22  receivelogEntry_11_opt1  [c1]
-   e23  sendissuePass_12
-   e24  receiveissuePass_12
-   e25  checkloop_notifyEntry_3_loop1  [a1]
+   a1   sendreleaseBadge_1
+   b1   receivereleaseBadge_1
+   c1   sendsyncBadge_2
+   d1   receivesyncBadge_2
+   e1   sendnotifyEntry_3  (guard a1)
+   f1   receivenotifyEntry_3  (guard a1)
+   g1   sendsendBadge_4  (guard a1 b1)
+   g2   sendupdateBadge_6  (guard a1 b2)
+   h1   receivesendBadge_4  (guard a1 b1)
+   h2   receiveupdateBadge_6  (guard a1 b2)
+   i1   sendreportEntry_5  (guard a1 b1)
+   j1   receivereportEntry_5  (guard a1 b1)
+   k1   sendsyncPass_7  (guard a1)
+   l1   receivesyncPass_7  (guard a1)
+   m1   sendfetchBadge_8
+   m2   checkloop_notifyEntry_3_loop1  (guard a1)
+   n1   receivefetchBadge_8
+   o1   sendreportBadge_9
+   p1   receivereportBadge_9
+   q1   sendassignEntry_10_opt1  (guard c1)
+   r1   receiveassignEntry_10_opt1  (guard c1)
+   s1   sendlogEntry_11_opt1  (guard c1)
+   t1   receivelogEntry_11_opt1  (guard c1)
+   u1   sendissuePass_12
+   v1   receiveissuePass_12
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e13 → e14
-       │   ├── e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24
-       │   └── e25 ↺ e5
-       └── e11 → e12 → e13 → e14
-           ├── e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24
-           └── e25 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       │   └── m2 ↺ e1
+       └── g2 → h2 → k1 → l1
+           ├── m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+           └── m2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreleaseBadge_1
-       └── e2 receivereleaseBadge_1
-           └── e3 sendsyncBadge_2
-               └── e4 receivesyncBadge_2
-                   └── e5 sendnotifyEntry_3  [a1]
-                       └── e6 receivenotifyEntry_3  [a1]
-                           ├── e7 sendsendBadge_4  [a1 b1]
-                           │   └── e8 receivesendBadge_4  [a1 b1]
-                           │       └── e9 sendreportEntry_5  [a1 b1]
-                           │           └── e10 receivereportEntry_5  [a1 b1]
-                           │               └── e13 sendsyncPass_7  [a1]
-                           │                   └── e14 receivesyncPass_7  [a1]
-                           │                       ├── e15 sendfetchBadge_8
-                           │                       │   └── e16 receivefetchBadge_8
-                           │                       │       └── e17 sendreportBadge_9
-                           │                       │           └── e18 receivereportBadge_9
-                           │                       │               └── e19 sendassignEntry_10_opt1  [c1]
-                           │                       │                   └── e20 receiveassignEntry_10_opt1  [c1]
-                           │                       │                       └── e21 sendlogEntry_11_opt1  [c1]
-                           │                       │                           └── e22 receivelogEntry_11_opt1  [c1]
-                           │                       │                               └── e23 sendissuePass_12
-                           │                       │                                   └── e24 receiveissuePass_12
-                           │                       └── e25 checkloop_notifyEntry_3_loop1  [a1]  ↺ กลับไป sendnotifyEntry_3
-                           └── e11 sendupdateBadge_6  [a1 b2]
-                               └── e12 receiveupdateBadge_6  [a1 b2]
-                                   └── e13 sendsyncPass_7  [a1]
-                                       └── e14 receivesyncPass_7  [a1]
-                                           ├── e15 sendfetchBadge_8
-                                           │   └── e16 receivefetchBadge_8
-                                           │       └── e17 sendreportBadge_9
-                                           │           └── e18 receivereportBadge_9
-                                           │               └── e19 sendassignEntry_10_opt1  [c1]
-                                           │                   └── e20 receiveassignEntry_10_opt1  [c1]
-                                           │                       └── e21 sendlogEntry_11_opt1  [c1]
-                                           │                           └── e22 receivelogEntry_11_opt1  [c1]
-                                           │                               └── e23 sendissuePass_12
-                                           │                                   └── e24 receiveissuePass_12
-                                           └── e25 checkloop_notifyEntry_3_loop1  [a1]  ↺ กลับไป sendnotifyEntry_3
+   └── a1 sendreleaseBadge_1
+       └── b1 receivereleaseBadge_1
+           └── c1 sendsyncBadge_2
+               └── d1 receivesyncBadge_2
+                   └── e1 sendnotifyEntry_3  (guard a1)
+                       └── f1 receivenotifyEntry_3  (guard a1)
+                           ├── g1 sendsendBadge_4  (guard a1 b1)
+                           │   └── h1 receivesendBadge_4  (guard a1 b1)
+                           │       └── i1 sendreportEntry_5  (guard a1 b1)
+                           │           └── j1 receivereportEntry_5  (guard a1 b1)
+                           │               └── k1 sendsyncPass_7  (guard a1)
+                           │                   └── l1 receivesyncPass_7  (guard a1)
+                           │                       ├── m1 sendfetchBadge_8
+                           │                       │   └── n1 receivefetchBadge_8
+                           │                       │       └── o1 sendreportBadge_9
+                           │                       │           └── p1 receivereportBadge_9
+                           │                       │               └── q1 sendassignEntry_10_opt1  (guard c1)
+                           │                       │                   └── r1 receiveassignEntry_10_opt1  (guard c1)
+                           │                       │                       └── s1 sendlogEntry_11_opt1  (guard c1)
+                           │                       │                           └── t1 receivelogEntry_11_opt1  (guard c1)
+                           │                       │                               └── u1 sendissuePass_12
+                           │                       │                                   └── v1 receiveissuePass_12
+                           │                       └── m2 checkloop_notifyEntry_3_loop1  (guard a1)  ↺ กลับไป sendnotifyEntry_3
+                           └── g2 sendupdateBadge_6  (guard a1 b2)
+                               └── h2 receiveupdateBadge_6  (guard a1 b2)
+                                   └── k1 sendsyncPass_7  (guard a1)
+                                       └── l1 receivesyncPass_7  (guard a1)
+                                           ├── m1 sendfetchBadge_8
+                                           │   └── n1 receivefetchBadge_8
+                                           │       └── o1 sendreportBadge_9
+                                           │           └── p1 receivereportBadge_9
+                                           │               └── q1 sendassignEntry_10_opt1  (guard c1)
+                                           │                   └── r1 receiveassignEntry_10_opt1  (guard c1)
+                                           │                       └── s1 sendlogEntry_11_opt1  (guard c1)
+                                           │                           └── t1 receivelogEntry_11_opt1  (guard c1)
+                                           │                               └── u1 sendissuePass_12
+                                           │                                   └── v1 receiveissuePass_12
+                                           └── m2 checkloop_notifyEntry_3_loop1  (guard a1)  ↺ กลับไป sendnotifyEntry_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e25 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e25 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1

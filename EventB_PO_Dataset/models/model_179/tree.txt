@@ -27,86 +27,86 @@ model_179  SmartWasteBin
    a2 -> b3
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreserveRoute_1
-   e2   receivereserveRoute_1
-   e3   sendsendRoute_2
-   e4   receivesendRoute_2
-   e5   sendassignRoute_3  [a1]
-   e6   receiveassignRoute_3  [a1]
-   e7   sendreservePickup_4  [a2]
-   e8   receivereservePickup_4  [a2]
-   e9   sendscheduleFill_5
-   e10  receivescheduleFill_5
-   e11  sendupdatePickup_6
-   e12  receiveupdatePickup_6
-   e13  sendlogPickup_7  [b1]
-   e14  receivelogPickup_7  [b1]
-   e15  sendissueRoute_8  [b2]
-   e16  receiveissueRoute_8  [b2]
-   e17  sendsyncPickup_9  [b3]
-   e18  receivesyncPickup_9  [b3]
-   e19  sendreleaseRoute_10
-   e20  receivereleaseRoute_10
+   a1   sendreserveRoute_1
+   b1   receivereserveRoute_1
+   c1   sendsendRoute_2
+   d1   receivesendRoute_2
+   e1   sendassignRoute_3  (guard a1)
+   e2   sendreservePickup_4  (guard a2)
+   f1   receiveassignRoute_3  (guard a1)
+   f2   receivereservePickup_4  (guard a2)
+   g1   sendscheduleFill_5
+   h1   receivescheduleFill_5
+   i1   sendupdatePickup_6
+   j1   receiveupdatePickup_6
+   k1   sendlogPickup_7  (guard b1)
+   k2   sendissueRoute_8  (guard b2)
+   k3   sendsyncPickup_9  (guard b3)
+   l1   receivelogPickup_7  (guard b1)
+   l2   receiveissueRoute_8  (guard b2)
+   l3   receivesyncPickup_9  (guard b3)
+   m1   sendreleaseRoute_10
+   n1   receivereleaseRoute_10
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e9 → e10 → e11 → e12
-       │   ├── e13 → e14 → e19 → e20
-       │   ├── e15 → e16 → e19 → e20
-       │   └── e17 → e18 → e19 → e20
-       └── e7 → e8 → e9 → e10 → e11 → e12
-           ├── e13 → e14 → e19 → e20
-           ├── e15 → e16 → e19 → e20
-           └── e17 → e18 → e19 → e20
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       │   ├── k1 → l1 → m1 → n1
+       │   ├── k2 → l2 → m1 → n1
+       │   └── k3 → l3 → m1 → n1
+       └── e2 → f2 → g1 → h1 → i1 → j1
+           ├── k1 → l1 → m1 → n1
+           ├── k2 → l2 → m1 → n1
+           └── k3 → l3 → m1 → n1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreserveRoute_1
-       └── e2 receivereserveRoute_1
-           └── e3 sendsendRoute_2
-               └── e4 receivesendRoute_2
-                   ├── e5 sendassignRoute_3  [a1]
-                   │   └── e6 receiveassignRoute_3  [a1]
-                   │       └── e9 sendscheduleFill_5
-                   │           └── e10 receivescheduleFill_5
-                   │               └── e11 sendupdatePickup_6
-                   │                   └── e12 receiveupdatePickup_6
-                   │                       ├── e13 sendlogPickup_7  [b1]
-                   │                       │   └── e14 receivelogPickup_7  [b1]
-                   │                       │       └── e19 sendreleaseRoute_10
-                   │                       │           └── e20 receivereleaseRoute_10
-                   │                       ├── e15 sendissueRoute_8  [b2]
-                   │                       │   └── e16 receiveissueRoute_8  [b2]
-                   │                       │       └── e19 sendreleaseRoute_10
-                   │                       │           └── e20 receivereleaseRoute_10
-                   │                       └── e17 sendsyncPickup_9  [b3]
-                   │                           └── e18 receivesyncPickup_9  [b3]
-                   │                               └── e19 sendreleaseRoute_10
-                   │                                   └── e20 receivereleaseRoute_10
-                   └── e7 sendreservePickup_4  [a2]
-                       └── e8 receivereservePickup_4  [a2]
-                           └── e9 sendscheduleFill_5
-                               └── e10 receivescheduleFill_5
-                                   └── e11 sendupdatePickup_6
-                                       └── e12 receiveupdatePickup_6
-                                           ├── e13 sendlogPickup_7  [b1]
-                                           │   └── e14 receivelogPickup_7  [b1]
-                                           │       └── e19 sendreleaseRoute_10
-                                           │           └── e20 receivereleaseRoute_10
-                                           ├── e15 sendissueRoute_8  [b2]
-                                           │   └── e16 receiveissueRoute_8  [b2]
-                                           │       └── e19 sendreleaseRoute_10
-                                           │           └── e20 receivereleaseRoute_10
-                                           └── e17 sendsyncPickup_9  [b3]
-                                               └── e18 receivesyncPickup_9  [b3]
-                                                   └── e19 sendreleaseRoute_10
-                                                       └── e20 receivereleaseRoute_10
+   └── a1 sendreserveRoute_1
+       └── b1 receivereserveRoute_1
+           └── c1 sendsendRoute_2
+               └── d1 receivesendRoute_2
+                   ├── e1 sendassignRoute_3  (guard a1)
+                   │   └── f1 receiveassignRoute_3  (guard a1)
+                   │       └── g1 sendscheduleFill_5
+                   │           └── h1 receivescheduleFill_5
+                   │               └── i1 sendupdatePickup_6
+                   │                   └── j1 receiveupdatePickup_6
+                   │                       ├── k1 sendlogPickup_7  (guard b1)
+                   │                       │   └── l1 receivelogPickup_7  (guard b1)
+                   │                       │       └── m1 sendreleaseRoute_10
+                   │                       │           └── n1 receivereleaseRoute_10
+                   │                       ├── k2 sendissueRoute_8  (guard b2)
+                   │                       │   └── l2 receiveissueRoute_8  (guard b2)
+                   │                       │       └── m1 sendreleaseRoute_10
+                   │                       │           └── n1 receivereleaseRoute_10
+                   │                       └── k3 sendsyncPickup_9  (guard b3)
+                   │                           └── l3 receivesyncPickup_9  (guard b3)
+                   │                               └── m1 sendreleaseRoute_10
+                   │                                   └── n1 receivereleaseRoute_10
+                   └── e2 sendreservePickup_4  (guard a2)
+                       └── f2 receivereservePickup_4  (guard a2)
+                           └── g1 sendscheduleFill_5
+                               └── h1 receivescheduleFill_5
+                                   └── i1 sendupdatePickup_6
+                                       └── j1 receiveupdatePickup_6
+                                           ├── k1 sendlogPickup_7  (guard b1)
+                                           │   └── l1 receivelogPickup_7  (guard b1)
+                                           │       └── m1 sendreleaseRoute_10
+                                           │           └── n1 receivereleaseRoute_10
+                                           ├── k2 sendissueRoute_8  (guard b2)
+                                           │   └── l2 receiveissueRoute_8  (guard b2)
+                                           │       └── m1 sendreleaseRoute_10
+                                           │           └── n1 receivereleaseRoute_10
+                                           └── k3 sendsyncPickup_9  (guard b3)
+                                               └── l3 receivesyncPickup_9  (guard b3)
+                                                   └── m1 sendreleaseRoute_10
+                                                       └── n1 receivereleaseRoute_10
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e19 -> e20
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1

@@ -16,68 +16,68 @@ model_149  PublicWifiHotspot
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendscheduleQuota_1
-   e2   receivescheduleQuota_1
-   e3   sendscheduleVoucher_2
-   e4   receivescheduleVoucher_2
-   e5   sendvalidateQuota_3
-   e6   receivevalidateQuota_3
-   e7   sendupdateSession_4
-   e8   receiveupdateSession_4
-   e9   sendvalidateSession_5
-   e10  receivevalidateSession_5
-   e11  sendreserveVoucher_6
-   e12  receivereserveVoucher_6
-   e13  sendupdateQuota_7_opt1  [a1]
-   e14  receiveupdateQuota_7_opt1  [a1]
-   e15  sendapproveQuota_8_opt1  [a1 b1]
-   e16  receiveapproveQuota_8_opt1  [a1 b1]
-   e17  sendqueryVoucher_9_opt1  [a1 b1]
-   e18  receivequeryVoucher_9_opt1  [a1 b1]
-   e19  sendsendSession_10_opt1  [a1 b2]
-   e20  receivesendSession_10_opt1  [a1 b2]
-   e21  sendissueSession_11_opt1  [a1]
-   e22  receiveissueSession_11_opt1  [a1]
-   e23  sendissueQuota_12
-   e24  receiveissueQuota_12
+   a1   sendscheduleQuota_1
+   b1   receivescheduleQuota_1
+   c1   sendscheduleVoucher_2
+   d1   receivescheduleVoucher_2
+   e1   sendvalidateQuota_3
+   f1   receivevalidateQuota_3
+   g1   sendupdateSession_4
+   h1   receiveupdateSession_4
+   i1   sendvalidateSession_5
+   j1   receivevalidateSession_5
+   k1   sendreserveVoucher_6
+   l1   receivereserveVoucher_6
+   m1   sendupdateQuota_7_opt1  (guard a1)
+   n1   receiveupdateQuota_7_opt1  (guard a1)
+   o1   sendapproveQuota_8_opt1  (guard a1 b1)
+   o2   sendsendSession_10_opt1  (guard a1 b2)
+   p1   receiveapproveQuota_8_opt1  (guard a1 b1)
+   p2   receivesendSession_10_opt1  (guard a1 b2)
+   q1   sendqueryVoucher_9_opt1  (guard a1 b1)
+   r1   receivequeryVoucher_9_opt1  (guard a1 b1)
+   s1   sendissueSession_11_opt1  (guard a1)
+   t1   receiveissueSession_11_opt1  (guard a1)
+   u1   sendissueQuota_12
+   v1   receiveissueQuota_12
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
-       ├── e15 → e16 → e17 → e18 → e21 → e22 → e23 → e24
-       └── e19 → e20 → e21 → e22 → e23 → e24
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       └── o2 → p2 → s1 → t1 → u1 → v1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendscheduleQuota_1
-       └── e2 receivescheduleQuota_1
-           └── e3 sendscheduleVoucher_2
-               └── e4 receivescheduleVoucher_2
-                   └── e5 sendvalidateQuota_3
-                       └── e6 receivevalidateQuota_3
-                           └── e7 sendupdateSession_4
-                               └── e8 receiveupdateSession_4
-                                   └── e9 sendvalidateSession_5
-                                       └── e10 receivevalidateSession_5
-                                           └── e11 sendreserveVoucher_6
-                                               └── e12 receivereserveVoucher_6
-                                                   └── e13 sendupdateQuota_7_opt1  [a1]
-                                                       └── e14 receiveupdateQuota_7_opt1  [a1]
-                                                           ├── e15 sendapproveQuota_8_opt1  [a1 b1]
-                                                           │   └── e16 receiveapproveQuota_8_opt1  [a1 b1]
-                                                           │       └── e17 sendqueryVoucher_9_opt1  [a1 b1]
-                                                           │           └── e18 receivequeryVoucher_9_opt1  [a1 b1]
-                                                           │               └── e21 sendissueSession_11_opt1  [a1]
-                                                           │                   └── e22 receiveissueSession_11_opt1  [a1]
-                                                           │                       └── e23 sendissueQuota_12
-                                                           │                           └── e24 receiveissueQuota_12
-                                                           └── e19 sendsendSession_10_opt1  [a1 b2]
-                                                               └── e20 receivesendSession_10_opt1  [a1 b2]
-                                                                   └── e21 sendissueSession_11_opt1  [a1]
-                                                                       └── e22 receiveissueSession_11_opt1  [a1]
-                                                                           └── e23 sendissueQuota_12
-                                                                               └── e24 receiveissueQuota_12
+   └── a1 sendscheduleQuota_1
+       └── b1 receivescheduleQuota_1
+           └── c1 sendscheduleVoucher_2
+               └── d1 receivescheduleVoucher_2
+                   └── e1 sendvalidateQuota_3
+                       └── f1 receivevalidateQuota_3
+                           └── g1 sendupdateSession_4
+                               └── h1 receiveupdateSession_4
+                                   └── i1 sendvalidateSession_5
+                                       └── j1 receivevalidateSession_5
+                                           └── k1 sendreserveVoucher_6
+                                               └── l1 receivereserveVoucher_6
+                                                   └── m1 sendupdateQuota_7_opt1  (guard a1)
+                                                       └── n1 receiveupdateQuota_7_opt1  (guard a1)
+                                                           ├── o1 sendapproveQuota_8_opt1  (guard a1 b1)
+                                                           │   └── p1 receiveapproveQuota_8_opt1  (guard a1 b1)
+                                                           │       └── q1 sendqueryVoucher_9_opt1  (guard a1 b1)
+                                                           │           └── r1 receivequeryVoucher_9_opt1  (guard a1 b1)
+                                                           │               └── s1 sendissueSession_11_opt1  (guard a1)
+                                                           │                   └── t1 receiveissueSession_11_opt1  (guard a1)
+                                                           │                       └── u1 sendissueQuota_12
+                                                           │                           └── v1 receiveissueQuota_12
+                                                           └── o2 sendsendSession_10_opt1  (guard a1 b2)
+                                                               └── p2 receivesendSession_10_opt1  (guard a1 b2)
+                                                                   └── s1 sendissueSession_11_opt1  (guard a1)
+                                                                       └── t1 receiveissueSession_11_opt1  (guard a1)
+                                                                           └── u1 sendissueQuota_12
+                                                                               └── v1 receiveissueQuota_12
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e21 -> e22 -> e23 -> e24
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> s1 -> t1 -> u1 -> v1

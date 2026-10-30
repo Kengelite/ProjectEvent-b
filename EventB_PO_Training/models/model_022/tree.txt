@@ -14,38 +14,38 @@ model_022  GymCheckIn
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendscanQR_1
-   e2   receivescanQR_1
-   e3   sendaccessResult_2
-   e4   receiveaccessResult_2
-   e5   sendopenGate_3  [a1]
-   e6   receiveopenGate_3  [a1]
-   e7   sendrenewPrompt_4  [a2]
-   e8   receiverenewPrompt_4  [a2]
-   e9   sendexitScan_5
-   e10  receiveexitScan_5
+   a1   sendscanQR_1
+   b1   receivescanQR_1
+   c1   sendaccessResult_2
+   d1   receiveaccessResult_2
+   e1   sendopenGate_3  (guard a1)
+   e2   sendrenewPrompt_4  (guard a2)
+   f1   receiveopenGate_3  (guard a1)
+   f2   receiverenewPrompt_4  (guard a2)
+   g1   sendexitScan_5
+   h1   receiveexitScan_5
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e9 → e10
-       └── e7 → e8 → e9 → e10
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1
+       └── e2 → f2 → g1 → h1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendscanQR_1
-       └── e2 receivescanQR_1
-           └── e3 sendaccessResult_2
-               └── e4 receiveaccessResult_2
-                   ├── e5 sendopenGate_3  [a1]
-                   │   └── e6 receiveopenGate_3  [a1]
-                   │       └── e9 sendexitScan_5
-                   │           └── e10 receiveexitScan_5
-                   └── e7 sendrenewPrompt_4  [a2]
-                       └── e8 receiverenewPrompt_4  [a2]
-                           └── e9 sendexitScan_5
-                               └── e10 receiveexitScan_5
+   └── a1 sendscanQR_1
+       └── b1 receivescanQR_1
+           └── c1 sendaccessResult_2
+               └── d1 receiveaccessResult_2
+                   ├── e1 sendopenGate_3  (guard a1)
+                   │   └── f1 receiveopenGate_3  (guard a1)
+                   │       └── g1 sendexitScan_5
+                   │           └── h1 receiveexitScan_5
+                   └── e2 sendrenewPrompt_4  (guard a2)
+                       └── f2 receiverenewPrompt_4  (guard a2)
+                           └── g1 sendexitScan_5
+                               └── h1 receiveexitScan_5
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10
-   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1

@@ -16,61 +16,61 @@ model_181  SolarPanelMonitor
    a1 -> b2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendackPower_1
-   e2   receiveackPower_1
-   e3   sendapproveExport_2
-   e4   receiveapproveExport_2
-   e5   sendissuePower_3  [a1]
-   e6   receiveissuePower_3  [a1]
-   e7   sendconfirmFault_4  [a1 b1]
-   e8   receiveconfirmFault_4  [a1 b1]
-   e9   sendreportFault_5  [a1 b1]
-   e10  receivereportFault_5  [a1 b1]
-   e11  sendcheckPower_6  [a1 b2]
-   e12  receivecheckPower_6  [a1 b2]
-   e13  sendreportExport_7  [a1]
-   e14  receivereportExport_7  [a1]
-   e15  sendreserveExport_8
-   e16  receivereserveExport_8
-   e17  checkloop_issuePower_3_loop1  [a1]
+   a1   sendackPower_1
+   b1   receiveackPower_1
+   c1   sendapproveExport_2
+   d1   receiveapproveExport_2
+   e1   sendissuePower_3  (guard a1)
+   f1   receiveissuePower_3  (guard a1)
+   g1   sendconfirmFault_4  (guard a1 b1)
+   g2   sendcheckPower_6  (guard a1 b2)
+   h1   receiveconfirmFault_4  (guard a1 b1)
+   h2   receivecheckPower_6  (guard a1 b2)
+   i1   sendreportFault_5  (guard a1 b1)
+   j1   receivereportFault_5  (guard a1 b1)
+   k1   sendreportExport_7  (guard a1)
+   l1   receivereportExport_7  (guard a1)
+   m1   sendreserveExport_8
+   m2   checkloop_issuePower_3_loop1  (guard a1)
+   n1   receivereserveExport_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6
-       ├── e7 → e8 → e9 → e10 → e13 → e14
-       │   ├── e15 → e16
-       │   └── e17 ↺ e5
-       └── e11 → e12 → e13 → e14
-           ├── e15 → e16
-           └── e17 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1
+       │   └── m2 ↺ e1
+       └── g2 → h2 → k1 → l1
+           ├── m1 → n1
+           └── m2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendackPower_1
-       └── e2 receiveackPower_1
-           └── e3 sendapproveExport_2
-               └── e4 receiveapproveExport_2
-                   └── e5 sendissuePower_3  [a1]
-                       └── e6 receiveissuePower_3  [a1]
-                           ├── e7 sendconfirmFault_4  [a1 b1]
-                           │   └── e8 receiveconfirmFault_4  [a1 b1]
-                           │       └── e9 sendreportFault_5  [a1 b1]
-                           │           └── e10 receivereportFault_5  [a1 b1]
-                           │               └── e13 sendreportExport_7  [a1]
-                           │                   └── e14 receivereportExport_7  [a1]
-                           │                       ├── e15 sendreserveExport_8
-                           │                       │   └── e16 receivereserveExport_8
-                           │                       └── e17 checkloop_issuePower_3_loop1  [a1]  ↺ กลับไป sendissuePower_3
-                           └── e11 sendcheckPower_6  [a1 b2]
-                               └── e12 receivecheckPower_6  [a1 b2]
-                                   └── e13 sendreportExport_7  [a1]
-                                       └── e14 receivereportExport_7  [a1]
-                                           ├── e15 sendreserveExport_8
-                                           │   └── e16 receivereserveExport_8
-                                           └── e17 checkloop_issuePower_3_loop1  [a1]  ↺ กลับไป sendissuePower_3
+   └── a1 sendackPower_1
+       └── b1 receiveackPower_1
+           └── c1 sendapproveExport_2
+               └── d1 receiveapproveExport_2
+                   └── e1 sendissuePower_3  (guard a1)
+                       └── f1 receiveissuePower_3  (guard a1)
+                           ├── g1 sendconfirmFault_4  (guard a1 b1)
+                           │   └── h1 receiveconfirmFault_4  (guard a1 b1)
+                           │       └── i1 sendreportFault_5  (guard a1 b1)
+                           │           └── j1 receivereportFault_5  (guard a1 b1)
+                           │               └── k1 sendreportExport_7  (guard a1)
+                           │                   └── l1 receivereportExport_7  (guard a1)
+                           │                       ├── m1 sendreserveExport_8
+                           │                       │   └── n1 receivereserveExport_8
+                           │                       └── m2 checkloop_issuePower_3_loop1  (guard a1)  ↺ กลับไป sendissuePower_3
+                           └── g2 sendcheckPower_6  (guard a1 b2)
+                               └── h2 receivecheckPower_6  (guard a1 b2)
+                                   └── k1 sendreportExport_7  (guard a1)
+                                       └── l1 receivereportExport_7  (guard a1)
+                                           ├── m1 sendreserveExport_8
+                                           │   └── n1 receivereserveExport_8
+                                           └── m2 checkloop_issuePower_3_loop1  (guard a1)  ↺ กลับไป sendissuePower_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1

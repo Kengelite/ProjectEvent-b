@@ -5,62 +5,62 @@
   "b1": "retryDoor < 3"
  },
  "event_codes": {
-  "e1": "sendcallElevator_1",
-  "e2": "receivecallElevator_1",
-  "e3": "sendmoveCar_2",
-  "e4": "receivemoveCar_2",
-  "e5": "sendarrived_3",
-  "e6": "receivearrived_3",
-  "e7": "sendopenDoor_4",
-  "e8": "receiveopenDoor_4",
-  "e9": "senddoorOpened_5",
-  "e10": "receivedoorOpened_5",
-  "e11": "sendcloseDoor_6",
-  "e12": "receivecloseDoor_6",
-  "e13": "senddoorSensor_7",
-  "e14": "receivedoorSensor_7",
-  "e15": "sendnotifyPassenger_8",
-  "e16": "receivenotifyPassenger_8",
-  "e17": "checkloop_closeDoor_6_loop1"
+  "a1": "sendcallElevator_1",
+  "b1": "receivecallElevator_1",
+  "c1": "sendmoveCar_2",
+  "d1": "receivemoveCar_2",
+  "e1": "sendarrived_3",
+  "f1": "receivearrived_3",
+  "g1": "sendopenDoor_4",
+  "g2": "sendcloseDoor_6",
+  "h1": "receiveopenDoor_4",
+  "h2": "receivecloseDoor_6",
+  "i1": "senddoorOpened_5",
+  "i2": "senddoorSensor_7",
+  "j1": "receivedoorOpened_5",
+  "j2": "receivedoorSensor_7",
+  "k1": "sendnotifyPassenger_8",
+  "l1": "receivenotifyPassenger_8",
+  "m1": "checkloop_closeDoor_6_loop1"
  },
  "event_guards": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
   "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [],
-  "e6": [],
-  "e7": [
+  "f1": [],
+  "g1": [
    "a1"
   ],
-  "e8": [
-   "a1"
-  ],
-  "e9": [
-   "a1"
-  ],
-  "e10": [
-   "a1"
-  ],
-  "e11": [
+  "g2": [
    "a2",
    "b1"
   ],
-  "e12": [
+  "h1": [
+   "a1"
+  ],
+  "h2": [
    "a2",
    "b1"
   ],
-  "e13": [
+  "i1": [
+   "a1"
+  ],
+  "i2": [
    "a2",
    "b1"
   ],
-  "e14": [
+  "j1": [
+   "a1"
+  ],
+  "j2": [
    "a2",
    "b1"
   ],
-  "e15": [],
-  "e16": [],
-  "e17": [
+  "k1": [],
+  "l1": [],
+  "m1": [
    "a2",
    "b1"
   ]
@@ -82,70 +82,70 @@
   "children": [
    {
     "event": "sendcallElevator_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivecallElevator_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendmoveCar_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivemoveCar_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendarrived_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [],
             "children": [
              {
               "event": "receivearrived_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [],
               "children": [
                {
                 "event": "sendopenDoor_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1"
                 ],
                 "children": [
                  {
                   "event": "receiveopenDoor_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1"
                   ],
                   "children": [
                    {
                     "event": "senddoorOpened_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receivedoorOpened_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendnotifyPassenger_8",
-                        "code": "e15",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivenotifyPassenger_8",
-                          "code": "e16",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -161,7 +161,7 @@
                },
                {
                 "event": "sendcloseDoor_6",
-                "code": "e11",
+                "code": "g2",
                 "guards": [
                  "a2",
                  "b1"
@@ -169,7 +169,7 @@
                 "children": [
                  {
                   "event": "receivecloseDoor_6",
-                  "code": "e12",
+                  "code": "h2",
                   "guards": [
                    "a2",
                    "b1"
@@ -177,7 +177,7 @@
                   "children": [
                    {
                     "event": "senddoorSensor_7",
-                    "code": "e13",
+                    "code": "i2",
                     "guards": [
                      "a2",
                      "b1"
@@ -185,7 +185,7 @@
                     "children": [
                      {
                       "event": "receivedoorSensor_7",
-                      "code": "e14",
+                      "code": "j2",
                       "guards": [
                        "a2",
                        "b1"
@@ -193,12 +193,12 @@
                       "children": [
                        {
                         "event": "sendnotifyPassenger_8",
-                        "code": "e15",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivenotifyPassenger_8",
-                          "code": "e16",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -206,13 +206,13 @@
                        },
                        {
                         "event": "checkloop_closeDoor_6_loop1",
-                        "code": "e17",
+                        "code": "m1",
                         "guards": [
                          "a2",
                          "b1"
                         ],
                         "loop_back_to": "sendcloseDoor_6",
-                        "loop_back_to_code": "e11",
+                        "loop_back_to_code": "g2",
                         "children": []
                        }
                       ]
@@ -238,9 +238,9 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e11"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> m1 ↺ g2"
  ],
  "unplaced_events": [],
  "source": "model.txt"

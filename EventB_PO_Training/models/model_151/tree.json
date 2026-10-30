@@ -6,75 +6,75 @@
   "c2": "urgent = 0"
  },
  "event_codes": {
-  "e1": "sendconfirmCredit_1",
-  "e2": "receiveconfirmCredit_1",
-  "e3": "sendfetchVoucher_2",
-  "e4": "receivefetchVoucher_2",
-  "e5": "sendsyncCredit_3_opt1",
-  "e6": "receivesyncCredit_3_opt1",
-  "e7": "sendnotifyCredit_4_opt1",
-  "e8": "receivenotifyCredit_4_opt1",
-  "e9": "sendconfirmBottle_5_opt1",
-  "e10": "receiveconfirmBottle_5_opt1",
-  "e11": "sendconfirmVoucher_6",
-  "e12": "receiveconfirmVoucher_6",
-  "e13": "sendackVoucher_7",
-  "e14": "receiveackVoucher_7",
-  "e15": "sendassignBottle_8",
-  "e16": "receiveassignBottle_8",
-  "e17": "sendscheduleVoucher_9",
-  "e18": "receivescheduleVoucher_9",
-  "e19": "sendqueryCredit_10",
-  "e20": "receivequeryCredit_10",
-  "e21": "checkloop_notifyCredit_4_loop1"
+  "a1": "sendconfirmCredit_1",
+  "b1": "receiveconfirmCredit_1",
+  "c1": "sendfetchVoucher_2",
+  "d1": "receivefetchVoucher_2",
+  "e1": "sendsyncCredit_3_opt1",
+  "f1": "receivesyncCredit_3_opt1",
+  "g1": "sendnotifyCredit_4_opt1",
+  "h1": "receivenotifyCredit_4_opt1",
+  "i1": "sendconfirmBottle_5_opt1",
+  "i2": "checkloop_notifyCredit_4_loop1",
+  "j1": "receiveconfirmBottle_5_opt1",
+  "k1": "sendconfirmVoucher_6",
+  "l1": "receiveconfirmVoucher_6",
+  "m1": "sendackVoucher_7",
+  "n1": "receiveackVoucher_7",
+  "o1": "sendassignBottle_8",
+  "o2": "sendscheduleVoucher_9",
+  "p1": "receiveassignBottle_8",
+  "p2": "receivescheduleVoucher_9",
+  "q1": "sendqueryCredit_10",
+  "r1": "receivequeryCredit_10"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "g1": [
    "a1",
    "b1"
   ],
-  "e8": [
+  "h1": [
    "a1",
    "b1"
   ],
-  "e9": [
+  "i1": [
    "a1"
   ],
-  "e10": [
+  "i2": [
+   "a1",
+   "b1"
+  ],
+  "j1": [
    "a1"
   ],
-  "e11": [],
-  "e12": [],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [
    "c1"
   ],
-  "e16": [
+  "o2": [
+   "c2"
+  ],
+  "p1": [
    "c1"
   ],
-  "e17": [
+  "p2": [
    "c2"
   ],
-  "e18": [
-   "c2"
-  ],
-  "e19": [],
-  "e20": [],
-  "e21": [
-   "a1",
-   "b1"
-  ]
+  "q1": [],
+  "r1": []
  },
  "guard_tree": {
   "a1": {
@@ -95,41 +95,41 @@
   "children": [
    {
     "event": "sendconfirmCredit_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveconfirmCredit_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendfetchVoucher_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivefetchVoucher_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendsyncCredit_3_opt1",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivesyncCredit_3_opt1",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendnotifyCredit_4_opt1",
-                "code": "e7",
+                "code": "g1",
                 "guards": [
                  "a1",
                  "b1"
@@ -137,7 +137,7 @@
                 "children": [
                  {
                   "event": "receivenotifyCredit_4_opt1",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [
                    "a1",
                    "b1"
@@ -145,60 +145,60 @@
                   "children": [
                    {
                     "event": "sendconfirmBottle_5_opt1",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [
                      "a1"
                     ],
                     "children": [
                      {
                       "event": "receiveconfirmBottle_5_opt1",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [
                        "a1"
                       ],
                       "children": [
                        {
                         "event": "sendconfirmVoucher_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receiveconfirmVoucher_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [],
                           "children": [
                            {
                             "event": "sendackVoucher_7",
-                            "code": "e13",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receiveackVoucher_7",
-                              "code": "e14",
+                              "code": "n1",
                               "guards": [],
                               "children": [
                                {
                                 "event": "sendassignBottle_8",
-                                "code": "e15",
+                                "code": "o1",
                                 "guards": [
                                  "c1"
                                 ],
                                 "children": [
                                  {
                                   "event": "receiveassignBottle_8",
-                                  "code": "e16",
+                                  "code": "p1",
                                   "guards": [
                                    "c1"
                                   ],
                                   "children": [
                                    {
                                     "event": "sendqueryCredit_10",
-                                    "code": "e19",
+                                    "code": "q1",
                                     "guards": [],
                                     "children": [
                                      {
                                       "event": "receivequeryCredit_10",
-                                      "code": "e20",
+                                      "code": "r1",
                                       "guards": [],
                                       "children": []
                                      }
@@ -210,26 +210,26 @@
                                },
                                {
                                 "event": "sendscheduleVoucher_9",
-                                "code": "e17",
+                                "code": "o2",
                                 "guards": [
                                  "c2"
                                 ],
                                 "children": [
                                  {
                                   "event": "receivescheduleVoucher_9",
-                                  "code": "e18",
+                                  "code": "p2",
                                   "guards": [
                                    "c2"
                                   ],
                                   "children": [
                                    {
                                     "event": "sendqueryCredit_10",
-                                    "code": "e19",
+                                    "code": "q1",
                                     "guards": [],
                                     "children": [
                                      {
                                       "event": "receivequeryCredit_10",
-                                      "code": "e20",
+                                      "code": "r1",
                                       "guards": [],
                                       "children": []
                                      }
@@ -253,13 +253,13 @@
                    },
                    {
                     "event": "checkloop_notifyCredit_4_loop1",
-                    "code": "e21",
+                    "code": "i2",
                     "guards": [
                      "a1",
                      "b1"
                     ],
                     "loop_back_to": "sendnotifyCredit_4_opt1",
-                    "loop_back_to_code": "e7",
+                    "loop_back_to_code": "g1",
                     "children": []
                    }
                   ]
@@ -281,9 +281,9 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e21 ↺ e7"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ g1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

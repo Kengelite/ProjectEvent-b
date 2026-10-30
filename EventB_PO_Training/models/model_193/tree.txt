@@ -10,37 +10,37 @@ model_193  VeterinaryClinic
    -
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreleaseAppointment_1
-   e2   receivereleaseAppointment_1
-   e3   sendcancelAppointment_2
-   e4   receivecancelAppointment_2
-   e5   sendreportInvoice_3
-   e6   receivereportInvoice_3
-   e7   sendsendAppointment_4
-   e8   receivesendAppointment_4
-   e9   sendapproveAppointment_5
-   e10  receiveapproveAppointment_5
-   e11  sendvalidateInvoice_6
-   e12  receivevalidateInvoice_6
+   a1   sendreleaseAppointment_1
+   b1   receivereleaseAppointment_1
+   c1   sendcancelAppointment_2
+   d1   receivecancelAppointment_2
+   e1   sendreportInvoice_3
+   f1   receivereportInvoice_3
+   g1   sendsendAppointment_4
+   h1   receivesendAppointment_4
+   i1   sendapproveAppointment_5
+   j1   receiveapproveAppointment_5
+   k1   sendvalidateInvoice_6
+   l1   receivevalidateInvoice_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreleaseAppointment_1
-       └── e2 receivereleaseAppointment_1
-           └── e3 sendcancelAppointment_2
-               └── e4 receivecancelAppointment_2
-                   └── e5 sendreportInvoice_3
-                       └── e6 receivereportInvoice_3
-                           └── e7 sendsendAppointment_4
-                               └── e8 receivesendAppointment_4
-                                   └── e9 sendapproveAppointment_5
-                                       └── e10 receiveapproveAppointment_5
-                                           └── e11 sendvalidateInvoice_6
-                                               └── e12 receivevalidateInvoice_6
+   └── a1 sendreleaseAppointment_1
+       └── b1 receivereleaseAppointment_1
+           └── c1 sendcancelAppointment_2
+               └── d1 receivecancelAppointment_2
+                   └── e1 sendreportInvoice_3
+                       └── f1 receivereportInvoice_3
+                           └── g1 sendsendAppointment_4
+                               └── h1 receivesendAppointment_4
+                                   └── i1 sendapproveAppointment_5
+                                       └── j1 receiveapproveAppointment_5
+                                           └── k1 sendvalidateInvoice_6
+                                               └── l1 receivevalidateInvoice_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

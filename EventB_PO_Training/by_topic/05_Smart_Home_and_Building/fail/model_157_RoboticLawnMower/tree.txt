@@ -11,37 +11,37 @@ model_157  RoboticLawnMower
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendsendDock_1
-   e2   receivesendDock_1
-   e3   sendrequestBlade_2
-   e4   receiverequestBlade_2
-   e5   sendcancelBlade_3_opt1  [a1]
-   e6   receivecancelBlade_3_opt1  [a1]
-   e7   sendapproveZone_4
-   e8   receiveapproveZone_4
-   e9   sendsyncZone_5
-   e10  receivesyncZone_5
-   e11  sendfetchDock_6
-   e12  receivefetchDock_6
+   a1   sendsendDock_1
+   b1   receivesendDock_1
+   c1   sendrequestBlade_2
+   d1   receiverequestBlade_2
+   e1   sendcancelBlade_3_opt1  (guard a1)
+   f1   receivecancelBlade_3_opt1  (guard a1)
+   g1   sendapproveZone_4
+   h1   receiveapproveZone_4
+   i1   sendsyncZone_5
+   j1   receivesyncZone_5
+   k1   sendfetchDock_6
+   l1   receivefetchDock_6
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendsendDock_1
-       └── e2 receivesendDock_1
-           └── e3 sendrequestBlade_2
-               └── e4 receiverequestBlade_2
-                   └── e5 sendcancelBlade_3_opt1  [a1]
-                       └── e6 receivecancelBlade_3_opt1  [a1]
-                           └── e7 sendapproveZone_4
-                               └── e8 receiveapproveZone_4
-                                   └── e9 sendsyncZone_5
-                                       └── e10 receivesyncZone_5
-                                           └── e11 sendfetchDock_6
-                                               └── e12 receivefetchDock_6
+   └── a1 sendsendDock_1
+       └── b1 receivesendDock_1
+           └── c1 sendrequestBlade_2
+               └── d1 receiverequestBlade_2
+                   └── e1 sendcancelBlade_3_opt1  (guard a1)
+                       └── f1 receivecancelBlade_3_opt1  (guard a1)
+                           └── g1 sendapproveZone_4
+                               └── h1 receiveapproveZone_4
+                                   └── i1 sendsyncZone_5
+                                       └── j1 receivesyncZone_5
+                                           └── k1 sendfetchDock_6
+                                               └── l1 receivefetchDock_6
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

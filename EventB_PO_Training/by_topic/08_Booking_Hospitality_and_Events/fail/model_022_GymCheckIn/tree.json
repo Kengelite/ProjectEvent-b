@@ -4,36 +4,36 @@
   "a2": "membership = EXPIRED"
  },
  "event_codes": {
-  "e1": "sendscanQR_1",
-  "e2": "receivescanQR_1",
-  "e3": "sendaccessResult_2",
-  "e4": "receiveaccessResult_2",
-  "e5": "sendopenGate_3",
-  "e6": "receiveopenGate_3",
-  "e7": "sendrenewPrompt_4",
-  "e8": "receiverenewPrompt_4",
-  "e9": "sendexitScan_5",
-  "e10": "receiveexitScan_5"
+  "a1": "sendscanQR_1",
+  "b1": "receivescanQR_1",
+  "c1": "sendaccessResult_2",
+  "d1": "receiveaccessResult_2",
+  "e1": "sendopenGate_3",
+  "e2": "sendrenewPrompt_4",
+  "f1": "receiveopenGate_3",
+  "f2": "receiverenewPrompt_4",
+  "g1": "sendexitScan_5",
+  "h1": "receiveexitScan_5"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
    "a2"
   ],
-  "e8": [
-   "a2"
-  ],
-  "e9": [],
-  "e10": []
+  "g1": [],
+  "h1": []
  },
  "guard_tree": {
   "a1": {},
@@ -50,46 +50,46 @@
   "children": [
    {
     "event": "sendscanQR_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivescanQR_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendaccessResult_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveaccessResult_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendopenGate_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveopenGate_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendexitScan_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receiveexitScan_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": []
                  }
@@ -101,26 +101,26 @@
            },
            {
             "event": "sendrenewPrompt_4",
-            "code": "e7",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receiverenewPrompt_4",
-              "code": "e8",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendexitScan_5",
-                "code": "e9",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receiveexitScan_5",
-                  "code": "e10",
+                  "code": "h1",
                   "guards": [],
                   "children": []
                  }
@@ -141,8 +141,8 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

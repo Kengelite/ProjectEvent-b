@@ -13,46 +13,46 @@ model_009  CinemaTicketing
    a1 -> b1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendselectMovie_1
-   e2   receiveselectMovie_1
-   e3   sendshowtimes_2
-   e4   receiveshowtimes_2
-   e5   sendpickSeat_3  [a1]
-   e6   receivepickSeat_3  [a1]
-   e7   sendseatStatus_4  [a1]
-   e8   receiveseatStatus_4  [a1]
-   e9   sendreserveSeat_5
-   e10  receivereserveSeat_5
-   e11  sendaddSnack_6_opt1  [b1]
-   e12  receiveaddSnack_6_opt1  [b1]
-   e13  sendissueTicket_7
-   e14  receiveissueTicket_7
-   e15  checkloop_pickSeat_3_loop1  [a1]
+   a1   sendselectMovie_1
+   b1   receiveselectMovie_1
+   c1   sendshowtimes_2
+   d1   receiveshowtimes_2
+   e1   sendpickSeat_3  (guard a1)
+   f1   receivepickSeat_3  (guard a1)
+   g1   sendseatStatus_4  (guard a1)
+   h1   receiveseatStatus_4  (guard a1)
+   i1   sendreserveSeat_5
+   i2   checkloop_pickSeat_3_loop1  (guard a1)
+   j1   receivereserveSeat_5
+   k1   sendaddSnack_6_opt1  (guard b1)
+   l1   receiveaddSnack_6_opt1  (guard b1)
+   m1   sendissueTicket_7
+   n1   receiveissueTicket_7
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
-       ├── e9 → e10 → e11 → e12 → e13 → e14
-       └── e15 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1 → m1 → n1
+       └── i2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendselectMovie_1
-       └── e2 receiveselectMovie_1
-           └── e3 sendshowtimes_2
-               └── e4 receiveshowtimes_2
-                   └── e5 sendpickSeat_3  [a1]
-                       └── e6 receivepickSeat_3  [a1]
-                           └── e7 sendseatStatus_4  [a1]
-                               └── e8 receiveseatStatus_4  [a1]
-                                   ├── e9 sendreserveSeat_5
-                                   │   └── e10 receivereserveSeat_5
-                                   │       └── e11 sendaddSnack_6_opt1  [b1]
-                                   │           └── e12 receiveaddSnack_6_opt1  [b1]
-                                   │               └── e13 sendissueTicket_7
-                                   │                   └── e14 receiveissueTicket_7
-                                   └── e15 checkloop_pickSeat_3_loop1  [a1]  ↺ กลับไป sendpickSeat_3
+   └── a1 sendselectMovie_1
+       └── b1 receiveselectMovie_1
+           └── c1 sendshowtimes_2
+               └── d1 receiveshowtimes_2
+                   └── e1 sendpickSeat_3  (guard a1)
+                       └── f1 receivepickSeat_3  (guard a1)
+                           └── g1 sendseatStatus_4  (guard a1)
+                               └── h1 receiveseatStatus_4  (guard a1)
+                                   ├── i1 sendreserveSeat_5
+                                   │   └── j1 receivereserveSeat_5
+                                   │       └── k1 sendaddSnack_6_opt1  (guard b1)
+                                   │           └── l1 receiveaddSnack_6_opt1  (guard b1)
+                                   │               └── m1 sendissueTicket_7
+                                   │                   └── n1 receiveissueTicket_7
+                                   └── i2 checkloop_pickSeat_3_loop1  (guard a1)  ↺ กลับไป sendpickSeat_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1

@@ -13,73 +13,73 @@ model_150  RailFareGate
    a1 -> b1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendqueryBalance_1
-   e2   receivequeryBalance_1
-   e3   sendassignBalance_2
-   e4   receiveassignBalance_2
-   e5   sendcheckFare_3_opt1  [a1]
-   e6   receivecheckFare_3_opt1  [a1]
-   e7   sendvalidateCard_4_opt1  [a1]
-   e8   receivevalidateCard_4_opt1  [a1]
-   e9   sendcheckCard_5
-   e10  receivecheckCard_5
-   e11  sendqueryFare_6
-   e12  receivequeryFare_6
-   e13  sendvalidateFare_7_opt2  [b1]
-   e14  receivevalidateFare_7_opt2  [b1]
-   e15  sendrequestCard_8_opt2  [b1]
-   e16  receiverequestCard_8_opt2  [b1]
-   e17  sendreportBalance_9
-   e18  receivereportBalance_9
-   e19  sendreleaseFare_10
-   e20  receivereleaseFare_10
-   e21  sendissueFare_11
-   e22  receiveissueFare_11
-   e23  sendlogBalance_12
-   e24  receivelogBalance_12
-   e25  sendvalidateBalance_13
-   e26  receivevalidateBalance_13
-   e27  sendassignFare_14
-   e28  receiveassignFare_14
-   e29  sendcancelFare_15
-   e30  receivecancelFare_15
+   a1   sendqueryBalance_1
+   b1   receivequeryBalance_1
+   c1   sendassignBalance_2
+   d1   receiveassignBalance_2
+   e1   sendcheckFare_3_opt1  (guard a1)
+   f1   receivecheckFare_3_opt1  (guard a1)
+   g1   sendvalidateCard_4_opt1  (guard a1)
+   h1   receivevalidateCard_4_opt1  (guard a1)
+   i1   sendcheckCard_5
+   j1   receivecheckCard_5
+   k1   sendqueryFare_6
+   l1   receivequeryFare_6
+   m1   sendvalidateFare_7_opt2  (guard b1)
+   n1   receivevalidateFare_7_opt2  (guard b1)
+   o1   sendrequestCard_8_opt2  (guard b1)
+   p1   receiverequestCard_8_opt2  (guard b1)
+   q1   sendreportBalance_9
+   r1   receivereportBalance_9
+   s1   sendreleaseFare_10
+   t1   receivereleaseFare_10
+   u1   sendissueFare_11
+   v1   receiveissueFare_11
+   w1   sendlogBalance_12
+   x1   receivelogBalance_12
+   y1   sendvalidateBalance_13
+   z1   receivevalidateBalance_13
+   aa1  sendassignFare_14
+   ab1  receiveassignFare_14
+   ac1  sendcancelFare_15
+   ad1  receivecancelFare_15
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e25 → e26 → e27 → e28 → e29 → e30
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1 → aa1 → ab1 → ac1 → ad1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendqueryBalance_1
-       └── e2 receivequeryBalance_1
-           └── e3 sendassignBalance_2
-               └── e4 receiveassignBalance_2
-                   └── e5 sendcheckFare_3_opt1  [a1]
-                       └── e6 receivecheckFare_3_opt1  [a1]
-                           └── e7 sendvalidateCard_4_opt1  [a1]
-                               └── e8 receivevalidateCard_4_opt1  [a1]
-                                   └── e9 sendcheckCard_5
-                                       └── e10 receivecheckCard_5
-                                           └── e11 sendqueryFare_6
-                                               └── e12 receivequeryFare_6
-                                                   └── e13 sendvalidateFare_7_opt2  [b1]
-                                                       └── e14 receivevalidateFare_7_opt2  [b1]
-                                                           └── e15 sendrequestCard_8_opt2  [b1]
-                                                               └── e16 receiverequestCard_8_opt2  [b1]
-                                                                   └── e17 sendreportBalance_9
-                                                                       └── e18 receivereportBalance_9
-                                                                           └── e19 sendreleaseFare_10
-                                                                               └── e20 receivereleaseFare_10
-                                                                                   └── e21 sendissueFare_11
-                                                                                       └── e22 receiveissueFare_11
-                                                                                           └── e23 sendlogBalance_12
-                                                                                               └── e24 receivelogBalance_12
-                                                                                                   └── e25 sendvalidateBalance_13
-                                                                                                       └── e26 receivevalidateBalance_13
-                                                                                                           └── e27 sendassignFare_14
-                                                                                                               └── e28 receiveassignFare_14
-                                                                                                                   └── e29 sendcancelFare_15
-                                                                                                                       └── e30 receivecancelFare_15
+   └── a1 sendqueryBalance_1
+       └── b1 receivequeryBalance_1
+           └── c1 sendassignBalance_2
+               └── d1 receiveassignBalance_2
+                   └── e1 sendcheckFare_3_opt1  (guard a1)
+                       └── f1 receivecheckFare_3_opt1  (guard a1)
+                           └── g1 sendvalidateCard_4_opt1  (guard a1)
+                               └── h1 receivevalidateCard_4_opt1  (guard a1)
+                                   └── i1 sendcheckCard_5
+                                       └── j1 receivecheckCard_5
+                                           └── k1 sendqueryFare_6
+                                               └── l1 receivequeryFare_6
+                                                   └── m1 sendvalidateFare_7_opt2  (guard b1)
+                                                       └── n1 receivevalidateFare_7_opt2  (guard b1)
+                                                           └── o1 sendrequestCard_8_opt2  (guard b1)
+                                                               └── p1 receiverequestCard_8_opt2  (guard b1)
+                                                                   └── q1 sendreportBalance_9
+                                                                       └── r1 receivereportBalance_9
+                                                                           └── s1 sendreleaseFare_10
+                                                                               └── t1 receivereleaseFare_10
+                                                                                   └── u1 sendissueFare_11
+                                                                                       └── v1 receiveissueFare_11
+                                                                                           └── w1 sendlogBalance_12
+                                                                                               └── x1 receivelogBalance_12
+                                                                                                   └── y1 sendvalidateBalance_13
+                                                                                                       └── z1 receivevalidateBalance_13
+                                                                                                           └── aa1 sendassignFare_14
+                                                                                                               └── ab1 receiveassignFare_14
+                                                                                                                   └── ac1 sendcancelFare_15
+                                                                                                                       └── ad1 receivecancelFare_15
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26 -> e27 -> e28 -> e29 -> e30
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1 -> aa1 -> ab1 -> ac1 -> ad1

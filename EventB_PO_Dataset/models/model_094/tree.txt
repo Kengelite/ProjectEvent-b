@@ -14,54 +14,54 @@ model_094  FleetFuelCard
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendreleaseLimit_1
-   e2   receivereleaseLimit_1
-   e3   sendreportCard_2
-   e4   receivereportCard_2
-   e5   sendsendFuel_3  [a1]
-   e6   receivesendFuel_3  [a1]
-   e7   sendissueLimit_4  [a1]
-   e8   receiveissueLimit_4  [a1]
-   e9   sendissueCard_5  [a1]
-   e10  receiveissueCard_5  [a1]
-   e11  sendapproveCard_6  [a1]
-   e12  receiveapproveCard_6  [a1]
-   e13  sendissueFuel_7  [a1]
-   e14  receiveissueFuel_7  [a1]
-   e15  sendcancelFuel_8  [a2]
-   e16  receivecancelFuel_8  [a2]
-   e17  sendvalidateCard_9
-   e18  receivevalidateCard_9
+   a1   sendreleaseLimit_1
+   b1   receivereleaseLimit_1
+   c1   sendreportCard_2
+   d1   receivereportCard_2
+   e1   sendsendFuel_3  (guard a1)
+   e2   sendcancelFuel_8  (guard a2)
+   f1   receivesendFuel_3  (guard a1)
+   f2   receivecancelFuel_8  (guard a2)
+   g1   sendissueLimit_4  (guard a1)
+   h1   receiveissueLimit_4  (guard a1)
+   i1   sendissueCard_5  (guard a1)
+   j1   receiveissueCard_5  (guard a1)
+   k1   sendapproveCard_6  (guard a1)
+   l1   receiveapproveCard_6  (guard a1)
+   m1   sendissueFuel_7  (guard a1)
+   n1   receiveissueFuel_7  (guard a1)
+   o1   sendvalidateCard_9
+   p1   receivevalidateCard_9
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e17 → e18
-       └── e15 → e16 → e17 → e18
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+       └── e2 → f2 → o1 → p1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendreleaseLimit_1
-       └── e2 receivereleaseLimit_1
-           └── e3 sendreportCard_2
-               └── e4 receivereportCard_2
-                   ├── e5 sendsendFuel_3  [a1]
-                   │   └── e6 receivesendFuel_3  [a1]
-                   │       └── e7 sendissueLimit_4  [a1]
-                   │           └── e8 receiveissueLimit_4  [a1]
-                   │               └── e9 sendissueCard_5  [a1]
-                   │                   └── e10 receiveissueCard_5  [a1]
-                   │                       └── e11 sendapproveCard_6  [a1]
-                   │                           └── e12 receiveapproveCard_6  [a1]
-                   │                               └── e13 sendissueFuel_7  [a1]
-                   │                                   └── e14 receiveissueFuel_7  [a1]
-                   │                                       └── e17 sendvalidateCard_9
-                   │                                           └── e18 receivevalidateCard_9
-                   └── e15 sendcancelFuel_8  [a2]
-                       └── e16 receivecancelFuel_8  [a2]
-                           └── e17 sendvalidateCard_9
-                               └── e18 receivevalidateCard_9
+   └── a1 sendreleaseLimit_1
+       └── b1 receivereleaseLimit_1
+           └── c1 sendreportCard_2
+               └── d1 receivereportCard_2
+                   ├── e1 sendsendFuel_3  (guard a1)
+                   │   └── f1 receivesendFuel_3  (guard a1)
+                   │       └── g1 sendissueLimit_4  (guard a1)
+                   │           └── h1 receiveissueLimit_4  (guard a1)
+                   │               └── i1 sendissueCard_5  (guard a1)
+                   │                   └── j1 receiveissueCard_5  (guard a1)
+                   │                       └── k1 sendapproveCard_6  (guard a1)
+                   │                           └── l1 receiveapproveCard_6  (guard a1)
+                   │                               └── m1 sendissueFuel_7  (guard a1)
+                   │                                   └── n1 receiveissueFuel_7  (guard a1)
+                   │                                       └── o1 sendvalidateCard_9
+                   │                                           └── p1 receivevalidateCard_9
+                   └── e2 sendcancelFuel_8  (guard a2)
+                       └── f2 receivecancelFuel_8  (guard a2)
+                           └── o1 sendvalidateCard_9
+                               └── p1 receivevalidateCard_9
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18
-   e1 -> e2 -> e3 -> e4 -> e15 -> e16 -> e17 -> e18
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> o1 -> p1

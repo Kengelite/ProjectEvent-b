@@ -3,36 +3,36 @@
   "a1": "useCache = 1"
  },
  "event_codes": {
-  "e1": "sendsyncReport_1",
-  "e2": "receivesyncReport_1",
-  "e3": "sendcancelAbsence_2",
-  "e4": "receivecancelAbsence_2",
-  "e5": "sendapproveAbsence_3_opt1",
-  "e6": "receiveapproveAbsence_3_opt1",
-  "e7": "sendqueryCheckin_4",
-  "e8": "receivequeryCheckin_4",
-  "e9": "sendupdateAbsence_5",
-  "e10": "receiveupdateAbsence_5",
-  "e11": "sendissueAbsence_6",
-  "e12": "receiveissueAbsence_6"
+  "a1": "sendsyncReport_1",
+  "b1": "receivesyncReport_1",
+  "c1": "sendcancelAbsence_2",
+  "d1": "receivecancelAbsence_2",
+  "e1": "sendapproveAbsence_3_opt1",
+  "f1": "receiveapproveAbsence_3_opt1",
+  "g1": "sendqueryCheckin_4",
+  "h1": "receivequeryCheckin_4",
+  "i1": "sendupdateAbsence_5",
+  "j1": "receiveupdateAbsence_5",
+  "k1": "sendissueAbsence_6",
+  "l1": "receiveissueAbsence_6"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "f1": [
    "a1"
   ],
-  "e7": [],
-  "e8": [],
-  "e9": [],
-  "e10": [],
-  "e11": [],
-  "e12": []
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
  },
  "guard_tree": {
   "a1": {}
@@ -47,66 +47,66 @@
   "children": [
    {
     "event": "sendsyncReport_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receivesyncReport_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendcancelAbsence_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receivecancelAbsence_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendapproveAbsence_3_opt1",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receiveapproveAbsence_3_opt1",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendqueryCheckin_4",
-                "code": "e7",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receivequeryCheckin_4",
-                  "code": "e8",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendupdateAbsence_5",
-                    "code": "e9",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveupdateAbsence_5",
-                      "code": "e10",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendissueAbsence_6",
-                        "code": "e11",
+                        "code": "k1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receiveissueAbsence_6",
-                          "code": "e12",
+                          "code": "l1",
                           "guards": [],
                           "children": []
                          }
@@ -135,7 +135,7 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

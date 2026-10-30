@@ -11,45 +11,45 @@ model_013  CourseEnrollment
    a1
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendbrowseCourses_1
-   e2   receivebrowseCourses_1
-   e3   sendcourseList_2
-   e4   receivecourseList_2
-   e5   sendenrollRequest_3
-   e6   receiveenrollRequest_3
-   e7   sendcheckPrereq_4
-   e8   receivecheckPrereq_4
-   e9   sendprereqOK_5
-   e10  receiveprereqOK_5
-   e11  sendrequestApproval_6_opt1  [a1]
-   e12  receiverequestApproval_6_opt1  [a1]
-   e13  sendapproved_7_opt1  [a1]
-   e14  receiveapproved_7_opt1  [a1]
-   e15  sendenrollConfirm_8
-   e16  receiveenrollConfirm_8
+   a1   sendbrowseCourses_1
+   b1   receivebrowseCourses_1
+   c1   sendcourseList_2
+   d1   receivecourseList_2
+   e1   sendenrollRequest_3
+   f1   receiveenrollRequest_3
+   g1   sendcheckPrereq_4
+   h1   receivecheckPrereq_4
+   i1   sendprereqOK_5
+   j1   receiveprereqOK_5
+   k1   sendrequestApproval_6_opt1  (guard a1)
+   l1   receiverequestApproval_6_opt1  (guard a1)
+   m1   sendapproved_7_opt1  (guard a1)
+   n1   receiveapproved_7_opt1  (guard a1)
+   o1   sendenrollConfirm_8
+   p1   receiveenrollConfirm_8
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendbrowseCourses_1
-       └── e2 receivebrowseCourses_1
-           └── e3 sendcourseList_2
-               └── e4 receivecourseList_2
-                   └── e5 sendenrollRequest_3
-                       └── e6 receiveenrollRequest_3
-                           └── e7 sendcheckPrereq_4
-                               └── e8 receivecheckPrereq_4
-                                   └── e9 sendprereqOK_5
-                                       └── e10 receiveprereqOK_5
-                                           └── e11 sendrequestApproval_6_opt1  [a1]
-                                               └── e12 receiverequestApproval_6_opt1  [a1]
-                                                   └── e13 sendapproved_7_opt1  [a1]
-                                                       └── e14 receiveapproved_7_opt1  [a1]
-                                                           └── e15 sendenrollConfirm_8
-                                                               └── e16 receiveenrollConfirm_8
+   └── a1 sendbrowseCourses_1
+       └── b1 receivebrowseCourses_1
+           └── c1 sendcourseList_2
+               └── d1 receivecourseList_2
+                   └── e1 sendenrollRequest_3
+                       └── f1 receiveenrollRequest_3
+                           └── g1 sendcheckPrereq_4
+                               └── h1 receivecheckPrereq_4
+                                   └── i1 sendprereqOK_5
+                                       └── j1 receiveprereqOK_5
+                                           └── k1 sendrequestApproval_6_opt1  (guard a1)
+                                               └── l1 receiverequestApproval_6_opt1  (guard a1)
+                                                   └── m1 sendapproved_7_opt1  (guard a1)
+                                                       └── n1 receiveapproved_7_opt1  (guard a1)
+                                                           └── o1 sendenrollConfirm_8
+                                                               └── p1 receiveenrollConfirm_8
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

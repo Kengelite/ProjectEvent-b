@@ -6,76 +6,76 @@
   "b2": "t_obs > 27"
  },
  "event_codes": {
-  "e1": "sendissueFeedback_1",
-  "e2": "receiveissueFeedback_1",
-  "e3": "sendassignFeedback_2",
-  "e4": "receiveassignFeedback_2",
-  "e5": "sendreserveGrade_3",
-  "e6": "receivereserveGrade_3",
-  "e7": "sendlogGrade_4",
-  "e8": "receivelogGrade_4",
-  "e9": "sendcheckSubmission_5",
-  "e10": "receivecheckSubmission_5",
-  "e11": "sendackGrade_6",
-  "e12": "receiveackGrade_6",
-  "e13": "sendnotifyGrade_7",
-  "e14": "receivenotifyGrade_7",
-  "e15": "sendupdateGrade_8",
-  "e16": "receiveupdateGrade_8",
-  "e17": "sendvalidateSubmission_9",
-  "e18": "receivevalidateSubmission_9",
-  "e19": "sendackSubmission_10",
-  "e20": "receiveackSubmission_10",
-  "e21": "sendreleaseSubmission_11",
-  "e22": "receivereleaseSubmission_11"
+  "a1": "sendissueFeedback_1",
+  "b1": "receiveissueFeedback_1",
+  "c1": "sendassignFeedback_2",
+  "d1": "receiveassignFeedback_2",
+  "e1": "sendreserveGrade_3",
+  "e2": "sendlogGrade_4",
+  "f1": "receivereserveGrade_3",
+  "f2": "receivelogGrade_4",
+  "g1": "sendackGrade_6",
+  "h1": "receiveackGrade_6",
+  "i1": "sendnotifyGrade_7",
+  "j1": "receivenotifyGrade_7",
+  "k1": "sendupdateGrade_8",
+  "k2": "sendvalidateSubmission_9",
+  "l1": "receiveupdateGrade_8",
+  "l2": "receivevalidateSubmission_9",
+  "m1": "sendreleaseSubmission_11",
+  "n1": "receivereleaseSubmission_11",
+  "o1": "sendackSubmission_10",
+  "p1": "receiveackSubmission_10",
+  "q1": "sendcheckSubmission_5",
+  "r1": "receivecheckSubmission_5"
  },
  "event_guards": {
-  "e1": [],
-  "e2": [],
-  "e3": [],
-  "e4": [],
-  "e5": [
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
    "a1"
   ],
-  "e6": [
+  "e2": [
+   "a2"
+  ],
+  "f1": [
    "a1"
   ],
-  "e7": [
+  "f2": [
    "a2"
   ],
-  "e8": [
-   "a2"
-  ],
-  "e9": [
-   "a2"
-  ],
-  "e10": [
-   "a2"
-  ],
-  "e11": [],
-  "e12": [],
-  "e13": [],
-  "e14": [],
-  "e15": [
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
    "b1"
   ],
-  "e16": [
+  "k2": [
+   "b2"
+  ],
+  "l1": [
    "b1"
   ],
-  "e17": [
+  "l2": [
    "b2"
   ],
-  "e18": [
+  "m1": [],
+  "n1": [],
+  "o1": [
    "b2"
   ],
-  "e19": [
+  "p1": [
    "b2"
   ],
-  "e20": [
-   "b2"
+  "q1": [
+   "a2"
   ],
-  "e21": [],
-  "e22": []
+  "r1": [
+   "a2"
+  ]
  },
  "guard_tree": {
   "a1": {
@@ -100,80 +100,80 @@
   "children": [
    {
     "event": "sendissueFeedback_1",
-    "code": "e1",
+    "code": "a1",
     "guards": [],
     "children": [
      {
       "event": "receiveissueFeedback_1",
-      "code": "e2",
+      "code": "b1",
       "guards": [],
       "children": [
        {
         "event": "sendassignFeedback_2",
-        "code": "e3",
+        "code": "c1",
         "guards": [],
         "children": [
          {
           "event": "receiveassignFeedback_2",
-          "code": "e4",
+          "code": "d1",
           "guards": [],
           "children": [
            {
             "event": "sendreserveGrade_3",
-            "code": "e5",
+            "code": "e1",
             "guards": [
              "a1"
             ],
             "children": [
              {
               "event": "receivereserveGrade_3",
-              "code": "e6",
+              "code": "f1",
               "guards": [
                "a1"
               ],
               "children": [
                {
                 "event": "sendackGrade_6",
-                "code": "e11",
+                "code": "g1",
                 "guards": [],
                 "children": [
                  {
                   "event": "receiveackGrade_6",
-                  "code": "e12",
+                  "code": "h1",
                   "guards": [],
                   "children": [
                    {
                     "event": "sendnotifyGrade_7",
-                    "code": "e13",
+                    "code": "i1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receivenotifyGrade_7",
-                      "code": "e14",
+                      "code": "j1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendupdateGrade_8",
-                        "code": "e15",
+                        "code": "k1",
                         "guards": [
                          "b1"
                         ],
                         "children": [
                          {
                           "event": "receiveupdateGrade_8",
-                          "code": "e16",
+                          "code": "l1",
                           "guards": [
                            "b1"
                           ],
                           "children": [
                            {
                             "event": "sendreleaseSubmission_11",
-                            "code": "e21",
+                            "code": "m1",
                             "guards": [],
                             "children": [
                              {
                               "event": "receivereleaseSubmission_11",
-                              "code": "e22",
+                              "code": "n1",
                               "guards": [],
                               "children": []
                              }
@@ -185,40 +185,40 @@
                        },
                        {
                         "event": "sendvalidateSubmission_9",
-                        "code": "e17",
+                        "code": "k2",
                         "guards": [
                          "b2"
                         ],
                         "children": [
                          {
                           "event": "receivevalidateSubmission_9",
-                          "code": "e18",
+                          "code": "l2",
                           "guards": [
                            "b2"
                           ],
                           "children": [
                            {
                             "event": "sendackSubmission_10",
-                            "code": "e19",
+                            "code": "o1",
                             "guards": [
                              "b2"
                             ],
                             "children": [
                              {
                               "event": "receiveackSubmission_10",
-                              "code": "e20",
+                              "code": "p1",
                               "guards": [
                                "b2"
                               ],
                               "children": [
                                {
                                 "event": "sendreleaseSubmission_11",
-                                "code": "e21",
+                                "code": "m1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivereleaseSubmission_11",
-                                  "code": "e22",
+                                  "code": "n1",
                                   "guards": [],
                                   "children": []
                                  }
@@ -246,74 +246,74 @@
            },
            {
             "event": "sendlogGrade_4",
-            "code": "e7",
+            "code": "e2",
             "guards": [
              "a2"
             ],
             "children": [
              {
               "event": "receivelogGrade_4",
-              "code": "e8",
+              "code": "f2",
               "guards": [
                "a2"
               ],
               "children": [
                {
                 "event": "sendcheckSubmission_5",
-                "code": "e9",
+                "code": "q1",
                 "guards": [
                  "a2"
                 ],
                 "children": [
                  {
                   "event": "receivecheckSubmission_5",
-                  "code": "e10",
+                  "code": "r1",
                   "guards": [
                    "a2"
                   ],
                   "children": [
                    {
                     "event": "sendackGrade_6",
-                    "code": "e11",
+                    "code": "g1",
                     "guards": [],
                     "children": [
                      {
                       "event": "receiveackGrade_6",
-                      "code": "e12",
+                      "code": "h1",
                       "guards": [],
                       "children": [
                        {
                         "event": "sendnotifyGrade_7",
-                        "code": "e13",
+                        "code": "i1",
                         "guards": [],
                         "children": [
                          {
                           "event": "receivenotifyGrade_7",
-                          "code": "e14",
+                          "code": "j1",
                           "guards": [],
                           "children": [
                            {
                             "event": "sendupdateGrade_8",
-                            "code": "e15",
+                            "code": "k1",
                             "guards": [
                              "b1"
                             ],
                             "children": [
                              {
                               "event": "receiveupdateGrade_8",
-                              "code": "e16",
+                              "code": "l1",
                               "guards": [
                                "b1"
                               ],
                               "children": [
                                {
                                 "event": "sendreleaseSubmission_11",
-                                "code": "e21",
+                                "code": "m1",
                                 "guards": [],
                                 "children": [
                                  {
                                   "event": "receivereleaseSubmission_11",
-                                  "code": "e22",
+                                  "code": "n1",
                                   "guards": [],
                                   "children": []
                                  }
@@ -325,40 +325,40 @@
                            },
                            {
                             "event": "sendvalidateSubmission_9",
-                            "code": "e17",
+                            "code": "k2",
                             "guards": [
                              "b2"
                             ],
                             "children": [
                              {
                               "event": "receivevalidateSubmission_9",
-                              "code": "e18",
+                              "code": "l2",
                               "guards": [
                                "b2"
                               ],
                               "children": [
                                {
                                 "event": "sendackSubmission_10",
-                                "code": "e19",
+                                "code": "o1",
                                 "guards": [
                                  "b2"
                                 ],
                                 "children": [
                                  {
                                   "event": "receiveackSubmission_10",
-                                  "code": "e20",
+                                  "code": "p1",
                                   "guards": [
                                    "b2"
                                   ],
                                   "children": [
                                    {
                                     "event": "sendreleaseSubmission_11",
-                                    "code": "e21",
+                                    "code": "m1",
                                     "guards": [],
                                     "children": [
                                      {
                                       "event": "receivereleaseSubmission_11",
-                                      "code": "e22",
+                                      "code": "n1",
                                       "guards": [],
                                       "children": []
                                      }
@@ -399,10 +399,10 @@
   ]
  },
  "event_paths": [
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e21 -> e22",
-  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e21 -> e22",
-  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22"
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> o1 -> p1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> o1 -> p1 -> m1 -> n1"
  ],
  "unplaced_events": [],
  "source": "model.txt"

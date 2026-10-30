@@ -14,46 +14,46 @@ model_060  BuildingVisitorPass
    a2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendsendBadge_1
-   e2   receivesendBadge_1
-   e3   sendcheckBadge_2
-   e4   receivecheckBadge_2
-   e5   sendqueryVisit_3  [a1]
-   e6   receivequeryVisit_3  [a1]
-   e7   sendreleasePass_4  [a1]
-   e8   receivereleasePass_4  [a1]
-   e9   sendnotifyPass_5  [a2]
-   e10  receivenotifyPass_5  [a2]
-   e11  sendvalidateVisit_6  [a2]
-   e12  receivevalidateVisit_6  [a2]
-   e13  sendsendPass_7
-   e14  receivesendPass_7
+   a1   sendsendBadge_1
+   b1   receivesendBadge_1
+   c1   sendcheckBadge_2
+   d1   receivecheckBadge_2
+   e1   sendqueryVisit_3  (guard a1)
+   e2   sendnotifyPass_5  (guard a2)
+   f1   receivequeryVisit_3  (guard a1)
+   f2   receivenotifyPass_5  (guard a2)
+   g1   sendreleasePass_4  (guard a1)
+   g2   sendvalidateVisit_6  (guard a2)
+   h1   receivereleasePass_4  (guard a1)
+   h2   receivevalidateVisit_6  (guard a2)
+   i1   sendsendPass_7
+   j1   receivesendPass_7
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4
-       ├── e5 → e6 → e7 → e8 → e13 → e14
-       └── e9 → e10 → e11 → e12 → e13 → e14
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → g2 → h2 → i1 → j1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendsendBadge_1
-       └── e2 receivesendBadge_1
-           └── e3 sendcheckBadge_2
-               └── e4 receivecheckBadge_2
-                   ├── e5 sendqueryVisit_3  [a1]
-                   │   └── e6 receivequeryVisit_3  [a1]
-                   │       └── e7 sendreleasePass_4  [a1]
-                   │           └── e8 receivereleasePass_4  [a1]
-                   │               └── e13 sendsendPass_7
-                   │                   └── e14 receivesendPass_7
-                   └── e9 sendnotifyPass_5  [a2]
-                       └── e10 receivenotifyPass_5  [a2]
-                           └── e11 sendvalidateVisit_6  [a2]
-                               └── e12 receivevalidateVisit_6  [a2]
-                                   └── e13 sendsendPass_7
-                                       └── e14 receivesendPass_7
+   └── a1 sendsendBadge_1
+       └── b1 receivesendBadge_1
+           └── c1 sendcheckBadge_2
+               └── d1 receivecheckBadge_2
+                   ├── e1 sendqueryVisit_3  (guard a1)
+                   │   └── f1 receivequeryVisit_3  (guard a1)
+                   │       └── g1 sendreleasePass_4  (guard a1)
+                   │           └── h1 receivereleasePass_4  (guard a1)
+                   │               └── i1 sendsendPass_7
+                   │                   └── j1 receivesendPass_7
+                   └── e2 sendnotifyPass_5  (guard a2)
+                       └── f2 receivenotifyPass_5  (guard a2)
+                           └── g2 sendvalidateVisit_6  (guard a2)
+                               └── h2 receivevalidateVisit_6  (guard a2)
+                                   └── i1 sendsendPass_7
+                                       └── j1 receivesendPass_7
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13 -> e14
-   e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1

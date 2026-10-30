@@ -20,75 +20,75 @@ model_097  FoodTruckOrdering
    a1 -> b1 -> c1 -> d2
 
 3) รหัสเหตุการณ์ (event)
-   e1   sendvalidateOrder_1
-   e2   receivevalidateOrder_1
-   e3   sendcheckPickup_2
-   e4   receivecheckPickup_2
-   e5   sendreleasePickup_3  [a1]
-   e6   receivereleasePickup_3  [a1]
-   e7   sendissueDish_4_opt1  [a1 b1]
-   e8   receiveissueDish_4_opt1  [a1 b1]
-   e9   sendcheckDish_5  [a1]
-   e10  receivecheckDish_5  [a1]
-   e11  sendcancelDish_6_opt2  [a1 c1]
-   e12  receivecancelDish_6_opt2  [a1 c1]
-   e13  sendcancelPickup_7_opt2  [a1 c1 d1]
-   e14  receivecancelPickup_7_opt2  [a1 c1 d1]
-   e15  sendassignPickup_8_opt2  [a1 c1 d2]
-   e16  receiveassignPickup_8_opt2  [a1 c1 d2]
-   e17  sendapprovePickup_9_opt2  [a1 c1]
-   e18  receiveapprovePickup_9_opt2  [a1 c1]
-   e19  sendackOrder_10  [a1]
-   e20  receiveackOrder_10  [a1]
-   e21  sendcheckOrder_11
-   e22  receivecheckOrder_11
-   e23  checkloop_releasePickup_3_loop1  [a1]
+   a1   sendvalidateOrder_1
+   b1   receivevalidateOrder_1
+   c1   sendcheckPickup_2
+   d1   receivecheckPickup_2
+   e1   sendreleasePickup_3  (guard a1)
+   f1   receivereleasePickup_3  (guard a1)
+   g1   sendissueDish_4_opt1  (guard a1 b1)
+   h1   receiveissueDish_4_opt1  (guard a1 b1)
+   i1   sendcheckDish_5  (guard a1)
+   j1   receivecheckDish_5  (guard a1)
+   k1   sendcancelDish_6_opt2  (guard a1 c1)
+   l1   receivecancelDish_6_opt2  (guard a1 c1)
+   m1   sendcancelPickup_7_opt2  (guard a1 c1 d1)
+   m2   sendassignPickup_8_opt2  (guard a1 c1 d2)
+   n1   receivecancelPickup_7_opt2  (guard a1 c1 d1)
+   n2   receiveassignPickup_8_opt2  (guard a1 c1 d2)
+   o1   sendapprovePickup_9_opt2  (guard a1 c1)
+   p1   receiveapprovePickup_9_opt2  (guard a1 c1)
+   q1   sendackOrder_10  (guard a1)
+   r1   receiveackOrder_10  (guard a1)
+   s1   sendcheckOrder_11
+   s2   checkloop_releasePickup_3_loop1  (guard a1)
+   t1   receivecheckOrder_11
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
-   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
-       ├── e13 → e14 → e17 → e18 → e19 → e20
-       │   ├── e21 → e22
-       │   └── e23 ↺ e5
-       └── e15 → e16 → e17 → e18 → e19 → e20
-           ├── e21 → e22
-           └── e23 ↺ e5
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1 → o1 → p1 → q1 → r1
+       │   ├── s1 → t1
+       │   └── s2 ↺ e1
+       └── m2 → n2 → o1 → p1 → q1 → r1
+           ├── s1 → t1
+           └── s2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
-   └── e1 sendvalidateOrder_1
-       └── e2 receivevalidateOrder_1
-           └── e3 sendcheckPickup_2
-               └── e4 receivecheckPickup_2
-                   └── e5 sendreleasePickup_3  [a1]
-                       └── e6 receivereleasePickup_3  [a1]
-                           └── e7 sendissueDish_4_opt1  [a1 b1]
-                               └── e8 receiveissueDish_4_opt1  [a1 b1]
-                                   └── e9 sendcheckDish_5  [a1]
-                                       └── e10 receivecheckDish_5  [a1]
-                                           └── e11 sendcancelDish_6_opt2  [a1 c1]
-                                               └── e12 receivecancelDish_6_opt2  [a1 c1]
-                                                   ├── e13 sendcancelPickup_7_opt2  [a1 c1 d1]
-                                                   │   └── e14 receivecancelPickup_7_opt2  [a1 c1 d1]
-                                                   │       └── e17 sendapprovePickup_9_opt2  [a1 c1]
-                                                   │           └── e18 receiveapprovePickup_9_opt2  [a1 c1]
-                                                   │               └── e19 sendackOrder_10  [a1]
-                                                   │                   └── e20 receiveackOrder_10  [a1]
-                                                   │                       ├── e21 sendcheckOrder_11
-                                                   │                       │   └── e22 receivecheckOrder_11
-                                                   │                       └── e23 checkloop_releasePickup_3_loop1  [a1]  ↺ กลับไป sendreleasePickup_3
-                                                   └── e15 sendassignPickup_8_opt2  [a1 c1 d2]
-                                                       └── e16 receiveassignPickup_8_opt2  [a1 c1 d2]
-                                                           └── e17 sendapprovePickup_9_opt2  [a1 c1]
-                                                               └── e18 receiveapprovePickup_9_opt2  [a1 c1]
-                                                                   └── e19 sendackOrder_10  [a1]
-                                                                       └── e20 receiveackOrder_10  [a1]
-                                                                           ├── e21 sendcheckOrder_11
-                                                                           │   └── e22 receivecheckOrder_11
-                                                                           └── e23 checkloop_releasePickup_3_loop1  [a1]  ↺ กลับไป sendreleasePickup_3
+   └── a1 sendvalidateOrder_1
+       └── b1 receivevalidateOrder_1
+           └── c1 sendcheckPickup_2
+               └── d1 receivecheckPickup_2
+                   └── e1 sendreleasePickup_3  (guard a1)
+                       └── f1 receivereleasePickup_3  (guard a1)
+                           └── g1 sendissueDish_4_opt1  (guard a1 b1)
+                               └── h1 receiveissueDish_4_opt1  (guard a1 b1)
+                                   └── i1 sendcheckDish_5  (guard a1)
+                                       └── j1 receivecheckDish_5  (guard a1)
+                                           └── k1 sendcancelDish_6_opt2  (guard a1 c1)
+                                               └── l1 receivecancelDish_6_opt2  (guard a1 c1)
+                                                   ├── m1 sendcancelPickup_7_opt2  (guard a1 c1 d1)
+                                                   │   └── n1 receivecancelPickup_7_opt2  (guard a1 c1 d1)
+                                                   │       └── o1 sendapprovePickup_9_opt2  (guard a1 c1)
+                                                   │           └── p1 receiveapprovePickup_9_opt2  (guard a1 c1)
+                                                   │               └── q1 sendackOrder_10  (guard a1)
+                                                   │                   └── r1 receiveackOrder_10  (guard a1)
+                                                   │                       ├── s1 sendcheckOrder_11
+                                                   │                       │   └── t1 receivecheckOrder_11
+                                                   │                       └── s2 checkloop_releasePickup_3_loop1  (guard a1)  ↺ กลับไป sendreleasePickup_3
+                                                   └── m2 sendassignPickup_8_opt2  (guard a1 c1 d2)
+                                                       └── n2 receiveassignPickup_8_opt2  (guard a1 c1 d2)
+                                                           └── o1 sendapprovePickup_9_opt2  (guard a1 c1)
+                                                               └── p1 receiveapprovePickup_9_opt2  (guard a1 c1)
+                                                                   └── q1 sendackOrder_10  (guard a1)
+                                                                       └── r1 receiveackOrder_10  (guard a1)
+                                                                           ├── s1 sendcheckOrder_11
+                                                                           │   └── t1 receivecheckOrder_11
+                                                                           └── s2 checkloop_releasePickup_3_loop1  (guard a1)  ↺ กลับไป sendreleasePickup_3
 
    เส้นทาง:
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
-   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ e1
