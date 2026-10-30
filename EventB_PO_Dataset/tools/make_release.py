@@ -24,6 +24,8 @@ Output (rebuilt from scratch each run):
                                 TREES.pdf, csv tables, by_topic/ text files; checked against the diagrams by
                                 tools/verify_trees.py. data/trees.jsonl holds the same trees as data.
 
+tools/audit_release.py then checks the whole release against the Rodin files and diagrams.
+
 Nothing that reveals the answer (meta.json, diagrams, Rodin files) is copied into the
 inputs. The split is stratified by result and by kind of failing PO; model_001 (the
 reconstructed Payment case kept for testing) always goes to test.
@@ -36,7 +38,7 @@ DATASET = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from categorize import TOPIC, TOPIC_NAMES                       # noqa: E402
 from make_batch_report import CHROME, CSS, esc                  # noqa: E402
-import extract_trees, make_tree_report, make_user_flow, verify_trees   # noqa: E402
+import audit_release, extract_trees, make_tree_report, make_user_flow, verify_trees   # noqa: E402
 
 SPLIT = (("train", 0.70), ("val", 0.15), ("test", 0.15))
 PROJECT = os.path.dirname(DATASET)
@@ -615,6 +617,9 @@ def build(out, seed):
     write_sources(out)
     pdf(out, rows, po_rows)
     make_user_flow.main(out)
+    report = audit_release.main(out)
+    if any(report["problems"].values()):
+        sys.exit("audit found problems — see EventB_PO_Dataset/audit_report.json")
     return rows
 
 
