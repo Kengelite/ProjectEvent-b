@@ -1,0 +1,55 @@
+model_006  BloodBankRequest
+
+1) รหัสเงื่อนไข (guard)
+   a1   stockUnits ≥ 2
+   a2   stockUnits < 2
+
+2) Guard tree
+   (root)
+   ├── a1  stockUnits ≥ 2
+   └── a2  stockUnits < 2
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendrequestBlood_1
+   e2   receiverequestBlood_1
+   e3   sendcrossMatch_2  [a1]
+   e4   receivecrossMatch_2  [a1]
+   e5   sendprepareCourier_3  [a1]
+   e6   receiveprepareCourier_3  [a1]
+   e7   senddeliverBlood_4  [a1]
+   e8   receivedeliverBlood_4  [a1]
+   e9   sendbackorder_5  [a2]
+   e10  receivebackorder_5  [a2]
+   e11  sendconfirmReceipt_6
+   e12  receiveconfirmReceipt_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2
+       ├── e3 → e4 → e5 → e6 → e7 → e8 → e11 → e12
+       └── e9 → e10 → e11 → e12
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendrequestBlood_1
+       └── e2 receiverequestBlood_1
+           ├── e3 sendcrossMatch_2  [a1]
+           │   └── e4 receivecrossMatch_2  [a1]
+           │       └── e5 sendprepareCourier_3  [a1]
+           │           └── e6 receiveprepareCourier_3  [a1]
+           │               └── e7 senddeliverBlood_4  [a1]
+           │                   └── e8 receivedeliverBlood_4  [a1]
+           │                       └── e11 sendconfirmReceipt_6
+           │                           └── e12 receiveconfirmReceipt_6
+           └── e9 sendbackorder_5  [a2]
+               └── e10 receivebackorder_5  [a2]
+                   └── e11 sendconfirmReceipt_6
+                       └── e12 receiveconfirmReceipt_6
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12
+   e1 -> e2 -> e9 -> e10 -> e11 -> e12

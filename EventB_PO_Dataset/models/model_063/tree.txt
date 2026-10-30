@@ -1,0 +1,68 @@
+model_063  CafeLoyaltyPoints
+
+1) รหัสเงื่อนไข (guard)
+   a1   roundNo < 12
+   b1   roundNo mod 2 = 0
+   c1   needAck = 1
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 12
+       └── b1  roundNo mod 2 = 0
+           └── c1  needAck = 1
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendapproveVisit_1
+   e2   receiveapproveVisit_1
+   e3   sendfetchPoint_2
+   e4   receivefetchPoint_2
+   e5   sendcheckPoint_3  [a1]
+   e6   receivecheckPoint_3  [a1]
+   e7   sendissueVisit_4_opt1  [a1 b1]
+   e8   receiveissueVisit_4_opt1  [a1 b1]
+   e9   sendupdateVisit_5  [a1]
+   e10  receiveupdateVisit_5  [a1]
+   e11  sendreleaseVisit_6_opt2  [a1 c1]
+   e12  receivereleaseVisit_6_opt2  [a1 c1]
+   e13  sendsendPoint_7  [a1]
+   e14  receivesendPoint_7  [a1]
+   e15  sendsyncReward_8  [a1]
+   e16  receivesyncReward_8  [a1]
+   e17  sendfetchReward_9
+   e18  receivefetchReward_9
+   e19  checkloop_checkPoint_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
+       ├── e17 → e18
+       └── e19 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendapproveVisit_1
+       └── e2 receiveapproveVisit_1
+           └── e3 sendfetchPoint_2
+               └── e4 receivefetchPoint_2
+                   └── e5 sendcheckPoint_3  [a1]
+                       └── e6 receivecheckPoint_3  [a1]
+                           └── e7 sendissueVisit_4_opt1  [a1 b1]
+                               └── e8 receiveissueVisit_4_opt1  [a1 b1]
+                                   └── e9 sendupdateVisit_5  [a1]
+                                       └── e10 receiveupdateVisit_5  [a1]
+                                           └── e11 sendreleaseVisit_6_opt2  [a1 c1]
+                                               └── e12 receivereleaseVisit_6_opt2  [a1 c1]
+                                                   └── e13 sendsendPoint_7  [a1]
+                                                       └── e14 receivesendPoint_7  [a1]
+                                                           └── e15 sendsyncReward_8  [a1]
+                                                               └── e16 receivesyncReward_8  [a1]
+                                                                   ├── e17 sendfetchReward_9
+                                                                   │   └── e18 receivefetchReward_9
+                                                                   └── e19 checkloop_checkPoint_3_loop1  [a1]  ↺ กลับไป sendcheckPoint_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e5

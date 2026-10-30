@@ -1,0 +1,141 @@
+{
+ "guard_codes": {
+  "a1": "express = 1"
+ },
+ "event_codes": {
+  "e1": "sendfetchBattery_1",
+  "e2": "receivefetchBattery_1",
+  "e3": "sendrequestBattery_2",
+  "e4": "receiverequestBattery_2",
+  "e5": "sendupdateUnlock_3_opt1",
+  "e6": "receiveupdateUnlock_3_opt1",
+  "e7": "sendissueTrip_4",
+  "e8": "receiveissueTrip_4",
+  "e9": "sendscheduleTrip_5",
+  "e10": "receivescheduleTrip_5",
+  "e11": "sendfetchTrip_6",
+  "e12": "receivefetchTrip_6"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": []
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendfetchBattery_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivefetchBattery_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendrequestBattery_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiverequestBattery_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendupdateUnlock_3_opt1",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveupdateUnlock_3_opt1",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendissueTrip_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveissueTrip_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendscheduleTrip_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivescheduleTrip_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendfetchTrip_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivefetchTrip_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12"
+ ],
+ "unplaced_events": []
+}

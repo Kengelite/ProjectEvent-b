@@ -1,0 +1,70 @@
+model_036  ServerAutoScaling
+
+1) รหัสเงื่อนไข (guard)
+   a1   checkNo < 12
+   b1   cpu > 80
+   b2   cpu ≤ 80
+
+2) Guard tree
+   (root)
+   └── a1  checkNo < 12
+       ├── b1  cpu > 80
+       └── b2  cpu ≤ 80
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendstartMonitoring_1
+   e2   receivestartMonitoring_1
+   e3   sendreportLoad_2  [a1]
+   e4   receivereportLoad_2  [a1]
+   e5   sendaddVM_3  [a1 b1]
+   e6   receiveaddVM_3  [a1 b1]
+   e7   sendvmReady_4  [a1 b1]
+   e8   receivevmReady_4  [a1 b1]
+   e9   sendregisterVM_5  [a1 b1]
+   e10  receiveregisterVM_5  [a1 b1]
+   e11  sendkeepCapacity_6  [a1 b2]
+   e12  receivekeepCapacity_6  [a1 b2]
+   e13  sendstopMonitoring_7
+   e14  receivestopMonitoring_7
+   e15  checkloop_reportLoad_2_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4
+       ├── e5 → e6 → e7 → e8 → e9 → e10
+       │   ├── e13 → e14
+       │   └── e15 ↺ e3
+       └── e11 → e12
+           ├── e13 → e14
+           └── e15 ↺ e3
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendstartMonitoring_1
+       └── e2 receivestartMonitoring_1
+           └── e3 sendreportLoad_2  [a1]
+               └── e4 receivereportLoad_2  [a1]
+                   ├── e5 sendaddVM_3  [a1 b1]
+                   │   └── e6 receiveaddVM_3  [a1 b1]
+                   │       └── e7 sendvmReady_4  [a1 b1]
+                   │           └── e8 receivevmReady_4  [a1 b1]
+                   │               └── e9 sendregisterVM_5  [a1 b1]
+                   │                   └── e10 receiveregisterVM_5  [a1 b1]
+                   │                       ├── e13 sendstopMonitoring_7
+                   │                       │   └── e14 receivestopMonitoring_7
+                   │                       └── e15 checkloop_reportLoad_2_loop1  [a1]  ↺ กลับไป sendreportLoad_2
+                   └── e11 sendkeepCapacity_6  [a1 b2]
+                       └── e12 receivekeepCapacity_6  [a1 b2]
+                           ├── e13 sendstopMonitoring_7
+                           │   └── e14 receivestopMonitoring_7
+                           └── e15 checkloop_reportLoad_2_loop1  [a1]  ↺ กลับไป sendreportLoad_2
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 ↺ e3
+   e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e15 ↺ e3

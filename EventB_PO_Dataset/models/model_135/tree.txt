@@ -1,0 +1,63 @@
+model_135  ParcelReturnDropoff
+
+1) รหัสเงื่อนไข (guard)
+   a1   useCache = 1
+
+2) Guard tree
+   (root)
+   └── a1  useCache = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendsyncReturn_1
+   e2   receivesyncReturn_1
+   e3   sendsendRefund_2
+   e4   receivesendRefund_2
+   e5   sendnotifyReturn_3_opt1  [a1]
+   e6   receivenotifyReturn_3_opt1  [a1]
+   e7   sendscheduleReturn_4
+   e8   receivescheduleReturn_4
+   e9   sendackReturn_5
+   e10  receiveackReturn_5
+   e11  sendreportReturn_6
+   e12  receivereportReturn_6
+   e13  sendlogRefund_7
+   e14  receivelogRefund_7
+   e15  sendapproveRefund_8
+   e16  receiveapproveRefund_8
+   e17  sendassignLabel_9
+   e18  receiveassignLabel_9
+   e19  sendvalidateRefund_10
+   e20  receivevalidateRefund_10
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendsyncReturn_1
+       └── e2 receivesyncReturn_1
+           └── e3 sendsendRefund_2
+               └── e4 receivesendRefund_2
+                   └── e5 sendnotifyReturn_3_opt1  [a1]
+                       └── e6 receivenotifyReturn_3_opt1  [a1]
+                           └── e7 sendscheduleReturn_4
+                               └── e8 receivescheduleReturn_4
+                                   └── e9 sendackReturn_5
+                                       └── e10 receiveackReturn_5
+                                           └── e11 sendreportReturn_6
+                                               └── e12 receivereportReturn_6
+                                                   └── e13 sendlogRefund_7
+                                                       └── e14 receivelogRefund_7
+                                                           └── e15 sendapproveRefund_8
+                                                               └── e16 receiveapproveRefund_8
+                                                                   └── e17 sendassignLabel_9
+                                                                       └── e18 receiveassignLabel_9
+                                                                           └── e19 sendvalidateRefund_10
+                                                                               └── e20 receivevalidateRefund_10
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20

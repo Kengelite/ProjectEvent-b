@@ -1,0 +1,369 @@
+{
+ "guard_codes": {
+  "a1": "roundNo < 12",
+  "b1": "roundNo mod 4 = 0",
+  "c1": "grade = ACTIVE",
+  "c2": "grade = IDLE"
+ },
+ "event_codes": {
+  "e1": "sendsyncShelf_1",
+  "e2": "receivesyncShelf_1",
+  "e3": "sendreserveShelf_2",
+  "e4": "receivereserveShelf_2",
+  "e5": "sendnotifyHold_3",
+  "e6": "receivenotifyHold_3",
+  "e7": "sendrequestBook_4_opt1",
+  "e8": "receiverequestBook_4_opt1",
+  "e9": "sendupdateHold_5_opt1",
+  "e10": "receiveupdateHold_5_opt1",
+  "e11": "sendapproveBook_6",
+  "e12": "receiveapproveBook_6",
+  "e13": "sendreportBook_7",
+  "e14": "receivereportBook_7",
+  "e15": "sendsyncBook_8",
+  "e16": "receivesyncBook_8",
+  "e17": "sendrequestHold_9",
+  "e18": "receiverequestHold_9",
+  "e19": "sendcancelShelf_10",
+  "e20": "receivecancelShelf_10",
+  "e21": "sendlogBook_11",
+  "e22": "receivelogBook_11",
+  "e23": "sendcancelHold_12",
+  "e24": "receivecancelHold_12",
+  "e25": "sendreserveBook_13",
+  "e26": "receivereserveBook_13",
+  "e27": "checkloop_notifyHold_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1",
+   "b1"
+  ],
+  "e10": [
+   "a1",
+   "b1"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [],
+  "e18": [],
+  "e19": [
+   "c1"
+  ],
+  "e20": [
+   "c1"
+  ],
+  "e21": [
+   "c1"
+  ],
+  "e22": [
+   "c1"
+  ],
+  "e23": [
+   "c2"
+  ],
+  "e24": [
+   "c2"
+  ],
+  "e25": [],
+  "e26": [],
+  "e27": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {},
+    "c2": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1",
+  "a1 -> b1 -> c2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsyncShelf_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesyncShelf_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendreserveShelf_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivereserveShelf_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendnotifyHold_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivenotifyHold_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendrequestBook_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receiverequestBook_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendupdateHold_5_opt1",
+                    "code": "e9",
+                    "guards": [
+                     "a1",
+                     "b1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveupdateHold_5_opt1",
+                      "code": "e10",
+                      "guards": [
+                       "a1",
+                       "b1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendapproveBook_6",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveapproveBook_6",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreportBook_7",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivereportBook_7",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsyncBook_8",
+                                "code": "e15",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivesyncBook_8",
+                                  "code": "e16",
+                                  "guards": [],
+                                  "children": [
+                                   {
+                                    "event": "sendrequestHold_9",
+                                    "code": "e17",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiverequestHold_9",
+                                      "code": "e18",
+                                      "guards": [],
+                                      "children": [
+                                       {
+                                        "event": "sendcancelShelf_10",
+                                        "code": "e19",
+                                        "guards": [
+                                         "c1"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivecancelShelf_10",
+                                          "code": "e20",
+                                          "guards": [
+                                           "c1"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendlogBook_11",
+                                            "code": "e21",
+                                            "guards": [
+                                             "c1"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receivelogBook_11",
+                                              "code": "e22",
+                                              "guards": [
+                                               "c1"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendreserveBook_13",
+                                                "code": "e25",
+                                                "guards": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivereserveBook_13",
+                                                  "code": "e26",
+                                                  "guards": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "sendcancelHold_12",
+                                        "code": "e23",
+                                        "guards": [
+                                         "c2"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivecancelHold_12",
+                                          "code": "e24",
+                                          "guards": [
+                                           "c2"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendreserveBook_13",
+                                            "code": "e25",
+                                            "guards": [],
+                                            "children": [
+                                             {
+                                              "event": "receivereserveBook_13",
+                                              "code": "e26",
+                                              "guards": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_notifyHold_3_loop1",
+                                "code": "e27",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "loop_back_to": "sendnotifyHold_3",
+                                "loop_back_to_code": "e5",
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e25 -> e26",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e23 -> e24 -> e25 -> e26",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e27 ↺ e5"
+ ],
+ "unplaced_events": []
+}

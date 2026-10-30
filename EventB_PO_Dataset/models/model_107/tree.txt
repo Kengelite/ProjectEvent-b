@@ -1,0 +1,59 @@
+model_107  HomeSecurityAlarm
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendlogCode_1
+   e2   receivelogCode_1
+   e3   sendreportAlert_2
+   e4   receivereportAlert_2
+   e5   sendcheckAlert_3_opt1  [a1]
+   e6   receivecheckAlert_3_opt1  [a1]
+   e7   sendnotifyZone_4_opt1  [a1]
+   e8   receivenotifyZone_4_opt1  [a1]
+   e9   sendsyncZone_5
+   e10  receivesyncZone_5
+   e11  sendqueryCode_6
+   e12  receivequeryCode_6
+   e13  sendassignAlert_7
+   e14  receiveassignAlert_7
+   e15  sendqueryZone_8
+   e16  receivequeryZone_8
+   e17  sendscheduleZone_9
+   e18  receivescheduleZone_9
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendlogCode_1
+       └── e2 receivelogCode_1
+           └── e3 sendreportAlert_2
+               └── e4 receivereportAlert_2
+                   └── e5 sendcheckAlert_3_opt1  [a1]
+                       └── e6 receivecheckAlert_3_opt1  [a1]
+                           └── e7 sendnotifyZone_4_opt1  [a1]
+                               └── e8 receivenotifyZone_4_opt1  [a1]
+                                   └── e9 sendsyncZone_5
+                                       └── e10 receivesyncZone_5
+                                           └── e11 sendqueryCode_6
+                                               └── e12 receivequeryCode_6
+                                                   └── e13 sendassignAlert_7
+                                                       └── e14 receiveassignAlert_7
+                                                           └── e15 sendqueryZone_8
+                                                               └── e16 receivequeryZone_8
+                                                                   └── e17 sendscheduleZone_9
+                                                                       └── e18 receivescheduleZone_9
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18

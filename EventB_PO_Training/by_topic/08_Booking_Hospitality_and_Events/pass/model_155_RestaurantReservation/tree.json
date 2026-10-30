@@ -1,0 +1,244 @@
+{
+ "guard_codes": {
+  "a1": "express = 1",
+  "b1": "roundNo < 8",
+  "c1": "needAck = 1"
+ },
+ "event_codes": {
+  "e1": "sendfetchMenu_1",
+  "e2": "receivefetchMenu_1",
+  "e3": "sendreserveTable_2",
+  "e4": "receivereserveTable_2",
+  "e5": "sendqueryBooking_3_opt1",
+  "e6": "receivequeryBooking_3_opt1",
+  "e7": "sendsyncMenu_4",
+  "e8": "receivesyncMenu_4",
+  "e9": "sendlogMenu_5",
+  "e10": "receivelogMenu_5",
+  "e11": "sendapproveMenu_6",
+  "e12": "receiveapproveMenu_6",
+  "e13": "sendackBooking_7_opt2",
+  "e14": "receiveackBooking_7_opt2",
+  "e15": "sendreportMenu_8",
+  "e16": "receivereportMenu_8",
+  "e17": "sendassignBooking_9",
+  "e18": "receiveassignBooking_9",
+  "e19": "checkloop_approveMenu_6_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [
+   "b1"
+  ],
+  "e12": [
+   "b1"
+  ],
+  "e13": [
+   "b1",
+   "c1"
+  ],
+  "e14": [
+   "b1",
+   "c1"
+  ],
+  "e15": [
+   "b1"
+  ],
+  "e16": [
+   "b1"
+  ],
+  "e17": [],
+  "e18": [],
+  "e19": [
+   "b1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendfetchMenu_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivefetchMenu_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendreserveTable_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivereserveTable_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendqueryBooking_3_opt1",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivequeryBooking_3_opt1",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendsyncMenu_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivesyncMenu_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendlogMenu_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivelogMenu_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendapproveMenu_6",
+                        "code": "e11",
+                        "guards": [
+                         "b1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveapproveMenu_6",
+                          "code": "e12",
+                          "guards": [
+                           "b1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendackBooking_7_opt2",
+                            "code": "e13",
+                            "guards": [
+                             "b1",
+                             "c1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveackBooking_7_opt2",
+                              "code": "e14",
+                              "guards": [
+                               "b1",
+                               "c1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreportMenu_8",
+                                "code": "e15",
+                                "guards": [
+                                 "b1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivereportMenu_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "b1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendassignBooking_9",
+                                    "code": "e17",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveassignBooking_9",
+                                      "code": "e18",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_approveMenu_6_loop1",
+                                    "code": "e19",
+                                    "guards": [
+                                     "b1"
+                                    ],
+                                    "loop_back_to": "sendapproveMenu_6",
+                                    "loop_back_to_code": "e11",
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e11"
+ ],
+ "unplaced_events": []
+}

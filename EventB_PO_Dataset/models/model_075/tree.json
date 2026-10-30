@@ -1,0 +1,306 @@
+{
+ "guard_codes": {
+  "a1": "retryNo < 8",
+  "b1": "roundNo < 6",
+  "c1": "pollNo < 11"
+ },
+ "event_codes": {
+  "e1": "sendsyncPickup_1",
+  "e2": "receivesyncPickup_1",
+  "e3": "sendreportPickup_2",
+  "e4": "receivereportPickup_2",
+  "e5": "sendconfirmOrder_3",
+  "e6": "receiveconfirmOrder_3",
+  "e7": "sendapproveSnack_4",
+  "e8": "receiveapproveSnack_4",
+  "e9": "sendassignOrder_5",
+  "e10": "receiveassignOrder_5",
+  "e11": "sendscheduleSnack_6",
+  "e12": "receivescheduleSnack_6",
+  "e13": "sendnotifySnack_7",
+  "e14": "receivenotifySnack_7",
+  "e15": "sendnotifyPickup_8",
+  "e16": "receivenotifyPickup_8",
+  "e17": "sendschedulePickup_9",
+  "e18": "receiveschedulePickup_9",
+  "e19": "sendupdatePickup_10",
+  "e20": "receiveupdatePickup_10",
+  "e21": "checkloop_confirmOrder_3_loop1",
+  "e22": "checkloop_scheduleSnack_6_loop2",
+  "e23": "checkloop_notifySnack_7_loop3"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [
+   "b1"
+  ],
+  "e12": [
+   "b1"
+  ],
+  "e13": [
+   "b1",
+   "c1"
+  ],
+  "e14": [
+   "b1",
+   "c1"
+  ],
+  "e15": [
+   "b1",
+   "c1"
+  ],
+  "e16": [
+   "b1",
+   "c1"
+  ],
+  "e17": [
+   "b1"
+  ],
+  "e18": [
+   "b1"
+  ],
+  "e19": [],
+  "e20": [],
+  "e21": [
+   "a1"
+  ],
+  "e22": [
+   "b1"
+  ],
+  "e23": [
+   "b1",
+   "c1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsyncPickup_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesyncPickup_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendreportPickup_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivereportPickup_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendconfirmOrder_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveconfirmOrder_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendapproveSnack_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveapproveSnack_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendassignOrder_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receiveassignOrder_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendscheduleSnack_6",
+                        "code": "e11",
+                        "guards": [
+                         "b1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivescheduleSnack_6",
+                          "code": "e12",
+                          "guards": [
+                           "b1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendnotifySnack_7",
+                            "code": "e13",
+                            "guards": [
+                             "b1",
+                             "c1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivenotifySnack_7",
+                              "code": "e14",
+                              "guards": [
+                               "b1",
+                               "c1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendnotifyPickup_8",
+                                "code": "e15",
+                                "guards": [
+                                 "b1",
+                                 "c1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivenotifyPickup_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "b1",
+                                   "c1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendschedulePickup_9",
+                                    "code": "e17",
+                                    "guards": [
+                                     "b1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveschedulePickup_9",
+                                      "code": "e18",
+                                      "guards": [
+                                       "b1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendupdatePickup_10",
+                                        "code": "e19",
+                                        "guards": [],
+                                        "children": [
+                                         {
+                                          "event": "receiveupdatePickup_10",
+                                          "code": "e20",
+                                          "guards": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "checkloop_scheduleSnack_6_loop2",
+                                        "code": "e22",
+                                        "guards": [
+                                         "b1"
+                                        ],
+                                        "loop_back_to": "sendscheduleSnack_6",
+                                        "loop_back_to_code": "e11",
+                                        "children": []
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_notifySnack_7_loop3",
+                                    "code": "e23",
+                                    "guards": [
+                                     "b1",
+                                     "c1"
+                                    ],
+                                    "loop_back_to": "sendnotifySnack_7",
+                                    "loop_back_to_code": "e13",
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "checkloop_confirmOrder_3_loop1",
+                "code": "e21",
+                "guards": [
+                 "a1"
+                ],
+                "loop_back_to": "sendconfirmOrder_3",
+                "loop_back_to_code": "e5",
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e22 ↺ e11",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 ↺ e13",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e21 ↺ e5"
+ ],
+ "unplaced_events": []
+}

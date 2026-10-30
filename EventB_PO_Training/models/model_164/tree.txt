@@ -1,0 +1,76 @@
+model_164  SmartAquarium
+
+1) รหัสเงื่อนไข (guard)
+   a1   cycleNo < 4
+   b1   cycleNo mod 2 = 0
+   b2   cycleNo mod 2 ≠ 0
+
+2) Guard tree
+   (root)
+   └── a1  cycleNo < 4
+       ├── b1  cycleNo mod 2 = 0
+       └── b2  cycleNo mod 2 ≠ 0
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendvalidatePh_1
+   e2   receivevalidatePh_1
+   e3   sendupdateFeed_2
+   e4   receiveupdateFeed_2
+   e5   sendreportFeed_3  [a1]
+   e6   receivereportFeed_3  [a1]
+   e7   sendapproveLight_4  [a1 b1]
+   e8   receiveapproveLight_4  [a1 b1]
+   e9   sendqueryFeed_5  [a1 b1]
+   e10  receivequeryFeed_5  [a1 b1]
+   e11  sendnotifyFeed_6  [a1 b2]
+   e12  receivenotifyFeed_6  [a1 b2]
+   e13  sendsendLight_7  [a1]
+   e14  receivesendLight_7  [a1]
+   e15  sendsyncLight_8
+   e16  receivesyncLight_8
+   e17  checkloop_reportFeed_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6
+       ├── e7 → e8 → e9 → e10 → e13 → e14
+       │   ├── e15 → e16
+       │   └── e17 ↺ e5
+       └── e11 → e12 → e13 → e14
+           ├── e15 → e16
+           └── e17 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendvalidatePh_1
+       └── e2 receivevalidatePh_1
+           └── e3 sendupdateFeed_2
+               └── e4 receiveupdateFeed_2
+                   └── e5 sendreportFeed_3  [a1]
+                       └── e6 receivereportFeed_3  [a1]
+                           ├── e7 sendapproveLight_4  [a1 b1]
+                           │   └── e8 receiveapproveLight_4  [a1 b1]
+                           │       └── e9 sendqueryFeed_5  [a1 b1]
+                           │           └── e10 receivequeryFeed_5  [a1 b1]
+                           │               └── e13 sendsendLight_7  [a1]
+                           │                   └── e14 receivesendLight_7  [a1]
+                           │                       ├── e15 sendsyncLight_8
+                           │                       │   └── e16 receivesyncLight_8
+                           │                       └── e17 checkloop_reportFeed_3_loop1  [a1]  ↺ กลับไป sendreportFeed_3
+                           └── e11 sendnotifyFeed_6  [a1 b2]
+                               └── e12 receivenotifyFeed_6  [a1 b2]
+                                   └── e13 sendsendLight_7  [a1]
+                                       └── e14 receivesendLight_7  [a1]
+                                           ├── e15 sendsyncLight_8
+                                           │   └── e16 receivesyncLight_8
+                                           └── e17 checkloop_reportFeed_3_loop1  [a1]  ↺ กลับไป sendreportFeed_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5

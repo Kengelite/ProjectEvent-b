@@ -1,0 +1,88 @@
+model_141  PharmacyDelivery
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+   b1   mode = GOLD
+   b2   mode = SILVER
+   b3   mode = BRONZE
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+       ├── b1  mode = GOLD
+       ├── b2  mode = SILVER
+       └── b3  mode = BRONZE
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+   a1 -> b3
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendsyncSignature_1
+   e2   receivesyncSignature_1
+   e3   sendvalidateSignature_2
+   e4   receivevalidateSignature_2
+   e5   sendfetchRoute_3_opt1  [a1]
+   e6   receivefetchRoute_3_opt1  [a1]
+   e7   sendqueryRoute_4_opt1  [a1]
+   e8   receivequeryRoute_4_opt1  [a1]
+   e9   sendconfirmRoute_5
+   e10  receiveconfirmRoute_5
+   e11  sendissuePackage_6
+   e12  receiveissuePackage_6
+   e13  sendcancelSignature_7  [b1]
+   e14  receivecancelSignature_7  [b1]
+   e15  sendconfirmPackage_8  [b1]
+   e16  receiveconfirmPackage_8  [b1]
+   e17  sendqueryPackage_9  [b2]
+   e18  receivequeryPackage_9  [b2]
+   e19  sendackSignature_10  [b2]
+   e20  receiveackSignature_10  [b2]
+   e21  sendscheduleSignature_11  [b3]
+   e22  receivescheduleSignature_11  [b3]
+   e23  sendapproveRoute_12
+   e24  receiveapproveRoute_12
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+       ├── e13 → e14 → e15 → e16 → e23 → e24
+       ├── e17 → e18 → e19 → e20 → e23 → e24
+       └── e21 → e22 → e23 → e24
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendsyncSignature_1
+       └── e2 receivesyncSignature_1
+           └── e3 sendvalidateSignature_2
+               └── e4 receivevalidateSignature_2
+                   └── e5 sendfetchRoute_3_opt1  [a1]
+                       └── e6 receivefetchRoute_3_opt1  [a1]
+                           └── e7 sendqueryRoute_4_opt1  [a1]
+                               └── e8 receivequeryRoute_4_opt1  [a1]
+                                   └── e9 sendconfirmRoute_5
+                                       └── e10 receiveconfirmRoute_5
+                                           └── e11 sendissuePackage_6
+                                               └── e12 receiveissuePackage_6
+                                                   ├── e13 sendcancelSignature_7  [b1]
+                                                   │   └── e14 receivecancelSignature_7  [b1]
+                                                   │       └── e15 sendconfirmPackage_8  [b1]
+                                                   │           └── e16 receiveconfirmPackage_8  [b1]
+                                                   │               └── e23 sendapproveRoute_12
+                                                   │                   └── e24 receiveapproveRoute_12
+                                                   ├── e17 sendqueryPackage_9  [b2]
+                                                   │   └── e18 receivequeryPackage_9  [b2]
+                                                   │       └── e19 sendackSignature_10  [b2]
+                                                   │           └── e20 receiveackSignature_10  [b2]
+                                                   │               └── e23 sendapproveRoute_12
+                                                   │                   └── e24 receiveapproveRoute_12
+                                                   └── e21 sendscheduleSignature_11  [b3]
+                                                       └── e22 receivescheduleSignature_11  [b3]
+                                                           └── e23 sendapproveRoute_12
+                                                               └── e24 receiveapproveRoute_12
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 -> e24
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24

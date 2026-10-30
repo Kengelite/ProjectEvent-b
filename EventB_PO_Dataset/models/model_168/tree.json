@@ -1,0 +1,424 @@
+{
+ "guard_codes": {
+  "a1": "attemptNo < 2",
+  "b1": "tier = GREEN",
+  "b2": "tier = RED",
+  "c1": "stepNo < 11"
+ },
+ "event_codes": {
+  "e1": "sendapproveOrder_1",
+  "e2": "receiveapproveOrder_1",
+  "e3": "sendassignExpiry_2",
+  "e4": "receiveassignExpiry_2",
+  "e5": "sendsendOrder_3",
+  "e6": "receivesendOrder_3",
+  "e7": "sendassignItem_4",
+  "e8": "receiveassignItem_4",
+  "e9": "sendscheduleOrder_5",
+  "e10": "receivescheduleOrder_5",
+  "e11": "sendlogOrder_6",
+  "e12": "receivelogOrder_6",
+  "e13": "sendapproveExpiry_7",
+  "e14": "receiveapproveExpiry_7",
+  "e15": "sendqueryItem_8",
+  "e16": "receivequeryItem_8",
+  "e17": "sendcheckOrder_9",
+  "e18": "receivecheckOrder_9",
+  "e19": "sendissueExpiry_10",
+  "e20": "receiveissueExpiry_10",
+  "e21": "sendsyncOrder_11",
+  "e22": "receivesyncOrder_11",
+  "e23": "checkloop_sendOrder_3_loop1",
+  "e24": "checkloop_issueExpiry_10_loop2"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1",
+   "b1"
+  ],
+  "e10": [
+   "a1",
+   "b1"
+  ],
+  "e11": [
+   "a1",
+   "b2"
+  ],
+  "e12": [
+   "a1",
+   "b2"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [],
+  "e18": [],
+  "e19": [
+   "c1"
+  ],
+  "e20": [
+   "c1"
+  ],
+  "e21": [],
+  "e22": [],
+  "e23": [
+   "a1"
+  ],
+  "e24": [
+   "c1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {}
+   },
+   "b2": {
+    "c1": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1",
+  "a1 -> b2 -> c1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendapproveOrder_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveapproveOrder_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendassignExpiry_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveassignExpiry_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendsendOrder_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivesendOrder_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendassignItem_4",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveassignItem_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendscheduleOrder_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1",
+                     "b1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivescheduleOrder_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1",
+                       "b1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendapproveExpiry_7",
+                        "code": "e13",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveapproveExpiry_7",
+                          "code": "e14",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendqueryItem_8",
+                            "code": "e15",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivequeryItem_8",
+                              "code": "e16",
+                              "guards": [],
+                              "children": [
+                               {
+                                "event": "sendcheckOrder_9",
+                                "code": "e17",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivecheckOrder_9",
+                                  "code": "e18",
+                                  "guards": [],
+                                  "children": [
+                                   {
+                                    "event": "sendissueExpiry_10",
+                                    "code": "e19",
+                                    "guards": [
+                                     "c1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveissueExpiry_10",
+                                      "code": "e20",
+                                      "guards": [
+                                       "c1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendsyncOrder_11",
+                                        "code": "e21",
+                                        "guards": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesyncOrder_11",
+                                          "code": "e22",
+                                          "guards": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "checkloop_issueExpiry_10_loop2",
+                                        "code": "e24",
+                                        "guards": [
+                                         "c1"
+                                        ],
+                                        "loop_back_to": "sendissueExpiry_10",
+                                        "loop_back_to_code": "e19",
+                                        "children": []
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_sendOrder_3_loop1",
+                            "code": "e23",
+                            "guards": [
+                             "a1"
+                            ],
+                            "loop_back_to": "sendsendOrder_3",
+                            "loop_back_to_code": "e5",
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendlogOrder_6",
+                "code": "e11",
+                "guards": [
+                 "a1",
+                 "b2"
+                ],
+                "children": [
+                 {
+                  "event": "receivelogOrder_6",
+                  "code": "e12",
+                  "guards": [
+                   "a1",
+                   "b2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendapproveExpiry_7",
+                    "code": "e13",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveapproveExpiry_7",
+                      "code": "e14",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendqueryItem_8",
+                        "code": "e15",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivequeryItem_8",
+                          "code": "e16",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendcheckOrder_9",
+                            "code": "e17",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivecheckOrder_9",
+                              "code": "e18",
+                              "guards": [],
+                              "children": [
+                               {
+                                "event": "sendissueExpiry_10",
+                                "code": "e19",
+                                "guards": [
+                                 "c1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveissueExpiry_10",
+                                  "code": "e20",
+                                  "guards": [
+                                   "c1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendsyncOrder_11",
+                                    "code": "e21",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receivesyncOrder_11",
+                                      "code": "e22",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_issueExpiry_10_loop2",
+                                    "code": "e24",
+                                    "guards": [
+                                     "c1"
+                                    ],
+                                    "loop_back_to": "sendissueExpiry_10",
+                                    "loop_back_to_code": "e19",
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_sendOrder_3_loop1",
+                        "code": "e23",
+                        "guards": [
+                         "a1"
+                        ],
+                        "loop_back_to": "sendsendOrder_3",
+                        "loop_back_to_code": "e5",
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e24 ↺ e19",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e23 ↺ e5",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e24 ↺ e19",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e23 ↺ e5"
+ ],
+ "unplaced_events": []
+}

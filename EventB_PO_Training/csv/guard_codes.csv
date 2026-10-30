@@ -1,0 +1,329 @@
+id,case,code,guard
+model_002,AirportBaggage,a1,bagCleared = 1
+model_002,AirportBaggage,a2,bagCleared = 0
+model_003,ATMWithdrawal,a1,pinAttempt < 3
+model_003,ATMWithdrawal,b1,pinValid = 1
+model_003,ATMWithdrawal,b2,pinValid = 0
+model_004,BankTransfer,a1,riskFlag = 0
+model_004,BankTransfer,a2,riskFlag = 1
+model_005,BatteryChargeCycle,a1,pulseNo < 8
+model_006,BloodBankRequest,a1,stockUnits ≥ 2
+model_006,BloodBankRequest,a2,stockUnits < 2
+model_007,CarRentalBooking,a1,searchCount < 3
+model_007,CarRentalBooking,b1,insurance = 1
+model_007,CarRentalBooking,c1,t_pay ≤ 10
+model_007,CarRentalBooking,c2,t_pay > 10
+model_008,ChatMessaging,a1,typing = 1
+model_009,CinemaTicketing,a1,seatTry < 3
+model_009,CinemaTicketing,b1,wantSnack = 1
+model_010,CoffeeOrderKiosk,a1,addShot = 1
+model_011,ColdChainMonitor,a1,tempBreach = 1
+model_011,ColdChainMonitor,a2,tempBreach = 0
+model_012,ConferenceRoomBooking,a1,needDisplay = 1
+model_013,CourseEnrollment,a1,needsApproval = 1
+model_014,DroneDelivery,a1,t_deliver ≤ 20
+model_014,DroneDelivery,a2,t_deliver > 20
+model_015,ElevatorControl,a1,doorState = CLEAR
+model_015,ElevatorControl,a2,doorState = BLOCKED
+model_015,ElevatorControl,b1,retryDoor < 3
+model_016,EmailVerification,a1,resendCount < 3
+model_016,EmailVerification,b1,verifyAttempt < 5
+model_017,EmergencyDispatch,a1,priority = HIGH
+model_017,EmergencyDispatch,b1,updateCount < 4
+model_017,EmergencyDispatch,c1,trafficJam = 1
+model_017,EmergencyDispatch,a2,priority = LOW
+model_018,FactoryRobotArm,a1,pickCount < 10
+model_018,FactoryRobotArm,b1,defect = 1
+model_020,FitnessTracker,a1,syncRound < 10
+model_021,FoodOrderApp,a1,hasCoupon = 1
+model_022,GymCheckIn,a1,membership = ACTIVE
+model_022,GymCheckIn,a2,membership = EXPIRED
+model_023,HospitalTriage,a1,severity = CRITICAL
+model_023,HospitalTriage,a2,severity = NORMAL
+model_024,HotelCheckIn,a1,roomReady = 1
+model_024,HotelCheckIn,a2,roomReady = 0
+model_025,InsuranceClaim,a1,hasDocs = 1
+model_025,InsuranceClaim,b1,claimAmount ≤ 5000
+model_025,InsuranceClaim,b2,claimAmount > 5000
+model_026,LabSampleTesting,a1,retestNo < 2
+model_027,LibraryLoan,a1,fine ≤ 100
+model_027,LibraryLoan,b1,wantReminder = 1
+model_027,LibraryLoan,a2,fine > 100
+model_028,LoginRateLimiter,a1,failCount < 5
+model_028,LoginRateLimiter,b1,failCount mod 2 = 0
+model_029,MedicationDispenser,a1,taken = 1
+model_029,MedicationDispenser,a2,taken = 0
+model_030,OnlineAuction,a1,roundNo < 5
+model_031,OnlineExam,a1,questionNo < 20
+model_031,OnlineExam,b1,autosaveCount < 3
+model_032,PackageTracking,a1,customsCheck = 1
+model_032,PackageTracking,b1,delivered = YES
+model_032,PackageTracking,b2,delivered = NO
+model_033,ParcelLocker,a1,codeValid = 1
+model_034,PrinterQueue,a1,jobCount < 5
+model_034,PrinterQueue,b1,retryPrint < 3
+model_036,ServerAutoScaling,a1,checkNo < 12
+model_036,ServerAutoScaling,b1,cpu > 80
+model_036,ServerAutoScaling,b2,cpu ≤ 80
+model_037,SmartDoorLock,a1,authResult = PASS
+model_037,SmartDoorLock,b1,autoLock = 1
+model_037,SmartDoorLock,a2,authResult = FAIL
+model_038,SmartGreenhouse,a1,cycleNo < 24
+model_038,SmartGreenhouse,b1,humidity < 40
+model_038,SmartGreenhouse,b2,humidity ≥ 40
+model_039,SmartMeterBilling,a1,autoPay = 1
+model_040,SmartParking,a1,slotFree = 1
+model_041,SmartPlugControl,a1,relayOn = 1
+model_041,SmartPlugControl,a2,relayOn = 0
+model_042,TaxiDispatch,a1,shareRide = 1
+model_043,ThermostatControl,a1,cycle < 5
+model_043,ThermostatControl,b1,overheat = 1
+model_043,ThermostatControl,b2,overheat = 0
+model_044,ToolRentalLocker,a1,lateReturn = 1
+model_045,TrafficLightController,a1,cycleCount < 10
+model_046,VendingMachine,a1,coinStatus = ENOUGH
+model_046,VendingMachine,a2,coinStatus = SHORT
+model_046,VendingMachine,a3,coinStatus = INVALID
+model_047,VoiceAssistant,a1,intent = MUSIC
+model_047,VoiceAssistant,a2,intent = WEATHER
+model_047,VoiceAssistant,a3,intent = UNKNOWN
+model_048,WarehouseRobotFleet,a1,shift < 8
+model_048,WarehouseRobotFleet,b1,lowBattery = 1
+model_049,AirportSecurityLane,a1,usage < 10
+model_049,AirportSecurityLane,a2,usage ≥ 10
+model_051,AirQualityMonitor,a1,useCache = 1
+model_051,AirQualityMonitor,b1,online = 1
+model_051,AirQualityMonitor,b2,online = 0
+model_052,AmbulanceRouting,a1,useCache = 1
+model_052,AmbulanceRouting,b1,needAck = 1
+model_056,BankBranchQueue,a1,passNo < 11
+model_057,BikeSharing,a1,t_obs ≤ 6
+model_057,BikeSharing,b1,useCache = 1
+model_057,BikeSharing,a2,t_obs > 6
+model_058,BloodDonationDrive,a1,t_obs ≤ 8
+model_058,BloodDonationDrive,b1,withExtra = 1
+model_058,BloodDonationDrive,a2,t_obs > 8
+model_059,BoardingSchoolGate,a1,passNo < 5
+model_059,BoardingSchoolGate,b1,urgent = 1
+model_059,BoardingSchoolGate,b2,urgent = 0
+model_060,BuildingVisitorPass,a1,t_obs ≤ 4
+model_060,BuildingVisitorPass,a2,t_obs > 4
+model_061,BulkSMSGateway,a1,retryNo < 11
+model_061,BulkSMSGateway,b1,retryNo mod 3 = 0
+model_062,BusTicketBooking,a1,retryNo < 3
+model_062,BusTicketBooking,b1,retryNo mod 3 = 0
+model_063,CafeLoyaltyPoints,a1,roundNo < 12
+model_063,CafeLoyaltyPoints,b1,roundNo mod 2 = 0
+model_063,CafeLoyaltyPoints,c1,needAck = 1
+model_064,CampusShuttleBus,a1,optIn = 1
+model_064,CampusShuttleBus,b1,load < 10
+model_064,CampusShuttleBus,b2,load ≥ 10
+model_067,CargoShipTracking,a1,cycleNo < 7
+model_067,CargoShipTracking,b1,useCache = 1
+model_069,CarWashBooking,a1,roundNo < 12
+model_069,CarWashBooking,b1,withExtra = 1
+model_070,CenterPivotIrrigation,a1,cycleNo < 9
+model_070,CenterPivotIrrigation,b1,cycleNo mod 3 = 0
+model_071,ChildcareCheckin,a1,approved = 1
+model_071,ChildcareCheckin,a2,approved = 0
+model_071,ChildcareCheckin,b1,retryNo < 4
+model_073,CloudCIPipeline,a1,useCache = 1
+model_073,CloudCIPipeline,b1,optIn = 1
+model_073,CloudCIPipeline,c1,retryNo < 11
+model_075,ConcessionStandOrder,a1,retryNo < 8
+model_075,ConcessionStandOrder,b1,roundNo < 6
+model_075,ConcessionStandOrder,c1,pollNo < 11
+model_077,CourseAutoGrading,a1,mode = MANUAL
+model_077,CourseAutoGrading,a2,mode = AUTO
+model_077,CourseAutoGrading,b1,t_obs ≤ 27
+model_077,CourseAutoGrading,b2,t_obs > 27
+model_080,CropDroneSpraying,a1,t_obs ≤ 11
+model_080,CropDroneSpraying,a2,t_obs > 11
+model_081,CustomsClearance,a1,useCache = 1
+model_086,DormLaundry,a1,cycleNo < 3
+model_087,DroneTrafficControl,a1,approved = 1
+model_087,DroneTrafficControl,b1,express = 1
+model_087,DroneTrafficControl,a2,approved = 0
+model_088,EVBatterySwap,a1,useCache = 1
+model_088,EVBatterySwap,b1,optIn = 1
+model_088,EVBatterySwap,c1,retryNo < 11
+model_090,EventCheckInQR,a1,passNo < 8
+model_090,EventCheckInQR,b1,passNo mod 4 = 0
+model_090,EventCheckInQR,b2,passNo mod 4 ≠ 0
+model_090,EventCheckInQR,c1,withExtra = 1
+model_091,FactoryQualityGate,a1,roundNo < 7
+model_093,FireSprinklerSystem,a1,optIn = 1
+model_094,FleetFuelCard,a1,temp < 50
+model_094,FleetFuelCard,a2,temp ≥ 50
+model_097,FoodTruckOrdering,a1,pollNo < 5
+model_097,FoodTruckOrdering,b1,needAck = 1
+model_097,FoodTruckOrdering,c1,express = 1
+model_097,FoodTruckOrdering,d1,tier = GREEN
+model_097,FoodTruckOrdering,d2,tier = RED
+model_098,ForestFireSensor,a1,grade = MANUAL
+model_098,ForestFireSensor,a2,grade = AUTO
+model_098,ForestFireSensor,b1,t_obs ≤ 3
+model_098,ForestFireSensor,c1,retryNo < 11
+model_098,ForestFireSensor,b2,t_obs > 3
+model_100,GasStationPrepay,a1,express = 1
+model_100,GasStationPrepay,b1,attemptNo < 4
+model_101,GlucoseMeterSync,a1,needAck = 1
+model_104,GroceryDeliverySlot,a1,retryNo < 8
+model_104,GroceryDeliverySlot,b1,retryNo mod 3 = 0
+model_104,GroceryDeliverySlot,b2,retryNo mod 3 ≠ 0
+model_105,HomeEnergyBattery,a1,express = 1
+model_105,HomeEnergyBattery,b1,attemptNo < 4
+model_106,HomeOxygenConcentrator,a1,withExtra = 1
+model_106,HomeOxygenConcentrator,b1,needAck = 1
+model_107,HomeSecurityAlarm,a1,needAck = 1
+model_109,HospitalLabRequest,a1,cycleNo < 8
+model_109,HospitalLabRequest,b1,cycleNo mod 3 = 0
+model_109,HospitalLabRequest,c1,attemptNo < 10
+model_109,HospitalLabRequest,b2,cycleNo mod 3 ≠ 0
+model_110,HospitalPharmacyRobot,a1,t_obs ≤ 13
+model_110,HospitalPharmacyRobot,a2,t_obs > 13
+model_113,InsuranceTelematics,a1,express = 1
+model_113,InsuranceTelematics,b1,roundNo < 6
+model_113,InsuranceTelematics,c1,urgent = 1
+model_113,InsuranceTelematics,c2,urgent = 0
+model_114,InventoryReorder,a1,retryNo < 12
+model_114,InventoryReorder,b1,retryNo mod 3 = 0
+model_114,InventoryReorder,c1,express = 1
+model_115,IoTDoorbell,a1,useCache = 1
+model_115,IoTDoorbell,b1,needAck = 1
+model_116,IrrigationZoneControl,a1,attemptNo < 12
+model_117,JobApplicationPortal,a1,stage = ACTIVE
+model_117,JobApplicationPortal,a2,stage = IDLE
+model_119,LiftEmergencyCall,a1,needAck = 1
+model_119,LiftEmergencyCall,b1,t_obs ≤ 23
+model_119,LiftEmergencyCall,b2,t_obs > 23
+model_120,LiftMaintenance,a1,attemptNo < 5
+model_121,LivestockFeeder,a1,approved = 1
+model_121,LivestockFeeder,b1,express = 1
+model_121,LivestockFeeder,a2,approved = 0
+model_122,MailroomSorting,a1,withExtra = 1
+model_122,MailroomSorting,b1,pollNo < 5
+model_123,MarathonTiming,a1,roundNo < 5
+model_123,MarathonTiming,b1,roundNo mod 2 = 0
+model_123,MarathonTiming,c1,load < 10
+model_123,MarathonTiming,d1,retryNo < 11
+model_123,MarathonTiming,c2,load ≥ 10
+model_125,MedicalImagingPACS,a1,roundNo < 6
+model_125,MedicalImagingPACS,b1,roundNo mod 3 = 0
+model_125,MedicalImagingPACS,b2,roundNo mod 3 ≠ 0
+model_126,MedicalTranscription,a1,optIn = 1
+model_127,MeetingRoomDisplay,a1,isVip = 1
+model_127,MeetingRoomDisplay,a2,isVip = 0
+model_128,MobileTopUp,a1,t_obs ≤ 13
+model_128,MobileTopUp,a2,t_obs > 13
+model_129,MuseumAudioGuide,a1,useCache = 1
+model_129,MuseumAudioGuide,b1,stepNo < 11
+model_130,OfficeLightingControl,a1,needAck = 1
+model_130,OfficeLightingControl,b1,express = 1
+model_131,OnlineBankingOTP,a1,retryNo < 12
+model_131,OnlineBankingOTP,b1,retryNo mod 4 = 0
+model_131,OnlineBankingOTP,b2,retryNo mod 4 ≠ 0
+model_134,OnlineQuizGame,a1,attemptNo < 10
+model_134,OnlineQuizGame,b1,roundNo < 6
+model_135,ParcelReturnDropoff,a1,useCache = 1
+model_137,ParkingPermitPortal,a1,retryNo < 9
+model_138,PassportRenewalKiosk,a1,t_obs ≤ 4
+model_138,PassportRenewalKiosk,a2,t_obs > 4
+model_139,PatientIntakeForm,a1,attemptNo < 5
+model_139,PatientIntakeForm,b1,attemptNo mod 2 = 0
+model_140,PetDoorController,a1,t_obs ≤ 58
+model_140,PetDoorController,a2,t_obs > 58
+model_141,PharmacyDelivery,a1,needAck = 1
+model_141,PharmacyDelivery,b1,mode = GOLD
+model_141,PharmacyDelivery,b2,mode = SILVER
+model_141,PharmacyDelivery,b3,mode = BRONZE
+model_142,PharmacyRefill,a1,express = 1
+model_143,PhotoPrintKiosk,a1,t_obs ≤ 13
+model_143,PhotoPrintKiosk,a2,t_obs > 13
+model_145,PodcastPublishing,a1,retryNo < 3
+model_145,PodcastPublishing,b1,retryNo mod 3 = 0
+model_145,PodcastPublishing,b2,retryNo mod 3 ≠ 0
+model_146,PortCraneControl,a1,express = 1
+model_147,PrintFleetMonitor,a1,isVip = 1
+model_147,PrintFleetMonitor,a2,isVip = 0
+model_148,PrisonVisitBooking,a1,passNo < 9
+model_148,PrisonVisitBooking,b1,passNo mod 2 = 0
+model_148,PrisonVisitBooking,c1,optIn = 1
+model_149,PublicWifiHotspot,a1,optIn = 1
+model_149,PublicWifiHotspot,b1,load < 10
+model_149,PublicWifiHotspot,b2,load ≥ 10
+model_150,RailFareGate,a1,needAck = 1
+model_150,RailFareGate,b1,withExtra = 1
+model_151,RecyclingKiosk,a1,express = 1
+model_151,RecyclingKiosk,b1,roundNo < 6
+model_151,RecyclingKiosk,c1,urgent = 1
+model_151,RecyclingKiosk,c2,urgent = 0
+model_153,RemotePatientMonitor,a1,passNo < 12
+model_154,RentalScooter,a1,express = 1
+model_155,RestaurantReservation,a1,express = 1
+model_155,RestaurantReservation,b1,roundNo < 8
+model_155,RestaurantReservation,c1,needAck = 1
+model_157,RoboticLawnMower,a1,useCache = 1
+model_158,RuralTelehealthKiosk,a1,passNo < 6
+model_158,RuralTelehealthKiosk,b1,passNo mod 4 = 0
+model_158,RuralTelehealthKiosk,b2,passNo mod 4 ≠ 0
+model_160,SchoolBusTracking,a1,t_obs ≤ 2
+model_160,SchoolBusTracking,a2,t_obs > 2
+model_161,SeaportPilotBooking,a1,needAck = 1
+model_162,SelfCheckoutLane,a1,t_obs ≤ 10
+model_162,SelfCheckoutLane,a2,t_obs > 10
+model_162,SelfCheckoutLane,b1,stepNo < 3
+model_164,SmartAquarium,a1,cycleNo < 4
+model_164,SmartAquarium,b1,cycleNo mod 2 = 0
+model_164,SmartAquarium,b2,cycleNo mod 2 ≠ 0
+model_165,SmartBabyMonitor,a1,useCache = 1
+model_165,SmartBabyMonitor,b1,score < 50
+model_165,SmartBabyMonitor,b2,score ≥ 50
+model_168,SmartFridgeInventory,a1,attemptNo < 2
+model_168,SmartFridgeInventory,b1,tier = GREEN
+model_168,SmartFridgeInventory,b2,tier = RED
+model_168,SmartFridgeInventory,c1,stepNo < 11
+model_170,SmartHelmetMining,a1,temp < 50
+model_170,SmartHelmetMining,a2,temp ≥ 50
+model_171,SmartLibraryShelf,a1,roundNo < 12
+model_171,SmartLibraryShelf,b1,roundNo mod 4 = 0
+model_171,SmartLibraryShelf,c1,grade = ACTIVE
+model_171,SmartLibraryShelf,c2,grade = IDLE
+model_172,SmartMirrorFitness,a1,attemptNo < 6
+model_172,SmartMirrorFitness,b1,attemptNo mod 2 = 0
+model_173,SmartPillBox,a1,needAck = 1
+model_173,SmartPillBox,b1,mode = GOLD
+model_173,SmartPillBox,b2,mode = SILVER
+model_173,SmartPillBox,b3,mode = BRONZE
+model_174,SmartRainGauge,a1,useCache = 1
+model_174,SmartRainGauge,b1,score < 50
+model_174,SmartRainGauge,b2,score ≥ 50
+model_175,SmartShoppingCart,a1,useCache = 1
+model_176,SmartStreetLight,a1,urgent = 1
+model_176,SmartStreetLight,a2,urgent = 0
+model_178,SmartVendingFridge,a1,attemptNo < 9
+model_178,SmartVendingFridge,b1,attemptNo mod 4 = 0
+model_179,SmartWasteBin,a1,hasKey = 1
+model_179,SmartWasteBin,a2,hasKey = 0
+model_179,SmartWasteBin,b1,phase = GOLD
+model_179,SmartWasteBin,b2,phase = SILVER
+model_179,SmartWasteBin,b3,phase = BRONZE
+model_180,SoilTestingLab,a1,roundNo < 12
+model_181,SolarPanelMonitor,a1,attemptNo < 8
+model_181,SolarPanelMonitor,b1,attemptNo mod 2 = 0
+model_181,SolarPanelMonitor,b2,attemptNo mod 2 ≠ 0
+model_184,StudentAttendance,a1,useCache = 1
+model_186,TelemedicineVisit,a1,stepNo < 2
+model_186,TelemedicineVisit,b1,stepNo mod 2 = 0
+model_186,TelemedicineVisit,b2,stepNo mod 2 ≠ 0
+model_188,TollPlazaETC,a1,withExtra = 1
+model_191,TrainSeatReservation,a1,passNo < 11
+model_191,TrainSeatReservation,b1,passNo mod 2 = 0
+model_191,TrainSeatReservation,b2,passNo mod 2 ≠ 0
+model_194,VideoStreaming,a1,stepNo < 7
+model_194,VideoStreaming,b1,stepNo mod 2 = 0
+model_194,VideoStreaming,b2,stepNo mod 2 ≠ 0
+model_197,WaterLeakDetection,a1,cycleNo < 10
+model_197,WaterLeakDetection,b1,cycleNo mod 2 = 0
+model_198,WindTurbineMonitor,a1,withExtra = 1
+model_198,WindTurbineMonitor,b1,needAck = 1

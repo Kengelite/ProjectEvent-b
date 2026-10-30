@@ -1,0 +1,285 @@
+{
+ "guard_codes": {
+  "a1": "retryNo < 3",
+  "b1": "retryNo mod 3 = 0",
+  "b2": "retryNo mod 3 ≠ 0"
+ },
+ "event_codes": {
+  "e1": "sendvalidateFeed_1",
+  "e2": "receivevalidateFeed_1",
+  "e3": "sendassignAudio_2",
+  "e4": "receiveassignAudio_2",
+  "e5": "sendsendEpisode_3",
+  "e6": "receivesendEpisode_3",
+  "e7": "sendreserveEpisode_4",
+  "e8": "receivereserveEpisode_4",
+  "e9": "sendissueAudio_5",
+  "e10": "receiveissueAudio_5",
+  "e11": "sendcheckFeed_6",
+  "e12": "receivecheckFeed_6",
+  "e13": "sendsendAudio_7",
+  "e14": "receivesendAudio_7",
+  "e15": "sendlogAudio_8",
+  "e16": "receivelogAudio_8",
+  "e17": "checkloop_sendEpisode_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1",
+   "b1"
+  ],
+  "e10": [
+   "a1",
+   "b1"
+  ],
+  "e11": [
+   "a1",
+   "b2"
+  ],
+  "e12": [
+   "a1",
+   "b2"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendvalidateFeed_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivevalidateFeed_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendassignAudio_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveassignAudio_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendsendEpisode_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivesendEpisode_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendreserveEpisode_4",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receivereserveEpisode_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendissueAudio_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1",
+                     "b1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveissueAudio_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1",
+                       "b1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsendAudio_7",
+                        "code": "e13",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesendAudio_7",
+                          "code": "e14",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendlogAudio_8",
+                            "code": "e15",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivelogAudio_8",
+                              "code": "e16",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_sendEpisode_3_loop1",
+                            "code": "e17",
+                            "guards": [
+                             "a1"
+                            ],
+                            "loop_back_to": "sendsendEpisode_3",
+                            "loop_back_to_code": "e5",
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendcheckFeed_6",
+                "code": "e11",
+                "guards": [
+                 "a1",
+                 "b2"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckFeed_6",
+                  "code": "e12",
+                  "guards": [
+                   "a1",
+                   "b2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsendAudio_7",
+                    "code": "e13",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesendAudio_7",
+                      "code": "e14",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendlogAudio_8",
+                        "code": "e15",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivelogAudio_8",
+                          "code": "e16",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_sendEpisode_3_loop1",
+                        "code": "e17",
+                        "guards": [
+                         "a1"
+                        ],
+                        "loop_back_to": "sendsendEpisode_3",
+                        "loop_back_to_code": "e5",
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5"
+ ],
+ "unplaced_events": []
+}

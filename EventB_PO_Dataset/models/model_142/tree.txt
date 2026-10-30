@@ -1,0 +1,59 @@
+model_142  PharmacyRefill
+
+1) รหัสเงื่อนไข (guard)
+   a1   express = 1
+
+2) Guard tree
+   (root)
+   └── a1  express = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendissuePrescription_1
+   e2   receiveissuePrescription_1
+   e3   sendcheckClaim_2
+   e4   receivecheckClaim_2
+   e5   sendschedulePrescription_3_opt1  [a1]
+   e6   receiveschedulePrescription_3_opt1  [a1]
+   e7   sendqueryRefill_4_opt1  [a1]
+   e8   receivequeryRefill_4_opt1  [a1]
+   e9   sendackRefill_5
+   e10  receiveackRefill_5
+   e11  sendreservePrescription_6
+   e12  receivereservePrescription_6
+   e13  sendcancelRefill_7
+   e14  receivecancelRefill_7
+   e15  sendvalidateClaim_8
+   e16  receivevalidateClaim_8
+   e17  sendconfirmPrescription_9
+   e18  receiveconfirmPrescription_9
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendissuePrescription_1
+       └── e2 receiveissuePrescription_1
+           └── e3 sendcheckClaim_2
+               └── e4 receivecheckClaim_2
+                   └── e5 sendschedulePrescription_3_opt1  [a1]
+                       └── e6 receiveschedulePrescription_3_opt1  [a1]
+                           └── e7 sendqueryRefill_4_opt1  [a1]
+                               └── e8 receivequeryRefill_4_opt1  [a1]
+                                   └── e9 sendackRefill_5
+                                       └── e10 receiveackRefill_5
+                                           └── e11 sendreservePrescription_6
+                                               └── e12 receivereservePrescription_6
+                                                   └── e13 sendcancelRefill_7
+                                                       └── e14 receivecancelRefill_7
+                                                           └── e15 sendvalidateClaim_8
+                                                               └── e16 receivevalidateClaim_8
+                                                                   └── e17 sendconfirmPrescription_9
+                                                                       └── e18 receiveconfirmPrescription_9
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18

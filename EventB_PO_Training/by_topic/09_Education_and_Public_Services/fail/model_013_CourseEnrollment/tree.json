@@ -1,0 +1,185 @@
+{
+ "guard_codes": {
+  "a1": "needsApproval = 1"
+ },
+ "event_codes": {
+  "e1": "sendbrowseCourses_1",
+  "e2": "receivebrowseCourses_1",
+  "e3": "sendcourseList_2",
+  "e4": "receivecourseList_2",
+  "e5": "sendenrollRequest_3",
+  "e6": "receiveenrollRequest_3",
+  "e7": "sendcheckPrereq_4",
+  "e8": "receivecheckPrereq_4",
+  "e9": "sendprereqOK_5",
+  "e10": "receiveprereqOK_5",
+  "e11": "sendrequestApproval_6_opt1",
+  "e12": "receiverequestApproval_6_opt1",
+  "e13": "sendapproved_7_opt1",
+  "e14": "receiveapproved_7_opt1",
+  "e15": "sendenrollConfirm_8",
+  "e16": "receiveenrollConfirm_8"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": []
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendbrowseCourses_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivebrowseCourses_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendcourseList_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivecourseList_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendenrollRequest_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receiveenrollRequest_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendcheckPrereq_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivecheckPrereq_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendprereqOK_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receiveprereqOK_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendrequestApproval_6_opt1",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiverequestApproval_6_opt1",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendapproved_7_opt1",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveapproved_7_opt1",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendenrollConfirm_8",
+                                "code": "e15",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receiveenrollConfirm_8",
+                                  "code": "e16",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,289 @@
+{
+ "guard_codes": {
+  "a1": "customsCheck = 1",
+  "b1": "delivered = YES",
+  "b2": "delivered = NO"
+ },
+ "event_codes": {
+  "e1": "sendcreateShipment_1",
+  "e2": "receivecreateShipment_1",
+  "e3": "sendpickupConfirm_2",
+  "e4": "receivepickupConfirm_2",
+  "e5": "sendarriveHub_3",
+  "e6": "receivearriveHub_3",
+  "e7": "sendscanIn_4",
+  "e8": "receivescanIn_4",
+  "e9": "sendcustomsHold_5_opt1",
+  "e10": "receivecustomsHold_5_opt1",
+  "e11": "senddispatchOut_6",
+  "e12": "receivedispatchOut_6",
+  "e13": "senddeliver_7",
+  "e14": "receivedeliver_7",
+  "e15": "sendsignReceipt_8",
+  "e16": "receivesignReceipt_8",
+  "e17": "sendleaveNotice_9",
+  "e18": "receiveleaveNotice_9",
+  "e19": "sendcloseShipment_10",
+  "e20": "receivecloseShipment_10",
+  "e21": "sendrateService_11",
+  "e22": "receiverateService_11"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [],
+  "e12": [],
+  "e13": [
+   "b1"
+  ],
+  "e14": [
+   "b1"
+  ],
+  "e15": [
+   "b1"
+  ],
+  "e16": [
+   "b1"
+  ],
+  "e17": [
+   "b2"
+  ],
+  "e18": [
+   "b2"
+  ],
+  "e19": [],
+  "e20": [],
+  "e21": [],
+  "e22": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendcreateShipment_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivecreateShipment_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendpickupConfirm_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivepickupConfirm_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendarriveHub_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receivearriveHub_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendscanIn_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivescanIn_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendcustomsHold_5_opt1",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivecustomsHold_5_opt1",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "senddispatchOut_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivedispatchOut_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "senddeliver_7",
+                            "code": "e13",
+                            "guards": [
+                             "b1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivedeliver_7",
+                              "code": "e14",
+                              "guards": [
+                               "b1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsignReceipt_8",
+                                "code": "e15",
+                                "guards": [
+                                 "b1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesignReceipt_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "b1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendcloseShipment_10",
+                                    "code": "e19",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receivecloseShipment_10",
+                                      "code": "e20",
+                                      "guards": [],
+                                      "children": [
+                                       {
+                                        "event": "sendrateService_11",
+                                        "code": "e21",
+                                        "guards": [],
+                                        "children": [
+                                         {
+                                          "event": "receiverateService_11",
+                                          "code": "e22",
+                                          "guards": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendleaveNotice_9",
+                            "code": "e17",
+                            "guards": [
+                             "b2"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveleaveNotice_9",
+                              "code": "e18",
+                              "guards": [
+                               "b2"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendcloseShipment_10",
+                                "code": "e19",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivecloseShipment_10",
+                                  "code": "e20",
+                                  "guards": [],
+                                  "children": [
+                                   {
+                                    "event": "sendrateService_11",
+                                    "code": "e21",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiverateService_11",
+                                      "code": "e22",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22"
+ ],
+ "unplaced_events": []
+}

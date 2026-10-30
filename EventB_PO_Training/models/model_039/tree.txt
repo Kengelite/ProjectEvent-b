@@ -1,0 +1,51 @@
+model_039  SmartMeterBilling
+
+1) รหัสเงื่อนไข (guard)
+   a1   autoPay = 1
+
+2) Guard tree
+   (root)
+   └── a1  autoPay = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendsendUsage_1
+   e2   receivesendUsage_1
+   e3   sendusageAck_2
+   e4   receiveusageAck_2
+   e5   sendgenerateBill_3
+   e6   receivegenerateBill_3
+   e7   sendpayBill_4
+   e8   receivepayBill_4
+   e9   sendsetAutoPay_5_opt1  [a1]
+   e10  receivesetAutoPay_5_opt1  [a1]
+   e11  sendautoPayOK_6_opt1  [a1]
+   e12  receiveautoPayOK_6_opt1  [a1]
+   e13  sendreceiptIssued_7
+   e14  receivereceiptIssued_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendsendUsage_1
+       └── e2 receivesendUsage_1
+           └── e3 sendusageAck_2
+               └── e4 receiveusageAck_2
+                   └── e5 sendgenerateBill_3
+                       └── e6 receivegenerateBill_3
+                           └── e7 sendpayBill_4
+                               └── e8 receivepayBill_4
+                                   └── e9 sendsetAutoPay_5_opt1  [a1]
+                                       └── e10 receivesetAutoPay_5_opt1  [a1]
+                                           └── e11 sendautoPayOK_6_opt1  [a1]
+                                               └── e12 receiveautoPayOK_6_opt1  [a1]
+                                                   └── e13 sendreceiptIssued_7
+                                                       └── e14 receivereceiptIssued_7
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14

@@ -1,0 +1,309 @@
+{
+ "guard_codes": {
+  "a1": "cycleNo < 10",
+  "b1": "cycleNo mod 2 = 0"
+ },
+ "event_codes": {
+  "e1": "sendfetchTicket_1",
+  "e2": "receivefetchTicket_1",
+  "e3": "sendupdateLeak_2",
+  "e4": "receiveupdateLeak_2",
+  "e5": "sendreserveValve_3",
+  "e6": "receivereserveValve_3",
+  "e7": "sendreleaseLeak_4_opt1",
+  "e8": "receivereleaseLeak_4_opt1",
+  "e9": "sendreleaseTicket_5",
+  "e10": "receivereleaseTicket_5",
+  "e11": "sendreportValve_6",
+  "e12": "receivereportValve_6",
+  "e13": "sendsyncTicket_7",
+  "e14": "receivesyncTicket_7",
+  "e15": "sendissueTicket_8",
+  "e16": "receiveissueTicket_8",
+  "e17": "sendcancelLeak_9",
+  "e18": "receivecancelLeak_9",
+  "e19": "sendackLeak_10",
+  "e20": "receiveackLeak_10",
+  "e21": "sendreportLeak_11",
+  "e22": "receivereportLeak_11",
+  "e23": "checkloop_reserveValve_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [
+   "a1"
+  ],
+  "e16": [
+   "a1"
+  ],
+  "e17": [
+   "a1"
+  ],
+  "e18": [
+   "a1"
+  ],
+  "e19": [
+   "a1"
+  ],
+  "e20": [
+   "a1"
+  ],
+  "e21": [],
+  "e22": [],
+  "e23": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendfetchTicket_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivefetchTicket_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendupdateLeak_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveupdateLeak_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendreserveValve_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivereserveValve_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendreleaseLeak_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receivereleaseLeak_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreleaseTicket_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereleaseTicket_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreportValve_6",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereportValve_6",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsyncTicket_7",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivesyncTicket_7",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendissueTicket_8",
+                                "code": "e15",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveissueTicket_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "a1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendcancelLeak_9",
+                                    "code": "e17",
+                                    "guards": [
+                                     "a1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivecancelLeak_9",
+                                      "code": "e18",
+                                      "guards": [
+                                       "a1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendackLeak_10",
+                                        "code": "e19",
+                                        "guards": [
+                                         "a1"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receiveackLeak_10",
+                                          "code": "e20",
+                                          "guards": [
+                                           "a1"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendreportLeak_11",
+                                            "code": "e21",
+                                            "guards": [],
+                                            "children": [
+                                             {
+                                              "event": "receivereportLeak_11",
+                                              "code": "e22",
+                                              "guards": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           },
+                                           {
+                                            "event": "checkloop_reserveValve_3_loop1",
+                                            "code": "e23",
+                                            "guards": [
+                                             "a1"
+                                            ],
+                                            "loop_back_to": "sendreserveValve_3",
+                                            "loop_back_to_code": "e5",
+                                            "children": []
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5"
+ ],
+ "unplaced_events": []
+}

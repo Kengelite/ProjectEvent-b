@@ -1,0 +1,148 @@
+{
+ "guard_codes": {
+  "a1": "membership = ACTIVE",
+  "a2": "membership = EXPIRED"
+ },
+ "event_codes": {
+  "e1": "sendscanQR_1",
+  "e2": "receivescanQR_1",
+  "e3": "sendaccessResult_2",
+  "e4": "receiveaccessResult_2",
+  "e5": "sendopenGate_3",
+  "e6": "receiveopenGate_3",
+  "e7": "sendrenewPrompt_4",
+  "e8": "receiverenewPrompt_4",
+  "e9": "sendexitScan_5",
+  "e10": "receiveexitScan_5"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a2"
+  ],
+  "e8": [
+   "a2"
+  ],
+  "e9": [],
+  "e10": []
+ },
+ "guard_tree": {
+  "a1": {},
+  "a2": {}
+ },
+ "guard_paths": [
+  "a1",
+  "a2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendscanQR_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivescanQR_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendaccessResult_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveaccessResult_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendopenGate_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveopenGate_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendexitScan_5",
+                "code": "e9",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveexitScan_5",
+                  "code": "e10",
+                  "guards": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendrenewPrompt_4",
+            "code": "e7",
+            "guards": [
+             "a2"
+            ],
+            "children": [
+             {
+              "event": "receiverenewPrompt_4",
+              "code": "e8",
+              "guards": [
+               "a2"
+              ],
+              "children": [
+               {
+                "event": "sendexitScan_5",
+                "code": "e9",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveexitScan_5",
+                  "code": "e10",
+                  "guards": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10",
+  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10"
+ ],
+ "unplaced_events": []
+}

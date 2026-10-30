@@ -1,0 +1,301 @@
+{
+ "guard_codes": {
+  "a1": "hasDocs = 1",
+  "b1": "claimAmount ≤ 5000",
+  "b2": "claimAmount > 5000"
+ },
+ "event_codes": {
+  "e1": "sendsubmitClaim_1",
+  "e2": "receivesubmitClaim_1",
+  "e3": "senduploadDocs_2_opt1",
+  "e4": "receiveuploadDocs_2_opt1",
+  "e5": "sendapprovalNotice_3",
+  "e6": "receiveapprovalNotice_3",
+  "e7": "sendassignAssessor_4",
+  "e8": "receiveassignAssessor_4",
+  "e9": "sendsiteVisit_5",
+  "e10": "receivesiteVisit_5",
+  "e11": "sendvisitDone_6",
+  "e12": "receivevisitDone_6",
+  "e13": "sendassessmentReport_7",
+  "e14": "receiveassessmentReport_7",
+  "e15": "sendpayout_8",
+  "e16": "receivepayout_8",
+  "e17": "sendtransferDone_9",
+  "e18": "receivetransferDone_9",
+  "e19": "sendnotifyClaimant_10",
+  "e20": "receivenotifyClaimant_10"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [
+   "a1"
+  ],
+  "e4": [
+   "a1"
+  ],
+  "e5": [
+   "b1"
+  ],
+  "e6": [
+   "b1"
+  ],
+  "e7": [
+   "b2"
+  ],
+  "e8": [
+   "b2"
+  ],
+  "e9": [
+   "b2"
+  ],
+  "e10": [
+   "b2"
+  ],
+  "e11": [
+   "b2"
+  ],
+  "e12": [
+   "b2"
+  ],
+  "e13": [
+   "b2"
+  ],
+  "e14": [
+   "b2"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [],
+  "e18": [],
+  "e19": [],
+  "e20": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsubmitClaim_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesubmitClaim_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "senduploadDocs_2_opt1",
+        "code": "e3",
+        "guards": [
+         "a1"
+        ],
+        "children": [
+         {
+          "event": "receiveuploadDocs_2_opt1",
+          "code": "e4",
+          "guards": [
+           "a1"
+          ],
+          "children": [
+           {
+            "event": "sendapprovalNotice_3",
+            "code": "e5",
+            "guards": [
+             "b1"
+            ],
+            "children": [
+             {
+              "event": "receiveapprovalNotice_3",
+              "code": "e6",
+              "guards": [
+               "b1"
+              ],
+              "children": [
+               {
+                "event": "sendpayout_8",
+                "code": "e15",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivepayout_8",
+                  "code": "e16",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendtransferDone_9",
+                    "code": "e17",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivetransferDone_9",
+                      "code": "e18",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendnotifyClaimant_10",
+                        "code": "e19",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyClaimant_10",
+                          "code": "e20",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendassignAssessor_4",
+            "code": "e7",
+            "guards": [
+             "b2"
+            ],
+            "children": [
+             {
+              "event": "receiveassignAssessor_4",
+              "code": "e8",
+              "guards": [
+               "b2"
+              ],
+              "children": [
+               {
+                "event": "sendsiteVisit_5",
+                "code": "e9",
+                "guards": [
+                 "b2"
+                ],
+                "children": [
+                 {
+                  "event": "receivesiteVisit_5",
+                  "code": "e10",
+                  "guards": [
+                   "b2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvisitDone_6",
+                    "code": "e11",
+                    "guards": [
+                     "b2"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevisitDone_6",
+                      "code": "e12",
+                      "guards": [
+                       "b2"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendassessmentReport_7",
+                        "code": "e13",
+                        "guards": [
+                         "b2"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveassessmentReport_7",
+                          "code": "e14",
+                          "guards": [
+                           "b2"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendpayout_8",
+                            "code": "e15",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivepayout_8",
+                              "code": "e16",
+                              "guards": [],
+                              "children": [
+                               {
+                                "event": "sendtransferDone_9",
+                                "code": "e17",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivetransferDone_9",
+                                  "code": "e18",
+                                  "guards": [],
+                                  "children": [
+                                   {
+                                    "event": "sendnotifyClaimant_10",
+                                    "code": "e19",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receivenotifyClaimant_10",
+                                      "code": "e20",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20",
+  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,59 @@
+model_011  ColdChainMonitor
+
+1) รหัสเงื่อนไข (guard)
+   a1   tempBreach = 1
+   a2   tempBreach = 0
+
+2) Guard tree
+   (root)
+   ├── a1  tempBreach = 1
+   └── a2  tempBreach = 0
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendlogTemperature_1
+   e2   receivelogTemperature_1
+   e3   senduploadLog_2
+   e4   receiveuploadLog_2
+   e5   senduploadAck_3
+   e6   receiveuploadAck_3
+   e7   sendraiseAlert_4  [a1]
+   e8   receiveraiseAlert_4  [a1]
+   e9   sendalertAck_5  [a1]
+   e10  receivealertAck_5  [a1]
+   e11  senddailySummary_6  [a2]
+   e12  receivedailySummary_6  [a2]
+   e13  sendcloseTrip_7
+   e14  receivecloseTrip_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6
+       ├── e7 → e8 → e9 → e10 → e13 → e14
+       └── e11 → e12 → e13 → e14
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendlogTemperature_1
+       └── e2 receivelogTemperature_1
+           └── e3 senduploadLog_2
+               └── e4 receiveuploadLog_2
+                   └── e5 senduploadAck_3
+                       └── e6 receiveuploadAck_3
+                           ├── e7 sendraiseAlert_4  [a1]
+                           │   └── e8 receiveraiseAlert_4  [a1]
+                           │       └── e9 sendalertAck_5  [a1]
+                           │           └── e10 receivealertAck_5  [a1]
+                           │               └── e13 sendcloseTrip_7
+                           │                   └── e14 receivecloseTrip_7
+                           └── e11 senddailySummary_6  [a2]
+                               └── e12 receivedailySummary_6  [a2]
+                                   └── e13 sendcloseTrip_7
+                                       └── e14 receivecloseTrip_7
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14

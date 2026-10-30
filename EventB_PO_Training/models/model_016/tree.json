@@ -1,0 +1,216 @@
+{
+ "guard_codes": {
+  "a1": "resendCount < 3",
+  "b1": "verifyAttempt < 5"
+ },
+ "event_codes": {
+  "e1": "sendregister_1",
+  "e2": "receiveregister_1",
+  "e3": "sendsendCode_2",
+  "e4": "receivesendCode_2",
+  "e5": "sendresendRequest_3",
+  "e6": "receiveresendRequest_3",
+  "e7": "sendresendCode_4",
+  "e8": "receiveresendCode_4",
+  "e9": "sendsubmitCode_5",
+  "e10": "receivesubmitCode_5",
+  "e11": "sendverifyResult_6",
+  "e12": "receiveverifyResult_6",
+  "e13": "sendaccountActivated_7",
+  "e14": "receiveaccountActivated_7",
+  "e15": "checkloop_resendRequest_3_loop1",
+  "e16": "checkloop_submitCode_5_loop2"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [
+   "b1"
+  ],
+  "e10": [
+   "b1"
+  ],
+  "e11": [
+   "b1"
+  ],
+  "e12": [
+   "b1"
+  ],
+  "e13": [],
+  "e14": [],
+  "e15": [
+   "a1"
+  ],
+  "e16": [
+   "b1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendregister_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveregister_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendsendCode_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivesendCode_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendresendRequest_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveresendRequest_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendresendCode_4",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveresendCode_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsubmitCode_5",
+                    "code": "e9",
+                    "guards": [
+                     "b1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesubmitCode_5",
+                      "code": "e10",
+                      "guards": [
+                       "b1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendverifyResult_6",
+                        "code": "e11",
+                        "guards": [
+                         "b1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveverifyResult_6",
+                          "code": "e12",
+                          "guards": [
+                           "b1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendaccountActivated_7",
+                            "code": "e13",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receiveaccountActivated_7",
+                              "code": "e14",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_submitCode_5_loop2",
+                            "code": "e16",
+                            "guards": [
+                             "b1"
+                            ],
+                            "loop_back_to": "sendsubmitCode_5",
+                            "loop_back_to_code": "e9",
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_resendRequest_3_loop1",
+                    "code": "e15",
+                    "guards": [
+                     "a1"
+                    ],
+                    "loop_back_to": "sendresendRequest_3",
+                    "loop_back_to_code": "e5",
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e16 ↺ e9",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5"
+ ],
+ "unplaced_events": []
+}

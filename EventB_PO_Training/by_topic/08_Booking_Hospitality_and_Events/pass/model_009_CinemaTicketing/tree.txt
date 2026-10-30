@@ -1,0 +1,58 @@
+model_009  CinemaTicketing
+
+1) รหัสเงื่อนไข (guard)
+   a1   seatTry < 3
+   b1   wantSnack = 1
+
+2) Guard tree
+   (root)
+   └── a1  seatTry < 3
+       └── b1  wantSnack = 1
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendselectMovie_1
+   e2   receiveselectMovie_1
+   e3   sendshowtimes_2
+   e4   receiveshowtimes_2
+   e5   sendpickSeat_3  [a1]
+   e6   receivepickSeat_3  [a1]
+   e7   sendseatStatus_4  [a1]
+   e8   receiveseatStatus_4  [a1]
+   e9   sendreserveSeat_5
+   e10  receivereserveSeat_5
+   e11  sendaddSnack_6_opt1  [b1]
+   e12  receiveaddSnack_6_opt1  [b1]
+   e13  sendissueTicket_7
+   e14  receiveissueTicket_7
+   e15  checkloop_pickSeat_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+       ├── e9 → e10 → e11 → e12 → e13 → e14
+       └── e15 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendselectMovie_1
+       └── e2 receiveselectMovie_1
+           └── e3 sendshowtimes_2
+               └── e4 receiveshowtimes_2
+                   └── e5 sendpickSeat_3  [a1]
+                       └── e6 receivepickSeat_3  [a1]
+                           └── e7 sendseatStatus_4  [a1]
+                               └── e8 receiveseatStatus_4  [a1]
+                                   ├── e9 sendreserveSeat_5
+                                   │   └── e10 receivereserveSeat_5
+                                   │       └── e11 sendaddSnack_6_opt1  [b1]
+                                   │           └── e12 receiveaddSnack_6_opt1  [b1]
+                                   │               └── e13 sendissueTicket_7
+                                   │                   └── e14 receiveissueTicket_7
+                                   └── e15 checkloop_pickSeat_3_loop1  [a1]  ↺ กลับไป sendpickSeat_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5

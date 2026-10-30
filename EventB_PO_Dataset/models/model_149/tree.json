@@ -1,0 +1,331 @@
+{
+ "guard_codes": {
+  "a1": "optIn = 1",
+  "b1": "load < 10",
+  "b2": "load ≥ 10"
+ },
+ "event_codes": {
+  "e1": "sendscheduleQuota_1",
+  "e2": "receivescheduleQuota_1",
+  "e3": "sendscheduleVoucher_2",
+  "e4": "receivescheduleVoucher_2",
+  "e5": "sendvalidateQuota_3",
+  "e6": "receivevalidateQuota_3",
+  "e7": "sendupdateSession_4",
+  "e8": "receiveupdateSession_4",
+  "e9": "sendvalidateSession_5",
+  "e10": "receivevalidateSession_5",
+  "e11": "sendreserveVoucher_6",
+  "e12": "receivereserveVoucher_6",
+  "e13": "sendupdateQuota_7_opt1",
+  "e14": "receiveupdateQuota_7_opt1",
+  "e15": "sendapproveQuota_8_opt1",
+  "e16": "receiveapproveQuota_8_opt1",
+  "e17": "sendqueryVoucher_9_opt1",
+  "e18": "receivequeryVoucher_9_opt1",
+  "e19": "sendsendSession_10_opt1",
+  "e20": "receivesendSession_10_opt1",
+  "e21": "sendissueSession_11_opt1",
+  "e22": "receiveissueSession_11_opt1",
+  "e23": "sendissueQuota_12",
+  "e24": "receiveissueQuota_12"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": [],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [
+   "a1",
+   "b1"
+  ],
+  "e16": [
+   "a1",
+   "b1"
+  ],
+  "e17": [
+   "a1",
+   "b1"
+  ],
+  "e18": [
+   "a1",
+   "b1"
+  ],
+  "e19": [
+   "a1",
+   "b2"
+  ],
+  "e20": [
+   "a1",
+   "b2"
+  ],
+  "e21": [
+   "a1"
+  ],
+  "e22": [
+   "a1"
+  ],
+  "e23": [],
+  "e24": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendscheduleQuota_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivescheduleQuota_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendscheduleVoucher_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivescheduleVoucher_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendvalidateQuota_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receivevalidateQuota_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendupdateSession_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveupdateSession_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendvalidateSession_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivevalidateSession_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendreserveVoucher_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivereserveVoucher_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendupdateQuota_7_opt1",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveupdateQuota_7_opt1",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapproveQuota_8_opt1",
+                                "code": "e15",
+                                "guards": [
+                                 "a1",
+                                 "b1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveQuota_8_opt1",
+                                  "code": "e16",
+                                  "guards": [
+                                   "a1",
+                                   "b1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendqueryVoucher_9_opt1",
+                                    "code": "e17",
+                                    "guards": [
+                                     "a1",
+                                     "b1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivequeryVoucher_9_opt1",
+                                      "code": "e18",
+                                      "guards": [
+                                       "a1",
+                                       "b1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendissueSession_11_opt1",
+                                        "code": "e21",
+                                        "guards": [
+                                         "a1"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receiveissueSession_11_opt1",
+                                          "code": "e22",
+                                          "guards": [
+                                           "a1"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendissueQuota_12",
+                                            "code": "e23",
+                                            "guards": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveissueQuota_12",
+                                              "code": "e24",
+                                              "guards": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "sendsendSession_10_opt1",
+                                "code": "e19",
+                                "guards": [
+                                 "a1",
+                                 "b2"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesendSession_10_opt1",
+                                  "code": "e20",
+                                  "guards": [
+                                   "a1",
+                                   "b2"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendissueSession_11_opt1",
+                                    "code": "e21",
+                                    "guards": [
+                                     "a1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveissueSession_11_opt1",
+                                      "code": "e22",
+                                      "guards": [
+                                       "a1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendissueQuota_12",
+                                        "code": "e23",
+                                        "guards": [],
+                                        "children": [
+                                         {
+                                          "event": "receiveissueQuota_12",
+                                          "code": "e24",
+                                          "guards": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e21 -> e22 -> e23 -> e24",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,66 @@
+model_018  FactoryRobotArm
+
+1) รหัสเงื่อนไข (guard)
+   a1   pickCount < 10
+   b1   defect = 1
+
+2) Guard tree
+   (root)
+   └── a1  pickCount < 10
+       └── b1  defect = 1
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendstartBatch_1
+   e2   receivestartBatch_1
+   e3   sendinitArm_2
+   e4   receiveinitArm_2
+   e5   sendcalibrateCamera_3
+   e6   receivecalibrateCamera_3
+   e7   sendlogStart_4
+   e8   receivelogStart_4
+   e9   sendpickItem_5  [a1]
+   e10  receivepickItem_5  [a1]
+   e11  sendinspectItem_6  [a1]
+   e12  receiveinspectItem_6  [a1]
+   e13  sendinspectionResult_7  [a1]
+   e14  receiveinspectionResult_7  [a1]
+   e15  senddiscardItem_8_opt1  [a1 b1]
+   e16  receivediscardItem_8_opt1  [a1 b1]
+   e17  sendreportSummary_9
+   e18  receivereportSummary_9
+   e19  checkloop_pickItem_5_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
+       ├── e17 → e18
+       └── e19 ↺ e9
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendstartBatch_1
+       └── e2 receivestartBatch_1
+           └── e3 sendinitArm_2
+               └── e4 receiveinitArm_2
+                   └── e5 sendcalibrateCamera_3
+                       └── e6 receivecalibrateCamera_3
+                           └── e7 sendlogStart_4
+                               └── e8 receivelogStart_4
+                                   └── e9 sendpickItem_5  [a1]
+                                       └── e10 receivepickItem_5  [a1]
+                                           └── e11 sendinspectItem_6  [a1]
+                                               └── e12 receiveinspectItem_6  [a1]
+                                                   └── e13 sendinspectionResult_7  [a1]
+                                                       └── e14 receiveinspectionResult_7  [a1]
+                                                           └── e15 senddiscardItem_8_opt1  [a1 b1]
+                                                               └── e16 receivediscardItem_8_opt1  [a1 b1]
+                                                                   ├── e17 sendreportSummary_9
+                                                                   │   └── e18 receivereportSummary_9
+                                                                   └── e19 checkloop_pickItem_5_loop1  [a1]  ↺ กลับไป sendpickItem_5
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e9

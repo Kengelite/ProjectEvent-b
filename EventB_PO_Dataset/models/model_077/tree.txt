@@ -1,0 +1,103 @@
+model_077  CourseAutoGrading
+
+1) รหัสเงื่อนไข (guard)
+   a1   mode = MANUAL
+   a2   mode = AUTO
+   b1   t_obs ≤ 27
+   b2   t_obs > 27
+
+2) Guard tree
+   (root)
+   ├── a1  mode = MANUAL
+   │   ├── b1  t_obs ≤ 27
+   │   └── b2  t_obs > 27
+   └── a2  mode = AUTO
+       ├── b1  t_obs ≤ 27
+       └── b2  t_obs > 27
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+   a2 -> b1
+   a2 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendissueFeedback_1
+   e2   receiveissueFeedback_1
+   e3   sendassignFeedback_2
+   e4   receiveassignFeedback_2
+   e5   sendreserveGrade_3  [a1]
+   e6   receivereserveGrade_3  [a1]
+   e7   sendlogGrade_4  [a2]
+   e8   receivelogGrade_4  [a2]
+   e9   sendcheckSubmission_5  [a2]
+   e10  receivecheckSubmission_5  [a2]
+   e11  sendackGrade_6
+   e12  receiveackGrade_6
+   e13  sendnotifyGrade_7
+   e14  receivenotifyGrade_7
+   e15  sendupdateGrade_8  [b1]
+   e16  receiveupdateGrade_8  [b1]
+   e17  sendvalidateSubmission_9  [b2]
+   e18  receivevalidateSubmission_9  [b2]
+   e19  sendackSubmission_10  [b2]
+   e20  receiveackSubmission_10  [b2]
+   e21  sendreleaseSubmission_11
+   e22  receivereleaseSubmission_11
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4
+       ├── e5 → e6 → e11 → e12 → e13 → e14
+       │   ├── e15 → e16 → e21 → e22
+       │   └── e17 → e18 → e19 → e20 → e21 → e22
+       └── e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
+           ├── e15 → e16 → e21 → e22
+           └── e17 → e18 → e19 → e20 → e21 → e22
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendissueFeedback_1
+       └── e2 receiveissueFeedback_1
+           └── e3 sendassignFeedback_2
+               └── e4 receiveassignFeedback_2
+                   ├── e5 sendreserveGrade_3  [a1]
+                   │   └── e6 receivereserveGrade_3  [a1]
+                   │       └── e11 sendackGrade_6
+                   │           └── e12 receiveackGrade_6
+                   │               └── e13 sendnotifyGrade_7
+                   │                   └── e14 receivenotifyGrade_7
+                   │                       ├── e15 sendupdateGrade_8  [b1]
+                   │                       │   └── e16 receiveupdateGrade_8  [b1]
+                   │                       │       └── e21 sendreleaseSubmission_11
+                   │                       │           └── e22 receivereleaseSubmission_11
+                   │                       └── e17 sendvalidateSubmission_9  [b2]
+                   │                           └── e18 receivevalidateSubmission_9  [b2]
+                   │                               └── e19 sendackSubmission_10  [b2]
+                   │                                   └── e20 receiveackSubmission_10  [b2]
+                   │                                       └── e21 sendreleaseSubmission_11
+                   │                                           └── e22 receivereleaseSubmission_11
+                   └── e7 sendlogGrade_4  [a2]
+                       └── e8 receivelogGrade_4  [a2]
+                           └── e9 sendcheckSubmission_5  [a2]
+                               └── e10 receivecheckSubmission_5  [a2]
+                                   └── e11 sendackGrade_6
+                                       └── e12 receiveackGrade_6
+                                           └── e13 sendnotifyGrade_7
+                                               └── e14 receivenotifyGrade_7
+                                                   ├── e15 sendupdateGrade_8  [b1]
+                                                   │   └── e16 receiveupdateGrade_8  [b1]
+                                                   │       └── e21 sendreleaseSubmission_11
+                                                   │           └── e22 receivereleaseSubmission_11
+                                                   └── e17 sendvalidateSubmission_9  [b2]
+                                                       └── e18 receivevalidateSubmission_9  [b2]
+                                                           └── e19 sendackSubmission_10  [b2]
+                                                               └── e20 receiveackSubmission_10  [b2]
+                                                                   └── e21 sendreleaseSubmission_11
+                                                                       └── e22 receivereleaseSubmission_11
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e21 -> e22
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
+   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e21 -> e22
+   e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22

@@ -1,0 +1,56 @@
+model_030  OnlineAuction
+
+1) รหัสเงื่อนไข (guard)
+   a1   roundNo < 5
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 5
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendplaceBid_1
+   e2   receiveplaceBid_1
+   e3   sendbidAccepted_2
+   e4   receivebidAccepted_2
+   e5   sendoutbidNotice_3  [a1]
+   e6   receiveoutbidNotice_3  [a1]
+   e7   sendraiseBid_4  [a1]
+   e8   receiveraiseBid_4  [a1]
+   e9   sendcloseAuction_5
+   e10  receivecloseAuction_5
+   e11  sendsaleConfirm_6
+   e12  receivesaleConfirm_6
+   e13  sendwinnerNotice_7
+   e14  receivewinnerNotice_7
+   e15  checkloop_outbidNotice_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+       ├── e9 → e10 → e11 → e12 → e13 → e14
+       └── e15 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendplaceBid_1
+       └── e2 receiveplaceBid_1
+           └── e3 sendbidAccepted_2
+               └── e4 receivebidAccepted_2
+                   └── e5 sendoutbidNotice_3  [a1]
+                       └── e6 receiveoutbidNotice_3  [a1]
+                           └── e7 sendraiseBid_4  [a1]
+                               └── e8 receiveraiseBid_4  [a1]
+                                   ├── e9 sendcloseAuction_5
+                                   │   └── e10 receivecloseAuction_5
+                                   │       └── e11 sendsaleConfirm_6
+                                   │           └── e12 receivesaleConfirm_6
+                                   │               └── e13 sendwinnerNotice_7
+                                   │                   └── e14 receivewinnerNotice_7
+                                   └── e15 checkloop_outbidNotice_3_loop1  [a1]  ↺ กลับไป sendoutbidNotice_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5

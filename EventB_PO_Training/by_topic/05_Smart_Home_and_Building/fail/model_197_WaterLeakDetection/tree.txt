@@ -1,0 +1,74 @@
+model_197  WaterLeakDetection
+
+1) รหัสเงื่อนไข (guard)
+   a1   cycleNo < 10
+   b1   cycleNo mod 2 = 0
+
+2) Guard tree
+   (root)
+   └── a1  cycleNo < 10
+       └── b1  cycleNo mod 2 = 0
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendfetchTicket_1
+   e2   receivefetchTicket_1
+   e3   sendupdateLeak_2
+   e4   receiveupdateLeak_2
+   e5   sendreserveValve_3  [a1]
+   e6   receivereserveValve_3  [a1]
+   e7   sendreleaseLeak_4_opt1  [a1 b1]
+   e8   receivereleaseLeak_4_opt1  [a1 b1]
+   e9   sendreleaseTicket_5  [a1]
+   e10  receivereleaseTicket_5  [a1]
+   e11  sendreportValve_6  [a1]
+   e12  receivereportValve_6  [a1]
+   e13  sendsyncTicket_7  [a1]
+   e14  receivesyncTicket_7  [a1]
+   e15  sendissueTicket_8  [a1]
+   e16  receiveissueTicket_8  [a1]
+   e17  sendcancelLeak_9  [a1]
+   e18  receivecancelLeak_9  [a1]
+   e19  sendackLeak_10  [a1]
+   e20  receiveackLeak_10  [a1]
+   e21  sendreportLeak_11
+   e22  receivereportLeak_11
+   e23  checkloop_reserveValve_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20
+       ├── e21 → e22
+       └── e23 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendfetchTicket_1
+       └── e2 receivefetchTicket_1
+           └── e3 sendupdateLeak_2
+               └── e4 receiveupdateLeak_2
+                   └── e5 sendreserveValve_3  [a1]
+                       └── e6 receivereserveValve_3  [a1]
+                           └── e7 sendreleaseLeak_4_opt1  [a1 b1]
+                               └── e8 receivereleaseLeak_4_opt1  [a1 b1]
+                                   └── e9 sendreleaseTicket_5  [a1]
+                                       └── e10 receivereleaseTicket_5  [a1]
+                                           └── e11 sendreportValve_6  [a1]
+                                               └── e12 receivereportValve_6  [a1]
+                                                   └── e13 sendsyncTicket_7  [a1]
+                                                       └── e14 receivesyncTicket_7  [a1]
+                                                           └── e15 sendissueTicket_8  [a1]
+                                                               └── e16 receiveissueTicket_8  [a1]
+                                                                   └── e17 sendcancelLeak_9  [a1]
+                                                                       └── e18 receivecancelLeak_9  [a1]
+                                                                           └── e19 sendackLeak_10  [a1]
+                                                                               └── e20 receiveackLeak_10  [a1]
+                                                                                   ├── e21 sendreportLeak_11
+                                                                                   │   └── e22 receivereportLeak_11
+                                                                                   └── e23 checkloop_reserveValve_3_loop1  [a1]  ↺ กลับไป sendreserveValve_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e23 ↺ e5

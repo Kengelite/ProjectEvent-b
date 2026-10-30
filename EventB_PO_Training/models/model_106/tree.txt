@@ -1,0 +1,57 @@
+model_106  HomeOxygenConcentrator
+
+1) รหัสเงื่อนไข (guard)
+   a1   withExtra = 1
+   b1   needAck = 1
+
+2) Guard tree
+   (root)
+   └── a1  withExtra = 1
+       └── b1  needAck = 1
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendreserveFlow_1
+   e2   receivereserveFlow_1
+   e3   sendupdateAlert_2
+   e4   receiveupdateAlert_2
+   e5   sendreserveAlert_3_opt1  [a1]
+   e6   receivereserveAlert_3_opt1  [a1]
+   e7   sendnotifyAlert_4
+   e8   receivenotifyAlert_4
+   e9   sendsyncAlert_5
+   e10  receivesyncAlert_5
+   e11  sendrequestFlow_6_opt2  [b1]
+   e12  receiverequestFlow_6_opt2  [b1]
+   e13  sendlogFlow_7_opt2  [b1]
+   e14  receivelogFlow_7_opt2  [b1]
+   e15  sendschedulePurity_8
+   e16  receiveschedulePurity_8
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendreserveFlow_1
+       └── e2 receivereserveFlow_1
+           └── e3 sendupdateAlert_2
+               └── e4 receiveupdateAlert_2
+                   └── e5 sendreserveAlert_3_opt1  [a1]
+                       └── e6 receivereserveAlert_3_opt1  [a1]
+                           └── e7 sendnotifyAlert_4
+                               └── e8 receivenotifyAlert_4
+                                   └── e9 sendsyncAlert_5
+                                       └── e10 receivesyncAlert_5
+                                           └── e11 sendrequestFlow_6_opt2  [b1]
+                                               └── e12 receiverequestFlow_6_opt2  [b1]
+                                                   └── e13 sendlogFlow_7_opt2  [b1]
+                                                       └── e14 receivelogFlow_7_opt2  [b1]
+                                                           └── e15 sendschedulePurity_8
+                                                               └── e16 receiveschedulePurity_8
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16

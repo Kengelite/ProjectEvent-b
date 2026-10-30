@@ -1,0 +1,61 @@
+model_058  BloodDonationDrive
+
+1) รหัสเงื่อนไข (guard)
+   a1   t_obs ≤ 8
+   b1   withExtra = 1
+   a2   t_obs > 8
+
+2) Guard tree
+   (root)
+   ├── a1  t_obs ≤ 8
+   │   └── b1  withExtra = 1
+   └── a2  t_obs > 8
+
+   เส้นทาง:
+   a1 -> b1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendackScreening_1
+   e2   receiveackScreening_1
+   e3   sendlogSlot_2
+   e4   receivelogSlot_2
+   e5   sendsyncSlot_3  [a1]
+   e6   receivesyncSlot_3  [a1]
+   e7   sendnotifyDonation_4_opt1  [a1 b1]
+   e8   receivenotifyDonation_4_opt1  [a1 b1]
+   e9   sendvalidateScreening_5  [a1]
+   e10  receivevalidateScreening_5  [a1]
+   e11  sendlogDonation_6  [a2]
+   e12  receivelogDonation_6  [a2]
+   e13  sendfetchScreening_7
+   e14  receivefetchScreening_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4
+       ├── e5 → e6 → e7 → e8 → e9 → e10 → e13 → e14
+       └── e11 → e12 → e13 → e14
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendackScreening_1
+       └── e2 receiveackScreening_1
+           └── e3 sendlogSlot_2
+               └── e4 receivelogSlot_2
+                   ├── e5 sendsyncSlot_3  [a1]
+                   │   └── e6 receivesyncSlot_3  [a1]
+                   │       └── e7 sendnotifyDonation_4_opt1  [a1 b1]
+                   │           └── e8 receivenotifyDonation_4_opt1  [a1 b1]
+                   │               └── e9 sendvalidateScreening_5  [a1]
+                   │                   └── e10 receivevalidateScreening_5  [a1]
+                   │                       └── e13 sendfetchScreening_7
+                   │                           └── e14 receivefetchScreening_7
+                   └── e11 sendlogDonation_6  [a2]
+                       └── e12 receivelogDonation_6  [a2]
+                           └── e13 sendfetchScreening_7
+                               └── e14 receivefetchScreening_7
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e13 -> e14

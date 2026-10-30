@@ -1,0 +1,52 @@
+model_120  LiftMaintenance
+
+1) รหัสเงื่อนไข (guard)
+   a1   attemptNo < 5
+
+2) Guard tree
+   (root)
+   └── a1  attemptNo < 5
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendlogJob_1
+   e2   receivelogJob_1
+   e3   sendvalidateJob_2
+   e4   receivevalidateJob_2
+   e5   sendrequestJob_3  [a1]
+   e6   receiverequestJob_3  [a1]
+   e7   sendcheckJob_4  [a1]
+   e8   receivecheckJob_4  [a1]
+   e9   sendsyncLock_5  [a1]
+   e10  receivesyncLock_5  [a1]
+   e11  sendcancelFault_6
+   e12  receivecancelFault_6
+   e13  checkloop_requestJob_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10
+       ├── e11 → e12
+       └── e13 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendlogJob_1
+       └── e2 receivelogJob_1
+           └── e3 sendvalidateJob_2
+               └── e4 receivevalidateJob_2
+                   └── e5 sendrequestJob_3  [a1]
+                       └── e6 receiverequestJob_3  [a1]
+                           └── e7 sendcheckJob_4  [a1]
+                               └── e8 receivecheckJob_4  [a1]
+                                   └── e9 sendsyncLock_5  [a1]
+                                       └── e10 receivesyncLock_5  [a1]
+                                           ├── e11 sendcancelFault_6
+                                           │   └── e12 receivecancelFault_6
+                                           └── e13 checkloop_requestJob_3_loop1  [a1]  ↺ กลับไป sendrequestJob_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 ↺ e5

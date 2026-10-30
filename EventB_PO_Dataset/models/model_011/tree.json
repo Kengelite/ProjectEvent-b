@@ -1,0 +1,192 @@
+{
+ "guard_codes": {
+  "a1": "tempBreach = 1",
+  "a2": "tempBreach = 0"
+ },
+ "event_codes": {
+  "e1": "sendlogTemperature_1",
+  "e2": "receivelogTemperature_1",
+  "e3": "senduploadLog_2",
+  "e4": "receiveuploadLog_2",
+  "e5": "senduploadAck_3",
+  "e6": "receiveuploadAck_3",
+  "e7": "sendraiseAlert_4",
+  "e8": "receiveraiseAlert_4",
+  "e9": "sendalertAck_5",
+  "e10": "receivealertAck_5",
+  "e11": "senddailySummary_6",
+  "e12": "receivedailySummary_6",
+  "e13": "sendcloseTrip_7",
+  "e14": "receivecloseTrip_7"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a2"
+  ],
+  "e12": [
+   "a2"
+  ],
+  "e13": [],
+  "e14": []
+ },
+ "guard_tree": {
+  "a1": {},
+  "a2": {}
+ },
+ "guard_paths": [
+  "a1",
+  "a2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendlogTemperature_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivelogTemperature_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "senduploadLog_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveuploadLog_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "senduploadAck_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receiveuploadAck_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendraiseAlert_4",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveraiseAlert_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendalertAck_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivealertAck_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcloseTrip_7",
+                        "code": "e13",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivecloseTrip_7",
+                          "code": "e14",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "senddailySummary_6",
+                "code": "e11",
+                "guards": [
+                 "a2"
+                ],
+                "children": [
+                 {
+                  "event": "receivedailySummary_6",
+                  "code": "e12",
+                  "guards": [
+                   "a2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcloseTrip_7",
+                    "code": "e13",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivecloseTrip_7",
+                      "code": "e14",
+                      "guards": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

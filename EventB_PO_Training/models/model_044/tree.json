@@ -1,0 +1,159 @@
+{
+ "guard_codes": {
+  "a1": "lateReturn = 1"
+ },
+ "event_codes": {
+  "e1": "sendreserveTool_1",
+  "e2": "receivereserveTool_1",
+  "e3": "sendreservationCode_2",
+  "e4": "receivereservationCode_2",
+  "e5": "sendunlockLocker_3",
+  "e6": "receiveunlockLocker_3",
+  "e7": "sendverifyCode_4",
+  "e8": "receiveverifyCode_4",
+  "e9": "sendcodeValid_5",
+  "e10": "receivecodeValid_5",
+  "e11": "sendreleaseTool_6",
+  "e12": "receivereleaseTool_6",
+  "e13": "sendchargeLateFee_7_opt1",
+  "e14": "receivechargeLateFee_7_opt1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": [],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendreserveTool_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivereserveTool_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendreservationCode_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivereservationCode_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendunlockLocker_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receiveunlockLocker_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendverifyCode_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveverifyCode_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendcodeValid_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivecodeValid_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendreleaseTool_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivereleaseTool_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendchargeLateFee_7_opt1",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivechargeLateFee_7_opt1",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,79 @@
+model_032  PackageTracking
+
+1) รหัสเงื่อนไข (guard)
+   a1   customsCheck = 1
+   b1   delivered = YES
+   b2   delivered = NO
+
+2) Guard tree
+   (root)
+   └── a1  customsCheck = 1
+       ├── b1  delivered = YES
+       └── b2  delivered = NO
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendcreateShipment_1
+   e2   receivecreateShipment_1
+   e3   sendpickupConfirm_2
+   e4   receivepickupConfirm_2
+   e5   sendarriveHub_3
+   e6   receivearriveHub_3
+   e7   sendscanIn_4
+   e8   receivescanIn_4
+   e9   sendcustomsHold_5_opt1  [a1]
+   e10  receivecustomsHold_5_opt1  [a1]
+   e11  senddispatchOut_6
+   e12  receivedispatchOut_6
+   e13  senddeliver_7  [b1]
+   e14  receivedeliver_7  [b1]
+   e15  sendsignReceipt_8  [b1]
+   e16  receivesignReceipt_8  [b1]
+   e17  sendleaveNotice_9  [b2]
+   e18  receiveleaveNotice_9  [b2]
+   e19  sendcloseShipment_10
+   e20  receivecloseShipment_10
+   e21  sendrateService_11
+   e22  receiverateService_11
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+       ├── e13 → e14 → e15 → e16 → e19 → e20 → e21 → e22
+       └── e17 → e18 → e19 → e20 → e21 → e22
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendcreateShipment_1
+       └── e2 receivecreateShipment_1
+           └── e3 sendpickupConfirm_2
+               └── e4 receivepickupConfirm_2
+                   └── e5 sendarriveHub_3
+                       └── e6 receivearriveHub_3
+                           └── e7 sendscanIn_4
+                               └── e8 receivescanIn_4
+                                   └── e9 sendcustomsHold_5_opt1  [a1]
+                                       └── e10 receivecustomsHold_5_opt1  [a1]
+                                           └── e11 senddispatchOut_6
+                                               └── e12 receivedispatchOut_6
+                                                   ├── e13 senddeliver_7  [b1]
+                                                   │   └── e14 receivedeliver_7  [b1]
+                                                   │       └── e15 sendsignReceipt_8  [b1]
+                                                   │           └── e16 receivesignReceipt_8  [b1]
+                                                   │               └── e19 sendcloseShipment_10
+                                                   │                   └── e20 receivecloseShipment_10
+                                                   │                       └── e21 sendrateService_11
+                                                   │                           └── e22 receiverateService_11
+                                                   └── e17 sendleaveNotice_9  [b2]
+                                                       └── e18 receiveleaveNotice_9  [b2]
+                                                           └── e19 sendcloseShipment_10
+                                                               └── e20 receivecloseShipment_10
+                                                                   └── e21 sendrateService_11
+                                                                       └── e22 receiverateService_11
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20 -> e21 -> e22
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22

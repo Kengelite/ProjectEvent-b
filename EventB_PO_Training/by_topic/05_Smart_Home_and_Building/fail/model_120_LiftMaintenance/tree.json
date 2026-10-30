@@ -1,0 +1,172 @@
+{
+ "guard_codes": {
+  "a1": "attemptNo < 5"
+ },
+ "event_codes": {
+  "e1": "sendlogJob_1",
+  "e2": "receivelogJob_1",
+  "e3": "sendvalidateJob_2",
+  "e4": "receivevalidateJob_2",
+  "e5": "sendrequestJob_3",
+  "e6": "receiverequestJob_3",
+  "e7": "sendcheckJob_4",
+  "e8": "receivecheckJob_4",
+  "e9": "sendsyncLock_5",
+  "e10": "receivesyncLock_5",
+  "e11": "sendcancelFault_6",
+  "e12": "receivecancelFault_6",
+  "e13": "checkloop_requestJob_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [],
+  "e12": [],
+  "e13": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendlogJob_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivelogJob_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendvalidateJob_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivevalidateJob_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendrequestJob_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiverequestJob_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendcheckJob_4",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckJob_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsyncLock_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesyncLock_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelFault_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivecancelFault_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_requestJob_3_loop1",
+                        "code": "e13",
+                        "guards": [
+                         "a1"
+                        ],
+                        "loop_back_to": "sendrequestJob_3",
+                        "loop_back_to_code": "e5",
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 ↺ e5"
+ ],
+ "unplaced_events": []
+}

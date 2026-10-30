@@ -1,0 +1,47 @@
+model_093  FireSprinklerSystem
+
+1) รหัสเงื่อนไข (guard)
+   a1   optIn = 1
+
+2) Guard tree
+   (root)
+   └── a1  optIn = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendcheckValve_1
+   e2   receivecheckValve_1
+   e3   sendlogValve_2
+   e4   receivelogValve_2
+   e5   sendsendAlarm_3_opt1  [a1]
+   e6   receivesendAlarm_3_opt1  [a1]
+   e7   sendupdateFire_4_opt1  [a1]
+   e8   receiveupdateFire_4_opt1  [a1]
+   e9   sendnotifyFire_5
+   e10  receivenotifyFire_5
+   e11  sendconfirmFire_6
+   e12  receiveconfirmFire_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendcheckValve_1
+       └── e2 receivecheckValve_1
+           └── e3 sendlogValve_2
+               └── e4 receivelogValve_2
+                   └── e5 sendsendAlarm_3_opt1  [a1]
+                       └── e6 receivesendAlarm_3_opt1  [a1]
+                           └── e7 sendupdateFire_4_opt1  [a1]
+                               └── e8 receiveupdateFire_4_opt1  [a1]
+                                   └── e9 sendnotifyFire_5
+                                       └── e10 receivenotifyFire_5
+                                           └── e11 sendconfirmFire_6
+                                               └── e12 receiveconfirmFire_6
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12

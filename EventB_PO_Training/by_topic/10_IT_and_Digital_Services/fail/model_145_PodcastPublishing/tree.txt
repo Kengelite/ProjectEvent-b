@@ -1,0 +1,76 @@
+model_145  PodcastPublishing
+
+1) รหัสเงื่อนไข (guard)
+   a1   retryNo < 3
+   b1   retryNo mod 3 = 0
+   b2   retryNo mod 3 ≠ 0
+
+2) Guard tree
+   (root)
+   └── a1  retryNo < 3
+       ├── b1  retryNo mod 3 = 0
+       └── b2  retryNo mod 3 ≠ 0
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendvalidateFeed_1
+   e2   receivevalidateFeed_1
+   e3   sendassignAudio_2
+   e4   receiveassignAudio_2
+   e5   sendsendEpisode_3  [a1]
+   e6   receivesendEpisode_3  [a1]
+   e7   sendreserveEpisode_4  [a1 b1]
+   e8   receivereserveEpisode_4  [a1 b1]
+   e9   sendissueAudio_5  [a1 b1]
+   e10  receiveissueAudio_5  [a1 b1]
+   e11  sendcheckFeed_6  [a1 b2]
+   e12  receivecheckFeed_6  [a1 b2]
+   e13  sendsendAudio_7  [a1]
+   e14  receivesendAudio_7  [a1]
+   e15  sendlogAudio_8
+   e16  receivelogAudio_8
+   e17  checkloop_sendEpisode_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6
+       ├── e7 → e8 → e9 → e10 → e13 → e14
+       │   ├── e15 → e16
+       │   └── e17 ↺ e5
+       └── e11 → e12 → e13 → e14
+           ├── e15 → e16
+           └── e17 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendvalidateFeed_1
+       └── e2 receivevalidateFeed_1
+           └── e3 sendassignAudio_2
+               └── e4 receiveassignAudio_2
+                   └── e5 sendsendEpisode_3  [a1]
+                       └── e6 receivesendEpisode_3  [a1]
+                           ├── e7 sendreserveEpisode_4  [a1 b1]
+                           │   └── e8 receivereserveEpisode_4  [a1 b1]
+                           │       └── e9 sendissueAudio_5  [a1 b1]
+                           │           └── e10 receiveissueAudio_5  [a1 b1]
+                           │               └── e13 sendsendAudio_7  [a1]
+                           │                   └── e14 receivesendAudio_7  [a1]
+                           │                       ├── e15 sendlogAudio_8
+                           │                       │   └── e16 receivelogAudio_8
+                           │                       └── e17 checkloop_sendEpisode_3_loop1  [a1]  ↺ กลับไป sendsendEpisode_3
+                           └── e11 sendcheckFeed_6  [a1 b2]
+                               └── e12 receivecheckFeed_6  [a1 b2]
+                                   └── e13 sendsendAudio_7  [a1]
+                                       └── e14 receivesendAudio_7  [a1]
+                                           ├── e15 sendlogAudio_8
+                                           │   └── e16 receivelogAudio_8
+                                           └── e17 checkloop_sendEpisode_3_loop1  [a1]  ↺ กลับไป sendsendEpisode_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5

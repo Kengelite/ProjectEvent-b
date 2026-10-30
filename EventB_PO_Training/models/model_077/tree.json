@@ -1,0 +1,408 @@
+{
+ "guard_codes": {
+  "a1": "mode = MANUAL",
+  "a2": "mode = AUTO",
+  "b1": "t_obs ≤ 27",
+  "b2": "t_obs > 27"
+ },
+ "event_codes": {
+  "e1": "sendissueFeedback_1",
+  "e2": "receiveissueFeedback_1",
+  "e3": "sendassignFeedback_2",
+  "e4": "receiveassignFeedback_2",
+  "e5": "sendreserveGrade_3",
+  "e6": "receivereserveGrade_3",
+  "e7": "sendlogGrade_4",
+  "e8": "receivelogGrade_4",
+  "e9": "sendcheckSubmission_5",
+  "e10": "receivecheckSubmission_5",
+  "e11": "sendackGrade_6",
+  "e12": "receiveackGrade_6",
+  "e13": "sendnotifyGrade_7",
+  "e14": "receivenotifyGrade_7",
+  "e15": "sendupdateGrade_8",
+  "e16": "receiveupdateGrade_8",
+  "e17": "sendvalidateSubmission_9",
+  "e18": "receivevalidateSubmission_9",
+  "e19": "sendackSubmission_10",
+  "e20": "receiveackSubmission_10",
+  "e21": "sendreleaseSubmission_11",
+  "e22": "receivereleaseSubmission_11"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a2"
+  ],
+  "e8": [
+   "a2"
+  ],
+  "e9": [
+   "a2"
+  ],
+  "e10": [
+   "a2"
+  ],
+  "e11": [],
+  "e12": [],
+  "e13": [],
+  "e14": [],
+  "e15": [
+   "b1"
+  ],
+  "e16": [
+   "b1"
+  ],
+  "e17": [
+   "b2"
+  ],
+  "e18": [
+   "b2"
+  ],
+  "e19": [
+   "b2"
+  ],
+  "e20": [
+   "b2"
+  ],
+  "e21": [],
+  "e22": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  },
+  "a2": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2",
+  "a2 -> b1",
+  "a2 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendissueFeedback_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveissueFeedback_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendassignFeedback_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveassignFeedback_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendreserveGrade_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivereserveGrade_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendackGrade_6",
+                "code": "e11",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveackGrade_6",
+                  "code": "e12",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendnotifyGrade_7",
+                    "code": "e13",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivenotifyGrade_7",
+                      "code": "e14",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendupdateGrade_8",
+                        "code": "e15",
+                        "guards": [
+                         "b1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveupdateGrade_8",
+                          "code": "e16",
+                          "guards": [
+                           "b1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseSubmission_11",
+                            "code": "e21",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseSubmission_11",
+                              "code": "e22",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendvalidateSubmission_9",
+                        "code": "e17",
+                        "guards": [
+                         "b2"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivevalidateSubmission_9",
+                          "code": "e18",
+                          "guards": [
+                           "b2"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendackSubmission_10",
+                            "code": "e19",
+                            "guards": [
+                             "b2"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveackSubmission_10",
+                              "code": "e20",
+                              "guards": [
+                               "b2"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreleaseSubmission_11",
+                                "code": "e21",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivereleaseSubmission_11",
+                                  "code": "e22",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendlogGrade_4",
+            "code": "e7",
+            "guards": [
+             "a2"
+            ],
+            "children": [
+             {
+              "event": "receivelogGrade_4",
+              "code": "e8",
+              "guards": [
+               "a2"
+              ],
+              "children": [
+               {
+                "event": "sendcheckSubmission_5",
+                "code": "e9",
+                "guards": [
+                 "a2"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckSubmission_5",
+                  "code": "e10",
+                  "guards": [
+                   "a2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendackGrade_6",
+                    "code": "e11",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receiveackGrade_6",
+                      "code": "e12",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendnotifyGrade_7",
+                        "code": "e13",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyGrade_7",
+                          "code": "e14",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendupdateGrade_8",
+                            "code": "e15",
+                            "guards": [
+                             "b1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveupdateGrade_8",
+                              "code": "e16",
+                              "guards": [
+                               "b1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreleaseSubmission_11",
+                                "code": "e21",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivereleaseSubmission_11",
+                                  "code": "e22",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendvalidateSubmission_9",
+                            "code": "e17",
+                            "guards": [
+                             "b2"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivevalidateSubmission_9",
+                              "code": "e18",
+                              "guards": [
+                               "b2"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendackSubmission_10",
+                                "code": "e19",
+                                "guards": [
+                                 "b2"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveackSubmission_10",
+                                  "code": "e20",
+                                  "guards": [
+                                   "b2"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendreleaseSubmission_11",
+                                    "code": "e21",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receivereleaseSubmission_11",
+                                      "code": "e22",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e21 -> e22",
+  "e1 -> e2 -> e3 -> e4 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,290 @@
+{
+ "guard_codes": {
+  "a1": "t_obs ≤ 58",
+  "a2": "t_obs > 58"
+ },
+ "event_codes": {
+  "e1": "sendrequestLog_1",
+  "e2": "receiverequestLog_1",
+  "e3": "sendscheduleEntry_2",
+  "e4": "receivescheduleEntry_2",
+  "e5": "sendcheckLog_3",
+  "e6": "receivecheckLog_3",
+  "e7": "sendcancelCurfew_4",
+  "e8": "receivecancelCurfew_4",
+  "e9": "sendreportCurfew_5",
+  "e10": "receivereportCurfew_5",
+  "e11": "sendqueryEntry_6",
+  "e12": "receivequeryEntry_6",
+  "e13": "sendrequestCurfew_7",
+  "e14": "receiverequestCurfew_7",
+  "e15": "sendapproveLog_8",
+  "e16": "receiveapproveLog_8",
+  "e17": "sendsendCurfew_9",
+  "e18": "receivesendCurfew_9",
+  "e19": "sendupdateEntry_10",
+  "e20": "receiveupdateEntry_10",
+  "e21": "sendsyncCurfew_11",
+  "e22": "receivesyncCurfew_11",
+  "e23": "sendsendEntry_12",
+  "e24": "receivesendEntry_12"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": [],
+  "e13": [],
+  "e14": [],
+  "e15": [
+   "a1"
+  ],
+  "e16": [
+   "a1"
+  ],
+  "e17": [
+   "a1"
+  ],
+  "e18": [
+   "a1"
+  ],
+  "e19": [
+   "a2"
+  ],
+  "e20": [
+   "a2"
+  ],
+  "e21": [
+   "a2"
+  ],
+  "e22": [
+   "a2"
+  ],
+  "e23": [],
+  "e24": []
+ },
+ "guard_tree": {
+  "a1": {},
+  "a2": {}
+ },
+ "guard_paths": [
+  "a1",
+  "a2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendrequestLog_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiverequestLog_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendscheduleEntry_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivescheduleEntry_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendcheckLog_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receivecheckLog_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendcancelCurfew_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivecancelCurfew_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendreportCurfew_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivereportCurfew_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendqueryEntry_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivequeryEntry_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendrequestCurfew_7",
+                            "code": "e13",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receiverequestCurfew_7",
+                              "code": "e14",
+                              "guards": [],
+                              "children": [
+                               {
+                                "event": "sendapproveLog_8",
+                                "code": "e15",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveLog_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "a1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendsendCurfew_9",
+                                    "code": "e17",
+                                    "guards": [
+                                     "a1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivesendCurfew_9",
+                                      "code": "e18",
+                                      "guards": [
+                                       "a1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendsendEntry_12",
+                                        "code": "e23",
+                                        "guards": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesendEntry_12",
+                                          "code": "e24",
+                                          "guards": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "sendupdateEntry_10",
+                                "code": "e19",
+                                "guards": [
+                                 "a2"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveupdateEntry_10",
+                                  "code": "e20",
+                                  "guards": [
+                                   "a2"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendsyncCurfew_11",
+                                    "code": "e21",
+                                    "guards": [
+                                     "a2"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivesyncCurfew_11",
+                                      "code": "e22",
+                                      "guards": [
+                                       "a2"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendsendEntry_12",
+                                        "code": "e23",
+                                        "guards": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesendEntry_12",
+                                          "code": "e24",
+                                          "guards": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e23 -> e24",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24"
+ ],
+ "unplaced_events": []
+}

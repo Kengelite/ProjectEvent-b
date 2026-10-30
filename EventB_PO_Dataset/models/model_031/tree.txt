@@ -1,0 +1,67 @@
+model_031  OnlineExam
+
+1) รหัสเงื่อนไข (guard)
+   a1   questionNo < 20
+   b1   autosaveCount < 3
+
+2) Guard tree
+   (root)
+   └── a1  questionNo < 20
+       └── b1  autosaveCount < 3
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendlogin_1
+   e2   receivelogin_1
+   e3   sendfetchQuestion_2  [a1]
+   e4   receivefetchQuestion_2  [a1]
+   e5   sendquestionData_3  [a1]
+   e6   receivequestionData_3  [a1]
+   e7   sendautosave_4  [a1 b1]
+   e8   receiveautosave_4  [a1 b1]
+   e9   sendsaveAck_5  [a1 b1]
+   e10  receivesaveAck_5  [a1 b1]
+   e11  sendsubmitAnswer_6  [a1]
+   e12  receivesubmitAnswer_6  [a1]
+   e13  sendflagBehavior_7
+   e14  receiveflagBehavior_7
+   e15  sendexamResult_8
+   e16  receiveexamResult_8
+   e17  checkloop_fetchQuestion_2_loop1  [a1]
+   e18  checkloop_autosave_4_loop2  [a1 b1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10
+       ├── e11 → e12
+       │   ├── e13 → e14 → e15 → e16
+       │   └── e17 ↺ e3
+       └── e18 ↺ e7
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendlogin_1
+       └── e2 receivelogin_1
+           └── e3 sendfetchQuestion_2  [a1]
+               └── e4 receivefetchQuestion_2  [a1]
+                   └── e5 sendquestionData_3  [a1]
+                       └── e6 receivequestionData_3  [a1]
+                           └── e7 sendautosave_4  [a1 b1]
+                               └── e8 receiveautosave_4  [a1 b1]
+                                   └── e9 sendsaveAck_5  [a1 b1]
+                                       └── e10 receivesaveAck_5  [a1 b1]
+                                           ├── e11 sendsubmitAnswer_6  [a1]
+                                           │   └── e12 receivesubmitAnswer_6  [a1]
+                                           │       ├── e13 sendflagBehavior_7
+                                           │       │   └── e14 receiveflagBehavior_7
+                                           │       │       └── e15 sendexamResult_8
+                                           │       │           └── e16 receiveexamResult_8
+                                           │       └── e17 checkloop_fetchQuestion_2_loop1  [a1]  ↺ กลับไป sendfetchQuestion_2
+                                           └── e18 checkloop_autosave_4_loop2  [a1 b1]  ↺ กลับไป sendautosave_4
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 ↺ e3
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e18 ↺ e7

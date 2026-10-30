@@ -1,0 +1,224 @@
+{
+ "guard_codes": {
+  "a1": "passNo < 11"
+ },
+ "event_codes": {
+  "e1": "sendqueryCounter_1",
+  "e2": "receivequeryCounter_1",
+  "e3": "sendassignService_2",
+  "e4": "receiveassignService_2",
+  "e5": "sendscheduleService_3",
+  "e6": "receivescheduleService_3",
+  "e7": "sendsyncTicket_4",
+  "e8": "receivesyncTicket_4",
+  "e9": "sendfetchTicket_5",
+  "e10": "receivefetchTicket_5",
+  "e11": "sendackCounter_6",
+  "e12": "receiveackCounter_6",
+  "e13": "sendnotifyService_7",
+  "e14": "receivenotifyService_7",
+  "e15": "sendqueryTicket_8",
+  "e16": "receivequeryTicket_8",
+  "e17": "checkloop_scheduleService_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendqueryCounter_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivequeryCounter_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendassignService_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveassignService_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendscheduleService_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivescheduleService_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendsyncTicket_4",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receivesyncTicket_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendfetchTicket_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivefetchTicket_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendackCounter_6",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveackCounter_6",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendnotifyService_7",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivenotifyService_7",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendqueryTicket_8",
+                                "code": "e15",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receivequeryTicket_8",
+                                  "code": "e16",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_scheduleService_3_loop1",
+                                "code": "e17",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "loop_back_to": "sendscheduleService_3",
+                                "loop_back_to_code": "e5",
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5"
+ ],
+ "unplaced_events": []
+}

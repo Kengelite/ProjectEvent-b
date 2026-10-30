@@ -1,0 +1,71 @@
+model_117  JobApplicationPortal
+
+1) รหัสเงื่อนไข (guard)
+   a1   stage = ACTIVE
+   a2   stage = IDLE
+
+2) Guard tree
+   (root)
+   ├── a1  stage = ACTIVE
+   └── a2  stage = IDLE
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendassignInterview_1
+   e2   receiveassignInterview_1
+   e3   sendcheckResume_2
+   e4   receivecheckResume_2
+   e5   sendvalidateInterview_3
+   e6   receivevalidateInterview_3
+   e7   sendreleaseInterview_4
+   e8   receivereleaseInterview_4
+   e9   sendackOffer_5
+   e10  receiveackOffer_5
+   e11  sendrequestOffer_6
+   e12  receiverequestOffer_6
+   e13  sendrequestInterview_7
+   e14  receiverequestInterview_7
+   e15  sendupdateOffer_8  [a1]
+   e16  receiveupdateOffer_8  [a1]
+   e17  sendcancelResume_9  [a2]
+   e18  receivecancelResume_9  [a2]
+   e19  sendassignResume_10
+   e20  receiveassignResume_10
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
+       ├── e15 → e16 → e19 → e20
+       └── e17 → e18 → e19 → e20
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendassignInterview_1
+       └── e2 receiveassignInterview_1
+           └── e3 sendcheckResume_2
+               └── e4 receivecheckResume_2
+                   └── e5 sendvalidateInterview_3
+                       └── e6 receivevalidateInterview_3
+                           └── e7 sendreleaseInterview_4
+                               └── e8 receivereleaseInterview_4
+                                   └── e9 sendackOffer_5
+                                       └── e10 receiveackOffer_5
+                                           └── e11 sendrequestOffer_6
+                                               └── e12 receiverequestOffer_6
+                                                   └── e13 sendrequestInterview_7
+                                                       └── e14 receiverequestInterview_7
+                                                           ├── e15 sendupdateOffer_8  [a1]
+                                                           │   └── e16 receiveupdateOffer_8  [a1]
+                                                           │       └── e19 sendassignResume_10
+                                                           │           └── e20 receiveassignResume_10
+                                                           └── e17 sendcancelResume_9  [a2]
+                                                               └── e18 receivecancelResume_9  [a2]
+                                                                   └── e19 sendassignResume_10
+                                                                       └── e20 receiveassignResume_10
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 -> e20
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18 -> e19 -> e20

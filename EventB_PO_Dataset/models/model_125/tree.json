@@ -1,0 +1,255 @@
+{
+ "guard_codes": {
+  "a1": "roundNo < 6",
+  "b1": "roundNo mod 3 = 0",
+  "b2": "roundNo mod 3 ≠ 0"
+ },
+ "event_codes": {
+  "e1": "sendcheckImage_1",
+  "e2": "receivecheckImage_1",
+  "e3": "sendassignImage_2",
+  "e4": "receiveassignImage_2",
+  "e5": "sendassignReport_3",
+  "e6": "receiveassignReport_3",
+  "e7": "sendapproveReport_4",
+  "e8": "receiveapproveReport_4",
+  "e9": "sendrequestImage_5",
+  "e10": "receiverequestImage_5",
+  "e11": "sendvalidateImage_6",
+  "e12": "receivevalidateImage_6",
+  "e13": "sendsyncReport_7",
+  "e14": "receivesyncReport_7",
+  "e15": "checkloop_assignReport_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1",
+   "b2"
+  ],
+  "e10": [
+   "a1",
+   "b2"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [],
+  "e14": [],
+  "e15": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendcheckImage_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivecheckImage_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendassignImage_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveassignImage_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendassignReport_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveassignReport_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendapproveReport_4",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveapproveReport_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvalidateImage_6",
+                    "code": "e11",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevalidateImage_6",
+                      "code": "e12",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsyncReport_7",
+                        "code": "e13",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivesyncReport_7",
+                          "code": "e14",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_assignReport_3_loop1",
+                        "code": "e15",
+                        "guards": [
+                         "a1"
+                        ],
+                        "loop_back_to": "sendassignReport_3",
+                        "loop_back_to_code": "e5",
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendrequestImage_5",
+                "code": "e9",
+                "guards": [
+                 "a1",
+                 "b2"
+                ],
+                "children": [
+                 {
+                  "event": "receiverequestImage_5",
+                  "code": "e10",
+                  "guards": [
+                   "a1",
+                   "b2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvalidateImage_6",
+                    "code": "e11",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevalidateImage_6",
+                      "code": "e12",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsyncReport_7",
+                        "code": "e13",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivesyncReport_7",
+                          "code": "e14",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_assignReport_3_loop1",
+                        "code": "e15",
+                        "guards": [
+                         "a1"
+                        ],
+                        "loop_back_to": "sendassignReport_3",
+                        "loop_back_to_code": "e5",
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12 -> e13 -> e14",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12 -> e15 ↺ e5",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e15 ↺ e5"
+ ],
+ "unplaced_events": []
+}

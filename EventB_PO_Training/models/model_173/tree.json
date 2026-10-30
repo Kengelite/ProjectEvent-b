@@ -1,0 +1,334 @@
+{
+ "guard_codes": {
+  "a1": "needAck = 1",
+  "b1": "mode = GOLD",
+  "b2": "mode = SILVER",
+  "b3": "mode = BRONZE"
+ },
+ "event_codes": {
+  "e1": "sendsyncRefill_1",
+  "e2": "receivesyncRefill_1",
+  "e3": "sendvalidateRefill_2",
+  "e4": "receivevalidateRefill_2",
+  "e5": "sendfetchReminder_3_opt1",
+  "e6": "receivefetchReminder_3_opt1",
+  "e7": "sendqueryReminder_4_opt1",
+  "e8": "receivequeryReminder_4_opt1",
+  "e9": "sendconfirmReminder_5",
+  "e10": "receiveconfirmReminder_5",
+  "e11": "sendissueDose_6",
+  "e12": "receiveissueDose_6",
+  "e13": "sendcancelRefill_7",
+  "e14": "receivecancelRefill_7",
+  "e15": "sendconfirmDose_8",
+  "e16": "receiveconfirmDose_8",
+  "e17": "sendqueryDose_9",
+  "e18": "receivequeryDose_9",
+  "e19": "sendackRefill_10",
+  "e20": "receiveackRefill_10",
+  "e21": "sendscheduleRefill_11",
+  "e22": "receivescheduleRefill_11",
+  "e23": "sendapproveReminder_12",
+  "e24": "receiveapproveReminder_12"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": [],
+  "e13": [
+   "b1"
+  ],
+  "e14": [
+   "b1"
+  ],
+  "e15": [
+   "b1"
+  ],
+  "e16": [
+   "b1"
+  ],
+  "e17": [
+   "b2"
+  ],
+  "e18": [
+   "b2"
+  ],
+  "e19": [
+   "b2"
+  ],
+  "e20": [
+   "b2"
+  ],
+  "e21": [
+   "b3"
+  ],
+  "e22": [
+   "b3"
+  ],
+  "e23": [],
+  "e24": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {},
+   "b3": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2",
+  "a1 -> b3"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsyncRefill_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesyncRefill_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendvalidateRefill_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivevalidateRefill_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendfetchReminder_3_opt1",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivefetchReminder_3_opt1",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendqueryReminder_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receivequeryReminder_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmReminder_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmReminder_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendissueDose_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receiveissueDose_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendcancelRefill_7",
+                            "code": "e13",
+                            "guards": [
+                             "b1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecancelRefill_7",
+                              "code": "e14",
+                              "guards": [
+                               "b1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendconfirmDose_8",
+                                "code": "e15",
+                                "guards": [
+                                 "b1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveconfirmDose_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "b1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveReminder_12",
+                                    "code": "e23",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveReminder_12",
+                                      "code": "e24",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendqueryDose_9",
+                            "code": "e17",
+                            "guards": [
+                             "b2"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivequeryDose_9",
+                              "code": "e18",
+                              "guards": [
+                               "b2"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendackRefill_10",
+                                "code": "e19",
+                                "guards": [
+                                 "b2"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveackRefill_10",
+                                  "code": "e20",
+                                  "guards": [
+                                   "b2"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveReminder_12",
+                                    "code": "e23",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveReminder_12",
+                                      "code": "e24",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendscheduleRefill_11",
+                            "code": "e21",
+                            "guards": [
+                             "b3"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivescheduleRefill_11",
+                              "code": "e22",
+                              "guards": [
+                               "b3"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapproveReminder_12",
+                                "code": "e23",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveReminder_12",
+                                  "code": "e24",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 -> e24",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24"
+ ],
+ "unplaced_events": []
+}

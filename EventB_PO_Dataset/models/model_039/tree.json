@@ -1,0 +1,167 @@
+{
+ "guard_codes": {
+  "a1": "autoPay = 1"
+ },
+ "event_codes": {
+  "e1": "sendsendUsage_1",
+  "e2": "receivesendUsage_1",
+  "e3": "sendusageAck_2",
+  "e4": "receiveusageAck_2",
+  "e5": "sendgenerateBill_3",
+  "e6": "receivegenerateBill_3",
+  "e7": "sendpayBill_4",
+  "e8": "receivepayBill_4",
+  "e9": "sendsetAutoPay_5_opt1",
+  "e10": "receivesetAutoPay_5_opt1",
+  "e11": "sendautoPayOK_6_opt1",
+  "e12": "receiveautoPayOK_6_opt1",
+  "e13": "sendreceiptIssued_7",
+  "e14": "receivereceiptIssued_7"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [],
+  "e14": []
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsendUsage_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesendUsage_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendusageAck_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveusageAck_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendgenerateBill_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receivegenerateBill_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendpayBill_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivepayBill_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendsetAutoPay_5_opt1",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesetAutoPay_5_opt1",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendautoPayOK_6_opt1",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveautoPayOK_6_opt1",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreceiptIssued_7",
+                            "code": "e13",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivereceiptIssued_7",
+                              "code": "e14",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

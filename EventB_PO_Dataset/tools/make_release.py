@@ -13,13 +13,15 @@ Output (rebuilt from scratch each run):
     csv/summary.csv             per-model numbers (features + labels + topic + split)
     csv/pass_fail_list.csv      per-model pass / fail
     csv/model_categories.csv    topic, diagram error, expected vs Rodin (analysis only)
-    models/model_XXX/           model.txt, label.json, po_details.json, features.json
+    models/model_XXX/           model.txt, label.json, po_details.json, features.json, tree.txt, tree.json
     by_topic/<NN_Topic>/<pass|fail>/<model_XXX_Case>/   the same models grouped by topic and
                                 Rodin result, with a list.csv per topic
     FLOW.pdf, FLOW.png          workflow diagram (tools/make_user_flow.py)
     SOURCES.md                  provenance (tools, versions, dates) and references
     PROVENANCE.pdf, csv/provenance.csv   where every single model came from
     SIMILAR_WORK.pdf, csv/similar_work.csv   published work similar to each model (related work)
+    TREES.pdf, data/trees.jsonl, csv/guard_codes.csv   event tree + guard tree of each model
+                                (tools/extract_trees.py, tools/make_tree_report.py)
 
 Nothing that reveals the answer (meta.json, diagrams, Rodin files) is copied into the
 inputs. The split is stratified by result and by kind of failing PO; model_001 (the
@@ -33,7 +35,7 @@ DATASET = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from categorize import TOPIC, TOPIC_NAMES                       # noqa: E402
 from make_batch_report import CHROME, CSS, esc                  # noqa: E402
-import make_user_flow                                           # noqa: E402
+import extract_trees, make_tree_report, make_user_flow          # noqa: E402
 
 SPLIT = (("train", 0.70), ("val", 0.15), ("test", 0.15))
 PROJECT = os.path.dirname(DATASET)
@@ -556,6 +558,7 @@ def write_csv(path, rows, fields):
 
 
 def build(out, seed):
+    extract_trees.main()
     rows, po_rows = load()
     split = assign_splits(rows, seed)
     for r in rows:
@@ -595,9 +598,24 @@ def build(out, seed):
     for r in rows:
         src, dst = os.path.join(DATASET, "models", r["id"]), os.path.join(out, "models", r["id"])
         os.makedirs(dst)
-        for f in ("model.txt", "label.json", "po_details.json", "features.json"):
+        for f in ("model.txt", "label.json", "po_details.json", "features.json", "tree.txt", "tree.json"):
             if os.path.exists(os.path.join(src, f)):
                 shutil.copy2(os.path.join(src, f), dst)
+
+    trees = {r["id"]: json.load(open(p)) for r in rows
+             if os.path.exists(p := os.path.join(DATASET, "models", r["id"], "tree.json"))}
+    with open(os.path.join(out, "data", "trees.jsonl"), "w", encoding="utf-8") as f:
+        for r in rows:
+            if r["id"] in trees:
+                t = trees[r["id"]]
+                f.write(json.dumps({"id": r["id"], "case": r["case"], "split": r["split"],
+                                    **{k: t[k] for k in ("guard_codes", "guard_paths", "event_codes", "event_guards",
+                                                         "event_paths")}}, ensure_ascii=False) + "\n")
+    write_csv(os.path.join(out, "csv", "guard_codes.csv"),
+              [{"id": r["id"], "case": r["case"], "code": c, "guard": g}
+               for r in rows if r["id"] in trees for c, g in trees[r["id"]]["guard_codes"].items()],
+              ["id", "case", "code", "guard"])
+    make_tree_report.main(out, rows, trees)
 
     by_topic(out, rows)
     sim = similar_rows(rows)
@@ -694,16 +712,19 @@ def pdf(out, rows, po_rows):
             "├── data/",
             "│   ├── dataset.jsonl         ← ทุกโมเดล: ข้อความ Event-B + feature + label + topic + split",
             "│   ├── po_details.jsonl      ← ผลราย PO (ผ่าน / ไม่ผ่าน)",
-            "│   └── split.csv             ← โมเดลไหนอยู่ train / val / test",
+            "│   ├── split.csv             ← โมเดลไหนอยู่ train / val / test",
+            "│   └── trees.jsonl           ← event tree + guard tree ของทุกโมเดล (รหัส + เส้นทาง)",
             "├── csv/",
             "│   ├── summary.csv           ← ตัวเลขต่อโมเดล (feature + label)",
             "│   ├── pass_fail_list.csv    ← pass / fail ต่อโมเดล",
-            "│   └── model_categories.csv  ← หัวข้อ + จุดผิดใน diagram (ใช้วิเคราะห์ ห้ามเป็น input)",
+            "│   ├── model_categories.csv  ← หัวข้อ + จุดผิดใน diagram (ใช้วิเคราะห์ ห้ามเป็น input)",
+            "│   └── guard_codes.csv       ← รหัส guard ของทุกโมเดล (a1 = cycleNo < 8 …)",
             "├── models/model_001 … model_198/",
             "│   ├── model.txt             ← Event-B (input)",
             "│   ├── label.json            ← total / discharged / failed",
             "│   ├── po_details.json       ← ผลราย PO",
-            "│   └── features.json",
+            "│   ├── features.json",
+            "│   └── tree.txt · tree.json  ← event tree + guard tree",
             "├── by_topic/                 ← โมเดลชุดเดียวกัน แยกตามหัวข้อ และผล Rodin",
             "│   ├── 01_Finance_and_Payment/",
             "│   │   ├── list.csv          ← รายชื่อ + ผล ของหัวข้อนี้",
@@ -713,6 +734,7 @@ def pdf(out, rows, po_rows):
             "├── FLOW.pdf · FLOW.png       ← แผนภาพขั้นตอนการดำเนินงาน",
             "├── PROVENANCE.pdf            ← ที่มาของแบบจำลองแต่ละตัว (csv/provenance.csv)",
             "├── SIMILAR_WORK.pdf          ← งานตีพิมพ์ที่คล้ายกับแบบจำลอง (csv/similar_work.csv)",
+            "├── TREES.pdf                 ← วิธีสร้าง event tree / guard tree และรหัสของทุกโมเดล",
             "└── SOURCES.md                ← แหล่งที่มาและเอกสารอ้างอิง"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
 

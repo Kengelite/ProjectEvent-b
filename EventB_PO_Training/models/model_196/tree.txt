@@ -1,0 +1,46 @@
+model_196  WarehousePicking
+
+1) รหัสเงื่อนไข (guard)
+   (ไม่มีเงื่อนไขจาก diagram)
+
+2) Guard tree
+   (root)
+
+   เส้นทาง:
+   -
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendreportTote_1
+   e2   receivereportTote_1
+   e3   sendsendOrder_2
+   e4   receivesendOrder_2
+   e5   sendlogTote_3
+   e6   receivelogTote_3
+   e7   sendlogBin_4
+   e8   receivelogBin_4
+   e9   sendassignBin_5
+   e10  receiveassignBin_5
+   e11  sendreserveTote_6
+   e12  receivereserveTote_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendreportTote_1
+       └── e2 receivereportTote_1
+           └── e3 sendsendOrder_2
+               └── e4 receivesendOrder_2
+                   └── e5 sendlogTote_3
+                       └── e6 receivelogTote_3
+                           └── e7 sendlogBin_4
+                               └── e8 receivelogBin_4
+                                   └── e9 sendassignBin_5
+                                       └── e10 receiveassignBin_5
+                                           └── e11 sendreserveTote_6
+                                               └── e12 receivereserveTote_6
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12

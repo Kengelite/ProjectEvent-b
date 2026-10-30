@@ -1,0 +1,88 @@
+model_173  SmartPillBox
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+   b1   mode = GOLD
+   b2   mode = SILVER
+   b3   mode = BRONZE
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+       ├── b1  mode = GOLD
+       ├── b2  mode = SILVER
+       └── b3  mode = BRONZE
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+   a1 -> b3
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendsyncRefill_1
+   e2   receivesyncRefill_1
+   e3   sendvalidateRefill_2
+   e4   receivevalidateRefill_2
+   e5   sendfetchReminder_3_opt1  [a1]
+   e6   receivefetchReminder_3_opt1  [a1]
+   e7   sendqueryReminder_4_opt1  [a1]
+   e8   receivequeryReminder_4_opt1  [a1]
+   e9   sendconfirmReminder_5
+   e10  receiveconfirmReminder_5
+   e11  sendissueDose_6
+   e12  receiveissueDose_6
+   e13  sendcancelRefill_7  [b1]
+   e14  receivecancelRefill_7  [b1]
+   e15  sendconfirmDose_8  [b1]
+   e16  receiveconfirmDose_8  [b1]
+   e17  sendqueryDose_9  [b2]
+   e18  receivequeryDose_9  [b2]
+   e19  sendackRefill_10  [b2]
+   e20  receiveackRefill_10  [b2]
+   e21  sendscheduleRefill_11  [b3]
+   e22  receivescheduleRefill_11  [b3]
+   e23  sendapproveReminder_12
+   e24  receiveapproveReminder_12
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12
+       ├── e13 → e14 → e15 → e16 → e23 → e24
+       ├── e17 → e18 → e19 → e20 → e23 → e24
+       └── e21 → e22 → e23 → e24
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendsyncRefill_1
+       └── e2 receivesyncRefill_1
+           └── e3 sendvalidateRefill_2
+               └── e4 receivevalidateRefill_2
+                   └── e5 sendfetchReminder_3_opt1  [a1]
+                       └── e6 receivefetchReminder_3_opt1  [a1]
+                           └── e7 sendqueryReminder_4_opt1  [a1]
+                               └── e8 receivequeryReminder_4_opt1  [a1]
+                                   └── e9 sendconfirmReminder_5
+                                       └── e10 receiveconfirmReminder_5
+                                           └── e11 sendissueDose_6
+                                               └── e12 receiveissueDose_6
+                                                   ├── e13 sendcancelRefill_7  [b1]
+                                                   │   └── e14 receivecancelRefill_7  [b1]
+                                                   │       └── e15 sendconfirmDose_8  [b1]
+                                                   │           └── e16 receiveconfirmDose_8  [b1]
+                                                   │               └── e23 sendapproveReminder_12
+                                                   │                   └── e24 receiveapproveReminder_12
+                                                   ├── e17 sendqueryDose_9  [b2]
+                                                   │   └── e18 receivequeryDose_9  [b2]
+                                                   │       └── e19 sendackRefill_10  [b2]
+                                                   │           └── e20 receiveackRefill_10  [b2]
+                                                   │               └── e23 sendapproveReminder_12
+                                                   │                   └── e24 receiveapproveReminder_12
+                                                   └── e21 sendscheduleRefill_11  [b3]
+                                                       └── e22 receivescheduleRefill_11  [b3]
+                                                           └── e23 sendapproveReminder_12
+                                                               └── e24 receiveapproveReminder_12
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 -> e24
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24

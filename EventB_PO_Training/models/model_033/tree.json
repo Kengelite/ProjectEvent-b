@@ -1,0 +1,167 @@
+{
+ "guard_codes": {
+  "a1": "codeValid = 1"
+ },
+ "event_codes": {
+  "e1": "senddepositParcel_1",
+  "e2": "receivedepositParcel_1",
+  "e3": "sendlockerReceipt_2",
+  "e4": "receivelockerReceipt_2",
+  "e5": "sendsendPickupCode_3",
+  "e6": "receivesendPickupCode_3",
+  "e7": "sendenterCode_4",
+  "e8": "receiveenterCode_4",
+  "e9": "sendopenSlot_5_opt1",
+  "e10": "receiveopenSlot_5_opt1",
+  "e11": "sendslotClosed_6_opt1",
+  "e12": "receiveslotClosed_6_opt1",
+  "e13": "sendnotifyCourier_7",
+  "e14": "receivenotifyCourier_7"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [],
+  "e14": []
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "senddepositParcel_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivedepositParcel_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendlockerReceipt_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivelockerReceipt_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendsendPickupCode_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receivesendPickupCode_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendenterCode_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveenterCode_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendopenSlot_5_opt1",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveopenSlot_5_opt1",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendslotClosed_6_opt1",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveslotClosed_6_opt1",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendnotifyCourier_7",
+                            "code": "e13",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivenotifyCourier_7",
+                              "code": "e14",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

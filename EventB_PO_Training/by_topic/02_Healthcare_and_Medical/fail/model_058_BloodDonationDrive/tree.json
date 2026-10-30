@@ -1,0 +1,207 @@
+{
+ "guard_codes": {
+  "a1": "t_obs ≤ 8",
+  "b1": "withExtra = 1",
+  "a2": "t_obs > 8"
+ },
+ "event_codes": {
+  "e1": "sendackScreening_1",
+  "e2": "receiveackScreening_1",
+  "e3": "sendlogSlot_2",
+  "e4": "receivelogSlot_2",
+  "e5": "sendsyncSlot_3",
+  "e6": "receivesyncSlot_3",
+  "e7": "sendnotifyDonation_4_opt1",
+  "e8": "receivenotifyDonation_4_opt1",
+  "e9": "sendvalidateScreening_5",
+  "e10": "receivevalidateScreening_5",
+  "e11": "sendlogDonation_6",
+  "e12": "receivelogDonation_6",
+  "e13": "sendfetchScreening_7",
+  "e14": "receivefetchScreening_7"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a2"
+  ],
+  "e12": [
+   "a2"
+  ],
+  "e13": [],
+  "e14": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {}
+  },
+  "a2": {}
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendackScreening_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveackScreening_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendlogSlot_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivelogSlot_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendsyncSlot_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivesyncSlot_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyDonation_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyDonation_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvalidateScreening_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevalidateScreening_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendfetchScreening_7",
+                        "code": "e13",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivefetchScreening_7",
+                          "code": "e14",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendlogDonation_6",
+            "code": "e11",
+            "guards": [
+             "a2"
+            ],
+            "children": [
+             {
+              "event": "receivelogDonation_6",
+              "code": "e12",
+              "guards": [
+               "a2"
+              ],
+              "children": [
+               {
+                "event": "sendfetchScreening_7",
+                "code": "e13",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receivefetchScreening_7",
+                  "code": "e14",
+                  "guards": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
+  "e1 -> e2 -> e3 -> e4 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

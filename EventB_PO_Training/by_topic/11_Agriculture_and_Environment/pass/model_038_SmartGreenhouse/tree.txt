@@ -1,0 +1,70 @@
+model_038  SmartGreenhouse
+
+1) รหัสเงื่อนไข (guard)
+   a1   cycleNo < 24
+   b1   humidity < 40
+   b2   humidity ≥ 40
+
+2) Guard tree
+   (root)
+   └── a1  cycleNo < 24
+       ├── b1  humidity < 40
+       └── b2  humidity ≥ 40
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendstartCycle_1
+   e2   receivestartCycle_1
+   e3   sendreadClimate_2  [a1]
+   e4   receivereadClimate_2  [a1]
+   e5   sendclimateData_3  [a1]
+   e6   receiveclimateData_3  [a1]
+   e7   sendstartSprinkler_4  [a1 b1]
+   e8   receivestartSprinkler_4  [a1 b1]
+   e9   sendsprinklerOn_5  [a1 b1]
+   e10  receivesprinklerOn_5  [a1 b1]
+   e11  sendstartFan_6  [a1 b2]
+   e12  receivestartFan_6  [a1 b2]
+   e13  sendendCycle_7
+   e14  receiveendCycle_7
+   e15  checkloop_readClimate_2_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6
+       ├── e7 → e8 → e9 → e10
+       │   ├── e13 → e14
+       │   └── e15 ↺ e3
+       └── e11 → e12
+           ├── e13 → e14
+           └── e15 ↺ e3
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendstartCycle_1
+       └── e2 receivestartCycle_1
+           └── e3 sendreadClimate_2  [a1]
+               └── e4 receivereadClimate_2  [a1]
+                   └── e5 sendclimateData_3  [a1]
+                       └── e6 receiveclimateData_3  [a1]
+                           ├── e7 sendstartSprinkler_4  [a1 b1]
+                           │   └── e8 receivestartSprinkler_4  [a1 b1]
+                           │       └── e9 sendsprinklerOn_5  [a1 b1]
+                           │           └── e10 receivesprinklerOn_5  [a1 b1]
+                           │               ├── e13 sendendCycle_7
+                           │               │   └── e14 receiveendCycle_7
+                           │               └── e15 checkloop_readClimate_2_loop1  [a1]  ↺ กลับไป sendreadClimate_2
+                           └── e11 sendstartFan_6  [a1 b2]
+                               └── e12 receivestartFan_6  [a1 b2]
+                                   ├── e13 sendendCycle_7
+                                   │   └── e14 receiveendCycle_7
+                                   └── e15 checkloop_readClimate_2_loop1  [a1]  ↺ กลับไป sendreadClimate_2
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 ↺ e3
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e15 ↺ e3

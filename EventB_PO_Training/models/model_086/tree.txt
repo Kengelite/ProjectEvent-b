@@ -1,0 +1,68 @@
+model_086  DormLaundry
+
+1) รหัสเงื่อนไข (guard)
+   a1   cycleNo < 3
+
+2) Guard tree
+   (root)
+   └── a1  cycleNo < 3
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendackCredit_1
+   e2   receiveackCredit_1
+   e3   sendconfirmCredit_2
+   e4   receiveconfirmCredit_2
+   e5   sendreserveMachine_3  [a1]
+   e6   receivereserveMachine_3  [a1]
+   e7   sendnotifyCredit_4  [a1]
+   e8   receivenotifyCredit_4  [a1]
+   e9   sendreleaseCycle_5
+   e10  receivereleaseCycle_5
+   e11  sendfetchCredit_6
+   e12  receivefetchCredit_6
+   e13  sendsendCredit_7
+   e14  receivesendCredit_7
+   e15  sendfetchCycle_8
+   e16  receivefetchCycle_8
+   e17  sendcancelCycle_9
+   e18  receivecancelCycle_9
+   e19  sendqueryCredit_10
+   e20  receivequeryCredit_10
+   e21  checkloop_reserveMachine_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+       ├── e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20
+       └── e21 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendackCredit_1
+       └── e2 receiveackCredit_1
+           └── e3 sendconfirmCredit_2
+               └── e4 receiveconfirmCredit_2
+                   └── e5 sendreserveMachine_3  [a1]
+                       └── e6 receivereserveMachine_3  [a1]
+                           └── e7 sendnotifyCredit_4  [a1]
+                               └── e8 receivenotifyCredit_4  [a1]
+                                   ├── e9 sendreleaseCycle_5
+                                   │   └── e10 receivereleaseCycle_5
+                                   │       └── e11 sendfetchCredit_6
+                                   │           └── e12 receivefetchCredit_6
+                                   │               └── e13 sendsendCredit_7
+                                   │                   └── e14 receivesendCredit_7
+                                   │                       └── e15 sendfetchCycle_8
+                                   │                           └── e16 receivefetchCycle_8
+                                   │                               └── e17 sendcancelCycle_9
+                                   │                                   └── e18 receivecancelCycle_9
+                                   │                                       └── e19 sendqueryCredit_10
+                                   │                                           └── e20 receivequeryCredit_10
+                                   └── e21 checkloop_reserveMachine_3_loop1  [a1]  ↺ กลับไป sendreserveMachine_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e21 ↺ e5

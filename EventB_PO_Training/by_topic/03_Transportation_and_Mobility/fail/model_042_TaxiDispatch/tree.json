@@ -1,0 +1,159 @@
+{
+ "guard_codes": {
+  "a1": "shareRide = 1"
+ },
+ "event_codes": {
+  "e1": "sendrequestRide_1",
+  "e2": "receiverequestRide_1",
+  "e3": "sendfindDriver_2",
+  "e4": "receivefindDriver_2",
+  "e5": "senddriverAccept_3",
+  "e6": "receivedriverAccept_3",
+  "e7": "sendrideConfirmed_4",
+  "e8": "receiverideConfirmed_4",
+  "e9": "sendaddPassenger_5_opt1",
+  "e10": "receiveaddPassenger_5_opt1",
+  "e11": "sendtripComplete_6",
+  "e12": "receivetripComplete_6",
+  "e13": "sendchargeRider_7",
+  "e14": "receivechargeRider_7"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [],
+  "e8": [],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [],
+  "e12": [],
+  "e13": [],
+  "e14": []
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendrequestRide_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiverequestRide_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendfindDriver_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivefindDriver_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "senddriverAccept_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receivedriverAccept_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendrideConfirmed_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiverideConfirmed_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendaddPassenger_5_opt1",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveaddPassenger_5_opt1",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendtripComplete_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivetripComplete_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendchargeRider_7",
+                            "code": "e13",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivechargeRider_7",
+                              "code": "e14",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

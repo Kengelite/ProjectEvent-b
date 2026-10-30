@@ -1,0 +1,334 @@
+{
+ "guard_codes": {
+  "a1": "needAck = 1",
+  "b1": "mode = GOLD",
+  "b2": "mode = SILVER",
+  "b3": "mode = BRONZE"
+ },
+ "event_codes": {
+  "e1": "sendsyncSignature_1",
+  "e2": "receivesyncSignature_1",
+  "e3": "sendvalidateSignature_2",
+  "e4": "receivevalidateSignature_2",
+  "e5": "sendfetchRoute_3_opt1",
+  "e6": "receivefetchRoute_3_opt1",
+  "e7": "sendqueryRoute_4_opt1",
+  "e8": "receivequeryRoute_4_opt1",
+  "e9": "sendconfirmRoute_5",
+  "e10": "receiveconfirmRoute_5",
+  "e11": "sendissuePackage_6",
+  "e12": "receiveissuePackage_6",
+  "e13": "sendcancelSignature_7",
+  "e14": "receivecancelSignature_7",
+  "e15": "sendconfirmPackage_8",
+  "e16": "receiveconfirmPackage_8",
+  "e17": "sendqueryPackage_9",
+  "e18": "receivequeryPackage_9",
+  "e19": "sendackSignature_10",
+  "e20": "receiveackSignature_10",
+  "e21": "sendscheduleSignature_11",
+  "e22": "receivescheduleSignature_11",
+  "e23": "sendapproveRoute_12",
+  "e24": "receiveapproveRoute_12"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": [],
+  "e13": [
+   "b1"
+  ],
+  "e14": [
+   "b1"
+  ],
+  "e15": [
+   "b1"
+  ],
+  "e16": [
+   "b1"
+  ],
+  "e17": [
+   "b2"
+  ],
+  "e18": [
+   "b2"
+  ],
+  "e19": [
+   "b2"
+  ],
+  "e20": [
+   "b2"
+  ],
+  "e21": [
+   "b3"
+  ],
+  "e22": [
+   "b3"
+  ],
+  "e23": [],
+  "e24": []
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {},
+   "b3": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2",
+  "a1 -> b3"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsyncSignature_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesyncSignature_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendvalidateSignature_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivevalidateSignature_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendfetchRoute_3_opt1",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivefetchRoute_3_opt1",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendqueryRoute_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receivequeryRoute_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmRoute_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmRoute_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendissuePackage_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receiveissuePackage_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": [
+                           {
+                            "event": "sendcancelSignature_7",
+                            "code": "e13",
+                            "guards": [
+                             "b1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecancelSignature_7",
+                              "code": "e14",
+                              "guards": [
+                               "b1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendconfirmPackage_8",
+                                "code": "e15",
+                                "guards": [
+                                 "b1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveconfirmPackage_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "b1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveRoute_12",
+                                    "code": "e23",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveRoute_12",
+                                      "code": "e24",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendqueryPackage_9",
+                            "code": "e17",
+                            "guards": [
+                             "b2"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivequeryPackage_9",
+                              "code": "e18",
+                              "guards": [
+                               "b2"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendackSignature_10",
+                                "code": "e19",
+                                "guards": [
+                                 "b2"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveackSignature_10",
+                                  "code": "e20",
+                                  "guards": [
+                                   "b2"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveRoute_12",
+                                    "code": "e23",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveRoute_12",
+                                      "code": "e24",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendscheduleSignature_11",
+                            "code": "e21",
+                            "guards": [
+                             "b3"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivescheduleSignature_11",
+                              "code": "e22",
+                              "guards": [
+                               "b3"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapproveRoute_12",
+                                "code": "e23",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveRoute_12",
+                                  "code": "e24",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e23 -> e24",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e17 -> e18 -> e19 -> e20 -> e23 -> e24",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e21 -> e22 -> e23 -> e24"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,285 @@
+{
+ "guard_codes": {
+  "a1": "attemptNo < 8",
+  "b1": "attemptNo mod 2 = 0",
+  "b2": "attemptNo mod 2 ≠ 0"
+ },
+ "event_codes": {
+  "e1": "sendackPower_1",
+  "e2": "receiveackPower_1",
+  "e3": "sendapproveExport_2",
+  "e4": "receiveapproveExport_2",
+  "e5": "sendissuePower_3",
+  "e6": "receiveissuePower_3",
+  "e7": "sendconfirmFault_4",
+  "e8": "receiveconfirmFault_4",
+  "e9": "sendreportFault_5",
+  "e10": "receivereportFault_5",
+  "e11": "sendcheckPower_6",
+  "e12": "receivecheckPower_6",
+  "e13": "sendreportExport_7",
+  "e14": "receivereportExport_7",
+  "e15": "sendreserveExport_8",
+  "e16": "receivereserveExport_8",
+  "e17": "checkloop_issuePower_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1",
+   "b1"
+  ],
+  "e10": [
+   "a1",
+   "b1"
+  ],
+  "e11": [
+   "a1",
+   "b2"
+  ],
+  "e12": [
+   "a1",
+   "b2"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {},
+   "b2": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1",
+  "a1 -> b2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendackPower_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveackPower_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendapproveExport_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiveapproveExport_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendissuePower_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveissuePower_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmFault_4",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveconfirmFault_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreportFault_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1",
+                     "b1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereportFault_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1",
+                       "b1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreportExport_7",
+                        "code": "e13",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereportExport_7",
+                          "code": "e14",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreserveExport_8",
+                            "code": "e15",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivereserveExport_8",
+                              "code": "e16",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_issuePower_3_loop1",
+                            "code": "e17",
+                            "guards": [
+                             "a1"
+                            ],
+                            "loop_back_to": "sendissuePower_3",
+                            "loop_back_to_code": "e5",
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendcheckPower_6",
+                "code": "e11",
+                "guards": [
+                 "a1",
+                 "b2"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckPower_6",
+                  "code": "e12",
+                  "guards": [
+                   "a1",
+                   "b2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreportExport_7",
+                    "code": "e13",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereportExport_7",
+                      "code": "e14",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreserveExport_8",
+                        "code": "e15",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivereserveExport_8",
+                          "code": "e16",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_issuePower_3_loop1",
+                        "code": "e17",
+                        "guards": [
+                         "a1"
+                        ],
+                        "loop_back_to": "sendissuePower_3",
+                        "loop_back_to_code": "e5",
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e17 ↺ e5",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5"
+ ],
+ "unplaced_events": []
+}

@@ -1,0 +1,95 @@
+model_119  LiftEmergencyCall
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+   b1   t_obs ≤ 23
+   b2   t_obs > 23
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+       ├── b1  t_obs ≤ 23
+       └── b2  t_obs > 23
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendreleaseCall_1
+   e2   receivereleaseCall_1
+   e3   sendqueryCall_2
+   e4   receivequeryCall_2
+   e5   sendsyncFault_3_opt1  [a1]
+   e6   receivesyncFault_3_opt1  [a1]
+   e7   sendlogCall_4
+   e8   receivelogCall_4
+   e9   sendnotifyFault_5
+   e10  receivenotifyFault_5
+   e11  sendreportFault_6  [b1]
+   e12  receivereportFault_6  [b1]
+   e13  sendcancelFault_7  [b2]
+   e14  receivecancelFault_7  [b2]
+   e15  sendsendFault_8
+   e16  receivesendFault_8
+   e17  sendsyncCall_9
+   e18  receivesyncCall_9
+   e19  sendackFault_10
+   e20  receiveackFault_10
+   e21  sendnotifyDispatch_11
+   e22  receivenotifyDispatch_11
+   e23  sendconfirmDispatch_12
+   e24  receiveconfirmDispatch_12
+   e25  sendvalidateFault_13
+   e26  receivevalidateFault_13
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10
+       ├── e11 → e12 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e25 → e26
+       └── e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e25 → e26
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendreleaseCall_1
+       └── e2 receivereleaseCall_1
+           └── e3 sendqueryCall_2
+               └── e4 receivequeryCall_2
+                   └── e5 sendsyncFault_3_opt1  [a1]
+                       └── e6 receivesyncFault_3_opt1  [a1]
+                           └── e7 sendlogCall_4
+                               └── e8 receivelogCall_4
+                                   └── e9 sendnotifyFault_5
+                                       └── e10 receivenotifyFault_5
+                                           ├── e11 sendreportFault_6  [b1]
+                                           │   └── e12 receivereportFault_6  [b1]
+                                           │       └── e15 sendsendFault_8
+                                           │           └── e16 receivesendFault_8
+                                           │               └── e17 sendsyncCall_9
+                                           │                   └── e18 receivesyncCall_9
+                                           │                       └── e19 sendackFault_10
+                                           │                           └── e20 receiveackFault_10
+                                           │                               └── e21 sendnotifyDispatch_11
+                                           │                                   └── e22 receivenotifyDispatch_11
+                                           │                                       └── e23 sendconfirmDispatch_12
+                                           │                                           └── e24 receiveconfirmDispatch_12
+                                           │                                               └── e25 sendvalidateFault_13
+                                           │                                                   └── e26 receivevalidateFault_13
+                                           └── e13 sendcancelFault_7  [b2]
+                                               └── e14 receivecancelFault_7  [b2]
+                                                   └── e15 sendsendFault_8
+                                                       └── e16 receivesendFault_8
+                                                           └── e17 sendsyncCall_9
+                                                               └── e18 receivesyncCall_9
+                                                                   └── e19 sendackFault_10
+                                                                       └── e20 receiveackFault_10
+                                                                           └── e21 sendnotifyDispatch_11
+                                                                               └── e22 receivenotifyDispatch_11
+                                                                                   └── e23 sendconfirmDispatch_12
+                                                                                       └── e24 receiveconfirmDispatch_12
+                                                                                           └── e25 sendvalidateFault_13
+                                                                                               └── e26 receivevalidateFault_13
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e25 -> e26

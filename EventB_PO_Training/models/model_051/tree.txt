@@ -1,0 +1,89 @@
+model_051  AirQualityMonitor
+
+1) รหัสเงื่อนไข (guard)
+   a1   useCache = 1
+   b1   online = 1
+   b2   online = 0
+
+2) Guard tree
+   (root)
+   └── a1  useCache = 1
+       ├── b1  online = 1
+       └── b2  online = 0
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendcancelFan_1
+   e2   receivecancelFan_1
+   e3   sendreleaseAlert_2
+   e4   receivereleaseAlert_2
+   e5   sendsendAlert_3_opt1  [a1]
+   e6   receivesendAlert_3_opt1  [a1]
+   e7   sendfetchFan_4
+   e8   receivefetchFan_4
+   e9   sendlogFan_5
+   e10  receivelogFan_5
+   e11  sendqueryAlert_6  [b1]
+   e12  receivequeryAlert_6  [b1]
+   e13  sendnotifyAlert_7  [b1]
+   e14  receivenotifyAlert_7  [b1]
+   e15  sendreservePm_8  [b1]
+   e16  receivereservePm_8  [b1]
+   e17  sendapproveFan_9  [b1]
+   e18  receiveapproveFan_9  [b1]
+   e19  sendreportFan_10  [b1]
+   e20  receivereportFan_10  [b1]
+   e21  sendrequestPm_11  [b1]
+   e22  receiverequestPm_11  [b1]
+   e23  sendfetchPm_12  [b1]
+   e24  receivefetchPm_12  [b1]
+   e25  sendcancelAlert_13  [b2]
+   e26  receivecancelAlert_13  [b2]
+   e27  sendvalidateFan_14
+   e28  receivevalidateFan_14
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10
+       ├── e11 → e12 → e13 → e14 → e15 → e16 → e17 → e18 → e19 → e20 → e21 → e22 → e23 → e24 → e27 → e28
+       └── e25 → e26 → e27 → e28
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendcancelFan_1
+       └── e2 receivecancelFan_1
+           └── e3 sendreleaseAlert_2
+               └── e4 receivereleaseAlert_2
+                   └── e5 sendsendAlert_3_opt1  [a1]
+                       └── e6 receivesendAlert_3_opt1  [a1]
+                           └── e7 sendfetchFan_4
+                               └── e8 receivefetchFan_4
+                                   └── e9 sendlogFan_5
+                                       └── e10 receivelogFan_5
+                                           ├── e11 sendqueryAlert_6  [b1]
+                                           │   └── e12 receivequeryAlert_6  [b1]
+                                           │       └── e13 sendnotifyAlert_7  [b1]
+                                           │           └── e14 receivenotifyAlert_7  [b1]
+                                           │               └── e15 sendreservePm_8  [b1]
+                                           │                   └── e16 receivereservePm_8  [b1]
+                                           │                       └── e17 sendapproveFan_9  [b1]
+                                           │                           └── e18 receiveapproveFan_9  [b1]
+                                           │                               └── e19 sendreportFan_10  [b1]
+                                           │                                   └── e20 receivereportFan_10  [b1]
+                                           │                                       └── e21 sendrequestPm_11  [b1]
+                                           │                                           └── e22 receiverequestPm_11  [b1]
+                                           │                                               └── e23 sendfetchPm_12  [b1]
+                                           │                                                   └── e24 receivefetchPm_12  [b1]
+                                           │                                                       └── e27 sendvalidateFan_14
+                                           │                                                           └── e28 receivevalidateFan_14
+                                           └── e25 sendcancelAlert_13  [b2]
+                                               └── e26 receivecancelAlert_13  [b2]
+                                                   └── e27 sendvalidateFan_14
+                                                       └── e28 receivevalidateFan_14
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e20 -> e21 -> e22 -> e23 -> e24 -> e27 -> e28
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e25 -> e26 -> e27 -> e28

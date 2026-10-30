@@ -1,0 +1,264 @@
+{
+ "guard_codes": {
+  "a1": "passNo < 9",
+  "b1": "passNo mod 2 = 0",
+  "c1": "optIn = 1"
+ },
+ "event_codes": {
+  "e1": "sendackVisit_1",
+  "e2": "receiveackVisit_1",
+  "e3": "sendsendSlot_2",
+  "e4": "receivesendSlot_2",
+  "e5": "sendqueryClearance_3",
+  "e6": "receivequeryClearance_3",
+  "e7": "sendcancelSlot_4_opt1",
+  "e8": "receivecancelSlot_4_opt1",
+  "e9": "sendissueVisit_5",
+  "e10": "receiveissueVisit_5",
+  "e11": "sendissueClearance_6_opt2",
+  "e12": "receiveissueClearance_6_opt2",
+  "e13": "sendrequestClearance_7",
+  "e14": "receiverequestClearance_7",
+  "e15": "sendsyncVisit_8",
+  "e16": "receivesyncVisit_8",
+  "e17": "sendapproveClearance_9",
+  "e18": "receiveapproveClearance_9",
+  "e19": "checkloop_queryClearance_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1",
+   "c1"
+  ],
+  "e12": [
+   "a1",
+   "c1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [
+   "a1"
+  ],
+  "e16": [
+   "a1"
+  ],
+  "e17": [],
+  "e18": [],
+  "e19": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendackVisit_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveackVisit_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendsendSlot_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivesendSlot_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendqueryClearance_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivequeryClearance_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendcancelSlot_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receivecancelSlot_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendissueVisit_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveissueVisit_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendissueClearance_6_opt2",
+                        "code": "e11",
+                        "guards": [
+                         "a1",
+                         "c1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveissueClearance_6_opt2",
+                          "code": "e12",
+                          "guards": [
+                           "a1",
+                           "c1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendrequestClearance_7",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiverequestClearance_7",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsyncVisit_8",
+                                "code": "e15",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesyncVisit_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "a1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveClearance_9",
+                                    "code": "e17",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveClearance_9",
+                                      "code": "e18",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_queryClearance_3_loop1",
+                                    "code": "e19",
+                                    "guards": [
+                                     "a1"
+                                    ],
+                                    "loop_back_to": "sendqueryClearance_3",
+                                    "loop_back_to_code": "e5",
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e5"
+ ],
+ "unplaced_events": []
+}

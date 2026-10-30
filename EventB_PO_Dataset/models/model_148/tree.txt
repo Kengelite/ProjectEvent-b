@@ -1,0 +1,68 @@
+model_148  PrisonVisitBooking
+
+1) รหัสเงื่อนไข (guard)
+   a1   passNo < 9
+   b1   passNo mod 2 = 0
+   c1   optIn = 1
+
+2) Guard tree
+   (root)
+   └── a1  passNo < 9
+       └── b1  passNo mod 2 = 0
+           └── c1  optIn = 1
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendackVisit_1
+   e2   receiveackVisit_1
+   e3   sendsendSlot_2
+   e4   receivesendSlot_2
+   e5   sendqueryClearance_3  [a1]
+   e6   receivequeryClearance_3  [a1]
+   e7   sendcancelSlot_4_opt1  [a1 b1]
+   e8   receivecancelSlot_4_opt1  [a1 b1]
+   e9   sendissueVisit_5  [a1]
+   e10  receiveissueVisit_5  [a1]
+   e11  sendissueClearance_6_opt2  [a1 c1]
+   e12  receiveissueClearance_6_opt2  [a1 c1]
+   e13  sendrequestClearance_7  [a1]
+   e14  receiverequestClearance_7  [a1]
+   e15  sendsyncVisit_8  [a1]
+   e16  receivesyncVisit_8  [a1]
+   e17  sendapproveClearance_9
+   e18  receiveapproveClearance_9
+   e19  checkloop_queryClearance_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14 → e15 → e16
+       ├── e17 → e18
+       └── e19 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendackVisit_1
+       └── e2 receiveackVisit_1
+           └── e3 sendsendSlot_2
+               └── e4 receivesendSlot_2
+                   └── e5 sendqueryClearance_3  [a1]
+                       └── e6 receivequeryClearance_3  [a1]
+                           └── e7 sendcancelSlot_4_opt1  [a1 b1]
+                               └── e8 receivecancelSlot_4_opt1  [a1 b1]
+                                   └── e9 sendissueVisit_5  [a1]
+                                       └── e10 receiveissueVisit_5  [a1]
+                                           └── e11 sendissueClearance_6_opt2  [a1 c1]
+                                               └── e12 receiveissueClearance_6_opt2  [a1 c1]
+                                                   └── e13 sendrequestClearance_7  [a1]
+                                                       └── e14 receiverequestClearance_7  [a1]
+                                                           └── e15 sendsyncVisit_8  [a1]
+                                                               └── e16 receivesyncVisit_8  [a1]
+                                                                   ├── e17 sendapproveClearance_9
+                                                                   │   └── e18 receiveapproveClearance_9
+                                                                   └── e19 checkloop_queryClearance_3_loop1  [a1]  ↺ กลับไป sendqueryClearance_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e5

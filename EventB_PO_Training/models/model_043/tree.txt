@@ -1,0 +1,70 @@
+model_043  ThermostatControl
+
+1) รหัสเงื่อนไข (guard)
+   a1   cycle < 5
+   b1   overheat = 1
+   b2   overheat = 0
+
+2) Guard tree
+   (root)
+   └── a1  cycle < 5
+       ├── b1  overheat = 1
+       └── b2  overheat = 0
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendstartHeating_1
+   e2   receivestartHeating_1
+   e3   sendheatingAck_2
+   e4   receiveheatingAck_2
+   e5   sendqueryTemp_3  [a1]
+   e6   receivequeryTemp_3  [a1]
+   e7   sendtempReport_4  [a1]
+   e8   receivetempReport_4  [a1]
+   e9   sendreducePower_5  [a1 b1]
+   e10  receivereducePower_5  [a1 b1]
+   e11  sendkeepPower_6  [a1 b2]
+   e12  receivekeepPower_6  [a1 b2]
+   e13  sendstopHeating_7
+   e14  receivestopHeating_7
+   e15  checkloop_queryTemp_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+       ├── e9 → e10
+       │   ├── e13 → e14
+       │   └── e15 ↺ e5
+       └── e11 → e12
+           ├── e13 → e14
+           └── e15 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendstartHeating_1
+       └── e2 receivestartHeating_1
+           └── e3 sendheatingAck_2
+               └── e4 receiveheatingAck_2
+                   └── e5 sendqueryTemp_3  [a1]
+                       └── e6 receivequeryTemp_3  [a1]
+                           └── e7 sendtempReport_4  [a1]
+                               └── e8 receivetempReport_4  [a1]
+                                   ├── e9 sendreducePower_5  [a1 b1]
+                                   │   └── e10 receivereducePower_5  [a1 b1]
+                                   │       ├── e13 sendstopHeating_7
+                                   │       │   └── e14 receivestopHeating_7
+                                   │       └── e15 checkloop_queryTemp_3_loop1  [a1]  ↺ กลับไป sendqueryTemp_3
+                                   └── e11 sendkeepPower_6  [a1 b2]
+                                       └── e12 receivekeepPower_6  [a1 b2]
+                                           ├── e13 sendstopHeating_7
+                                           │   └── e14 receivestopHeating_7
+                                           └── e15 checkloop_queryTemp_3_loop1  [a1]  ↺ กลับไป sendqueryTemp_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e15 ↺ e5
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e11 -> e12 -> e15 ↺ e5

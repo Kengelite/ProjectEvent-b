@@ -1,0 +1,231 @@
+{
+ "guard_codes": {
+  "a1": "attemptNo < 5",
+  "b1": "attemptNo mod 2 = 0"
+ },
+ "event_codes": {
+  "e1": "sendreleaseForm_1",
+  "e2": "receivereleaseForm_1",
+  "e3": "sendcancelForm_2",
+  "e4": "receivecancelForm_2",
+  "e5": "sendconfirmForm_3",
+  "e6": "receiveconfirmForm_3",
+  "e7": "sendreportForm_4_opt1",
+  "e8": "receivereportForm_4_opt1",
+  "e9": "sendscheduleConsent_5",
+  "e10": "receivescheduleConsent_5",
+  "e11": "sendconfirmConsent_6",
+  "e12": "receiveconfirmConsent_6",
+  "e13": "sendissueForm_7",
+  "e14": "receiveissueForm_7",
+  "e15": "sendassignRecord_8",
+  "e16": "receiveassignRecord_8",
+  "e17": "checkloop_confirmForm_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1"
+  ],
+  "e12": [
+   "a1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [],
+  "e16": [],
+  "e17": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendreleaseForm_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivereleaseForm_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendcancelForm_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivecancelForm_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendconfirmForm_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receiveconfirmForm_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendreportForm_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receivereportForm_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendscheduleConsent_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivescheduleConsent_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendconfirmConsent_6",
+                        "code": "e11",
+                        "guards": [
+                         "a1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveconfirmConsent_6",
+                          "code": "e12",
+                          "guards": [
+                           "a1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendissueForm_7",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveissueForm_7",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendassignRecord_8",
+                                "code": "e15",
+                                "guards": [],
+                                "children": [
+                                 {
+                                  "event": "receiveassignRecord_8",
+                                  "code": "e16",
+                                  "guards": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_confirmForm_3_loop1",
+                                "code": "e17",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "loop_back_to": "sendconfirmForm_3",
+                                "loop_back_to_code": "e5",
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5"
+ ],
+ "unplaced_events": []
+}

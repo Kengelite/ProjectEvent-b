@@ -1,0 +1,192 @@
+{
+ "guard_codes": {
+  "a1": "taken = 1",
+  "a2": "taken = 0"
+ },
+ "event_codes": {
+  "e1": "sendscheduleDose_1",
+  "e2": "receivescheduleDose_1",
+  "e3": "senddoseAlert_2",
+  "e4": "receivedoseAlert_2",
+  "e5": "sendconfirmIntake_3",
+  "e6": "receiveconfirmIntake_3",
+  "e7": "sendlogDose_4",
+  "e8": "receivelogDose_4",
+  "e9": "sendlogAck_5",
+  "e10": "receivelogAck_5",
+  "e11": "sendescalateMissed_6",
+  "e12": "receiveescalateMissed_6",
+  "e13": "sendrefillCheck_7",
+  "e14": "receiverefillCheck_7"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a2"
+  ],
+  "e12": [
+   "a2"
+  ],
+  "e13": [],
+  "e14": []
+ },
+ "guard_tree": {
+  "a1": {},
+  "a2": {}
+ },
+ "guard_paths": [
+  "a1",
+  "a2"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendscheduleDose_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivescheduleDose_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "senddoseAlert_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivedoseAlert_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendconfirmIntake_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receiveconfirmIntake_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendlogDose_4",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receivelogDose_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendlogAck_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivelogAck_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendrefillCheck_7",
+                        "code": "e13",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receiverefillCheck_7",
+                          "code": "e14",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendescalateMissed_6",
+                "code": "e11",
+                "guards": [
+                 "a2"
+                ],
+                "children": [
+                 {
+                  "event": "receiveescalateMissed_6",
+                  "code": "e12",
+                  "guards": [
+                   "a2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendrefillCheck_7",
+                    "code": "e13",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receiverefillCheck_7",
+                      "code": "e14",
+                      "guards": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e13 -> e14",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e11 -> e12 -> e13 -> e14"
+ ],
+ "unplaced_events": []
+}

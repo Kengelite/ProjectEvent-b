@@ -1,0 +1,63 @@
+model_016  EmailVerification
+
+1) รหัสเงื่อนไข (guard)
+   a1   resendCount < 3
+   b1   verifyAttempt < 5
+
+2) Guard tree
+   (root)
+   └── a1  resendCount < 3
+       └── b1  verifyAttempt < 5
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendregister_1
+   e2   receiveregister_1
+   e3   sendsendCode_2
+   e4   receivesendCode_2
+   e5   sendresendRequest_3  [a1]
+   e6   receiveresendRequest_3  [a1]
+   e7   sendresendCode_4  [a1]
+   e8   receiveresendCode_4  [a1]
+   e9   sendsubmitCode_5  [b1]
+   e10  receivesubmitCode_5  [b1]
+   e11  sendverifyResult_6  [b1]
+   e12  receiveverifyResult_6  [b1]
+   e13  sendaccountActivated_7
+   e14  receiveaccountActivated_7
+   e15  checkloop_resendRequest_3_loop1  [a1]
+   e16  checkloop_submitCode_5_loop2  [b1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+       ├── e9 → e10 → e11 → e12
+       │   ├── e13 → e14
+       │   └── e16 ↺ e9
+       └── e15 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendregister_1
+       └── e2 receiveregister_1
+           └── e3 sendsendCode_2
+               └── e4 receivesendCode_2
+                   └── e5 sendresendRequest_3  [a1]
+                       └── e6 receiveresendRequest_3  [a1]
+                           └── e7 sendresendCode_4  [a1]
+                               └── e8 receiveresendCode_4  [a1]
+                                   ├── e9 sendsubmitCode_5  [b1]
+                                   │   └── e10 receivesubmitCode_5  [b1]
+                                   │       └── e11 sendverifyResult_6  [b1]
+                                   │           └── e12 receiveverifyResult_6  [b1]
+                                   │               ├── e13 sendaccountActivated_7
+                                   │               │   └── e14 receiveaccountActivated_7
+                                   │               └── e16 checkloop_submitCode_5_loop2  [b1]  ↺ กลับไป sendsubmitCode_5
+                                   └── e15 checkloop_resendRequest_3_loop1  [a1]  ↺ กลับไป sendresendRequest_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e16 ↺ e9
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5

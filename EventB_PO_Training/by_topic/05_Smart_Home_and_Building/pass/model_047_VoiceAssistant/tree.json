@@ -1,0 +1,261 @@
+{
+ "guard_codes": {
+  "a1": "intent = MUSIC",
+  "a2": "intent = WEATHER",
+  "a3": "intent = UNKNOWN"
+ },
+ "event_codes": {
+  "e1": "sendwakeWord_1",
+  "e2": "receivewakeWord_1",
+  "e3": "sendstreamAudio_2",
+  "e4": "receivestreamAudio_2",
+  "e5": "sendintentResult_3",
+  "e6": "receiveintentResult_3",
+  "e7": "sendplaySong_4",
+  "e8": "receiveplaySong_4",
+  "e9": "sendfetchWeather_5",
+  "e10": "receivefetchWeather_5",
+  "e11": "sendweatherInfo_6",
+  "e12": "receiveweatherInfo_6",
+  "e13": "sendspeakWeather_7",
+  "e14": "receivespeakWeather_7",
+  "e15": "sendaskRepeat_8",
+  "e16": "receiveaskRepeat_8",
+  "e17": "sendsleepMode_9",
+  "e18": "receivesleepMode_9"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [],
+  "e6": [],
+  "e7": [
+   "a1"
+  ],
+  "e8": [
+   "a1"
+  ],
+  "e9": [
+   "a2"
+  ],
+  "e10": [
+   "a2"
+  ],
+  "e11": [
+   "a2"
+  ],
+  "e12": [
+   "a2"
+  ],
+  "e13": [
+   "a2"
+  ],
+  "e14": [
+   "a2"
+  ],
+  "e15": [
+   "a3"
+  ],
+  "e16": [
+   "a3"
+  ],
+  "e17": [],
+  "e18": []
+ },
+ "guard_tree": {
+  "a1": {},
+  "a2": {},
+  "a3": {}
+ },
+ "guard_paths": [
+  "a1",
+  "a2",
+  "a3"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendwakeWord_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivewakeWord_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendstreamAudio_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivestreamAudio_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendintentResult_3",
+            "code": "e5",
+            "guards": [],
+            "children": [
+             {
+              "event": "receiveintentResult_3",
+              "code": "e6",
+              "guards": [],
+              "children": [
+               {
+                "event": "sendplaySong_4",
+                "code": "e7",
+                "guards": [
+                 "a1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveplaySong_4",
+                  "code": "e8",
+                  "guards": [
+                   "a1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsleepMode_9",
+                    "code": "e17",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivesleepMode_9",
+                      "code": "e18",
+                      "guards": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendfetchWeather_5",
+                "code": "e9",
+                "guards": [
+                 "a2"
+                ],
+                "children": [
+                 {
+                  "event": "receivefetchWeather_5",
+                  "code": "e10",
+                  "guards": [
+                   "a2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendweatherInfo_6",
+                    "code": "e11",
+                    "guards": [
+                     "a2"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveweatherInfo_6",
+                      "code": "e12",
+                      "guards": [
+                       "a2"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendspeakWeather_7",
+                        "code": "e13",
+                        "guards": [
+                         "a2"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivespeakWeather_7",
+                          "code": "e14",
+                          "guards": [
+                           "a2"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsleepMode_9",
+                            "code": "e17",
+                            "guards": [],
+                            "children": [
+                             {
+                              "event": "receivesleepMode_9",
+                              "code": "e18",
+                              "guards": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendaskRepeat_8",
+                "code": "e15",
+                "guards": [
+                 "a3"
+                ],
+                "children": [
+                 {
+                  "event": "receiveaskRepeat_8",
+                  "code": "e16",
+                  "guards": [
+                   "a3"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsleepMode_9",
+                    "code": "e17",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivesleepMode_9",
+                      "code": "e18",
+                      "guards": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e17 -> e18",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e15 -> e16 -> e17 -> e18"
+ ],
+ "unplaced_events": []
+}

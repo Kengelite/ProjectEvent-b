@@ -1,0 +1,264 @@
+{
+ "guard_codes": {
+  "a1": "roundNo < 12",
+  "b1": "roundNo mod 2 = 0",
+  "c1": "needAck = 1"
+ },
+ "event_codes": {
+  "e1": "sendapproveVisit_1",
+  "e2": "receiveapproveVisit_1",
+  "e3": "sendfetchPoint_2",
+  "e4": "receivefetchPoint_2",
+  "e5": "sendcheckPoint_3",
+  "e6": "receivecheckPoint_3",
+  "e7": "sendissueVisit_4_opt1",
+  "e8": "receiveissueVisit_4_opt1",
+  "e9": "sendupdateVisit_5",
+  "e10": "receiveupdateVisit_5",
+  "e11": "sendreleaseVisit_6_opt2",
+  "e12": "receivereleaseVisit_6_opt2",
+  "e13": "sendsendPoint_7",
+  "e14": "receivesendPoint_7",
+  "e15": "sendsyncReward_8",
+  "e16": "receivesyncReward_8",
+  "e17": "sendfetchReward_9",
+  "e18": "receivefetchReward_9",
+  "e19": "checkloop_checkPoint_3_loop1"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [
+   "a1",
+   "b1"
+  ],
+  "e8": [
+   "a1",
+   "b1"
+  ],
+  "e9": [
+   "a1"
+  ],
+  "e10": [
+   "a1"
+  ],
+  "e11": [
+   "a1",
+   "c1"
+  ],
+  "e12": [
+   "a1",
+   "c1"
+  ],
+  "e13": [
+   "a1"
+  ],
+  "e14": [
+   "a1"
+  ],
+  "e15": [
+   "a1"
+  ],
+  "e16": [
+   "a1"
+  ],
+  "e17": [],
+  "e18": [],
+  "e19": [
+   "a1"
+  ]
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendapproveVisit_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receiveapproveVisit_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendfetchPoint_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receivefetchPoint_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendcheckPoint_3",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivecheckPoint_3",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendissueVisit_4_opt1",
+                "code": "e7",
+                "guards": [
+                 "a1",
+                 "b1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveissueVisit_4_opt1",
+                  "code": "e8",
+                  "guards": [
+                   "a1",
+                   "b1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendupdateVisit_5",
+                    "code": "e9",
+                    "guards": [
+                     "a1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveupdateVisit_5",
+                      "code": "e10",
+                      "guards": [
+                       "a1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreleaseVisit_6_opt2",
+                        "code": "e11",
+                        "guards": [
+                         "a1",
+                         "c1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereleaseVisit_6_opt2",
+                          "code": "e12",
+                          "guards": [
+                           "a1",
+                           "c1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsendPoint_7",
+                            "code": "e13",
+                            "guards": [
+                             "a1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivesendPoint_7",
+                              "code": "e14",
+                              "guards": [
+                               "a1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsyncReward_8",
+                                "code": "e15",
+                                "guards": [
+                                 "a1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesyncReward_8",
+                                  "code": "e16",
+                                  "guards": [
+                                   "a1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendfetchReward_9",
+                                    "code": "e17",
+                                    "guards": [],
+                                    "children": [
+                                     {
+                                      "event": "receivefetchReward_9",
+                                      "code": "e18",
+                                      "guards": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_checkPoint_3_loop1",
+                                    "code": "e19",
+                                    "guards": [
+                                     "a1"
+                                    ],
+                                    "loop_back_to": "sendcheckPoint_3",
+                                    "loop_back_to_code": "e5",
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e17 -> e18",
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16 -> e19 ↺ e5"
+ ],
+ "unplaced_events": []
+}

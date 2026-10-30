@@ -1,0 +1,141 @@
+{
+ "guard_codes": {
+  "a1": "useCache = 1"
+ },
+ "event_codes": {
+  "e1": "sendsendRelease_1",
+  "e2": "receivesendRelease_1",
+  "e3": "sendrequestDuty_2",
+  "e4": "receiverequestDuty_2",
+  "e5": "sendcancelDuty_3_opt1",
+  "e6": "receivecancelDuty_3_opt1",
+  "e7": "sendapproveDeclaration_4",
+  "e8": "receiveapproveDeclaration_4",
+  "e9": "sendsyncDeclaration_5",
+  "e10": "receivesyncDeclaration_5",
+  "e11": "sendfetchRelease_6",
+  "e12": "receivefetchRelease_6"
+ },
+ "event_guards": {
+  "e1": [],
+  "e2": [],
+  "e3": [],
+  "e4": [],
+  "e5": [
+   "a1"
+  ],
+  "e6": [
+   "a1"
+  ],
+  "e7": [],
+  "e8": [],
+  "e9": [],
+  "e10": [],
+  "e11": [],
+  "e12": []
+ },
+ "guard_tree": {
+  "a1": {}
+ },
+ "guard_paths": [
+  "a1"
+ ],
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "guards": [],
+  "children": [
+   {
+    "event": "sendsendRelease_1",
+    "code": "e1",
+    "guards": [],
+    "children": [
+     {
+      "event": "receivesendRelease_1",
+      "code": "e2",
+      "guards": [],
+      "children": [
+       {
+        "event": "sendrequestDuty_2",
+        "code": "e3",
+        "guards": [],
+        "children": [
+         {
+          "event": "receiverequestDuty_2",
+          "code": "e4",
+          "guards": [],
+          "children": [
+           {
+            "event": "sendcancelDuty_3_opt1",
+            "code": "e5",
+            "guards": [
+             "a1"
+            ],
+            "children": [
+             {
+              "event": "receivecancelDuty_3_opt1",
+              "code": "e6",
+              "guards": [
+               "a1"
+              ],
+              "children": [
+               {
+                "event": "sendapproveDeclaration_4",
+                "code": "e7",
+                "guards": [],
+                "children": [
+                 {
+                  "event": "receiveapproveDeclaration_4",
+                  "code": "e8",
+                  "guards": [],
+                  "children": [
+                   {
+                    "event": "sendsyncDeclaration_5",
+                    "code": "e9",
+                    "guards": [],
+                    "children": [
+                     {
+                      "event": "receivesyncDeclaration_5",
+                      "code": "e10",
+                      "guards": [],
+                      "children": [
+                       {
+                        "event": "sendfetchRelease_6",
+                        "code": "e11",
+                        "guards": [],
+                        "children": [
+                         {
+                          "event": "receivefetchRelease_6",
+                          "code": "e12",
+                          "guards": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12"
+ ],
+ "unplaced_events": []
+}

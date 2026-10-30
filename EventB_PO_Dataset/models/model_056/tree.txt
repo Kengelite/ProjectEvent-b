@@ -1,0 +1,60 @@
+model_056  BankBranchQueue
+
+1) รหัสเงื่อนไข (guard)
+   a1   passNo < 11
+
+2) Guard tree
+   (root)
+   └── a1  passNo < 11
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendqueryCounter_1
+   e2   receivequeryCounter_1
+   e3   sendassignService_2
+   e4   receiveassignService_2
+   e5   sendscheduleService_3  [a1]
+   e6   receivescheduleService_3  [a1]
+   e7   sendsyncTicket_4  [a1]
+   e8   receivesyncTicket_4  [a1]
+   e9   sendfetchTicket_5  [a1]
+   e10  receivefetchTicket_5  [a1]
+   e11  sendackCounter_6  [a1]
+   e12  receiveackCounter_6  [a1]
+   e13  sendnotifyService_7  [a1]
+   e14  receivenotifyService_7  [a1]
+   e15  sendqueryTicket_8
+   e16  receivequeryTicket_8
+   e17  checkloop_scheduleService_3_loop1  [a1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8 → e9 → e10 → e11 → e12 → e13 → e14
+       ├── e15 → e16
+       └── e17 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendqueryCounter_1
+       └── e2 receivequeryCounter_1
+           └── e3 sendassignService_2
+               └── e4 receiveassignService_2
+                   └── e5 sendscheduleService_3  [a1]
+                       └── e6 receivescheduleService_3  [a1]
+                           └── e7 sendsyncTicket_4  [a1]
+                               └── e8 receivesyncTicket_4  [a1]
+                                   └── e9 sendfetchTicket_5  [a1]
+                                       └── e10 receivefetchTicket_5  [a1]
+                                           └── e11 sendackCounter_6  [a1]
+                                               └── e12 receiveackCounter_6  [a1]
+                                                   └── e13 sendnotifyService_7  [a1]
+                                                       └── e14 receivenotifyService_7  [a1]
+                                                           ├── e15 sendqueryTicket_8
+                                                           │   └── e16 receivequeryTicket_8
+                                                           └── e17 checkloop_scheduleService_3_loop1  [a1]  ↺ กลับไป sendscheduleService_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e15 -> e16
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 ↺ e5

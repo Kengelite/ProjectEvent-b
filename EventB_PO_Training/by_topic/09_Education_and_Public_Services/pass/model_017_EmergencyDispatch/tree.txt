@@ -1,0 +1,76 @@
+model_017  EmergencyDispatch
+
+1) รหัสเงื่อนไข (guard)
+   a1   priority = HIGH
+   b1   updateCount < 4
+   c1   trafficJam = 1
+   a2   priority = LOW
+
+2) Guard tree
+   (root)
+   ├── a1  priority = HIGH
+   │   └── b1  updateCount < 4
+   │       └── c1  trafficJam = 1
+   └── a2  priority = LOW
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendreportEmergency_1
+   e2   receivereportEmergency_1
+   e3   sendaskDetails_2
+   e4   receiveaskDetails_2
+   e5   sendprovideDetails_3
+   e6   receiveprovideDetails_3
+   e7   senddispatchAmbulance_4  [a1]
+   e8   receivedispatchAmbulance_4  [a1]
+   e9   sendsendLocation_5  [a1 b1]
+   e10  receivesendLocation_5  [a1 b1]
+   e11  sendrerouteRequest_6_opt1  [a1 b1 c1]
+   e12  receivererouteRequest_6_opt1  [a1 b1 c1]
+   e13  sendnotifyHospital_7  [a1]
+   e14  receivenotifyHospital_7  [a1]
+   e15  sendscheduleCallback_8  [a2]
+   e16  receivescheduleCallback_8  [a2]
+   e17  sendcloseCase_9
+   e18  receivecloseCase_9
+   e19  checkloop_sendLocation_5_loop1  [a1 b1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6
+       ├── e7 → e8 → e9 → e10 → e11 → e12
+       │   ├── e13 → e14 → e17 → e18
+       │   └── e19 ↺ e9
+       └── e15 → e16 → e17 → e18
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendreportEmergency_1
+       └── e2 receivereportEmergency_1
+           └── e3 sendaskDetails_2
+               └── e4 receiveaskDetails_2
+                   └── e5 sendprovideDetails_3
+                       └── e6 receiveprovideDetails_3
+                           ├── e7 senddispatchAmbulance_4  [a1]
+                           │   └── e8 receivedispatchAmbulance_4  [a1]
+                           │       └── e9 sendsendLocation_5  [a1 b1]
+                           │           └── e10 receivesendLocation_5  [a1 b1]
+                           │               └── e11 sendrerouteRequest_6_opt1  [a1 b1 c1]
+                           │                   └── e12 receivererouteRequest_6_opt1  [a1 b1 c1]
+                           │                       ├── e13 sendnotifyHospital_7  [a1]
+                           │                       │   └── e14 receivenotifyHospital_7  [a1]
+                           │                       │       └── e17 sendcloseCase_9
+                           │                       │           └── e18 receivecloseCase_9
+                           │                       └── e19 checkloop_sendLocation_5_loop1  [a1 b1]  ↺ กลับไป sendsendLocation_5
+                           └── e15 sendscheduleCallback_8  [a2]
+                               └── e16 receivescheduleCallback_8  [a2]
+                                   └── e17 sendcloseCase_9
+                                       └── e18 receivecloseCase_9
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14 -> e17 -> e18
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e19 ↺ e9
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e15 -> e16 -> e17 -> e18

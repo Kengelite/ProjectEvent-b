@@ -1,0 +1,63 @@
+model_034  PrinterQueue
+
+1) รหัสเงื่อนไข (guard)
+   a1   jobCount < 5
+   b1   retryPrint < 3
+
+2) Guard tree
+   (root)
+   └── a1  jobCount < 5
+       └── b1  retryPrint < 3
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendsubmitJob_1
+   e2   receivesubmitJob_1
+   e3   sendjobQueued_2
+   e4   receivejobQueued_2
+   e5   sendpagePrinted_3  [a1]
+   e6   receivepagePrinted_3  [a1]
+   e7   sendnextPage_4  [a1]
+   e8   receivenextPage_4  [a1]
+   e9   sendreprint_5  [b1]
+   e10  receivereprint_5  [b1]
+   e11  sendreprintDone_6  [b1]
+   e12  receivereprintDone_6  [b1]
+   e13  sendjobComplete_7
+   e14  receivejobComplete_7
+   e15  checkloop_pagePrinted_3_loop1  [a1]
+   e16  checkloop_reprint_5_loop2  [b1]
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── e1 → e2 → e3 → e4 → e5 → e6 → e7 → e8
+       ├── e9 → e10 → e11 → e12
+       │   ├── e13 → e14
+       │   └── e16 ↺ e9
+       └── e15 ↺ e5
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── e1 sendsubmitJob_1
+       └── e2 receivesubmitJob_1
+           └── e3 sendjobQueued_2
+               └── e4 receivejobQueued_2
+                   └── e5 sendpagePrinted_3  [a1]
+                       └── e6 receivepagePrinted_3  [a1]
+                           └── e7 sendnextPage_4  [a1]
+                               └── e8 receivenextPage_4  [a1]
+                                   ├── e9 sendreprint_5  [b1]
+                                   │   └── e10 receivereprint_5  [b1]
+                                   │       └── e11 sendreprintDone_6  [b1]
+                                   │           └── e12 receivereprintDone_6  [b1]
+                                   │               ├── e13 sendjobComplete_7
+                                   │               │   └── e14 receivejobComplete_7
+                                   │               └── e16 checkloop_reprint_5_loop2  [b1]  ↺ กลับไป sendreprint_5
+                                   └── e15 checkloop_pagePrinted_3_loop1  [a1]  ↺ กลับไป sendpagePrinted_3
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e13 -> e14
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e9 -> e10 -> e11 -> e12 -> e16 ↺ e9
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e15 ↺ e5
