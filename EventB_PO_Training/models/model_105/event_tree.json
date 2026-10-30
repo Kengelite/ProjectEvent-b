@@ -1,0 +1,200 @@
+{
+ "event_codes": {
+  "a1": "sendnotifyExport_1",
+  "b1": "receivenotifyExport_1",
+  "c1": "sendvalidateExport_2",
+  "d1": "receivevalidateExport_2",
+  "e1": "sendlogCharge_3_opt1",
+  "f1": "receivelogCharge_3_opt1",
+  "g1": "sendreserveTariff_4",
+  "h1": "receivereserveTariff_4",
+  "i1": "sendassignCharge_5",
+  "j1": "receiveassignCharge_5",
+  "k1": "sendreleaseTariff_6",
+  "l1": "receivereleaseTariff_6",
+  "m1": "sendfetchCharge_7",
+  "n1": "receivefetchCharge_7",
+  "o1": "sendrequestCharge_8",
+  "o2": "checkloop_releaseTariff_6_loop1",
+  "p1": "receiverequestCharge_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "express = 1"
+  ],
+  "f1": [
+   "express = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "attemptNo < 4"
+  ],
+  "l1": [
+   "attemptNo < 4"
+  ],
+  "m1": [
+   "attemptNo < 4"
+  ],
+  "n1": [
+   "attemptNo < 4"
+  ],
+  "o1": [],
+  "o2": [
+   "attemptNo < 4"
+  ],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendnotifyExport_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivenotifyExport_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendvalidateExport_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivevalidateExport_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendlogCharge_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "express = 1"
+            ],
+            "children": [
+             {
+              "event": "receivelogCharge_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "express = 1"
+              ],
+              "children": [
+               {
+                "event": "sendreserveTariff_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivereserveTariff_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendassignCharge_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveassignCharge_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreleaseTariff_6",
+                        "code": "k1",
+                        "conditions": [
+                         "attemptNo < 4"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereleaseTariff_6",
+                          "code": "l1",
+                          "conditions": [
+                           "attemptNo < 4"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendfetchCharge_7",
+                            "code": "m1",
+                            "conditions": [
+                             "attemptNo < 4"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivefetchCharge_7",
+                              "code": "n1",
+                              "conditions": [
+                               "attemptNo < 4"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendrequestCharge_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiverequestCharge_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_releaseTariff_6_loop1",
+                                "code": "o2",
+                                "loop_back_to": "sendreleaseTariff_6",
+                                "loop_back_to_code": "k1",
+                                "conditions": [
+                                 "attemptNo < 4"
+                                ],
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ k1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

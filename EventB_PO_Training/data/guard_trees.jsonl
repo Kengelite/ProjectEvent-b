@@ -1,0 +1,198 @@
+{"id": "model_001", "case": "Payment & Notification", "split": "test", "guard_codes": {"a1": "Login = 1", "b1": "amount_1 ≥ 1000", "b2": "amount_1 < 1000", "c1": "retry < 3", "c2": "retry = 3", "d1": "par_1 = 2"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b2 -> c1", "c2 -> d1"]}
+{"id": "model_002", "case": "AirportBaggage", "split": "train", "guard_codes": {"a1": "bagCleared = 1", "a2": "bagCleared = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_003", "case": "ATMWithdrawal", "split": "train", "guard_codes": {"a1": "pinAttempt < 3", "b1": "pinValid = 1", "b2": "pinValid = 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_004", "case": "BankTransfer", "split": "test", "guard_codes": {"a1": "riskFlag = 0", "a2": "riskFlag = 1"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_005", "case": "BatteryChargeCycle", "split": "train", "guard_codes": {"a1": "pulseNo < 8"}, "guard_paths": ["a1"]}
+{"id": "model_006", "case": "BloodBankRequest", "split": "train", "guard_codes": {"a1": "stockUnits ≥ 2", "a2": "stockUnits < 2"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_007", "case": "CarRentalBooking", "split": "val", "guard_codes": {"a1": "searchCount < 3", "b1": "insurance = 1", "c1": "t_pay ≤ 10", "c2": "t_pay > 10"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b1 -> c2"]}
+{"id": "model_008", "case": "ChatMessaging", "split": "train", "guard_codes": {"a1": "typing = 1"}, "guard_paths": ["a1"]}
+{"id": "model_009", "case": "CinemaTicketing", "split": "train", "guard_codes": {"a1": "seatTry < 3", "b1": "wantSnack = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_010", "case": "CoffeeOrderKiosk", "split": "train", "guard_codes": {"a1": "addShot = 1"}, "guard_paths": ["a1"]}
+{"id": "model_011", "case": "ColdChainMonitor", "split": "val", "guard_codes": {"a1": "tempBreach = 1", "a2": "tempBreach = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_012", "case": "ConferenceRoomBooking", "split": "train", "guard_codes": {"a1": "needDisplay = 1"}, "guard_paths": ["a1"]}
+{"id": "model_013", "case": "CourseEnrollment", "split": "train", "guard_codes": {"a1": "needsApproval = 1"}, "guard_paths": ["a1"]}
+{"id": "model_014", "case": "DroneDelivery", "split": "train", "guard_codes": {"a1": "t_deliver ≤ 20", "a2": "t_deliver > 20"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_015", "case": "ElevatorControl", "split": "val", "guard_codes": {"a1": "doorState = CLEAR", "a2": "doorState = BLOCKED", "b1": "retryDoor < 3"}, "guard_paths": ["a1", "a2 -> b1"]}
+{"id": "model_016", "case": "EmailVerification", "split": "train", "guard_codes": {"a1": "resendCount < 3", "b1": "verifyAttempt < 5"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_017", "case": "EmergencyDispatch", "split": "val", "guard_codes": {"a1": "priority = HIGH", "b1": "updateCount < 4", "c1": "trafficJam = 1", "a2": "priority = LOW"}, "guard_paths": ["a1 -> b1 -> c1", "a2"]}
+{"id": "model_018", "case": "FactoryRobotArm", "split": "train", "guard_codes": {"a1": "pickCount < 10", "b1": "defect = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_019", "case": "FerryTicketGate", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_020", "case": "FitnessTracker", "split": "train", "guard_codes": {"a1": "syncRound < 10"}, "guard_paths": ["a1"]}
+{"id": "model_021", "case": "FoodOrderApp", "split": "train", "guard_codes": {"a1": "hasCoupon = 1"}, "guard_paths": ["a1"]}
+{"id": "model_022", "case": "GymCheckIn", "split": "train", "guard_codes": {"a1": "membership = ACTIVE", "a2": "membership = EXPIRED"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_023", "case": "HospitalTriage", "split": "train", "guard_codes": {"a1": "severity = CRITICAL", "a2": "severity = NORMAL"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_024", "case": "HotelCheckIn", "split": "train", "guard_codes": {"a1": "roomReady = 1", "a2": "roomReady = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_025", "case": "InsuranceClaim", "split": "train", "guard_codes": {"a1": "hasDocs = 1", "b1": "claimAmount ≤ 5000", "b2": "claimAmount > 5000"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_026", "case": "LabSampleTesting", "split": "val", "guard_codes": {"a1": "retestNo < 2"}, "guard_paths": ["a1"]}
+{"id": "model_027", "case": "LibraryLoan", "split": "train", "guard_codes": {"a1": "fine ≤ 100", "b1": "wantReminder = 1", "a2": "fine > 100"}, "guard_paths": ["a1 -> b1", "a2"]}
+{"id": "model_028", "case": "LoginRateLimiter", "split": "val", "guard_codes": {"a1": "failCount < 5", "b1": "failCount mod 2 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_029", "case": "MedicationDispenser", "split": "train", "guard_codes": {"a1": "taken = 1", "a2": "taken = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_030", "case": "OnlineAuction", "split": "val", "guard_codes": {"a1": "roundNo < 5"}, "guard_paths": ["a1"]}
+{"id": "model_031", "case": "OnlineExam", "split": "train", "guard_codes": {"a1": "questionNo < 20", "b1": "autosaveCount < 3"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_032", "case": "PackageTracking", "split": "test", "guard_codes": {"a1": "customsCheck = 1", "b1": "delivered = YES", "b2": "delivered = NO"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_033", "case": "ParcelLocker", "split": "test", "guard_codes": {"a1": "codeValid = 1"}, "guard_paths": ["a1"]}
+{"id": "model_034", "case": "PrinterQueue", "split": "train", "guard_codes": {"a1": "jobCount < 5", "b1": "retryPrint < 3"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_035", "case": "SensorDataPipeline", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_036", "case": "ServerAutoScaling", "split": "train", "guard_codes": {"a1": "checkNo < 12", "b1": "cpu > 80", "b2": "cpu ≤ 80"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_037", "case": "SmartDoorLock", "split": "train", "guard_codes": {"a1": "authResult = PASS", "b1": "autoLock = 1", "a2": "authResult = FAIL"}, "guard_paths": ["a1 -> b1", "a2"]}
+{"id": "model_038", "case": "SmartGreenhouse", "split": "train", "guard_codes": {"a1": "cycleNo < 24", "b1": "humidity < 40", "b2": "humidity ≥ 40"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_039", "case": "SmartMeterBilling", "split": "train", "guard_codes": {"a1": "autoPay = 1"}, "guard_paths": ["a1"]}
+{"id": "model_040", "case": "SmartParking", "split": "val", "guard_codes": {"a1": "slotFree = 1"}, "guard_paths": ["a1"]}
+{"id": "model_041", "case": "SmartPlugControl", "split": "test", "guard_codes": {"a1": "relayOn = 1", "a2": "relayOn = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_042", "case": "TaxiDispatch", "split": "test", "guard_codes": {"a1": "shareRide = 1"}, "guard_paths": ["a1"]}
+{"id": "model_043", "case": "ThermostatControl", "split": "train", "guard_codes": {"a1": "cycle < 5", "b1": "overheat = 1", "b2": "overheat = 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_044", "case": "ToolRentalLocker", "split": "train", "guard_codes": {"a1": "lateReturn = 1"}, "guard_paths": ["a1"]}
+{"id": "model_045", "case": "TrafficLightController", "split": "train", "guard_codes": {"a1": "cycleCount < 10"}, "guard_paths": ["a1"]}
+{"id": "model_046", "case": "VendingMachine", "split": "train", "guard_codes": {"a1": "coinStatus = ENOUGH", "a2": "coinStatus = SHORT", "a3": "coinStatus = INVALID"}, "guard_paths": ["a1", "a2", "a3"]}
+{"id": "model_047", "case": "VoiceAssistant", "split": "train", "guard_codes": {"a1": "intent = MUSIC", "a2": "intent = WEATHER", "a3": "intent = UNKNOWN"}, "guard_paths": ["a1", "a2", "a3"]}
+{"id": "model_048", "case": "WarehouseRobotFleet", "split": "test", "guard_codes": {"a1": "shift < 8", "b1": "lowBattery = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_049", "case": "AirportSecurityLane", "split": "train", "guard_codes": {"a1": "usage < 10", "a2": "usage ≥ 10"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_050", "case": "AirportShuttle", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_051", "case": "AirQualityMonitor", "split": "train", "guard_codes": {"a1": "useCache = 1", "b1": "online = 1", "b2": "online = 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_052", "case": "AmbulanceRouting", "split": "train", "guard_codes": {"a1": "useCache = 1", "b1": "needAck = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_053", "case": "ApartmentIntercom", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_054", "case": "ArchiveDocumentScan", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_055", "case": "ArtGalleryTicketing", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_056", "case": "BankBranchQueue", "split": "test", "guard_codes": {"a1": "passNo < 11"}, "guard_paths": ["a1"]}
+{"id": "model_057", "case": "BikeSharing", "split": "train", "guard_codes": {"a1": "t_obs ≤ 6", "b1": "useCache = 1", "a2": "t_obs > 6"}, "guard_paths": ["a1 -> b1", "a2"]}
+{"id": "model_058", "case": "BloodDonationDrive", "split": "train", "guard_codes": {"a1": "t_obs ≤ 8", "b1": "withExtra = 1", "a2": "t_obs > 8"}, "guard_paths": ["a1 -> b1", "a2"]}
+{"id": "model_059", "case": "BoardingSchoolGate", "split": "val", "guard_codes": {"a1": "passNo < 5", "b1": "urgent = 1", "b2": "urgent = 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_060", "case": "BuildingVisitorPass", "split": "train", "guard_codes": {"a1": "t_obs ≤ 4", "a2": "t_obs > 4"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_061", "case": "BulkSMSGateway", "split": "test", "guard_codes": {"a1": "retryNo < 11", "b1": "retryNo mod 3 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_062", "case": "BusTicketBooking", "split": "train", "guard_codes": {"a1": "retryNo < 3", "b1": "retryNo mod 3 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_063", "case": "CafeLoyaltyPoints", "split": "train", "guard_codes": {"a1": "roundNo < 12", "b1": "roundNo mod 2 = 0", "c1": "needAck = 1"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_064", "case": "CampusShuttleBus", "split": "train", "guard_codes": {"a1": "optIn = 1", "b1": "load < 10", "b2": "load ≥ 10"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_065", "case": "CampusWifiAccess", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_066", "case": "CanteenPayment", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_067", "case": "CargoShipTracking", "split": "val", "guard_codes": {"a1": "cycleNo < 7", "b1": "useCache = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_068", "case": "CarRentalReturn", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_069", "case": "CarWashBooking", "split": "train", "guard_codes": {"a1": "roundNo < 12", "b1": "withExtra = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_070", "case": "CenterPivotIrrigation", "split": "train", "guard_codes": {"a1": "cycleNo < 9", "b1": "cycleNo mod 3 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_071", "case": "ChildcareCheckin", "split": "test", "guard_codes": {"a1": "approved = 1", "a2": "approved = 0", "b1": "retryNo < 4"}, "guard_paths": ["a1 -> b1", "a2 -> b1"]}
+{"id": "model_072", "case": "CloudBackupJob", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_073", "case": "CloudCIPipeline", "split": "train", "guard_codes": {"a1": "useCache = 1", "b1": "optIn = 1", "c1": "retryNo < 11"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_074", "case": "ConcertTicketQueue", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_075", "case": "ConcessionStandOrder", "split": "val", "guard_codes": {"a1": "retryNo < 8", "b1": "roundNo < 6", "c1": "pollNo < 11"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_076", "case": "ConferenceBadgeScan", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_077", "case": "CourseAutoGrading", "split": "test", "guard_codes": {"a1": "mode = MANUAL", "a2": "mode = AUTO", "b1": "t_obs ≤ 27", "b2": "t_obs > 27"}, "guard_paths": ["a1 -> b1", "a1 -> b2", "a2 -> b1", "a2 -> b2"]}
+{"id": "model_078", "case": "CoworkingDeskBooking", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_079", "case": "CraneLoadMonitor", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_080", "case": "CropDroneSpraying", "split": "train", "guard_codes": {"a1": "t_obs ≤ 11", "a2": "t_obs > 11"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_081", "case": "CustomsClearance", "split": "test", "guard_codes": {"a1": "useCache = 1"}, "guard_paths": ["a1"]}
+{"id": "model_082", "case": "DentalAppointment", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_083", "case": "DigitalLibraryAccess", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_084", "case": "DigitalVotingBooth", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_085", "case": "DisasterAlertBroadcast", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_086", "case": "DormLaundry", "split": "train", "guard_codes": {"a1": "cycleNo < 3"}, "guard_paths": ["a1"]}
+{"id": "model_087", "case": "DroneTrafficControl", "split": "train", "guard_codes": {"a1": "approved = 1", "b1": "express = 1", "a2": "approved = 0"}, "guard_paths": ["a1 -> b1", "a2"]}
+{"id": "model_088", "case": "EVBatterySwap", "split": "val", "guard_codes": {"a1": "useCache = 1", "b1": "optIn = 1", "c1": "retryNo < 11"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_089", "case": "EVChargingSession", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_090", "case": "EventCheckInQR", "split": "train", "guard_codes": {"a1": "passNo < 8", "b1": "passNo mod 4 = 0", "b2": "passNo mod 4 ≠ 0", "c1": "withExtra = 1"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b2 -> c1"]}
+{"id": "model_091", "case": "FactoryQualityGate", "split": "train", "guard_codes": {"a1": "roundNo < 7"}, "guard_paths": ["a1"]}
+{"id": "model_092", "case": "FarmMilkingRobot", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_093", "case": "FireSprinklerSystem", "split": "test", "guard_codes": {"a1": "optIn = 1"}, "guard_paths": ["a1"]}
+{"id": "model_094", "case": "FleetFuelCard", "split": "train", "guard_codes": {"a1": "temp < 50", "a2": "temp ≥ 50"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_095", "case": "FlightCheckIn", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_096", "case": "FlightCrewScheduling", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_097", "case": "FoodTruckOrdering", "split": "val", "guard_codes": {"a1": "pollNo < 5", "b1": "needAck = 1", "c1": "express = 1", "d1": "tier = GREEN", "d2": "tier = RED"}, "guard_paths": ["a1 -> b1 -> c1 -> d1", "a1 -> b1 -> c1 -> d2"]}
+{"id": "model_098", "case": "ForestFireSensor", "split": "train", "guard_codes": {"a1": "grade = MANUAL", "a2": "grade = AUTO", "b1": "t_obs ≤ 3", "c1": "retryNo < 11", "b2": "t_obs > 3"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b2", "a2 -> b1 -> c1", "a2 -> b2"]}
+{"id": "model_099", "case": "GarageGateControl", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_100", "case": "GasStationPrepay", "split": "train", "guard_codes": {"a1": "express = 1", "b1": "attemptNo < 4"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_101", "case": "GlucoseMeterSync", "split": "train", "guard_codes": {"a1": "needAck = 1"}, "guard_paths": ["a1"]}
+{"id": "model_102", "case": "GolfCartFleet", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_103", "case": "GreenhouseLighting", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_104", "case": "GroceryDeliverySlot", "split": "train", "guard_codes": {"a1": "retryNo < 8", "b1": "retryNo mod 3 = 0", "b2": "retryNo mod 3 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_105", "case": "HomeEnergyBattery", "split": "test", "guard_codes": {"a1": "express = 1", "b1": "attemptNo < 4"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_106", "case": "HomeOxygenConcentrator", "split": "train", "guard_codes": {"a1": "withExtra = 1", "b1": "needAck = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_107", "case": "HomeSecurityAlarm", "split": "train", "guard_codes": {"a1": "needAck = 1"}, "guard_paths": ["a1"]}
+{"id": "model_108", "case": "HospitalBedAllocation", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_109", "case": "HospitalLabRequest", "split": "train", "guard_codes": {"a1": "cycleNo < 8", "b1": "cycleNo mod 3 = 0", "c1": "attemptNo < 10", "b2": "cycleNo mod 3 ≠ 0"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b2"]}
+{"id": "model_110", "case": "HospitalPharmacyRobot", "split": "train", "guard_codes": {"a1": "t_obs ≤ 13", "a2": "t_obs > 13"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_111", "case": "HotelKeylessEntry", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_112", "case": "HotelRoomService", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_113", "case": "InsuranceTelematics", "split": "test", "guard_codes": {"a1": "express = 1", "b1": "roundNo < 6", "c1": "urgent = 1", "c2": "urgent = 0"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b1 -> c2"]}
+{"id": "model_114", "case": "InventoryReorder", "split": "val", "guard_codes": {"a1": "retryNo < 12", "b1": "retryNo mod 3 = 0", "c1": "express = 1"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_115", "case": "IoTDoorbell", "split": "val", "guard_codes": {"a1": "useCache = 1", "b1": "needAck = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_116", "case": "IrrigationZoneControl", "split": "test", "guard_codes": {"a1": "attemptNo < 12"}, "guard_paths": ["a1"]}
+{"id": "model_117", "case": "JobApplicationPortal", "split": "train", "guard_codes": {"a1": "stage = ACTIVE", "a2": "stage = IDLE"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_118", "case": "LabEquipmentBooking", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_119", "case": "LiftEmergencyCall", "split": "train", "guard_codes": {"a1": "needAck = 1", "b1": "t_obs ≤ 23", "b2": "t_obs > 23"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_120", "case": "LiftMaintenance", "split": "train", "guard_codes": {"a1": "attemptNo < 5"}, "guard_paths": ["a1"]}
+{"id": "model_121", "case": "LivestockFeeder", "split": "train", "guard_codes": {"a1": "approved = 1", "b1": "express = 1", "a2": "approved = 0"}, "guard_paths": ["a1 -> b1", "a2"]}
+{"id": "model_122", "case": "MailroomSorting", "split": "train", "guard_codes": {"a1": "withExtra = 1", "b1": "pollNo < 5"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_123", "case": "MarathonTiming", "split": "train", "guard_codes": {"a1": "roundNo < 5", "b1": "roundNo mod 2 = 0", "c1": "load < 10", "d1": "retryNo < 11", "c2": "load ≥ 10"}, "guard_paths": ["a1 -> b1 -> c1 -> d1", "a1 -> b1 -> c2"]}
+{"id": "model_124", "case": "MarketplaceEscrow", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_125", "case": "MedicalImagingPACS", "split": "train", "guard_codes": {"a1": "roundNo < 6", "b1": "roundNo mod 3 = 0", "b2": "roundNo mod 3 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_126", "case": "MedicalTranscription", "split": "train", "guard_codes": {"a1": "optIn = 1"}, "guard_paths": ["a1"]}
+{"id": "model_127", "case": "MeetingRoomDisplay", "split": "train", "guard_codes": {"a1": "isVip = 1", "a2": "isVip = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_128", "case": "MobileTopUp", "split": "train", "guard_codes": {"a1": "t_obs ≤ 13", "a2": "t_obs > 13"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_129", "case": "MuseumAudioGuide", "split": "val", "guard_codes": {"a1": "useCache = 1", "b1": "stepNo < 11"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_130", "case": "OfficeLightingControl", "split": "test", "guard_codes": {"a1": "needAck = 1", "b1": "express = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_131", "case": "OnlineBankingOTP", "split": "train", "guard_codes": {"a1": "retryNo < 12", "b1": "retryNo mod 4 = 0", "b2": "retryNo mod 4 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_132", "case": "OnlineDonation", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_133", "case": "OnlineGroceryPicking", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_134", "case": "OnlineQuizGame", "split": "train", "guard_codes": {"a1": "attemptNo < 10", "b1": "roundNo < 6"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_135", "case": "ParcelReturnDropoff", "split": "train", "guard_codes": {"a1": "useCache = 1"}, "guard_paths": ["a1"]}
+{"id": "model_136", "case": "ParentalControlRouter", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_137", "case": "ParkingPermitPortal", "split": "train", "guard_codes": {"a1": "retryNo < 9"}, "guard_paths": ["a1"]}
+{"id": "model_138", "case": "PassportRenewalKiosk", "split": "train", "guard_codes": {"a1": "t_obs ≤ 4", "a2": "t_obs > 4"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_139", "case": "PatientIntakeForm", "split": "train", "guard_codes": {"a1": "attemptNo < 5", "b1": "attemptNo mod 2 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_140", "case": "PetDoorController", "split": "train", "guard_codes": {"a1": "t_obs ≤ 58", "a2": "t_obs > 58"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_141", "case": "PharmacyDelivery", "split": "val", "guard_codes": {"a1": "needAck = 1", "b1": "mode = GOLD", "b2": "mode = SILVER", "b3": "mode = BRONZE"}, "guard_paths": ["a1 -> b1", "a1 -> b2", "a1 -> b3"]}
+{"id": "model_142", "case": "PharmacyRefill", "split": "train", "guard_codes": {"a1": "express = 1"}, "guard_paths": ["a1"]}
+{"id": "model_143", "case": "PhotoPrintKiosk", "split": "test", "guard_codes": {"a1": "t_obs ≤ 13", "a2": "t_obs > 13"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_144", "case": "PipelineLeakSCADA", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_145", "case": "PodcastPublishing", "split": "test", "guard_codes": {"a1": "retryNo < 3", "b1": "retryNo mod 3 = 0", "b2": "retryNo mod 3 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_146", "case": "PortCraneControl", "split": "train", "guard_codes": {"a1": "express = 1"}, "guard_paths": ["a1"]}
+{"id": "model_147", "case": "PrintFleetMonitor", "split": "train", "guard_codes": {"a1": "isVip = 1", "a2": "isVip = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_148", "case": "PrisonVisitBooking", "split": "train", "guard_codes": {"a1": "passNo < 9", "b1": "passNo mod 2 = 0", "c1": "optIn = 1"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_149", "case": "PublicWifiHotspot", "split": "train", "guard_codes": {"a1": "optIn = 1", "b1": "load < 10", "b2": "load ≥ 10"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_150", "case": "RailFareGate", "split": "train", "guard_codes": {"a1": "needAck = 1", "b1": "withExtra = 1"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_151", "case": "RecyclingKiosk", "split": "train", "guard_codes": {"a1": "express = 1", "b1": "roundNo < 6", "c1": "urgent = 1", "c2": "urgent = 0"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b1 -> c2"]}
+{"id": "model_152", "case": "RemoteExamProctor", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_153", "case": "RemotePatientMonitor", "split": "test", "guard_codes": {"a1": "passNo < 12"}, "guard_paths": ["a1"]}
+{"id": "model_154", "case": "RentalScooter", "split": "train", "guard_codes": {"a1": "express = 1"}, "guard_paths": ["a1"]}
+{"id": "model_155", "case": "RestaurantReservation", "split": "test", "guard_codes": {"a1": "express = 1", "b1": "roundNo < 8", "c1": "needAck = 1"}, "guard_paths": ["a1 -> b1 -> c1"]}
+{"id": "model_156", "case": "RideHailingSurge", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_157", "case": "RoboticLawnMower", "split": "train", "guard_codes": {"a1": "useCache = 1"}, "guard_paths": ["a1"]}
+{"id": "model_158", "case": "RuralTelehealthKiosk", "split": "train", "guard_codes": {"a1": "passNo < 6", "b1": "passNo mod 4 = 0", "b2": "passNo mod 4 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_159", "case": "SatelliteGroundStation", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_160", "case": "SchoolBusTracking", "split": "train", "guard_codes": {"a1": "t_obs ≤ 2", "a2": "t_obs > 2"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_161", "case": "SeaportPilotBooking", "split": "train", "guard_codes": {"a1": "needAck = 1"}, "guard_paths": ["a1"]}
+{"id": "model_162", "case": "SelfCheckoutLane", "split": "train", "guard_codes": {"a1": "t_obs ≤ 10", "a2": "t_obs > 10", "b1": "stepNo < 3"}, "guard_paths": ["a1 -> b1", "a2 -> b1"]}
+{"id": "model_163", "case": "ShipLockOperation", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_164", "case": "SmartAquarium", "split": "train", "guard_codes": {"a1": "cycleNo < 4", "b1": "cycleNo mod 2 = 0", "b2": "cycleNo mod 2 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_165", "case": "SmartBabyMonitor", "split": "val", "guard_codes": {"a1": "useCache = 1", "b1": "score < 50", "b2": "score ≥ 50"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_166", "case": "SmartBeehive", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_167", "case": "SmartCurtainControl", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_168", "case": "SmartFridgeInventory", "split": "train", "guard_codes": {"a1": "attemptNo < 2", "b1": "tier = GREEN", "b2": "tier = RED", "c1": "stepNo < 11"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b2 -> c1"]}
+{"id": "model_169", "case": "SmartGymLocker", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_170", "case": "SmartHelmetMining", "split": "train", "guard_codes": {"a1": "temp < 50", "a2": "temp ≥ 50"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_171", "case": "SmartLibraryShelf", "split": "test", "guard_codes": {"a1": "roundNo < 12", "b1": "roundNo mod 4 = 0", "c1": "grade = ACTIVE", "c2": "grade = IDLE"}, "guard_paths": ["a1 -> b1 -> c1", "a1 -> b1 -> c2"]}
+{"id": "model_172", "case": "SmartMirrorFitness", "split": "val", "guard_codes": {"a1": "attemptNo < 6", "b1": "attemptNo mod 2 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_173", "case": "SmartPillBox", "split": "train", "guard_codes": {"a1": "needAck = 1", "b1": "mode = GOLD", "b2": "mode = SILVER", "b3": "mode = BRONZE"}, "guard_paths": ["a1 -> b1", "a1 -> b2", "a1 -> b3"]}
+{"id": "model_174", "case": "SmartRainGauge", "split": "train", "guard_codes": {"a1": "useCache = 1", "b1": "score < 50", "b2": "score ≥ 50"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_175", "case": "SmartShoppingCart", "split": "train", "guard_codes": {"a1": "useCache = 1"}, "guard_paths": ["a1"]}
+{"id": "model_176", "case": "SmartStreetLight", "split": "train", "guard_codes": {"a1": "urgent = 1", "a2": "urgent = 0"}, "guard_paths": ["a1", "a2"]}
+{"id": "model_177", "case": "SmartTrashCompactor", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_178", "case": "SmartVendingFridge", "split": "test", "guard_codes": {"a1": "attemptNo < 9", "b1": "attemptNo mod 4 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_179", "case": "SmartWasteBin", "split": "train", "guard_codes": {"a1": "hasKey = 1", "a2": "hasKey = 0", "b1": "phase = GOLD", "b2": "phase = SILVER", "b3": "phase = BRONZE"}, "guard_paths": ["a1 -> b1", "a1 -> b2", "a1 -> b3", "a2 -> b1", "a2 -> b2", "a2 -> b3"]}
+{"id": "model_180", "case": "SoilTestingLab", "split": "train", "guard_codes": {"a1": "roundNo < 12"}, "guard_paths": ["a1"]}
+{"id": "model_181", "case": "SolarPanelMonitor", "split": "val", "guard_codes": {"a1": "attemptNo < 8", "b1": "attemptNo mod 2 = 0", "b2": "attemptNo mod 2 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_182", "case": "StadiumEntryGate", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_183", "case": "StreetParkingMeter", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_184", "case": "StudentAttendance", "split": "train", "guard_codes": {"a1": "useCache = 1"}, "guard_paths": ["a1"]}
+{"id": "model_185", "case": "TaxFilingPortal", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_186", "case": "TelemedicineVisit", "split": "train", "guard_codes": {"a1": "stepNo < 2", "b1": "stepNo mod 2 = 0", "b2": "stepNo mod 2 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_187", "case": "ThermalCameraScreening", "split": "test", "guard_codes": {}, "guard_paths": []}
+{"id": "model_188", "case": "TollPlazaETC", "split": "val", "guard_codes": {"a1": "withExtra = 1"}, "guard_paths": ["a1"]}
+{"id": "model_189", "case": "TradingOrderGateway", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_190", "case": "TrafficSignalPriority", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_191", "case": "TrainSeatReservation", "split": "train", "guard_codes": {"a1": "passNo < 11", "b1": "passNo mod 2 = 0", "b2": "passNo mod 2 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_192", "case": "VaccineColdBox", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_193", "case": "VeterinaryClinic", "split": "val", "guard_codes": {}, "guard_paths": []}
+{"id": "model_194", "case": "VideoStreaming", "split": "train", "guard_codes": {"a1": "stepNo < 7", "b1": "stepNo mod 2 = 0", "b2": "stepNo mod 2 ≠ 0"}, "guard_paths": ["a1 -> b1", "a1 -> b2"]}
+{"id": "model_195", "case": "WarehouseForklift", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_196", "case": "WarehousePicking", "split": "train", "guard_codes": {}, "guard_paths": []}
+{"id": "model_197", "case": "WaterLeakDetection", "split": "train", "guard_codes": {"a1": "cycleNo < 10", "b1": "cycleNo mod 2 = 0"}, "guard_paths": ["a1 -> b1"]}
+{"id": "model_198", "case": "WindTurbineMonitor", "split": "val", "guard_codes": {"a1": "withExtra = 1", "b1": "needAck = 1"}, "guard_paths": ["a1 -> b1"]}

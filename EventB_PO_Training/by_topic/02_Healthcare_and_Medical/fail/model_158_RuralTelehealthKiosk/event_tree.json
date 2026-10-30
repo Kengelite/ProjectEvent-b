@@ -1,0 +1,421 @@
+{
+ "event_codes": {
+  "a1": "sendreportVital_1",
+  "b1": "receivereportVital_1",
+  "c1": "sendvalidateVital_2",
+  "d1": "receivevalidateVital_2",
+  "e1": "sendfetchPrescription_3",
+  "f1": "receivefetchPrescription_3",
+  "g1": "sendschedulePrescription_4",
+  "g2": "sendreportPrescription_11",
+  "h1": "receiveschedulePrescription_4",
+  "h2": "receivereportPrescription_11",
+  "i1": "sendcancelPrescription_5",
+  "j1": "receivecancelPrescription_5",
+  "k1": "sendnotifyConsult_6",
+  "l1": "receivenotifyConsult_6",
+  "m1": "sendsendVital_7",
+  "n1": "receivesendVital_7",
+  "o1": "sendfetchVital_8",
+  "p1": "receivefetchVital_8",
+  "q1": "sendackConsult_9",
+  "r1": "receiveackConsult_9",
+  "s1": "sendupdateConsult_10",
+  "t1": "receiveupdateConsult_10",
+  "u1": "sendconfirmVital_12",
+  "v1": "receiveconfirmVital_12",
+  "w1": "sendreleaseVital_13",
+  "w2": "checkloop_fetchPrescription_3_loop1",
+  "x1": "receivereleaseVital_13"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "passNo < 6"
+  ],
+  "f1": [
+   "passNo < 6"
+  ],
+  "g1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "g2": [
+   "passNo < 6",
+   "passNo mod 4 ≠ 0"
+  ],
+  "h1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "h2": [
+   "passNo < 6",
+   "passNo mod 4 ≠ 0"
+  ],
+  "i1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "j1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "k1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "l1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "m1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "n1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "o1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "p1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "q1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "r1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "s1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "t1": [
+   "passNo < 6",
+   "passNo mod 4 = 0"
+  ],
+  "u1": [
+   "passNo < 6"
+  ],
+  "v1": [
+   "passNo < 6"
+  ],
+  "w1": [],
+  "w2": [
+   "passNo < 6"
+  ],
+  "x1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreportVital_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereportVital_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendvalidateVital_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivevalidateVital_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendfetchPrescription_3",
+            "code": "e1",
+            "conditions": [
+             "passNo < 6"
+            ],
+            "children": [
+             {
+              "event": "receivefetchPrescription_3",
+              "code": "f1",
+              "conditions": [
+               "passNo < 6"
+              ],
+              "children": [
+               {
+                "event": "sendschedulePrescription_4",
+                "code": "g1",
+                "conditions": [
+                 "passNo < 6",
+                 "passNo mod 4 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveschedulePrescription_4",
+                  "code": "h1",
+                  "conditions": [
+                   "passNo < 6",
+                   "passNo mod 4 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcancelPrescription_5",
+                    "code": "i1",
+                    "conditions": [
+                     "passNo < 6",
+                     "passNo mod 4 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivecancelPrescription_5",
+                      "code": "j1",
+                      "conditions": [
+                       "passNo < 6",
+                       "passNo mod 4 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendnotifyConsult_6",
+                        "code": "k1",
+                        "conditions": [
+                         "passNo < 6",
+                         "passNo mod 4 = 0"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivenotifyConsult_6",
+                          "code": "l1",
+                          "conditions": [
+                           "passNo < 6",
+                           "passNo mod 4 = 0"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsendVital_7",
+                            "code": "m1",
+                            "conditions": [
+                             "passNo < 6",
+                             "passNo mod 4 = 0"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivesendVital_7",
+                              "code": "n1",
+                              "conditions": [
+                               "passNo < 6",
+                               "passNo mod 4 = 0"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendfetchVital_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "passNo < 6",
+                                 "passNo mod 4 = 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivefetchVital_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "passNo < 6",
+                                   "passNo mod 4 = 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendackConsult_9",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "passNo < 6",
+                                     "passNo mod 4 = 0"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveackConsult_9",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "passNo < 6",
+                                       "passNo mod 4 = 0"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendupdateConsult_10",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "passNo < 6",
+                                         "passNo mod 4 = 0"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receiveupdateConsult_10",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "passNo < 6",
+                                           "passNo mod 4 = 0"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendconfirmVital_12",
+                                            "code": "u1",
+                                            "conditions": [
+                                             "passNo < 6"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receiveconfirmVital_12",
+                                              "code": "v1",
+                                              "conditions": [
+                                               "passNo < 6"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendreleaseVital_13",
+                                                "code": "w1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivereleaseVital_13",
+                                                  "code": "x1",
+                                                  "conditions": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               },
+                                               {
+                                                "event": "checkloop_fetchPrescription_3_loop1",
+                                                "code": "w2",
+                                                "loop_back_to": "sendfetchPrescription_3",
+                                                "loop_back_to_code": "e1",
+                                                "conditions": [
+                                                 "passNo < 6"
+                                                ],
+                                                "children": []
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendreportPrescription_11",
+                "code": "g2",
+                "conditions": [
+                 "passNo < 6",
+                 "passNo mod 4 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivereportPrescription_11",
+                  "code": "h2",
+                  "conditions": [
+                   "passNo < 6",
+                   "passNo mod 4 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmVital_12",
+                    "code": "u1",
+                    "conditions": [
+                     "passNo < 6"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveconfirmVital_12",
+                      "code": "v1",
+                      "conditions": [
+                       "passNo < 6"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreleaseVital_13",
+                        "code": "w1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereleaseVital_13",
+                          "code": "x1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_fetchPrescription_3_loop1",
+                        "code": "w2",
+                        "loop_back_to": "sendfetchPrescription_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "passNo < 6"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> u1 -> v1 -> w1 -> x1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> u1 -> v1 -> w2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

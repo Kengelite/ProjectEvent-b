@@ -1,0 +1,164 @@
+{
+ "event_codes": {
+  "a1": "sendlogJob_1",
+  "b1": "receivelogJob_1",
+  "c1": "sendvalidateJob_2",
+  "d1": "receivevalidateJob_2",
+  "e1": "sendrequestJob_3",
+  "f1": "receiverequestJob_3",
+  "g1": "sendcheckJob_4",
+  "h1": "receivecheckJob_4",
+  "i1": "sendsyncLock_5",
+  "j1": "receivesyncLock_5",
+  "k1": "sendcancelFault_6",
+  "k2": "checkloop_requestJob_3_loop1",
+  "l1": "receivecancelFault_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 5"
+  ],
+  "f1": [
+   "attemptNo < 5"
+  ],
+  "g1": [
+   "attemptNo < 5"
+  ],
+  "h1": [
+   "attemptNo < 5"
+  ],
+  "i1": [
+   "attemptNo < 5"
+  ],
+  "j1": [
+   "attemptNo < 5"
+  ],
+  "k1": [],
+  "k2": [
+   "attemptNo < 5"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendlogJob_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivelogJob_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendvalidateJob_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivevalidateJob_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendrequestJob_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 5"
+            ],
+            "children": [
+             {
+              "event": "receiverequestJob_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 5"
+              ],
+              "children": [
+               {
+                "event": "sendcheckJob_4",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 5"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckJob_4",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 5"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsyncLock_5",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 5"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesyncLock_5",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 5"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelFault_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivecancelFault_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_requestJob_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendrequestJob_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "attemptNo < 5"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

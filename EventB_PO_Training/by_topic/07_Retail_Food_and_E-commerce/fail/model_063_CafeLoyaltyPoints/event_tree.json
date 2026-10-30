@@ -1,0 +1,250 @@
+{
+ "event_codes": {
+  "a1": "sendapproveVisit_1",
+  "b1": "receiveapproveVisit_1",
+  "c1": "sendfetchPoint_2",
+  "d1": "receivefetchPoint_2",
+  "e1": "sendcheckPoint_3",
+  "f1": "receivecheckPoint_3",
+  "g1": "sendissueVisit_4_opt1",
+  "h1": "receiveissueVisit_4_opt1",
+  "i1": "sendupdateVisit_5",
+  "j1": "receiveupdateVisit_5",
+  "k1": "sendreleaseVisit_6_opt2",
+  "l1": "receivereleaseVisit_6_opt2",
+  "m1": "sendsendPoint_7",
+  "n1": "receivesendPoint_7",
+  "o1": "sendsyncReward_8",
+  "p1": "receivesyncReward_8",
+  "q1": "sendfetchReward_9",
+  "q2": "checkloop_checkPoint_3_loop1",
+  "r1": "receivefetchReward_9"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "roundNo < 12"
+  ],
+  "f1": [
+   "roundNo < 12"
+  ],
+  "g1": [
+   "roundNo < 12",
+   "roundNo mod 2 = 0"
+  ],
+  "h1": [
+   "roundNo < 12",
+   "roundNo mod 2 = 0"
+  ],
+  "i1": [
+   "roundNo < 12"
+  ],
+  "j1": [
+   "roundNo < 12"
+  ],
+  "k1": [
+   "roundNo < 12",
+   "needAck = 1"
+  ],
+  "l1": [
+   "roundNo < 12",
+   "needAck = 1"
+  ],
+  "m1": [
+   "roundNo < 12"
+  ],
+  "n1": [
+   "roundNo < 12"
+  ],
+  "o1": [
+   "roundNo < 12"
+  ],
+  "p1": [
+   "roundNo < 12"
+  ],
+  "q1": [],
+  "q2": [
+   "roundNo < 12"
+  ],
+  "r1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendapproveVisit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveapproveVisit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfetchPoint_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefetchPoint_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcheckPoint_3",
+            "code": "e1",
+            "conditions": [
+             "roundNo < 12"
+            ],
+            "children": [
+             {
+              "event": "receivecheckPoint_3",
+              "code": "f1",
+              "conditions": [
+               "roundNo < 12"
+              ],
+              "children": [
+               {
+                "event": "sendissueVisit_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "roundNo < 12",
+                 "roundNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveissueVisit_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "roundNo < 12",
+                   "roundNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendupdateVisit_5",
+                    "code": "i1",
+                    "conditions": [
+                     "roundNo < 12"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveupdateVisit_5",
+                      "code": "j1",
+                      "conditions": [
+                       "roundNo < 12"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreleaseVisit_6_opt2",
+                        "code": "k1",
+                        "conditions": [
+                         "roundNo < 12",
+                         "needAck = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereleaseVisit_6_opt2",
+                          "code": "l1",
+                          "conditions": [
+                           "roundNo < 12",
+                           "needAck = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsendPoint_7",
+                            "code": "m1",
+                            "conditions": [
+                             "roundNo < 12"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivesendPoint_7",
+                              "code": "n1",
+                              "conditions": [
+                               "roundNo < 12"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsyncReward_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "roundNo < 12"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesyncReward_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "roundNo < 12"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendfetchReward_9",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivefetchReward_9",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_checkPoint_3_loop1",
+                                    "code": "q2",
+                                    "loop_back_to": "sendcheckPoint_3",
+                                    "loop_back_to_code": "e1",
+                                    "conditions": [
+                                     "roundNo < 12"
+                                    ],
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

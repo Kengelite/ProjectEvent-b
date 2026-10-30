@@ -1,0 +1,220 @@
+{
+ "event_codes": {
+  "a1": "sendreleaseForm_1",
+  "b1": "receivereleaseForm_1",
+  "c1": "sendcancelForm_2",
+  "d1": "receivecancelForm_2",
+  "e1": "sendconfirmForm_3",
+  "f1": "receiveconfirmForm_3",
+  "g1": "sendreportForm_4_opt1",
+  "h1": "receivereportForm_4_opt1",
+  "i1": "sendscheduleConsent_5",
+  "j1": "receivescheduleConsent_5",
+  "k1": "sendconfirmConsent_6",
+  "l1": "receiveconfirmConsent_6",
+  "m1": "sendissueForm_7",
+  "n1": "receiveissueForm_7",
+  "o1": "sendassignRecord_8",
+  "o2": "checkloop_confirmForm_3_loop1",
+  "p1": "receiveassignRecord_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 5"
+  ],
+  "f1": [
+   "attemptNo < 5"
+  ],
+  "g1": [
+   "attemptNo < 5",
+   "attemptNo mod 2 = 0"
+  ],
+  "h1": [
+   "attemptNo < 5",
+   "attemptNo mod 2 = 0"
+  ],
+  "i1": [
+   "attemptNo < 5"
+  ],
+  "j1": [
+   "attemptNo < 5"
+  ],
+  "k1": [
+   "attemptNo < 5"
+  ],
+  "l1": [
+   "attemptNo < 5"
+  ],
+  "m1": [
+   "attemptNo < 5"
+  ],
+  "n1": [
+   "attemptNo < 5"
+  ],
+  "o1": [],
+  "o2": [
+   "attemptNo < 5"
+  ],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreleaseForm_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereleaseForm_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcancelForm_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecancelForm_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendconfirmForm_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 5"
+            ],
+            "children": [
+             {
+              "event": "receiveconfirmForm_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 5"
+              ],
+              "children": [
+               {
+                "event": "sendreportForm_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 5",
+                 "attemptNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivereportForm_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 5",
+                   "attemptNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendscheduleConsent_5",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 5"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivescheduleConsent_5",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 5"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendconfirmConsent_6",
+                        "code": "k1",
+                        "conditions": [
+                         "attemptNo < 5"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveconfirmConsent_6",
+                          "code": "l1",
+                          "conditions": [
+                           "attemptNo < 5"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendissueForm_7",
+                            "code": "m1",
+                            "conditions": [
+                             "attemptNo < 5"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveissueForm_7",
+                              "code": "n1",
+                              "conditions": [
+                               "attemptNo < 5"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendassignRecord_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveassignRecord_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_confirmForm_3_loop1",
+                                "code": "o2",
+                                "loop_back_to": "sendconfirmForm_3",
+                                "loop_back_to_code": "e1",
+                                "conditions": [
+                                 "attemptNo < 5"
+                                ],
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

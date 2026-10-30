@@ -1,0 +1,195 @@
+{
+ "event_codes": {
+  "a1": "sendlogCode_1",
+  "b1": "receivelogCode_1",
+  "c1": "sendreportAlert_2",
+  "d1": "receivereportAlert_2",
+  "e1": "sendcheckAlert_3_opt1",
+  "f1": "receivecheckAlert_3_opt1",
+  "g1": "sendnotifyZone_4_opt1",
+  "h1": "receivenotifyZone_4_opt1",
+  "i1": "sendsyncZone_5",
+  "j1": "receivesyncZone_5",
+  "k1": "sendqueryCode_6",
+  "l1": "receivequeryCode_6",
+  "m1": "sendassignAlert_7",
+  "n1": "receiveassignAlert_7",
+  "o1": "sendqueryZone_8",
+  "p1": "receivequeryZone_8",
+  "q1": "sendscheduleZone_9",
+  "r1": "receivescheduleZone_9"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "needAck = 1"
+  ],
+  "f1": [
+   "needAck = 1"
+  ],
+  "g1": [
+   "needAck = 1"
+  ],
+  "h1": [
+   "needAck = 1"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendlogCode_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivelogCode_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreportAlert_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereportAlert_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcheckAlert_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "needAck = 1"
+            ],
+            "children": [
+             {
+              "event": "receivecheckAlert_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "needAck = 1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyZone_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "needAck = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyZone_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "needAck = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsyncZone_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesyncZone_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendqueryCode_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivequeryCode_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendassignAlert_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveassignAlert_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendqueryZone_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivequeryZone_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendscheduleZone_9",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivescheduleZone_9",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

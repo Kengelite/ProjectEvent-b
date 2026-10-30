@@ -1,0 +1,223 @@
+{
+ "event_codes": {
+  "a1": "sendstartHeating_1",
+  "b1": "receivestartHeating_1",
+  "c1": "sendheatingAck_2",
+  "d1": "receiveheatingAck_2",
+  "e1": "sendqueryTemp_3",
+  "f1": "receivequeryTemp_3",
+  "g1": "sendtempReport_4",
+  "h1": "receivetempReport_4",
+  "i1": "sendreducePower_5",
+  "i2": "sendkeepPower_6",
+  "j1": "receivereducePower_5",
+  "j2": "receivekeepPower_6",
+  "k1": "sendstopHeating_7",
+  "k2": "checkloop_queryTemp_3_loop1",
+  "l1": "receivestopHeating_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "cycle < 5"
+  ],
+  "f1": [
+   "cycle < 5"
+  ],
+  "g1": [
+   "cycle < 5"
+  ],
+  "h1": [
+   "cycle < 5"
+  ],
+  "i1": [
+   "cycle < 5",
+   "overheat = 1"
+  ],
+  "i2": [
+   "cycle < 5",
+   "overheat = 0"
+  ],
+  "j1": [
+   "cycle < 5",
+   "overheat = 1"
+  ],
+  "j2": [
+   "cycle < 5",
+   "overheat = 0"
+  ],
+  "k1": [],
+  "k2": [
+   "cycle < 5"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendstartHeating_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivestartHeating_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendheatingAck_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveheatingAck_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendqueryTemp_3",
+            "code": "e1",
+            "conditions": [
+             "cycle < 5"
+            ],
+            "children": [
+             {
+              "event": "receivequeryTemp_3",
+              "code": "f1",
+              "conditions": [
+               "cycle < 5"
+              ],
+              "children": [
+               {
+                "event": "sendtempReport_4",
+                "code": "g1",
+                "conditions": [
+                 "cycle < 5"
+                ],
+                "children": [
+                 {
+                  "event": "receivetempReport_4",
+                  "code": "h1",
+                  "conditions": [
+                   "cycle < 5"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreducePower_5",
+                    "code": "i1",
+                    "conditions": [
+                     "cycle < 5",
+                     "overheat = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereducePower_5",
+                      "code": "j1",
+                      "conditions": [
+                       "cycle < 5",
+                       "overheat = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendstopHeating_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivestopHeating_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_queryTemp_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendqueryTemp_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "cycle < 5"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "sendkeepPower_6",
+                    "code": "i2",
+                    "conditions": [
+                     "cycle < 5",
+                     "overheat = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivekeepPower_6",
+                      "code": "j2",
+                      "conditions": [
+                       "cycle < 5",
+                       "overheat = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendstopHeating_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivestopHeating_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_queryTemp_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendqueryTemp_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "cycle < 5"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

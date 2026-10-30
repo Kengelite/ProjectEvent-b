@@ -1,0 +1,55 @@
+model_031  OnlineExam  —  Event tree
+
+1) รหัส event
+   a1   sendlogin_1
+   b1   receivelogin_1
+   c1   sendfetchQuestion_2
+   d1   receivefetchQuestion_2
+   e1   sendquestionData_3
+   f1   receivequestionData_3
+   g1   sendautosave_4
+   h1   receiveautosave_4
+   i1   sendsaveAck_5
+   j1   receivesaveAck_5
+   k1   sendsubmitAnswer_6
+   k2   checkloop_autosave_4_loop2
+   l1   receivesubmitAnswer_6
+   m1   sendflagBehavior_7
+   m2   checkloop_fetchQuestion_2_loop1
+   n1   receiveflagBehavior_7
+   o1   sendexamResult_8
+   p1   receiveexamResult_8
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
+       ├── k1 → l1
+       │   ├── m1 → n1 → o1 → p1
+       │   └── m2 ↺ c1
+       └── k2 ↺ g1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendlogin_1
+       └── b1 receivelogin_1
+           └── c1 sendfetchQuestion_2
+               └── d1 receivefetchQuestion_2
+                   └── e1 sendquestionData_3
+                       └── f1 receivequestionData_3
+                           └── g1 sendautosave_4
+                               └── h1 receiveautosave_4
+                                   └── i1 sendsaveAck_5
+                                       └── j1 receivesaveAck_5
+                                           ├── k1 sendsubmitAnswer_6
+                                           │   └── l1 receivesubmitAnswer_6
+                                           │       ├── m1 sendflagBehavior_7
+                                           │       │   └── n1 receiveflagBehavior_7
+                                           │       │       └── o1 sendexamResult_8
+                                           │       │           └── p1 receiveexamResult_8
+                                           │       └── m2 checkloop_fetchQuestion_2_loop1  ↺ วนกลับไป sendfetchQuestion_2
+                                           └── k2 checkloop_autosave_4_loop2  ↺ วนกลับไป sendautosave_4
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ c1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ g1

@@ -1,0 +1,24 @@
+{
+ "guard_codes": {
+  "a1": "roundNo < 5",
+  "b1": "roundNo mod 2 = 0",
+  "c1": "load < 10",
+  "d1": "retryNo < 11",
+  "c2": "load ≥ 10"
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {
+     "d1": {}
+    },
+    "c2": {}
+   }
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1 -> d1",
+  "a1 -> b1 -> c2"
+ ],
+ "source": "model.txt"
+}

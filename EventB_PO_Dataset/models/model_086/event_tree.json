@@ -1,0 +1,228 @@
+{
+ "event_codes": {
+  "a1": "sendackCredit_1",
+  "b1": "receiveackCredit_1",
+  "c1": "sendconfirmCredit_2",
+  "d1": "receiveconfirmCredit_2",
+  "e1": "sendreserveMachine_3",
+  "f1": "receivereserveMachine_3",
+  "g1": "sendnotifyCredit_4",
+  "h1": "receivenotifyCredit_4",
+  "i1": "sendreleaseCycle_5",
+  "i2": "checkloop_reserveMachine_3_loop1",
+  "j1": "receivereleaseCycle_5",
+  "k1": "sendfetchCredit_6",
+  "l1": "receivefetchCredit_6",
+  "m1": "sendsendCredit_7",
+  "n1": "receivesendCredit_7",
+  "o1": "sendfetchCycle_8",
+  "p1": "receivefetchCycle_8",
+  "q1": "sendcancelCycle_9",
+  "r1": "receivecancelCycle_9",
+  "s1": "sendqueryCredit_10",
+  "t1": "receivequeryCredit_10"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "cycleNo < 3"
+  ],
+  "f1": [
+   "cycleNo < 3"
+  ],
+  "g1": [
+   "cycleNo < 3"
+  ],
+  "h1": [
+   "cycleNo < 3"
+  ],
+  "i1": [],
+  "i2": [
+   "cycleNo < 3"
+  ],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendackCredit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveackCredit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendconfirmCredit_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveconfirmCredit_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreserveMachine_3",
+            "code": "e1",
+            "conditions": [
+             "cycleNo < 3"
+            ],
+            "children": [
+             {
+              "event": "receivereserveMachine_3",
+              "code": "f1",
+              "conditions": [
+               "cycleNo < 3"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyCredit_4",
+                "code": "g1",
+                "conditions": [
+                 "cycleNo < 3"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyCredit_4",
+                  "code": "h1",
+                  "conditions": [
+                   "cycleNo < 3"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreleaseCycle_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereleaseCycle_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendfetchCredit_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivefetchCredit_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendsendCredit_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivesendCredit_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendfetchCycle_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivefetchCycle_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendcancelCycle_9",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivecancelCycle_9",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendqueryCredit_10",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivequeryCredit_10",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_reserveMachine_3_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendreserveMachine_3",
+                    "loop_back_to_code": "e1",
+                    "conditions": [
+                     "cycleNo < 3"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

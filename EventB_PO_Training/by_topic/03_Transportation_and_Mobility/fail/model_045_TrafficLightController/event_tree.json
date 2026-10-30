@@ -1,0 +1,164 @@
+{
+ "event_codes": {
+  "a1": "sendsetGreen_1",
+  "b1": "receivesetGreen_1",
+  "c1": "sendgreenAck_2",
+  "d1": "receivegreenAck_2",
+  "e1": "sendsetYellow_3",
+  "f1": "receivesetYellow_3",
+  "g1": "sendsetRed_4",
+  "h1": "receivesetRed_4",
+  "i1": "sendphaseDone_5",
+  "j1": "receivephaseDone_5",
+  "k1": "sendshutdown_6",
+  "k2": "checkloop_setYellow_3_loop1",
+  "l1": "receiveshutdown_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "cycleCount < 10"
+  ],
+  "f1": [
+   "cycleCount < 10"
+  ],
+  "g1": [
+   "cycleCount < 10"
+  ],
+  "h1": [
+   "cycleCount < 10"
+  ],
+  "i1": [
+   "cycleCount < 10"
+  ],
+  "j1": [
+   "cycleCount < 10"
+  ],
+  "k1": [],
+  "k2": [
+   "cycleCount < 10"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsetGreen_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesetGreen_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendgreenAck_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivegreenAck_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsetYellow_3",
+            "code": "e1",
+            "conditions": [
+             "cycleCount < 10"
+            ],
+            "children": [
+             {
+              "event": "receivesetYellow_3",
+              "code": "f1",
+              "conditions": [
+               "cycleCount < 10"
+              ],
+              "children": [
+               {
+                "event": "sendsetRed_4",
+                "code": "g1",
+                "conditions": [
+                 "cycleCount < 10"
+                ],
+                "children": [
+                 {
+                  "event": "receivesetRed_4",
+                  "code": "h1",
+                  "conditions": [
+                   "cycleCount < 10"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendphaseDone_5",
+                    "code": "i1",
+                    "conditions": [
+                     "cycleCount < 10"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivephaseDone_5",
+                      "code": "j1",
+                      "conditions": [
+                       "cycleCount < 10"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendshutdown_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveshutdown_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_setYellow_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendsetYellow_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "cycleCount < 10"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

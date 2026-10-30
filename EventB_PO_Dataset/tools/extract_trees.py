@@ -12,7 +12,8 @@ A loop-counter event hangs under the last event of its loop body. Events are cod
 the step, the number the alternative where the tree branches (an alt, or loop-again vs. go on). Events at the
 same step of sibling branches share a letter (m1 / m2 / m3); an event where branches merge starts a new letter.
 
-Writes models/<id>/tree.json and tree.txt. model_001's model.txt has event names only, so its events and guards
+Writes the two trees to separate files: models/<id>/guard_tree.txt|json and event_tree.txt|json.
+The event files name conditions by their text, never by guard code, so the two code sets never mix. model_001's model.txt has event names only, so its events and guards
 are read from the Rodin proof-obligation file (.bpo) instead; one of its events has no name there.
 """
 import glob, html, json, os, re
@@ -221,14 +222,14 @@ def draw(node, label, pre=""):
     return out
 
 
-def draw_events(t, pre=""):
+def draw_events(t, pre="", show_guards=False):
     out = []
     for k, c in enumerate(t["children"]):
         last = k == len(t["children"]) - 1
-        g = f"  (guard {' '.join(c['guards'])})" if c["guards"] else ""
+        g = f"  (guard {' '.join(c['guards'])})" if show_guards and c["guards"] else ""
         back = f"  ↺ วนกลับไป {c['loop_back_to']}" if "loop_back_to" in c else ""
         out.append(f"{pre}{'└── ' if last else '├── '}{c['code']} {c['event']}{g}{back}")
-        out += draw_events(c, pre + ("    " if last else "│   "))
+        out += draw_events(c, pre + ("    " if last else "│   "), show_guards)
     return out
 
 
@@ -252,20 +253,55 @@ def draw_events_compact(t, pre="", width=None):
     return out
 
 
-def text(model_id, case, t):
+def split_tree(t):
+    """The combined result as two independent parts; event nodes carry condition text, not guard codes."""
     gc = t["guard_codes"]
-    lines = [f"{model_id}  {case}", "", "1) รหัส guard"]
+    def conv(n):
+        m = {k: v for k, v in n.items() if k not in ("guards", "children")}
+        m["conditions"] = [gc[c] for c in n["guards"]]
+        m["children"] = [conv(c) for c in n["children"]]
+        return m
+    guard = {k: t[k] for k in ("guard_codes", "guard_tree", "guard_paths", "source")}
+    event = {"event_codes": t["event_codes"],
+             "event_conditions": {c: [gc[g] for g in gs] for c, gs in t["event_guards"].items()},
+             "event_tree": conv(t["event_tree"]), "event_paths": t["event_paths"],
+             "unplaced_events": t["unplaced_events"], "source": t["source"]}
+    return guard, event
+
+
+def load_tree(model_dir):
+    """Both files of a model joined back into one dict (event conditions mapped to guard codes again)."""
+    guard = json.load(open(os.path.join(model_dir, "guard_tree.json"), encoding="utf-8"))
+    event = json.load(open(os.path.join(model_dir, "event_tree.json"), encoding="utf-8"))
+    code = {g: c for c, g in guard["guard_codes"].items()}
+    def conv(n):
+        m = {k: v for k, v in n.items() if k not in ("conditions", "children")}
+        m["guards"] = [code[g] for g in n["conditions"]]
+        m["children"] = [conv(c) for c in n["children"]]
+        return m
+    return {**guard, "event_codes": event["event_codes"],
+            "event_guards": {c: [code[g] for g in gs] for c, gs in event["event_conditions"].items()},
+            "event_tree": conv(event["event_tree"]), "event_paths": event["event_paths"],
+            "unplaced_events": event["unplaced_events"]}
+
+
+def guard_text(model_id, case, t):
+    gc = t["guard_codes"]
+    lines = [f"{model_id}  {case}  —  Guard tree", "", "1) รหัส guard"]
     lines += [f"   {c:<4} {g}" for c, g in gc.items()] or ["   (ไม่มีเงื่อนไขจากแผนภาพ)"]
     lines += ["", "2) Guard tree", "   (root)"]
     lines += ["   " + l for l in draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}")]
-    lines += ["", "   เส้นทาง:"] + ([f"   {p}" for p in t["guard_paths"]] or ["   -"])
-    lines += ["", "3) รหัส event"]
-    lines += [f"   {c:<4} {n}" + (f"  (guard {' '.join(t['event_guards'][c])})" if t["event_guards"][c] else "")
-              for c, n in t["event_codes"].items()]
-    lines += ["", "4) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)", "   (root) INITIALISATION"]
+    lines += ["", "3) เส้นทาง"] + ([f"   {p}" for p in t["guard_paths"]] or ["   -"])
+    return "\n".join(lines) + "\n"
+
+
+def event_text(model_id, case, t):
+    lines = [f"{model_id}  {case}  —  Event tree", "", "1) รหัส event"]
+    lines += [f"   {c:<4} {n}" for c, n in t["event_codes"].items()]
+    lines += ["", "2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)", "   (root) INITIALISATION"]
     lines += ["   " + l for l in draw_events_compact(t["event_tree"])]
-    lines += ["", "   Event tree แบบเต็ม", "   (root) INITIALISATION"] + ["   " + l for l in draw_events(t["event_tree"])]
-    lines += ["", "   เส้นทาง:"] + [f"   {p}" for p in t["event_paths"]]
+    lines += ["", "3) Event tree แบบเต็ม", "   (root) INITIALISATION"] + ["   " + l for l in draw_events(t["event_tree"])]
+    lines += ["", "4) เส้นทาง"] + [f"   {p}" for p in t["event_paths"]]
     return "\n".join(lines) + "\n"
 
 
@@ -283,8 +319,13 @@ def main():
             events, source = from_bpo(bpo[0]), "rodin .bpo (model.txt has event names only)"
         t = build(events)
         t["source"] = source
-        json.dump(t, open(os.path.join(d, "tree.json"), "w"), ensure_ascii=False, indent=1)
-        open(os.path.join(d, "tree.txt"), "w", encoding="utf-8").write(text(meta["model_id"], meta["case"], t))
+        guard, event = split_tree(t)
+        for name, part, txt in (("guard_tree", guard, guard_text), ("event_tree", event, event_text)):
+            json.dump(part, open(os.path.join(d, f"{name}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+            open(os.path.join(d, f"{name}.txt"), "w", encoding="utf-8").write(txt(meta["model_id"], meta["case"], t))
+        for old in ("tree.json", "tree.txt"):
+            if os.path.exists(os.path.join(d, old)):
+                os.remove(os.path.join(d, old))
         n += 1
     print("trees written:", n)
 

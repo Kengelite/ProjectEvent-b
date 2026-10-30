@@ -1,0 +1,163 @@
+{
+ "event_codes": {
+  "a1": "sendcheckPrint_1",
+  "b1": "receivecheckPrint_1",
+  "c1": "sendassignPrint_2",
+  "d1": "receiveassignPrint_2",
+  "e1": "sendassignOrder_3",
+  "e2": "sendupdatePhoto_5",
+  "f1": "receiveassignOrder_3",
+  "f2": "receiveupdatePhoto_5",
+  "g1": "sendreservePhoto_4",
+  "h1": "receivereservePhoto_4",
+  "i1": "sendschedulePrint_6",
+  "j1": "receiveschedulePrint_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "t_obs ≤ 13"
+  ],
+  "e2": [
+   "t_obs > 13"
+  ],
+  "f1": [
+   "t_obs ≤ 13"
+  ],
+  "f2": [
+   "t_obs > 13"
+  ],
+  "g1": [
+   "t_obs ≤ 13"
+  ],
+  "h1": [
+   "t_obs ≤ 13"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcheckPrint_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecheckPrint_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignPrint_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignPrint_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendassignOrder_3",
+            "code": "e1",
+            "conditions": [
+             "t_obs ≤ 13"
+            ],
+            "children": [
+             {
+              "event": "receiveassignOrder_3",
+              "code": "f1",
+              "conditions": [
+               "t_obs ≤ 13"
+              ],
+              "children": [
+               {
+                "event": "sendreservePhoto_4",
+                "code": "g1",
+                "conditions": [
+                 "t_obs ≤ 13"
+                ],
+                "children": [
+                 {
+                  "event": "receivereservePhoto_4",
+                  "code": "h1",
+                  "conditions": [
+                   "t_obs ≤ 13"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendschedulePrint_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveschedulePrint_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendupdatePhoto_5",
+            "code": "e2",
+            "conditions": [
+             "t_obs > 13"
+            ],
+            "children": [
+             {
+              "event": "receiveupdatePhoto_5",
+              "code": "f2",
+              "conditions": [
+               "t_obs > 13"
+              ],
+              "children": [
+               {
+                "event": "sendschedulePrint_6",
+                "code": "i1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveschedulePrint_6",
+                  "code": "j1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

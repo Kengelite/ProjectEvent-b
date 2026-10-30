@@ -1,0 +1,224 @@
+{
+ "event_codes": {
+  "a1": "sendvalidateSeat_1",
+  "b1": "receivevalidateSeat_1",
+  "c1": "sendlogTicket_2",
+  "d1": "receivelogTicket_2",
+  "e1": "sendsendSeat_3",
+  "f1": "receivesendSeat_3",
+  "g1": "sendreserveSeat_4_opt1",
+  "h1": "receivereserveSeat_4_opt1",
+  "i1": "sendrequestRoute_5_opt1",
+  "j1": "receiverequestRoute_5_opt1",
+  "k1": "sendlogSeat_6",
+  "l1": "receivelogSeat_6",
+  "m1": "sendscheduleTicket_7",
+  "n1": "receivescheduleTicket_7",
+  "o1": "sendapproveSeat_8",
+  "o2": "checkloop_sendSeat_3_loop1",
+  "p1": "receiveapproveSeat_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 3"
+  ],
+  "f1": [
+   "retryNo < 3"
+  ],
+  "g1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "h1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "i1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "j1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "k1": [
+   "retryNo < 3"
+  ],
+  "l1": [
+   "retryNo < 3"
+  ],
+  "m1": [
+   "retryNo < 3"
+  ],
+  "n1": [
+   "retryNo < 3"
+  ],
+  "o1": [],
+  "o2": [
+   "retryNo < 3"
+  ],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendvalidateSeat_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivevalidateSeat_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendlogTicket_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivelogTicket_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendSeat_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 3"
+            ],
+            "children": [
+             {
+              "event": "receivesendSeat_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 3"
+              ],
+              "children": [
+               {
+                "event": "sendreserveSeat_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 3",
+                 "retryNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivereserveSeat_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 3",
+                   "retryNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendrequestRoute_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 3",
+                     "retryNo mod 3 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiverequestRoute_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 3",
+                       "retryNo mod 3 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendlogSeat_6",
+                        "code": "k1",
+                        "conditions": [
+                         "retryNo < 3"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivelogSeat_6",
+                          "code": "l1",
+                          "conditions": [
+                           "retryNo < 3"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendscheduleTicket_7",
+                            "code": "m1",
+                            "conditions": [
+                             "retryNo < 3"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivescheduleTicket_7",
+                              "code": "n1",
+                              "conditions": [
+                               "retryNo < 3"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapproveSeat_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveSeat_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_sendSeat_3_loop1",
+                                "code": "o2",
+                                "loop_back_to": "sendsendSeat_3",
+                                "loop_back_to_code": "e1",
+                                "conditions": [
+                                 "retryNo < 3"
+                                ],
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

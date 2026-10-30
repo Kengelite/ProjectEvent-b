@@ -1,0 +1,271 @@
+{
+ "event_codes": {
+  "a1": "sendvalidateFeed_1",
+  "b1": "receivevalidateFeed_1",
+  "c1": "sendassignAudio_2",
+  "d1": "receiveassignAudio_2",
+  "e1": "sendsendEpisode_3",
+  "f1": "receivesendEpisode_3",
+  "g1": "sendreserveEpisode_4",
+  "g2": "sendcheckFeed_6",
+  "h1": "receivereserveEpisode_4",
+  "h2": "receivecheckFeed_6",
+  "i1": "sendissueAudio_5",
+  "j1": "receiveissueAudio_5",
+  "k1": "sendsendAudio_7",
+  "l1": "receivesendAudio_7",
+  "m1": "sendlogAudio_8",
+  "m2": "checkloop_sendEpisode_3_loop1",
+  "n1": "receivelogAudio_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 3"
+  ],
+  "f1": [
+   "retryNo < 3"
+  ],
+  "g1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "g2": [
+   "retryNo < 3",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "h1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "h2": [
+   "retryNo < 3",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "i1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "j1": [
+   "retryNo < 3",
+   "retryNo mod 3 = 0"
+  ],
+  "k1": [
+   "retryNo < 3"
+  ],
+  "l1": [
+   "retryNo < 3"
+  ],
+  "m1": [],
+  "m2": [
+   "retryNo < 3"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendvalidateFeed_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivevalidateFeed_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignAudio_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignAudio_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendEpisode_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 3"
+            ],
+            "children": [
+             {
+              "event": "receivesendEpisode_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 3"
+              ],
+              "children": [
+               {
+                "event": "sendreserveEpisode_4",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 3",
+                 "retryNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivereserveEpisode_4",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 3",
+                   "retryNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendissueAudio_5",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 3",
+                     "retryNo mod 3 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveissueAudio_5",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 3",
+                       "retryNo mod 3 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsendAudio_7",
+                        "code": "k1",
+                        "conditions": [
+                         "retryNo < 3"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesendAudio_7",
+                          "code": "l1",
+                          "conditions": [
+                           "retryNo < 3"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendlogAudio_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivelogAudio_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_sendEpisode_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendsendEpisode_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "retryNo < 3"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendcheckFeed_6",
+                "code": "g2",
+                "conditions": [
+                 "retryNo < 3",
+                 "retryNo mod 3 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckFeed_6",
+                  "code": "h2",
+                  "conditions": [
+                   "retryNo < 3",
+                   "retryNo mod 3 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsendAudio_7",
+                    "code": "k1",
+                    "conditions": [
+                     "retryNo < 3"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesendAudio_7",
+                      "code": "l1",
+                      "conditions": [
+                       "retryNo < 3"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendlogAudio_8",
+                        "code": "m1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivelogAudio_8",
+                          "code": "n1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_sendEpisode_3_loop1",
+                        "code": "m2",
+                        "loop_back_to": "sendsendEpisode_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "retryNo < 3"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,133 @@
+{
+ "event_codes": {
+  "a1": "sendnotifyArrival_1",
+  "b1": "receivenotifyArrival_1",
+  "c1": "sendreserveArrival_2",
+  "d1": "receivereserveArrival_2",
+  "e1": "sendsendBerth_3_opt1",
+  "f1": "receivesendBerth_3_opt1",
+  "g1": "sendlogPilot_4",
+  "h1": "receivelogPilot_4",
+  "i1": "sendrequestBerth_5",
+  "j1": "receiverequestBerth_5",
+  "k1": "sendcheckArrival_6",
+  "l1": "receivecheckArrival_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "needAck = 1"
+  ],
+  "f1": [
+   "needAck = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendnotifyArrival_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivenotifyArrival_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreserveArrival_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereserveArrival_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendBerth_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "needAck = 1"
+            ],
+            "children": [
+             {
+              "event": "receivesendBerth_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "needAck = 1"
+              ],
+              "children": [
+               {
+                "event": "sendlogPilot_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivelogPilot_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendrequestBerth_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiverequestBerth_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendcheckArrival_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivecheckArrival_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

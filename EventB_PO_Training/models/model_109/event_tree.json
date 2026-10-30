@@ -1,0 +1,392 @@
+{
+ "event_codes": {
+  "a1": "sendcheckOrder_1",
+  "b1": "receivecheckOrder_1",
+  "c1": "sendrequestResult_2",
+  "d1": "receiverequestResult_2",
+  "e1": "sendconfirmOrder_3",
+  "f1": "receiveconfirmOrder_3",
+  "g1": "sendscheduleOrder_4",
+  "g2": "sendreportSample_9",
+  "h1": "receivescheduleOrder_4",
+  "h2": "receivereportSample_9",
+  "i1": "sendackSample_5",
+  "j1": "receiveackSample_5",
+  "k1": "sendapproveSample_6",
+  "l1": "receiveapproveSample_6",
+  "m1": "sendissueResult_7",
+  "n1": "receiveissueResult_7",
+  "o1": "sendreportResult_8",
+  "o2": "checkloop_ackSample_5_loop2",
+  "p1": "receivereportResult_8",
+  "q1": "sendrequestSample_10",
+  "r1": "receiverequestSample_10",
+  "s1": "sendreserveSample_11",
+  "s2": "checkloop_confirmOrder_3_loop1",
+  "t1": "receivereserveSample_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "cycleNo < 8"
+  ],
+  "f1": [
+   "cycleNo < 8"
+  ],
+  "g1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0"
+  ],
+  "g2": [
+   "cycleNo < 8",
+   "cycleNo mod 3 ≠ 0"
+  ],
+  "h1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0"
+  ],
+  "h2": [
+   "cycleNo < 8",
+   "cycleNo mod 3 ≠ 0"
+  ],
+  "i1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "j1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "k1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "l1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "m1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "n1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "o1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0"
+  ],
+  "o2": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0",
+   "attemptNo < 10"
+  ],
+  "p1": [
+   "cycleNo < 8",
+   "cycleNo mod 3 = 0"
+  ],
+  "q1": [
+   "cycleNo < 8"
+  ],
+  "r1": [
+   "cycleNo < 8"
+  ],
+  "s1": [],
+  "s2": [
+   "cycleNo < 8"
+  ],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcheckOrder_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecheckOrder_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendrequestResult_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiverequestResult_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendconfirmOrder_3",
+            "code": "e1",
+            "conditions": [
+             "cycleNo < 8"
+            ],
+            "children": [
+             {
+              "event": "receiveconfirmOrder_3",
+              "code": "f1",
+              "conditions": [
+               "cycleNo < 8"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleOrder_4",
+                "code": "g1",
+                "conditions": [
+                 "cycleNo < 8",
+                 "cycleNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivescheduleOrder_4",
+                  "code": "h1",
+                  "conditions": [
+                   "cycleNo < 8",
+                   "cycleNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendackSample_5",
+                    "code": "i1",
+                    "conditions": [
+                     "cycleNo < 8",
+                     "cycleNo mod 3 = 0",
+                     "attemptNo < 10"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveackSample_5",
+                      "code": "j1",
+                      "conditions": [
+                       "cycleNo < 8",
+                       "cycleNo mod 3 = 0",
+                       "attemptNo < 10"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendapproveSample_6",
+                        "code": "k1",
+                        "conditions": [
+                         "cycleNo < 8",
+                         "cycleNo mod 3 = 0",
+                         "attemptNo < 10"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveapproveSample_6",
+                          "code": "l1",
+                          "conditions": [
+                           "cycleNo < 8",
+                           "cycleNo mod 3 = 0",
+                           "attemptNo < 10"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendissueResult_7",
+                            "code": "m1",
+                            "conditions": [
+                             "cycleNo < 8",
+                             "cycleNo mod 3 = 0",
+                             "attemptNo < 10"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveissueResult_7",
+                              "code": "n1",
+                              "conditions": [
+                               "cycleNo < 8",
+                               "cycleNo mod 3 = 0",
+                               "attemptNo < 10"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreportResult_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "cycleNo < 8",
+                                 "cycleNo mod 3 = 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivereportResult_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "cycleNo < 8",
+                                   "cycleNo mod 3 = 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendrequestSample_10",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "cycleNo < 8"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiverequestSample_10",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "cycleNo < 8"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendreserveSample_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivereserveSample_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "checkloop_confirmOrder_3_loop1",
+                                        "code": "s2",
+                                        "loop_back_to": "sendconfirmOrder_3",
+                                        "loop_back_to_code": "e1",
+                                        "conditions": [
+                                         "cycleNo < 8"
+                                        ],
+                                        "children": []
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_ackSample_5_loop2",
+                                "code": "o2",
+                                "loop_back_to": "sendackSample_5",
+                                "loop_back_to_code": "i1",
+                                "conditions": [
+                                 "cycleNo < 8",
+                                 "cycleNo mod 3 = 0",
+                                 "attemptNo < 10"
+                                ],
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendreportSample_9",
+                "code": "g2",
+                "conditions": [
+                 "cycleNo < 8",
+                 "cycleNo mod 3 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivereportSample_9",
+                  "code": "h2",
+                  "conditions": [
+                   "cycleNo < 8",
+                   "cycleNo mod 3 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendrequestSample_10",
+                    "code": "q1",
+                    "conditions": [
+                     "cycleNo < 8"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiverequestSample_10",
+                      "code": "r1",
+                      "conditions": [
+                       "cycleNo < 8"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreserveSample_11",
+                        "code": "s1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereserveSample_11",
+                          "code": "t1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_confirmOrder_3_loop1",
+                        "code": "s2",
+                        "loop_back_to": "sendconfirmOrder_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "cycleNo < 8"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ i1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> q1 -> r1 -> s2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

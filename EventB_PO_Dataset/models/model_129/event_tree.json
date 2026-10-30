@@ -1,0 +1,174 @@
+{
+ "event_codes": {
+  "a1": "sendconfirmTour_1",
+  "b1": "receiveconfirmTour_1",
+  "c1": "sendnotifyTour_2",
+  "d1": "receivenotifyTour_2",
+  "e1": "sendreserveTour_3_opt1",
+  "f1": "receivereserveTour_3_opt1",
+  "g1": "sendcancelTour_4",
+  "h1": "receivecancelTour_4",
+  "i1": "sendvalidateTour_5",
+  "j1": "receivevalidateTour_5",
+  "k1": "sendcheckTour_6",
+  "l1": "receivecheckTour_6",
+  "m1": "sendvalidateAudio_7",
+  "m2": "checkloop_checkTour_6_loop1",
+  "n1": "receivevalidateAudio_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "useCache = 1"
+  ],
+  "f1": [
+   "useCache = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "stepNo < 11"
+  ],
+  "l1": [
+   "stepNo < 11"
+  ],
+  "m1": [],
+  "m2": [
+   "stepNo < 11"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendconfirmTour_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveconfirmTour_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendnotifyTour_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivenotifyTour_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreserveTour_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "useCache = 1"
+            ],
+            "children": [
+             {
+              "event": "receivereserveTour_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "useCache = 1"
+              ],
+              "children": [
+               {
+                "event": "sendcancelTour_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivecancelTour_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendvalidateTour_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivevalidateTour_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendcheckTour_6",
+                        "code": "k1",
+                        "conditions": [
+                         "stepNo < 11"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecheckTour_6",
+                          "code": "l1",
+                          "conditions": [
+                           "stepNo < 11"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendvalidateAudio_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivevalidateAudio_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_checkTour_6_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendcheckTour_6",
+                            "loop_back_to_code": "k1",
+                            "conditions": [
+                             "stepNo < 11"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ k1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

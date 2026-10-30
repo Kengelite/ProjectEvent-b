@@ -1,0 +1,50 @@
+model_121  LivestockFeeder  —  Event tree
+
+1) รหัส event
+   a1   sendreportRation_1
+   b1   receivereportRation_1
+   c1   sendsyncFeed_2
+   d1   receivesyncFeed_2
+   e1   sendackFeed_3
+   e2   sendcancelRation_7
+   f1   receiveackFeed_3
+   f2   receivecancelRation_7
+   g1   sendupdateRation_4_opt1
+   h1   receiveupdateRation_4_opt1
+   i1   sendqueryRation_5_opt1
+   j1   receivequeryRation_5_opt1
+   k1   sendconfirmFeed_6
+   l1   receiveconfirmFeed_6
+   m1   sendconfirmRation_8
+   n1   receiveconfirmRation_8
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       └── e2 → f2 → m1 → n1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreportRation_1
+       └── b1 receivereportRation_1
+           └── c1 sendsyncFeed_2
+               └── d1 receivesyncFeed_2
+                   ├── e1 sendackFeed_3
+                   │   └── f1 receiveackFeed_3
+                   │       └── g1 sendupdateRation_4_opt1
+                   │           └── h1 receiveupdateRation_4_opt1
+                   │               └── i1 sendqueryRation_5_opt1
+                   │                   └── j1 receivequeryRation_5_opt1
+                   │                       └── k1 sendconfirmFeed_6
+                   │                           └── l1 receiveconfirmFeed_6
+                   │                               └── m1 sendconfirmRation_8
+                   │                                   └── n1 receiveconfirmRation_8
+                   └── e2 sendcancelRation_7
+                       └── f2 receivecancelRation_7
+                           └── m1 sendconfirmRation_8
+                               └── n1 receiveconfirmRation_8
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1

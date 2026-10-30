@@ -1,0 +1,310 @@
+{
+ "event_codes": {
+  "a1": "sendcheckInvoice_1",
+  "b1": "receivecheckInvoice_1",
+  "c1": "sendreportInvoice_2",
+  "d1": "receivereportInvoice_2",
+  "e1": "sendsendInvoice_3",
+  "f1": "receivesendInvoice_3",
+  "g1": "sendackInvoice_4_opt1",
+  "h1": "receiveackInvoice_4_opt1",
+  "i1": "sendlogStock_5_opt1",
+  "j1": "receivelogStock_5_opt1",
+  "k1": "sendrequestInvoice_6",
+  "l1": "receiverequestInvoice_6",
+  "m1": "sendscheduleStock_7_opt2",
+  "n1": "receivescheduleStock_7_opt2",
+  "o1": "sendscheduleOrder_8_opt2",
+  "p1": "receivescheduleOrder_8_opt2",
+  "q1": "sendupdateInvoice_9",
+  "r1": "receiveupdateInvoice_9",
+  "s1": "sendissueOrder_10",
+  "t1": "receiveissueOrder_10",
+  "u1": "sendfetchOrder_11",
+  "u2": "checkloop_sendInvoice_3_loop1",
+  "v1": "receivefetchOrder_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 12"
+  ],
+  "f1": [
+   "retryNo < 12"
+  ],
+  "g1": [
+   "retryNo < 12",
+   "retryNo mod 3 = 0"
+  ],
+  "h1": [
+   "retryNo < 12",
+   "retryNo mod 3 = 0"
+  ],
+  "i1": [
+   "retryNo < 12",
+   "retryNo mod 3 = 0"
+  ],
+  "j1": [
+   "retryNo < 12",
+   "retryNo mod 3 = 0"
+  ],
+  "k1": [
+   "retryNo < 12"
+  ],
+  "l1": [
+   "retryNo < 12"
+  ],
+  "m1": [
+   "retryNo < 12",
+   "express = 1"
+  ],
+  "n1": [
+   "retryNo < 12",
+   "express = 1"
+  ],
+  "o1": [
+   "retryNo < 12",
+   "express = 1"
+  ],
+  "p1": [
+   "retryNo < 12",
+   "express = 1"
+  ],
+  "q1": [
+   "retryNo < 12"
+  ],
+  "r1": [
+   "retryNo < 12"
+  ],
+  "s1": [
+   "retryNo < 12"
+  ],
+  "t1": [
+   "retryNo < 12"
+  ],
+  "u1": [],
+  "u2": [
+   "retryNo < 12"
+  ],
+  "v1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcheckInvoice_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecheckInvoice_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreportInvoice_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereportInvoice_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendInvoice_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 12"
+            ],
+            "children": [
+             {
+              "event": "receivesendInvoice_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 12"
+              ],
+              "children": [
+               {
+                "event": "sendackInvoice_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 12",
+                 "retryNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveackInvoice_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 12",
+                   "retryNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendlogStock_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 12",
+                     "retryNo mod 3 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivelogStock_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 12",
+                       "retryNo mod 3 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendrequestInvoice_6",
+                        "code": "k1",
+                        "conditions": [
+                         "retryNo < 12"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiverequestInvoice_6",
+                          "code": "l1",
+                          "conditions": [
+                           "retryNo < 12"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendscheduleStock_7_opt2",
+                            "code": "m1",
+                            "conditions": [
+                             "retryNo < 12",
+                             "express = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivescheduleStock_7_opt2",
+                              "code": "n1",
+                              "conditions": [
+                               "retryNo < 12",
+                               "express = 1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendscheduleOrder_8_opt2",
+                                "code": "o1",
+                                "conditions": [
+                                 "retryNo < 12",
+                                 "express = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivescheduleOrder_8_opt2",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "retryNo < 12",
+                                   "express = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendupdateInvoice_9",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "retryNo < 12"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveupdateInvoice_9",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "retryNo < 12"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendissueOrder_10",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "retryNo < 12"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receiveissueOrder_10",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "retryNo < 12"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendfetchOrder_11",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receivefetchOrder_11",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           },
+                                           {
+                                            "event": "checkloop_sendInvoice_3_loop1",
+                                            "code": "u2",
+                                            "loop_back_to": "sendsendInvoice_3",
+                                            "loop_back_to_code": "e1",
+                                            "conditions": [
+                                             "retryNo < 12"
+                                            ],
+                                            "children": []
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

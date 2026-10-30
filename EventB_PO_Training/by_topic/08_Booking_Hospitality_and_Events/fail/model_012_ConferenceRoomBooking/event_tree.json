@@ -1,0 +1,151 @@
+{
+ "event_codes": {
+  "a1": "sendsearchRoom_1",
+  "b1": "receivesearchRoom_1",
+  "c1": "sendavailability_2",
+  "d1": "receiveavailability_2",
+  "e1": "sendbookRoom_3",
+  "f1": "receivebookRoom_3",
+  "g1": "sendcreateEvent_4",
+  "h1": "receivecreateEvent_4",
+  "i1": "sendeventCreated_5",
+  "j1": "receiveeventCreated_5",
+  "k1": "sendupdatePanel_6_opt1",
+  "l1": "receiveupdatePanel_6_opt1",
+  "m1": "sendbookingDone_7",
+  "n1": "receivebookingDone_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "needDisplay = 1"
+  ],
+  "l1": [
+   "needDisplay = 1"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsearchRoom_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesearchRoom_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendavailability_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveavailability_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendbookRoom_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivebookRoom_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendcreateEvent_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivecreateEvent_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendeventCreated_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveeventCreated_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendupdatePanel_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "needDisplay = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveupdatePanel_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "needDisplay = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendbookingDone_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivebookingDone_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

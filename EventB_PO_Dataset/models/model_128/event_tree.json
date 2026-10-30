@@ -1,0 +1,189 @@
+{
+ "event_codes": {
+  "a1": "sendnotifyCredit_1",
+  "b1": "receivenotifyCredit_1",
+  "c1": "sendconfirmBundle_2",
+  "d1": "receiveconfirmBundle_2",
+  "e1": "sendreportBundle_3",
+  "e2": "sendcheckBundle_5",
+  "f1": "receivereportBundle_3",
+  "f2": "receivecheckBundle_5",
+  "g1": "sendackCredit_4",
+  "g2": "sendassignCredit_6",
+  "h1": "receiveackCredit_4",
+  "h2": "receiveassignCredit_6",
+  "i1": "sendreleaseTopup_7",
+  "j1": "receivereleaseTopup_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "t_obs ≤ 13"
+  ],
+  "e2": [
+   "t_obs > 13"
+  ],
+  "f1": [
+   "t_obs ≤ 13"
+  ],
+  "f2": [
+   "t_obs > 13"
+  ],
+  "g1": [
+   "t_obs ≤ 13"
+  ],
+  "g2": [
+   "t_obs > 13"
+  ],
+  "h1": [
+   "t_obs ≤ 13"
+  ],
+  "h2": [
+   "t_obs > 13"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendnotifyCredit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivenotifyCredit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendconfirmBundle_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveconfirmBundle_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreportBundle_3",
+            "code": "e1",
+            "conditions": [
+             "t_obs ≤ 13"
+            ],
+            "children": [
+             {
+              "event": "receivereportBundle_3",
+              "code": "f1",
+              "conditions": [
+               "t_obs ≤ 13"
+              ],
+              "children": [
+               {
+                "event": "sendackCredit_4",
+                "code": "g1",
+                "conditions": [
+                 "t_obs ≤ 13"
+                ],
+                "children": [
+                 {
+                  "event": "receiveackCredit_4",
+                  "code": "h1",
+                  "conditions": [
+                   "t_obs ≤ 13"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreleaseTopup_7",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereleaseTopup_7",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendcheckBundle_5",
+            "code": "e2",
+            "conditions": [
+             "t_obs > 13"
+            ],
+            "children": [
+             {
+              "event": "receivecheckBundle_5",
+              "code": "f2",
+              "conditions": [
+               "t_obs > 13"
+              ],
+              "children": [
+               {
+                "event": "sendassignCredit_6",
+                "code": "g2",
+                "conditions": [
+                 "t_obs > 13"
+                ],
+                "children": [
+                 {
+                  "event": "receiveassignCredit_6",
+                  "code": "h2",
+                  "conditions": [
+                   "t_obs > 13"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreleaseTopup_7",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereleaseTopup_7",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

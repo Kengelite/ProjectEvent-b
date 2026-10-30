@@ -1,0 +1,272 @@
+{
+ "event_codes": {
+  "a1": "sendconfirmCredit_1",
+  "b1": "receiveconfirmCredit_1",
+  "c1": "sendfetchVoucher_2",
+  "d1": "receivefetchVoucher_2",
+  "e1": "sendsyncCredit_3_opt1",
+  "f1": "receivesyncCredit_3_opt1",
+  "g1": "sendnotifyCredit_4_opt1",
+  "h1": "receivenotifyCredit_4_opt1",
+  "i1": "sendconfirmBottle_5_opt1",
+  "i2": "checkloop_notifyCredit_4_loop1",
+  "j1": "receiveconfirmBottle_5_opt1",
+  "k1": "sendconfirmVoucher_6",
+  "l1": "receiveconfirmVoucher_6",
+  "m1": "sendackVoucher_7",
+  "n1": "receiveackVoucher_7",
+  "o1": "sendassignBottle_8",
+  "o2": "sendscheduleVoucher_9",
+  "p1": "receiveassignBottle_8",
+  "p2": "receivescheduleVoucher_9",
+  "q1": "sendqueryCredit_10",
+  "r1": "receivequeryCredit_10"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "express = 1"
+  ],
+  "f1": [
+   "express = 1"
+  ],
+  "g1": [
+   "express = 1",
+   "roundNo < 6"
+  ],
+  "h1": [
+   "express = 1",
+   "roundNo < 6"
+  ],
+  "i1": [
+   "express = 1"
+  ],
+  "i2": [
+   "express = 1",
+   "roundNo < 6"
+  ],
+  "j1": [
+   "express = 1"
+  ],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [
+   "urgent = 1"
+  ],
+  "o2": [
+   "urgent = 0"
+  ],
+  "p1": [
+   "urgent = 1"
+  ],
+  "p2": [
+   "urgent = 0"
+  ],
+  "q1": [],
+  "r1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendconfirmCredit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveconfirmCredit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfetchVoucher_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefetchVoucher_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsyncCredit_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "express = 1"
+            ],
+            "children": [
+             {
+              "event": "receivesyncCredit_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "express = 1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyCredit_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "express = 1",
+                 "roundNo < 6"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyCredit_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "express = 1",
+                   "roundNo < 6"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmBottle_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "express = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveconfirmBottle_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "express = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendconfirmVoucher_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveconfirmVoucher_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendackVoucher_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveackVoucher_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendassignBottle_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "urgent = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveassignBottle_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "urgent = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendqueryCredit_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivequeryCredit_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "sendscheduleVoucher_9",
+                                "code": "o2",
+                                "conditions": [
+                                 "urgent = 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivescheduleVoucher_9",
+                                  "code": "p2",
+                                  "conditions": [
+                                   "urgent = 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendqueryCredit_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivequeryCredit_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_notifyCredit_4_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendnotifyCredit_4_opt1",
+                    "loop_back_to_code": "g1",
+                    "conditions": [
+                     "express = 1",
+                     "roundNo < 6"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ g1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,42 @@
+model_137  ParkingPermitPortal  —  Event tree
+
+1) รหัส event
+   a1   sendfetchPermit_1
+   b1   receivefetchPermit_1
+   c1   sendapprovePlate_2
+   d1   receiveapprovePlate_2
+   e1   sendqueryFine_3
+   f1   receivequeryFine_3
+   g1   sendconfirmPlate_4
+   h1   receiveconfirmPlate_4
+   i1   sendfetchPlate_5
+   j1   receivefetchPlate_5
+   k1   sendreservePermit_6
+   k2   checkloop_queryFine_3_loop1
+   l1   receivereservePermit_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
+       ├── k1 → l1
+       └── k2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendfetchPermit_1
+       └── b1 receivefetchPermit_1
+           └── c1 sendapprovePlate_2
+               └── d1 receiveapprovePlate_2
+                   └── e1 sendqueryFine_3
+                       └── f1 receivequeryFine_3
+                           └── g1 sendconfirmPlate_4
+                               └── h1 receiveconfirmPlate_4
+                                   └── i1 sendfetchPlate_5
+                                       └── j1 receivefetchPlate_5
+                                           ├── k1 sendreservePermit_6
+                                           │   └── l1 receivereservePermit_6
+                                           └── k2 checkloop_queryFine_3_loop1  ↺ วนกลับไป sendqueryFine_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1

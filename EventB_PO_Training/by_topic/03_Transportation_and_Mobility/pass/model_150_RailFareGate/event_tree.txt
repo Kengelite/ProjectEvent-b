@@ -1,0 +1,73 @@
+model_150  RailFareGate  —  Event tree
+
+1) รหัส event
+   a1   sendqueryBalance_1
+   b1   receivequeryBalance_1
+   c1   sendassignBalance_2
+   d1   receiveassignBalance_2
+   e1   sendcheckFare_3_opt1
+   f1   receivecheckFare_3_opt1
+   g1   sendvalidateCard_4_opt1
+   h1   receivevalidateCard_4_opt1
+   i1   sendcheckCard_5
+   j1   receivecheckCard_5
+   k1   sendqueryFare_6
+   l1   receivequeryFare_6
+   m1   sendvalidateFare_7_opt2
+   n1   receivevalidateFare_7_opt2
+   o1   sendrequestCard_8_opt2
+   p1   receiverequestCard_8_opt2
+   q1   sendreportBalance_9
+   r1   receivereportBalance_9
+   s1   sendreleaseFare_10
+   t1   receivereleaseFare_10
+   u1   sendissueFare_11
+   v1   receiveissueFare_11
+   w1   sendlogBalance_12
+   x1   receivelogBalance_12
+   y1   sendvalidateBalance_13
+   z1   receivevalidateBalance_13
+   aa1  sendassignFare_14
+   ab1  receiveassignFare_14
+   ac1  sendcancelFare_15
+   ad1  receivecancelFare_15
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1 → aa1 → ab1 → ac1 → ad1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendqueryBalance_1
+       └── b1 receivequeryBalance_1
+           └── c1 sendassignBalance_2
+               └── d1 receiveassignBalance_2
+                   └── e1 sendcheckFare_3_opt1
+                       └── f1 receivecheckFare_3_opt1
+                           └── g1 sendvalidateCard_4_opt1
+                               └── h1 receivevalidateCard_4_opt1
+                                   └── i1 sendcheckCard_5
+                                       └── j1 receivecheckCard_5
+                                           └── k1 sendqueryFare_6
+                                               └── l1 receivequeryFare_6
+                                                   └── m1 sendvalidateFare_7_opt2
+                                                       └── n1 receivevalidateFare_7_opt2
+                                                           └── o1 sendrequestCard_8_opt2
+                                                               └── p1 receiverequestCard_8_opt2
+                                                                   └── q1 sendreportBalance_9
+                                                                       └── r1 receivereportBalance_9
+                                                                           └── s1 sendreleaseFare_10
+                                                                               └── t1 receivereleaseFare_10
+                                                                                   └── u1 sendissueFare_11
+                                                                                       └── v1 receiveissueFare_11
+                                                                                           └── w1 sendlogBalance_12
+                                                                                               └── x1 receivelogBalance_12
+                                                                                                   └── y1 sendvalidateBalance_13
+                                                                                                       └── z1 receivevalidateBalance_13
+                                                                                                           └── aa1 sendassignFare_14
+                                                                                                               └── ab1 receiveassignFare_14
+                                                                                                                   └── ac1 sendcancelFare_15
+                                                                                                                       └── ad1 receivecancelFare_15
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1 -> aa1 -> ab1 -> ac1 -> ad1

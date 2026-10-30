@@ -1,0 +1,419 @@
+{
+ "event_codes": {
+  "a1": "sendqueryTicket_1",
+  "b1": "receivequeryTicket_1",
+  "c1": "sendassignCoach_2",
+  "d1": "receiveassignCoach_2",
+  "e1": "sendscheduleCoach_3",
+  "f1": "receivescheduleCoach_3",
+  "g1": "sendconfirmSeat_4",
+  "g2": "sendapproveTicket_8",
+  "h1": "receiveconfirmSeat_4",
+  "h2": "receiveapproveTicket_8",
+  "i1": "sendreserveTicket_5",
+  "j1": "receivereserveTicket_5",
+  "k1": "sendissueTicket_6",
+  "l1": "receiveissueTicket_6",
+  "m1": "sendrequestCoach_7",
+  "n1": "receiverequestCoach_7",
+  "o1": "sendcheckTicket_9",
+  "p1": "receivecheckTicket_9",
+  "q1": "sendcancelTicket_10",
+  "r1": "receivecancelTicket_10",
+  "s1": "sendreportCoach_11",
+  "t1": "receivereportCoach_11",
+  "u1": "sendissueCoach_12",
+  "u2": "checkloop_scheduleCoach_3_loop1",
+  "v1": "receiveissueCoach_12"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "passNo < 11"
+  ],
+  "f1": [
+   "passNo < 11"
+  ],
+  "g1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "g2": [
+   "passNo < 11",
+   "passNo mod 2 ≠ 0"
+  ],
+  "h1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "h2": [
+   "passNo < 11",
+   "passNo mod 2 ≠ 0"
+  ],
+  "i1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "j1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "k1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "l1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "m1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "n1": [
+   "passNo < 11",
+   "passNo mod 2 = 0"
+  ],
+  "o1": [
+   "passNo < 11"
+  ],
+  "p1": [
+   "passNo < 11"
+  ],
+  "q1": [
+   "passNo < 11"
+  ],
+  "r1": [
+   "passNo < 11"
+  ],
+  "s1": [
+   "passNo < 11"
+  ],
+  "t1": [
+   "passNo < 11"
+  ],
+  "u1": [],
+  "u2": [
+   "passNo < 11"
+  ],
+  "v1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendqueryTicket_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivequeryTicket_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignCoach_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignCoach_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendscheduleCoach_3",
+            "code": "e1",
+            "conditions": [
+             "passNo < 11"
+            ],
+            "children": [
+             {
+              "event": "receivescheduleCoach_3",
+              "code": "f1",
+              "conditions": [
+               "passNo < 11"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmSeat_4",
+                "code": "g1",
+                "conditions": [
+                 "passNo < 11",
+                 "passNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveconfirmSeat_4",
+                  "code": "h1",
+                  "conditions": [
+                   "passNo < 11",
+                   "passNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreserveTicket_5",
+                    "code": "i1",
+                    "conditions": [
+                     "passNo < 11",
+                     "passNo mod 2 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereserveTicket_5",
+                      "code": "j1",
+                      "conditions": [
+                       "passNo < 11",
+                       "passNo mod 2 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendissueTicket_6",
+                        "code": "k1",
+                        "conditions": [
+                         "passNo < 11",
+                         "passNo mod 2 = 0"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveissueTicket_6",
+                          "code": "l1",
+                          "conditions": [
+                           "passNo < 11",
+                           "passNo mod 2 = 0"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendrequestCoach_7",
+                            "code": "m1",
+                            "conditions": [
+                             "passNo < 11",
+                             "passNo mod 2 = 0"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiverequestCoach_7",
+                              "code": "n1",
+                              "conditions": [
+                               "passNo < 11",
+                               "passNo mod 2 = 0"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendcheckTicket_9",
+                                "code": "o1",
+                                "conditions": [
+                                 "passNo < 11"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivecheckTicket_9",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "passNo < 11"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendcancelTicket_10",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "passNo < 11"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivecancelTicket_10",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "passNo < 11"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendreportCoach_11",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "passNo < 11"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivereportCoach_11",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "passNo < 11"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendissueCoach_12",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveissueCoach_12",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           },
+                                           {
+                                            "event": "checkloop_scheduleCoach_3_loop1",
+                                            "code": "u2",
+                                            "loop_back_to": "sendscheduleCoach_3",
+                                            "loop_back_to_code": "e1",
+                                            "conditions": [
+                                             "passNo < 11"
+                                            ],
+                                            "children": []
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendapproveTicket_8",
+                "code": "g2",
+                "conditions": [
+                 "passNo < 11",
+                 "passNo mod 2 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveapproveTicket_8",
+                  "code": "h2",
+                  "conditions": [
+                   "passNo < 11",
+                   "passNo mod 2 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcheckTicket_9",
+                    "code": "o1",
+                    "conditions": [
+                     "passNo < 11"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivecheckTicket_9",
+                      "code": "p1",
+                      "conditions": [
+                       "passNo < 11"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelTicket_10",
+                        "code": "q1",
+                        "conditions": [
+                         "passNo < 11"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecancelTicket_10",
+                          "code": "r1",
+                          "conditions": [
+                           "passNo < 11"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreportCoach_11",
+                            "code": "s1",
+                            "conditions": [
+                             "passNo < 11"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivereportCoach_11",
+                              "code": "t1",
+                              "conditions": [
+                               "passNo < 11"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendissueCoach_12",
+                                "code": "u1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveissueCoach_12",
+                                  "code": "v1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_scheduleCoach_3_loop1",
+                                "code": "u2",
+                                "loop_back_to": "sendscheduleCoach_3",
+                                "loop_back_to_code": "e1",
+                                "conditions": [
+                                 "passNo < 11"
+                                ],
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

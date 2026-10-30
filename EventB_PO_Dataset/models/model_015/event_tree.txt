@@ -1,0 +1,55 @@
+model_015  ElevatorControl  —  Event tree
+
+1) รหัส event
+   a1   sendcallElevator_1
+   b1   receivecallElevator_1
+   c1   sendmoveCar_2
+   d1   receivemoveCar_2
+   e1   sendarrived_3
+   f1   receivearrived_3
+   g1   sendopenDoor_4
+   g2   sendcloseDoor_6
+   h1   receiveopenDoor_4
+   h2   receivecloseDoor_6
+   i1   senddoorOpened_5
+   i2   senddoorSensor_7
+   j1   receivedoorOpened_5
+   j2   receivedoorSensor_7
+   k1   sendnotifyPassenger_8
+   k2   checkloop_closeDoor_6_loop1
+   l1   receivenotifyPassenger_8
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → i2 → j2
+           ├── k1 → l1
+           └── k2 ↺ g2
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendcallElevator_1
+       └── b1 receivecallElevator_1
+           └── c1 sendmoveCar_2
+               └── d1 receivemoveCar_2
+                   └── e1 sendarrived_3
+                       └── f1 receivearrived_3
+                           ├── g1 sendopenDoor_4
+                           │   └── h1 receiveopenDoor_4
+                           │       └── i1 senddoorOpened_5
+                           │           └── j1 receivedoorOpened_5
+                           │               └── k1 sendnotifyPassenger_8
+                           │                   └── l1 receivenotifyPassenger_8
+                           └── g2 sendcloseDoor_6
+                               └── h2 receivecloseDoor_6
+                                   └── i2 senddoorSensor_7
+                                       └── j2 receivedoorSensor_7
+                                           ├── k1 sendnotifyPassenger_8
+                                           │   └── l1 receivenotifyPassenger_8
+                                           └── k2 checkloop_closeDoor_6_loop1  ↺ วนกลับไป sendcloseDoor_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k2 ↺ g2

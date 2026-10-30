@@ -1,0 +1,37 @@
+model_193  VeterinaryClinic  —  Event tree
+
+1) รหัส event
+   a1   sendreleaseAppointment_1
+   b1   receivereleaseAppointment_1
+   c1   sendcancelAppointment_2
+   d1   receivecancelAppointment_2
+   e1   sendreportInvoice_3
+   f1   receivereportInvoice_3
+   g1   sendsendAppointment_4
+   h1   receivesendAppointment_4
+   i1   sendapproveAppointment_5
+   j1   receiveapproveAppointment_5
+   k1   sendvalidateInvoice_6
+   l1   receivevalidateInvoice_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreleaseAppointment_1
+       └── b1 receivereleaseAppointment_1
+           └── c1 sendcancelAppointment_2
+               └── d1 receivecancelAppointment_2
+                   └── e1 sendreportInvoice_3
+                       └── f1 receivereportInvoice_3
+                           └── g1 sendsendAppointment_4
+                               └── h1 receivesendAppointment_4
+                                   └── i1 sendapproveAppointment_5
+                                       └── j1 receiveapproveAppointment_5
+                                           └── k1 sendvalidateInvoice_6
+                                               └── l1 receivevalidateInvoice_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

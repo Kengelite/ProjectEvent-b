@@ -1,0 +1,272 @@
+{
+ "event_codes": {
+  "a1": "sendconfirmRating_1",
+  "b1": "receiveconfirmRating_1",
+  "c1": "sendfetchPremium_2",
+  "d1": "receivefetchPremium_2",
+  "e1": "sendsyncRating_3_opt1",
+  "f1": "receivesyncRating_3_opt1",
+  "g1": "sendnotifyRating_4_opt1",
+  "h1": "receivenotifyRating_4_opt1",
+  "i1": "sendconfirmTrip_5_opt1",
+  "i2": "checkloop_notifyRating_4_loop1",
+  "j1": "receiveconfirmTrip_5_opt1",
+  "k1": "sendconfirmPremium_6",
+  "l1": "receiveconfirmPremium_6",
+  "m1": "sendackPremium_7",
+  "n1": "receiveackPremium_7",
+  "o1": "sendassignTrip_8",
+  "o2": "sendschedulePremium_9",
+  "p1": "receiveassignTrip_8",
+  "p2": "receiveschedulePremium_9",
+  "q1": "sendqueryRating_10",
+  "r1": "receivequeryRating_10"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "express = 1"
+  ],
+  "f1": [
+   "express = 1"
+  ],
+  "g1": [
+   "express = 1",
+   "roundNo < 6"
+  ],
+  "h1": [
+   "express = 1",
+   "roundNo < 6"
+  ],
+  "i1": [
+   "express = 1"
+  ],
+  "i2": [
+   "express = 1",
+   "roundNo < 6"
+  ],
+  "j1": [
+   "express = 1"
+  ],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [
+   "urgent = 1"
+  ],
+  "o2": [
+   "urgent = 0"
+  ],
+  "p1": [
+   "urgent = 1"
+  ],
+  "p2": [
+   "urgent = 0"
+  ],
+  "q1": [],
+  "r1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendconfirmRating_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveconfirmRating_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfetchPremium_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefetchPremium_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsyncRating_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "express = 1"
+            ],
+            "children": [
+             {
+              "event": "receivesyncRating_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "express = 1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyRating_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "express = 1",
+                 "roundNo < 6"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyRating_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "express = 1",
+                   "roundNo < 6"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmTrip_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "express = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveconfirmTrip_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "express = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendconfirmPremium_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveconfirmPremium_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendackPremium_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveackPremium_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendassignTrip_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "urgent = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveassignTrip_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "urgent = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendqueryRating_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivequeryRating_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "sendschedulePremium_9",
+                                "code": "o2",
+                                "conditions": [
+                                 "urgent = 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveschedulePremium_9",
+                                  "code": "p2",
+                                  "conditions": [
+                                   "urgent = 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendqueryRating_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivequeryRating_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_notifyRating_4_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendnotifyRating_4_opt1",
+                    "loop_back_to_code": "g1",
+                    "conditions": [
+                     "express = 1",
+                     "roundNo < 6"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ g1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

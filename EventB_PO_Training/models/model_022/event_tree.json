@@ -1,0 +1,137 @@
+{
+ "event_codes": {
+  "a1": "sendscanQR_1",
+  "b1": "receivescanQR_1",
+  "c1": "sendaccessResult_2",
+  "d1": "receiveaccessResult_2",
+  "e1": "sendopenGate_3",
+  "e2": "sendrenewPrompt_4",
+  "f1": "receiveopenGate_3",
+  "f2": "receiverenewPrompt_4",
+  "g1": "sendexitScan_5",
+  "h1": "receiveexitScan_5"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "membership = ACTIVE"
+  ],
+  "e2": [
+   "membership = EXPIRED"
+  ],
+  "f1": [
+   "membership = ACTIVE"
+  ],
+  "f2": [
+   "membership = EXPIRED"
+  ],
+  "g1": [],
+  "h1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendscanQR_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivescanQR_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendaccessResult_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveaccessResult_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendopenGate_3",
+            "code": "e1",
+            "conditions": [
+             "membership = ACTIVE"
+            ],
+            "children": [
+             {
+              "event": "receiveopenGate_3",
+              "code": "f1",
+              "conditions": [
+               "membership = ACTIVE"
+              ],
+              "children": [
+               {
+                "event": "sendexitScan_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveexitScan_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendrenewPrompt_4",
+            "code": "e2",
+            "conditions": [
+             "membership = EXPIRED"
+            ],
+            "children": [
+             {
+              "event": "receiverenewPrompt_4",
+              "code": "f2",
+              "conditions": [
+               "membership = EXPIRED"
+              ],
+              "children": [
+               {
+                "event": "sendexitScan_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveexitScan_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

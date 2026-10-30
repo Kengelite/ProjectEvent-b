@@ -1,0 +1,206 @@
+{
+ "event_codes": {
+  "a1": "sendstartShift_1",
+  "b1": "receivestartShift_1",
+  "c1": "sendassignTaskA_2",
+  "d1": "receiveassignTaskA_2",
+  "e1": "sendassignTaskB_3",
+  "f1": "receiveassignTaskB_3",
+  "g1": "sendtaskDone_4",
+  "h1": "receivetaskDone_4",
+  "i1": "sendreserveDock_5_opt1",
+  "j1": "receivereserveDock_5_opt1",
+  "k1": "senddockReady_6_opt1",
+  "l1": "receivedockReady_6_opt1",
+  "m1": "sendendShift_7",
+  "m2": "checkloop_assignTaskA_2_loop1",
+  "n1": "receiveendShift_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [
+   "shift < 8"
+  ],
+  "d1": [
+   "shift < 8"
+  ],
+  "e1": [
+   "shift < 8"
+  ],
+  "f1": [
+   "shift < 8"
+  ],
+  "g1": [
+   "shift < 8"
+  ],
+  "h1": [
+   "shift < 8"
+  ],
+  "i1": [
+   "shift < 8",
+   "lowBattery = 1"
+  ],
+  "j1": [
+   "shift < 8",
+   "lowBattery = 1"
+  ],
+  "k1": [
+   "shift < 8",
+   "lowBattery = 1"
+  ],
+  "l1": [
+   "shift < 8",
+   "lowBattery = 1"
+  ],
+  "m1": [],
+  "m2": [
+   "shift < 8"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendstartShift_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivestartShift_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignTaskA_2",
+        "code": "c1",
+        "conditions": [
+         "shift < 8"
+        ],
+        "children": [
+         {
+          "event": "receiveassignTaskA_2",
+          "code": "d1",
+          "conditions": [
+           "shift < 8"
+          ],
+          "children": [
+           {
+            "event": "sendassignTaskB_3",
+            "code": "e1",
+            "conditions": [
+             "shift < 8"
+            ],
+            "children": [
+             {
+              "event": "receiveassignTaskB_3",
+              "code": "f1",
+              "conditions": [
+               "shift < 8"
+              ],
+              "children": [
+               {
+                "event": "sendtaskDone_4",
+                "code": "g1",
+                "conditions": [
+                 "shift < 8"
+                ],
+                "children": [
+                 {
+                  "event": "receivetaskDone_4",
+                  "code": "h1",
+                  "conditions": [
+                   "shift < 8"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreserveDock_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "shift < 8",
+                     "lowBattery = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereserveDock_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "shift < 8",
+                       "lowBattery = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "senddockReady_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "shift < 8",
+                         "lowBattery = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivedockReady_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "shift < 8",
+                           "lowBattery = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendendShift_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveendShift_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_assignTaskA_2_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendassignTaskA_2",
+                            "loop_back_to_code": "c1",
+                            "conditions": [
+                             "shift < 8"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ c1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

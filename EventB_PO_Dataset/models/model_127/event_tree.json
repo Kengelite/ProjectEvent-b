@@ -1,0 +1,163 @@
+{
+ "event_codes": {
+  "a1": "sendcancelMeeting_1",
+  "b1": "receivecancelMeeting_1",
+  "c1": "sendconfirmCheckin_2",
+  "d1": "receiveconfirmCheckin_2",
+  "e1": "sendconfirmMeeting_3",
+  "e2": "sendrequestMeeting_5",
+  "f1": "receiveconfirmMeeting_3",
+  "f2": "receiverequestMeeting_5",
+  "g1": "sendupdateRoom_4",
+  "h1": "receiveupdateRoom_4",
+  "i1": "sendconfirmRoom_6",
+  "j1": "receiveconfirmRoom_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "isVip = 1"
+  ],
+  "e2": [
+   "isVip = 0"
+  ],
+  "f1": [
+   "isVip = 1"
+  ],
+  "f2": [
+   "isVip = 0"
+  ],
+  "g1": [
+   "isVip = 1"
+  ],
+  "h1": [
+   "isVip = 1"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelMeeting_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelMeeting_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendconfirmCheckin_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveconfirmCheckin_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendconfirmMeeting_3",
+            "code": "e1",
+            "conditions": [
+             "isVip = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveconfirmMeeting_3",
+              "code": "f1",
+              "conditions": [
+               "isVip = 1"
+              ],
+              "children": [
+               {
+                "event": "sendupdateRoom_4",
+                "code": "g1",
+                "conditions": [
+                 "isVip = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveupdateRoom_4",
+                  "code": "h1",
+                  "conditions": [
+                   "isVip = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmRoom_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmRoom_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendrequestMeeting_5",
+            "code": "e2",
+            "conditions": [
+             "isVip = 0"
+            ],
+            "children": [
+             {
+              "event": "receiverequestMeeting_5",
+              "code": "f2",
+              "conditions": [
+               "isVip = 0"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmRoom_6",
+                "code": "i1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveconfirmRoom_6",
+                  "code": "j1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

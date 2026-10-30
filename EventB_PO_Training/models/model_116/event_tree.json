@@ -1,0 +1,254 @@
+{
+ "event_codes": {
+  "a1": "sendqueryZone_1",
+  "b1": "receivequeryZone_1",
+  "c1": "sendackSchedule_2",
+  "d1": "receiveackSchedule_2",
+  "e1": "sendrequestZone_3",
+  "f1": "receiverequestZone_3",
+  "g1": "sendcheckMoisture_4",
+  "h1": "receivecheckMoisture_4",
+  "i1": "sendqueryMoisture_5",
+  "j1": "receivequeryMoisture_5",
+  "k1": "sendcancelZone_6",
+  "k2": "checkloop_requestZone_3_loop1",
+  "l1": "receivecancelZone_6",
+  "m1": "sendrequestSchedule_7",
+  "n1": "receiverequestSchedule_7",
+  "o1": "sendreleaseMoisture_8",
+  "p1": "receivereleaseMoisture_8",
+  "q1": "sendreserveMoisture_9",
+  "r1": "receivereserveMoisture_9",
+  "s1": "sendscheduleSchedule_10",
+  "t1": "receivescheduleSchedule_10",
+  "u1": "sendsendSchedule_11",
+  "v1": "receivesendSchedule_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 12"
+  ],
+  "f1": [
+   "attemptNo < 12"
+  ],
+  "g1": [
+   "attemptNo < 12"
+  ],
+  "h1": [
+   "attemptNo < 12"
+  ],
+  "i1": [
+   "attemptNo < 12"
+  ],
+  "j1": [
+   "attemptNo < 12"
+  ],
+  "k1": [],
+  "k2": [
+   "attemptNo < 12"
+  ],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": [],
+  "u1": [],
+  "v1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendqueryZone_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivequeryZone_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendackSchedule_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveackSchedule_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendrequestZone_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 12"
+            ],
+            "children": [
+             {
+              "event": "receiverequestZone_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 12"
+              ],
+              "children": [
+               {
+                "event": "sendcheckMoisture_4",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 12"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckMoisture_4",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 12"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendqueryMoisture_5",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 12"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivequeryMoisture_5",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 12"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelZone_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivecancelZone_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendrequestSchedule_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiverequestSchedule_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendreleaseMoisture_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivereleaseMoisture_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendreserveMoisture_9",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivereserveMoisture_9",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendscheduleSchedule_10",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivescheduleSchedule_10",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": [
+                                           {
+                                            "event": "sendsendSchedule_11",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receivesendSchedule_11",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_requestZone_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendrequestZone_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "attemptNo < 12"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

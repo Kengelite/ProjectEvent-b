@@ -1,0 +1,399 @@
+{
+ "event_codes": {
+  "a1": "sendreleaseSplit_1",
+  "b1": "receivereleaseSplit_1",
+  "c1": "sendquerySplit_2",
+  "d1": "receivequerySplit_2",
+  "e1": "sendcancelBib_3",
+  "f1": "receivecancelBib_3",
+  "g1": "sendrequestBib_4_opt1",
+  "h1": "receiverequestBib_4_opt1",
+  "i1": "sendrequestFinish_5",
+  "j1": "receiverequestFinish_5",
+  "k1": "sendassignSplit_6",
+  "l1": "receiveassignSplit_6",
+  "m1": "sendcancelFinish_7",
+  "m2": "checkloop_cancelBib_3_loop1",
+  "n1": "receivecancelFinish_7",
+  "o1": "sendsendFinish_8",
+  "p1": "receivesendFinish_8",
+  "q1": "sendfetchFinish_9",
+  "q2": "sendreleaseFinish_13",
+  "r1": "receivefetchFinish_9",
+  "r2": "receivereleaseFinish_13",
+  "s1": "sendreserveSplit_10",
+  "t1": "receivereserveSplit_10",
+  "u1": "sendreserveFinish_11",
+  "v1": "receivereserveFinish_11",
+  "w1": "sendvalidateFinish_12",
+  "w2": "checkloop_reserveSplit_10_loop2",
+  "x1": "receivevalidateFinish_12",
+  "y1": "sendsendBib_14",
+  "z1": "receivesendBib_14"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "roundNo < 5"
+  ],
+  "f1": [
+   "roundNo < 5"
+  ],
+  "g1": [
+   "roundNo < 5",
+   "roundNo mod 2 = 0"
+  ],
+  "h1": [
+   "roundNo < 5",
+   "roundNo mod 2 = 0"
+  ],
+  "i1": [
+   "roundNo < 5"
+  ],
+  "j1": [
+   "roundNo < 5"
+  ],
+  "k1": [
+   "roundNo < 5"
+  ],
+  "l1": [
+   "roundNo < 5"
+  ],
+  "m1": [],
+  "m2": [
+   "roundNo < 5"
+  ],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [
+   "load < 10"
+  ],
+  "q2": [
+   "load ≥ 10"
+  ],
+  "r1": [
+   "load < 10"
+  ],
+  "r2": [
+   "load ≥ 10"
+  ],
+  "s1": [
+   "load < 10",
+   "retryNo < 11"
+  ],
+  "t1": [
+   "load < 10",
+   "retryNo < 11"
+  ],
+  "u1": [
+   "load < 10",
+   "retryNo < 11"
+  ],
+  "v1": [
+   "load < 10",
+   "retryNo < 11"
+  ],
+  "w1": [
+   "load < 10"
+  ],
+  "w2": [
+   "load < 10",
+   "retryNo < 11"
+  ],
+  "x1": [
+   "load < 10"
+  ],
+  "y1": [],
+  "z1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreleaseSplit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereleaseSplit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendquerySplit_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivequerySplit_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcancelBib_3",
+            "code": "e1",
+            "conditions": [
+             "roundNo < 5"
+            ],
+            "children": [
+             {
+              "event": "receivecancelBib_3",
+              "code": "f1",
+              "conditions": [
+               "roundNo < 5"
+              ],
+              "children": [
+               {
+                "event": "sendrequestBib_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "roundNo < 5",
+                 "roundNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiverequestBib_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "roundNo < 5",
+                   "roundNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendrequestFinish_5",
+                    "code": "i1",
+                    "conditions": [
+                     "roundNo < 5"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiverequestFinish_5",
+                      "code": "j1",
+                      "conditions": [
+                       "roundNo < 5"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendassignSplit_6",
+                        "code": "k1",
+                        "conditions": [
+                         "roundNo < 5"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveassignSplit_6",
+                          "code": "l1",
+                          "conditions": [
+                           "roundNo < 5"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendcancelFinish_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivecancelFinish_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendsendFinish_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivesendFinish_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendfetchFinish_9",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "load < 10"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivefetchFinish_9",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "load < 10"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendreserveSplit_10",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "load < 10",
+                                         "retryNo < 11"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivereserveSplit_10",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "load < 10",
+                                           "retryNo < 11"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendreserveFinish_11",
+                                            "code": "u1",
+                                            "conditions": [
+                                             "load < 10",
+                                             "retryNo < 11"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receivereserveFinish_11",
+                                              "code": "v1",
+                                              "conditions": [
+                                               "load < 10",
+                                               "retryNo < 11"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendvalidateFinish_12",
+                                                "code": "w1",
+                                                "conditions": [
+                                                 "load < 10"
+                                                ],
+                                                "children": [
+                                                 {
+                                                  "event": "receivevalidateFinish_12",
+                                                  "code": "x1",
+                                                  "conditions": [
+                                                   "load < 10"
+                                                  ],
+                                                  "children": [
+                                                   {
+                                                    "event": "sendsendBib_14",
+                                                    "code": "y1",
+                                                    "conditions": [],
+                                                    "children": [
+                                                     {
+                                                      "event": "receivesendBib_14",
+                                                      "code": "z1",
+                                                      "conditions": [],
+                                                      "children": []
+                                                     }
+                                                    ]
+                                                   }
+                                                  ]
+                                                 }
+                                                ]
+                                               },
+                                               {
+                                                "event": "checkloop_reserveSplit_10_loop2",
+                                                "code": "w2",
+                                                "loop_back_to": "sendreserveSplit_10",
+                                                "loop_back_to_code": "s1",
+                                                "conditions": [
+                                                 "load < 10",
+                                                 "retryNo < 11"
+                                                ],
+                                                "children": []
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "sendreleaseFinish_13",
+                                    "code": "q2",
+                                    "conditions": [
+                                     "load ≥ 10"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivereleaseFinish_13",
+                                      "code": "r2",
+                                      "conditions": [
+                                       "load ≥ 10"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendsendBib_14",
+                                        "code": "y1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesendBib_14",
+                                          "code": "z1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_cancelBib_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendcancelBib_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "roundNo < 5"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ s1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 -> r2 -> y1 -> z1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

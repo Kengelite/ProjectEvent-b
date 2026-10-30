@@ -1,0 +1,181 @@
+{
+ "event_codes": {
+  "a1": "sendarrive_1",
+  "b1": "receivearrive_1",
+  "c1": "sendlookupBooking_2",
+  "d1": "receivelookupBooking_2",
+  "e1": "sendbookingInfo_3",
+  "f1": "receivebookingInfo_3",
+  "g1": "sendassignRoom_4",
+  "g2": "sendofferLounge_6",
+  "h1": "receiveassignRoom_4",
+  "h2": "receiveofferLounge_6",
+  "i1": "sendissueKeycard_5",
+  "j1": "receiveissueKeycard_5",
+  "k1": "sendupdateOccupancy_7",
+  "l1": "receiveupdateOccupancy_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "roomReady = 1"
+  ],
+  "g2": [
+   "roomReady = 0"
+  ],
+  "h1": [
+   "roomReady = 1"
+  ],
+  "h2": [
+   "roomReady = 0"
+  ],
+  "i1": [
+   "roomReady = 1"
+  ],
+  "j1": [
+   "roomReady = 1"
+  ],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendarrive_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivearrive_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendlookupBooking_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivelookupBooking_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendbookingInfo_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivebookingInfo_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendassignRoom_4",
+                "code": "g1",
+                "conditions": [
+                 "roomReady = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveassignRoom_4",
+                  "code": "h1",
+                  "conditions": [
+                   "roomReady = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendissueKeycard_5",
+                    "code": "i1",
+                    "conditions": [
+                     "roomReady = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveissueKeycard_5",
+                      "code": "j1",
+                      "conditions": [
+                       "roomReady = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendupdateOccupancy_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveupdateOccupancy_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendofferLounge_6",
+                "code": "g2",
+                "conditions": [
+                 "roomReady = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveofferLounge_6",
+                  "code": "h2",
+                  "conditions": [
+                   "roomReady = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendupdateOccupancy_7",
+                    "code": "k1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveupdateOccupancy_7",
+                      "code": "l1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

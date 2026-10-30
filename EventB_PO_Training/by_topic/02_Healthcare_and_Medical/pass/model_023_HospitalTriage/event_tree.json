@@ -1,0 +1,189 @@
+{
+ "event_codes": {
+  "a1": "sendregisterPatient_1",
+  "b1": "receiveregisterPatient_1",
+  "c1": "sendmeasureVitals_2",
+  "d1": "receivemeasureVitals_2",
+  "e1": "sendcallDoctor_3",
+  "e2": "sendscheduleVisit_6",
+  "f1": "receivecallDoctor_3",
+  "f2": "receivescheduleVisit_6",
+  "g1": "sendorderLabTest_4",
+  "h1": "receiveorderLabTest_4",
+  "i1": "sendprescribeDrug_5",
+  "j1": "receiveprescribeDrug_5",
+  "k1": "senddischargeNote_7",
+  "l1": "receivedischargeNote_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "severity = CRITICAL"
+  ],
+  "e2": [
+   "severity = NORMAL"
+  ],
+  "f1": [
+   "severity = CRITICAL"
+  ],
+  "f2": [
+   "severity = NORMAL"
+  ],
+  "g1": [
+   "severity = CRITICAL"
+  ],
+  "h1": [
+   "severity = CRITICAL"
+  ],
+  "i1": [
+   "severity = CRITICAL"
+  ],
+  "j1": [
+   "severity = CRITICAL"
+  ],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendregisterPatient_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveregisterPatient_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendmeasureVitals_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivemeasureVitals_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcallDoctor_3",
+            "code": "e1",
+            "conditions": [
+             "severity = CRITICAL"
+            ],
+            "children": [
+             {
+              "event": "receivecallDoctor_3",
+              "code": "f1",
+              "conditions": [
+               "severity = CRITICAL"
+              ],
+              "children": [
+               {
+                "event": "sendorderLabTest_4",
+                "code": "g1",
+                "conditions": [
+                 "severity = CRITICAL"
+                ],
+                "children": [
+                 {
+                  "event": "receiveorderLabTest_4",
+                  "code": "h1",
+                  "conditions": [
+                   "severity = CRITICAL"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendprescribeDrug_5",
+                    "code": "i1",
+                    "conditions": [
+                     "severity = CRITICAL"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveprescribeDrug_5",
+                      "code": "j1",
+                      "conditions": [
+                       "severity = CRITICAL"
+                      ],
+                      "children": [
+                       {
+                        "event": "senddischargeNote_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivedischargeNote_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendscheduleVisit_6",
+            "code": "e2",
+            "conditions": [
+             "severity = NORMAL"
+            ],
+            "children": [
+             {
+              "event": "receivescheduleVisit_6",
+              "code": "f2",
+              "conditions": [
+               "severity = NORMAL"
+              ],
+              "children": [
+               {
+                "event": "senddischargeNote_7",
+                "code": "k1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivedischargeNote_7",
+                  "code": "l1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

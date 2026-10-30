@@ -1,0 +1,37 @@
+model_190  TrafficSignalPriority  —  Event tree
+
+1) รหัส event
+   a1   sendqueryPriority_1
+   b1   receivequeryPriority_1
+   c1   sendassignGreen_2
+   d1   receiveassignGreen_2
+   e1   sendupdateGreen_3
+   f1   receiveupdateGreen_3
+   g1   sendqueryLane_4
+   h1   receivequeryLane_4
+   i1   sendconfirmPriority_5
+   j1   receiveconfirmPriority_5
+   k1   sendreserveLane_6
+   l1   receivereserveLane_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendqueryPriority_1
+       └── b1 receivequeryPriority_1
+           └── c1 sendassignGreen_2
+               └── d1 receiveassignGreen_2
+                   └── e1 sendupdateGreen_3
+                       └── f1 receiveupdateGreen_3
+                           └── g1 sendqueryLane_4
+                               └── h1 receivequeryLane_4
+                                   └── i1 sendconfirmPriority_5
+                                       └── j1 receiveconfirmPriority_5
+                                           └── k1 sendreserveLane_6
+                                               └── l1 receivereserveLane_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

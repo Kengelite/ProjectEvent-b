@@ -1,0 +1,46 @@
+model_037  SmartDoorLock  —  Event tree
+
+1) รหัส event
+   a1   sendunlockRequest_1
+   b1   receiveunlockRequest_1
+   c1   sendchallenge_2
+   d1   receivechallenge_2
+   e1   sendrespond_3
+   f1   receiverespond_3
+   g1   senddoorUnlocked_4
+   g2   sendaccessDenied_6
+   h1   receivedoorUnlocked_4
+   h2   receiveaccessDenied_6
+   i1   sendscheduleRelock_5_opt1
+   j1   receivescheduleRelock_5_opt1
+   k1   sendstatusUpdate_7
+   l1   receivestatusUpdate_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendunlockRequest_1
+       └── b1 receiveunlockRequest_1
+           └── c1 sendchallenge_2
+               └── d1 receivechallenge_2
+                   └── e1 sendrespond_3
+                       └── f1 receiverespond_3
+                           ├── g1 senddoorUnlocked_4
+                           │   └── h1 receivedoorUnlocked_4
+                           │       └── i1 sendscheduleRelock_5_opt1
+                           │           └── j1 receivescheduleRelock_5_opt1
+                           │               └── k1 sendstatusUpdate_7
+                           │                   └── l1 receivestatusUpdate_7
+                           └── g2 sendaccessDenied_6
+                               └── h2 receiveaccessDenied_6
+                                   └── k1 sendstatusUpdate_7
+                                       └── l1 receivestatusUpdate_7
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1

@@ -1,0 +1,125 @@
+{
+ "event_codes": {
+  "a1": "sendscheduleAisle_1",
+  "b1": "receivescheduleAisle_1",
+  "c1": "sendcancelAisle_2",
+  "d1": "receivecancelAisle_2",
+  "e1": "sendvalidatePallet_3",
+  "f1": "receivevalidatePallet_3",
+  "g1": "sendapprovePallet_4",
+  "h1": "receiveapprovePallet_4",
+  "i1": "sendfetchAisle_5",
+  "j1": "receivefetchAisle_5",
+  "k1": "sendapproveAisle_6",
+  "l1": "receiveapproveAisle_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendscheduleAisle_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivescheduleAisle_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcancelAisle_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecancelAisle_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendvalidatePallet_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivevalidatePallet_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendapprovePallet_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveapprovePallet_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendfetchAisle_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivefetchAisle_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendapproveAisle_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveapproveAisle_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

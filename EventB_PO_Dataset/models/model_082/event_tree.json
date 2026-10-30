@@ -1,0 +1,125 @@
+{
+ "event_codes": {
+  "a1": "sendqueryAppointment_1",
+  "b1": "receivequeryAppointment_1",
+  "c1": "sendassignTreatment_2",
+  "d1": "receiveassignTreatment_2",
+  "e1": "sendupdateTreatment_3",
+  "f1": "receiveupdateTreatment_3",
+  "g1": "sendqueryClaim_4",
+  "h1": "receivequeryClaim_4",
+  "i1": "sendconfirmAppointment_5",
+  "j1": "receiveconfirmAppointment_5",
+  "k1": "sendreserveClaim_6",
+  "l1": "receivereserveClaim_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendqueryAppointment_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivequeryAppointment_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignTreatment_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignTreatment_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendupdateTreatment_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveupdateTreatment_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendqueryClaim_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivequeryClaim_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendconfirmAppointment_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmAppointment_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreserveClaim_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereserveClaim_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

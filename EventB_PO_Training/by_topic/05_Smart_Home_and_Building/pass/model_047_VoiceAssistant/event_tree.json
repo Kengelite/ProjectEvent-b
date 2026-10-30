@@ -1,0 +1,247 @@
+{
+ "event_codes": {
+  "a1": "sendwakeWord_1",
+  "b1": "receivewakeWord_1",
+  "c1": "sendstreamAudio_2",
+  "d1": "receivestreamAudio_2",
+  "e1": "sendintentResult_3",
+  "f1": "receiveintentResult_3",
+  "g1": "sendplaySong_4",
+  "g2": "sendfetchWeather_5",
+  "g3": "sendaskRepeat_8",
+  "h1": "receiveplaySong_4",
+  "h2": "receivefetchWeather_5",
+  "h3": "receiveaskRepeat_8",
+  "i1": "sendsleepMode_9",
+  "j1": "receivesleepMode_9",
+  "k1": "sendweatherInfo_6",
+  "l1": "receiveweatherInfo_6",
+  "m1": "sendspeakWeather_7",
+  "n1": "receivespeakWeather_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "intent = MUSIC"
+  ],
+  "g2": [
+   "intent = WEATHER"
+  ],
+  "g3": [
+   "intent = UNKNOWN"
+  ],
+  "h1": [
+   "intent = MUSIC"
+  ],
+  "h2": [
+   "intent = WEATHER"
+  ],
+  "h3": [
+   "intent = UNKNOWN"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "intent = WEATHER"
+  ],
+  "l1": [
+   "intent = WEATHER"
+  ],
+  "m1": [
+   "intent = WEATHER"
+  ],
+  "n1": [
+   "intent = WEATHER"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendwakeWord_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivewakeWord_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendstreamAudio_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivestreamAudio_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendintentResult_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveintentResult_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendplaySong_4",
+                "code": "g1",
+                "conditions": [
+                 "intent = MUSIC"
+                ],
+                "children": [
+                 {
+                  "event": "receiveplaySong_4",
+                  "code": "h1",
+                  "conditions": [
+                   "intent = MUSIC"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsleepMode_9",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesleepMode_9",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendfetchWeather_5",
+                "code": "g2",
+                "conditions": [
+                 "intent = WEATHER"
+                ],
+                "children": [
+                 {
+                  "event": "receivefetchWeather_5",
+                  "code": "h2",
+                  "conditions": [
+                   "intent = WEATHER"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendweatherInfo_6",
+                    "code": "k1",
+                    "conditions": [
+                     "intent = WEATHER"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveweatherInfo_6",
+                      "code": "l1",
+                      "conditions": [
+                       "intent = WEATHER"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendspeakWeather_7",
+                        "code": "m1",
+                        "conditions": [
+                         "intent = WEATHER"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivespeakWeather_7",
+                          "code": "n1",
+                          "conditions": [
+                           "intent = WEATHER"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsleepMode_9",
+                            "code": "i1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivesleepMode_9",
+                              "code": "j1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendaskRepeat_8",
+                "code": "g3",
+                "conditions": [
+                 "intent = UNKNOWN"
+                ],
+                "children": [
+                 {
+                  "event": "receiveaskRepeat_8",
+                  "code": "h3",
+                  "conditions": [
+                   "intent = UNKNOWN"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsleepMode_9",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesleepMode_9",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g3 -> h3 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,205 @@
+{
+ "event_codes": {
+  "a1": "sendsubmitJob_1",
+  "b1": "receivesubmitJob_1",
+  "c1": "sendjobQueued_2",
+  "d1": "receivejobQueued_2",
+  "e1": "sendpagePrinted_3",
+  "f1": "receivepagePrinted_3",
+  "g1": "sendnextPage_4",
+  "h1": "receivenextPage_4",
+  "i1": "sendreprint_5",
+  "i2": "checkloop_pagePrinted_3_loop1",
+  "j1": "receivereprint_5",
+  "k1": "sendreprintDone_6",
+  "l1": "receivereprintDone_6",
+  "m1": "sendjobComplete_7",
+  "m2": "checkloop_reprint_5_loop2",
+  "n1": "receivejobComplete_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "jobCount < 5"
+  ],
+  "f1": [
+   "jobCount < 5"
+  ],
+  "g1": [
+   "jobCount < 5"
+  ],
+  "h1": [
+   "jobCount < 5"
+  ],
+  "i1": [
+   "retryPrint < 3"
+  ],
+  "i2": [
+   "jobCount < 5"
+  ],
+  "j1": [
+   "retryPrint < 3"
+  ],
+  "k1": [
+   "retryPrint < 3"
+  ],
+  "l1": [
+   "retryPrint < 3"
+  ],
+  "m1": [],
+  "m2": [
+   "retryPrint < 3"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsubmitJob_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesubmitJob_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendjobQueued_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivejobQueued_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendpagePrinted_3",
+            "code": "e1",
+            "conditions": [
+             "jobCount < 5"
+            ],
+            "children": [
+             {
+              "event": "receivepagePrinted_3",
+              "code": "f1",
+              "conditions": [
+               "jobCount < 5"
+              ],
+              "children": [
+               {
+                "event": "sendnextPage_4",
+                "code": "g1",
+                "conditions": [
+                 "jobCount < 5"
+                ],
+                "children": [
+                 {
+                  "event": "receivenextPage_4",
+                  "code": "h1",
+                  "conditions": [
+                   "jobCount < 5"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreprint_5",
+                    "code": "i1",
+                    "conditions": [
+                     "retryPrint < 3"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereprint_5",
+                      "code": "j1",
+                      "conditions": [
+                       "retryPrint < 3"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreprintDone_6",
+                        "code": "k1",
+                        "conditions": [
+                         "retryPrint < 3"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereprintDone_6",
+                          "code": "l1",
+                          "conditions": [
+                           "retryPrint < 3"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendjobComplete_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivejobComplete_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_reprint_5_loop2",
+                            "code": "m2",
+                            "loop_back_to": "sendreprint_5",
+                            "loop_back_to_code": "i1",
+                            "conditions": [
+                             "retryPrint < 3"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_pagePrinted_3_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendpagePrinted_3",
+                    "loop_back_to_code": "e1",
+                    "conditions": [
+                     "jobCount < 5"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ i1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

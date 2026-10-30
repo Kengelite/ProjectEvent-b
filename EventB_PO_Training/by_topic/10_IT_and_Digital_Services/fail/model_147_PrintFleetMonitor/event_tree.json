@@ -1,0 +1,169 @@
+{
+ "event_codes": {
+  "a1": "sendvalidateJob_1",
+  "b1": "receivevalidateJob_1",
+  "c1": "sendreserveAlert_2",
+  "d1": "receivereserveAlert_2",
+  "e1": "sendqueryToner_3",
+  "e2": "sendconfirmJob_4",
+  "f1": "receivequeryToner_3",
+  "f2": "receiveconfirmJob_4",
+  "g1": "sendfetchToner_5",
+  "h1": "receivefetchToner_5",
+  "i1": "sendscheduleToner_6",
+  "j1": "receivescheduleToner_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "isVip = 1"
+  ],
+  "e2": [
+   "isVip = 0"
+  ],
+  "f1": [
+   "isVip = 1"
+  ],
+  "f2": [
+   "isVip = 0"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendvalidateJob_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivevalidateJob_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreserveAlert_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereserveAlert_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendqueryToner_3",
+            "code": "e1",
+            "conditions": [
+             "isVip = 1"
+            ],
+            "children": [
+             {
+              "event": "receivequeryToner_3",
+              "code": "f1",
+              "conditions": [
+               "isVip = 1"
+              ],
+              "children": [
+               {
+                "event": "sendfetchToner_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivefetchToner_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendscheduleToner_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivescheduleToner_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendconfirmJob_4",
+            "code": "e2",
+            "conditions": [
+             "isVip = 0"
+            ],
+            "children": [
+             {
+              "event": "receiveconfirmJob_4",
+              "code": "f2",
+              "conditions": [
+               "isVip = 0"
+              ],
+              "children": [
+               {
+                "event": "sendfetchToner_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivefetchToner_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendscheduleToner_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivescheduleToner_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

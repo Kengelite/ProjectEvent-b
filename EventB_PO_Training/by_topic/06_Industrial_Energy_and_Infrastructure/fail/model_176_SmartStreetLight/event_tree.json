@@ -1,0 +1,253 @@
+{
+ "event_codes": {
+  "a1": "sendcancelDim_1",
+  "b1": "receivecancelDim_1",
+  "c1": "sendqueryDim_2",
+  "d1": "receivequeryDim_2",
+  "e1": "sendrequestFault_3",
+  "f1": "receiverequestFault_3",
+  "g1": "sendreleaseLamp_4",
+  "h1": "receivereleaseLamp_4",
+  "i1": "sendsendDim_5",
+  "j1": "receivesendDim_5",
+  "k1": "sendlogLamp_6",
+  "l1": "receivelogLamp_6",
+  "m1": "sendconfirmDim_7",
+  "n1": "receiveconfirmDim_7",
+  "o1": "sendconfirmFault_8",
+  "o2": "sendapproveDim_10",
+  "p1": "receiveconfirmFault_8",
+  "p2": "receiveapproveDim_10",
+  "q1": "sendnotifyDim_9",
+  "r1": "receivenotifyDim_9",
+  "s1": "sendackFault_11",
+  "t1": "receiveackFault_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [
+   "urgent = 1"
+  ],
+  "o2": [
+   "urgent = 0"
+  ],
+  "p1": [
+   "urgent = 1"
+  ],
+  "p2": [
+   "urgent = 0"
+  ],
+  "q1": [
+   "urgent = 1"
+  ],
+  "r1": [
+   "urgent = 1"
+  ],
+  "s1": [],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelDim_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelDim_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendqueryDim_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivequeryDim_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendrequestFault_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiverequestFault_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendreleaseLamp_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivereleaseLamp_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendsendDim_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesendDim_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendlogLamp_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivelogLamp_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendconfirmDim_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveconfirmDim_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendconfirmFault_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "urgent = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveconfirmFault_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "urgent = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendnotifyDim_9",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "urgent = 1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivenotifyDim_9",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "urgent = 1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendackFault_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receiveackFault_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "sendapproveDim_10",
+                                "code": "o2",
+                                "conditions": [
+                                 "urgent = 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveDim_10",
+                                  "code": "p2",
+                                  "conditions": [
+                                   "urgent = 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendackFault_11",
+                                    "code": "s1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveackFault_11",
+                                      "code": "t1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> s1 -> t1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

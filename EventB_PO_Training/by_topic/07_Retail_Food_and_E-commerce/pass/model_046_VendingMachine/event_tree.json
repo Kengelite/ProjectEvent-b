@@ -1,0 +1,203 @@
+{
+ "event_codes": {
+  "a1": "sendinsertCoin_1",
+  "b1": "receiveinsertCoin_1",
+  "c1": "sendselectItem_2",
+  "d1": "receiveselectItem_2",
+  "e1": "senddispenseItem_3",
+  "e2": "sendrequestMoreCoins_5",
+  "e3": "sendrejectCoin_6",
+  "f1": "receivedispenseItem_3",
+  "f2": "receiverequestMoreCoins_5",
+  "f3": "receiverejectCoin_6",
+  "g1": "sendreturnChange_4",
+  "h1": "receivereturnChange_4",
+  "i1": "sendshowIdle_7",
+  "j1": "receiveshowIdle_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "coinStatus = ENOUGH"
+  ],
+  "e2": [
+   "coinStatus = SHORT"
+  ],
+  "e3": [
+   "coinStatus = INVALID"
+  ],
+  "f1": [
+   "coinStatus = ENOUGH"
+  ],
+  "f2": [
+   "coinStatus = SHORT"
+  ],
+  "f3": [
+   "coinStatus = INVALID"
+  ],
+  "g1": [
+   "coinStatus = ENOUGH"
+  ],
+  "h1": [
+   "coinStatus = ENOUGH"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendinsertCoin_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveinsertCoin_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendselectItem_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveselectItem_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "senddispenseItem_3",
+            "code": "e1",
+            "conditions": [
+             "coinStatus = ENOUGH"
+            ],
+            "children": [
+             {
+              "event": "receivedispenseItem_3",
+              "code": "f1",
+              "conditions": [
+               "coinStatus = ENOUGH"
+              ],
+              "children": [
+               {
+                "event": "sendreturnChange_4",
+                "code": "g1",
+                "conditions": [
+                 "coinStatus = ENOUGH"
+                ],
+                "children": [
+                 {
+                  "event": "receivereturnChange_4",
+                  "code": "h1",
+                  "conditions": [
+                   "coinStatus = ENOUGH"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendshowIdle_7",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveshowIdle_7",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendrequestMoreCoins_5",
+            "code": "e2",
+            "conditions": [
+             "coinStatus = SHORT"
+            ],
+            "children": [
+             {
+              "event": "receiverequestMoreCoins_5",
+              "code": "f2",
+              "conditions": [
+               "coinStatus = SHORT"
+              ],
+              "children": [
+               {
+                "event": "sendshowIdle_7",
+                "code": "i1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveshowIdle_7",
+                  "code": "j1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendrejectCoin_6",
+            "code": "e3",
+            "conditions": [
+             "coinStatus = INVALID"
+            ],
+            "children": [
+             {
+              "event": "receiverejectCoin_6",
+              "code": "f3",
+              "conditions": [
+               "coinStatus = INVALID"
+              ],
+              "children": [
+               {
+                "event": "sendshowIdle_7",
+                "code": "i1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveshowIdle_7",
+                  "code": "j1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e3 -> f3 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

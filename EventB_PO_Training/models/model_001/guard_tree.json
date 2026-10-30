@@ -1,0 +1,29 @@
+{
+ "guard_codes": {
+  "a1": "Login = 1",
+  "b1": "amount_1 ≥ 1000",
+  "b2": "amount_1 < 1000",
+  "c1": "retry < 3",
+  "c2": "retry = 3",
+  "d1": "par_1 = 2"
+ },
+ "guard_tree": {
+  "a1": {
+   "b1": {
+    "c1": {}
+   },
+   "b2": {
+    "c1": {}
+   }
+  },
+  "c2": {
+   "d1": {}
+  }
+ },
+ "guard_paths": [
+  "a1 -> b1 -> c1",
+  "a1 -> b2 -> c1",
+  "c2 -> d1"
+ ],
+ "source": "rodin .bpo (model.txt has event names only)"
+}

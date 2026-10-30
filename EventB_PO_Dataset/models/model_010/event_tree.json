@@ -1,0 +1,115 @@
+{
+ "event_codes": {
+  "a1": "sendchooseDrink_1",
+  "b1": "receivechooseDrink_1",
+  "c1": "sendshowPrice_2",
+  "d1": "receiveshowPrice_2",
+  "e1": "sendaddExtraShot_3_opt1",
+  "f1": "receiveaddExtraShot_3_opt1",
+  "g1": "sendpayCash_4",
+  "h1": "receivepayCash_4",
+  "i1": "sendserveDrink_5",
+  "j1": "receiveserveDrink_5"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "addShot = 1"
+  ],
+  "f1": [
+   "addShot = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendchooseDrink_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivechooseDrink_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendshowPrice_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveshowPrice_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendaddExtraShot_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "addShot = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveaddExtraShot_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "addShot = 1"
+              ],
+              "children": [
+               {
+                "event": "sendpayCash_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivepayCash_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendserveDrink_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveserveDrink_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

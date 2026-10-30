@@ -1,0 +1,46 @@
+model_060  BuildingVisitorPass  —  Event tree
+
+1) รหัส event
+   a1   sendsendBadge_1
+   b1   receivesendBadge_1
+   c1   sendcheckBadge_2
+   d1   receivecheckBadge_2
+   e1   sendqueryVisit_3
+   e2   sendnotifyPass_5
+   f1   receivequeryVisit_3
+   f2   receivenotifyPass_5
+   g1   sendreleasePass_4
+   g2   sendvalidateVisit_6
+   h1   receivereleasePass_4
+   h2   receivevalidateVisit_6
+   i1   sendsendPass_7
+   j1   receivesendPass_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → g2 → h2 → i1 → j1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsendBadge_1
+       └── b1 receivesendBadge_1
+           └── c1 sendcheckBadge_2
+               └── d1 receivecheckBadge_2
+                   ├── e1 sendqueryVisit_3
+                   │   └── f1 receivequeryVisit_3
+                   │       └── g1 sendreleasePass_4
+                   │           └── h1 receivereleasePass_4
+                   │               └── i1 sendsendPass_7
+                   │                   └── j1 receivesendPass_7
+                   └── e2 sendnotifyPass_5
+                       └── f2 receivenotifyPass_5
+                           └── g2 sendvalidateVisit_6
+                               └── h2 receivevalidateVisit_6
+                                   └── i1 sendsendPass_7
+                                       └── j1 receivesendPass_7
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1

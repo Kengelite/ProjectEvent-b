@@ -1,0 +1,387 @@
+{
+ "event_codes": {
+  "a1": "sendissueFeedback_1",
+  "b1": "receiveissueFeedback_1",
+  "c1": "sendassignFeedback_2",
+  "d1": "receiveassignFeedback_2",
+  "e1": "sendreserveGrade_3",
+  "e2": "sendlogGrade_4",
+  "f1": "receivereserveGrade_3",
+  "f2": "receivelogGrade_4",
+  "g1": "sendackGrade_6",
+  "h1": "receiveackGrade_6",
+  "i1": "sendnotifyGrade_7",
+  "j1": "receivenotifyGrade_7",
+  "k1": "sendupdateGrade_8",
+  "k2": "sendvalidateSubmission_9",
+  "l1": "receiveupdateGrade_8",
+  "l2": "receivevalidateSubmission_9",
+  "m1": "sendreleaseSubmission_11",
+  "n1": "receivereleaseSubmission_11",
+  "o1": "sendackSubmission_10",
+  "p1": "receiveackSubmission_10",
+  "q1": "sendcheckSubmission_5",
+  "r1": "receivecheckSubmission_5"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "mode = MANUAL"
+  ],
+  "e2": [
+   "mode = AUTO"
+  ],
+  "f1": [
+   "mode = MANUAL"
+  ],
+  "f2": [
+   "mode = AUTO"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "t_obs ≤ 27"
+  ],
+  "k2": [
+   "t_obs > 27"
+  ],
+  "l1": [
+   "t_obs ≤ 27"
+  ],
+  "l2": [
+   "t_obs > 27"
+  ],
+  "m1": [],
+  "n1": [],
+  "o1": [
+   "t_obs > 27"
+  ],
+  "p1": [
+   "t_obs > 27"
+  ],
+  "q1": [
+   "mode = AUTO"
+  ],
+  "r1": [
+   "mode = AUTO"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendissueFeedback_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveissueFeedback_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignFeedback_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignFeedback_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreserveGrade_3",
+            "code": "e1",
+            "conditions": [
+             "mode = MANUAL"
+            ],
+            "children": [
+             {
+              "event": "receivereserveGrade_3",
+              "code": "f1",
+              "conditions": [
+               "mode = MANUAL"
+              ],
+              "children": [
+               {
+                "event": "sendackGrade_6",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveackGrade_6",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendnotifyGrade_7",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivenotifyGrade_7",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendupdateGrade_8",
+                        "code": "k1",
+                        "conditions": [
+                         "t_obs ≤ 27"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveupdateGrade_8",
+                          "code": "l1",
+                          "conditions": [
+                           "t_obs ≤ 27"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseSubmission_11",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseSubmission_11",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendvalidateSubmission_9",
+                        "code": "k2",
+                        "conditions": [
+                         "t_obs > 27"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivevalidateSubmission_9",
+                          "code": "l2",
+                          "conditions": [
+                           "t_obs > 27"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendackSubmission_10",
+                            "code": "o1",
+                            "conditions": [
+                             "t_obs > 27"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveackSubmission_10",
+                              "code": "p1",
+                              "conditions": [
+                               "t_obs > 27"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreleaseSubmission_11",
+                                "code": "m1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivereleaseSubmission_11",
+                                  "code": "n1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendlogGrade_4",
+            "code": "e2",
+            "conditions": [
+             "mode = AUTO"
+            ],
+            "children": [
+             {
+              "event": "receivelogGrade_4",
+              "code": "f2",
+              "conditions": [
+               "mode = AUTO"
+              ],
+              "children": [
+               {
+                "event": "sendcheckSubmission_5",
+                "code": "q1",
+                "conditions": [
+                 "mode = AUTO"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckSubmission_5",
+                  "code": "r1",
+                  "conditions": [
+                   "mode = AUTO"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendackGrade_6",
+                    "code": "g1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveackGrade_6",
+                      "code": "h1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendnotifyGrade_7",
+                        "code": "i1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyGrade_7",
+                          "code": "j1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendupdateGrade_8",
+                            "code": "k1",
+                            "conditions": [
+                             "t_obs ≤ 27"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveupdateGrade_8",
+                              "code": "l1",
+                              "conditions": [
+                               "t_obs ≤ 27"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreleaseSubmission_11",
+                                "code": "m1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivereleaseSubmission_11",
+                                  "code": "n1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendvalidateSubmission_9",
+                            "code": "k2",
+                            "conditions": [
+                             "t_obs > 27"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivevalidateSubmission_9",
+                              "code": "l2",
+                              "conditions": [
+                               "t_obs > 27"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendackSubmission_10",
+                                "code": "o1",
+                                "conditions": [
+                                 "t_obs > 27"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveackSubmission_10",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "t_obs > 27"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendreleaseSubmission_11",
+                                    "code": "m1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivereleaseSubmission_11",
+                                      "code": "n1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> o1 -> p1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> o1 -> p1 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

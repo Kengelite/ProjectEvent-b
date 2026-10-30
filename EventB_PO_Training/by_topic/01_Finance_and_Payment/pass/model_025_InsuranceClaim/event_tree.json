@@ -1,0 +1,287 @@
+{
+ "event_codes": {
+  "a1": "sendsubmitClaim_1",
+  "b1": "receivesubmitClaim_1",
+  "c1": "senduploadDocs_2_opt1",
+  "d1": "receiveuploadDocs_2_opt1",
+  "e1": "sendapprovalNotice_3",
+  "e2": "sendassignAssessor_4",
+  "f1": "receiveapprovalNotice_3",
+  "f2": "receiveassignAssessor_4",
+  "g1": "sendpayout_8",
+  "h1": "receivepayout_8",
+  "i1": "sendtransferDone_9",
+  "j1": "receivetransferDone_9",
+  "k1": "sendnotifyClaimant_10",
+  "l1": "receivenotifyClaimant_10",
+  "m1": "sendsiteVisit_5",
+  "n1": "receivesiteVisit_5",
+  "o1": "sendvisitDone_6",
+  "p1": "receivevisitDone_6",
+  "q1": "sendassessmentReport_7",
+  "r1": "receiveassessmentReport_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [
+   "hasDocs = 1"
+  ],
+  "d1": [
+   "hasDocs = 1"
+  ],
+  "e1": [
+   "claimAmount ≤ 5000"
+  ],
+  "e2": [
+   "claimAmount > 5000"
+  ],
+  "f1": [
+   "claimAmount ≤ 5000"
+  ],
+  "f2": [
+   "claimAmount > 5000"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "claimAmount > 5000"
+  ],
+  "n1": [
+   "claimAmount > 5000"
+  ],
+  "o1": [
+   "claimAmount > 5000"
+  ],
+  "p1": [
+   "claimAmount > 5000"
+  ],
+  "q1": [
+   "claimAmount > 5000"
+  ],
+  "r1": [
+   "claimAmount > 5000"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsubmitClaim_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesubmitClaim_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "senduploadDocs_2_opt1",
+        "code": "c1",
+        "conditions": [
+         "hasDocs = 1"
+        ],
+        "children": [
+         {
+          "event": "receiveuploadDocs_2_opt1",
+          "code": "d1",
+          "conditions": [
+           "hasDocs = 1"
+          ],
+          "children": [
+           {
+            "event": "sendapprovalNotice_3",
+            "code": "e1",
+            "conditions": [
+             "claimAmount ≤ 5000"
+            ],
+            "children": [
+             {
+              "event": "receiveapprovalNotice_3",
+              "code": "f1",
+              "conditions": [
+               "claimAmount ≤ 5000"
+              ],
+              "children": [
+               {
+                "event": "sendpayout_8",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivepayout_8",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendtransferDone_9",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivetransferDone_9",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendnotifyClaimant_10",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyClaimant_10",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendassignAssessor_4",
+            "code": "e2",
+            "conditions": [
+             "claimAmount > 5000"
+            ],
+            "children": [
+             {
+              "event": "receiveassignAssessor_4",
+              "code": "f2",
+              "conditions": [
+               "claimAmount > 5000"
+              ],
+              "children": [
+               {
+                "event": "sendsiteVisit_5",
+                "code": "m1",
+                "conditions": [
+                 "claimAmount > 5000"
+                ],
+                "children": [
+                 {
+                  "event": "receivesiteVisit_5",
+                  "code": "n1",
+                  "conditions": [
+                   "claimAmount > 5000"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvisitDone_6",
+                    "code": "o1",
+                    "conditions": [
+                     "claimAmount > 5000"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevisitDone_6",
+                      "code": "p1",
+                      "conditions": [
+                       "claimAmount > 5000"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendassessmentReport_7",
+                        "code": "q1",
+                        "conditions": [
+                         "claimAmount > 5000"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveassessmentReport_7",
+                          "code": "r1",
+                          "conditions": [
+                           "claimAmount > 5000"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendpayout_8",
+                            "code": "g1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivepayout_8",
+                              "code": "h1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendtransferDone_9",
+                                "code": "i1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivetransferDone_9",
+                                  "code": "j1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendnotifyClaimant_10",
+                                    "code": "k1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivenotifyClaimant_10",
+                                      "code": "l1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

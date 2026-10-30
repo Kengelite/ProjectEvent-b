@@ -1,0 +1,75 @@
+model_171  SmartLibraryShelf  —  Event tree
+
+1) รหัส event
+   a1   sendsyncShelf_1
+   b1   receivesyncShelf_1
+   c1   sendreserveShelf_2
+   d1   receivereserveShelf_2
+   e1   sendnotifyHold_3
+   f1   receivenotifyHold_3
+   g1   sendrequestBook_4_opt1
+   h1   receiverequestBook_4_opt1
+   i1   sendupdateHold_5_opt1
+   j1   receiveupdateHold_5_opt1
+   k1   sendapproveBook_6
+   l1   receiveapproveBook_6
+   m1   sendreportBook_7
+   n1   receivereportBook_7
+   o1   sendsyncBook_8
+   o2   checkloop_notifyHold_3_loop1
+   p1   receivesyncBook_8
+   q1   sendrequestHold_9
+   r1   receiverequestHold_9
+   s1   sendcancelShelf_10
+   s2   sendcancelHold_12
+   t1   receivecancelShelf_10
+   t2   receivecancelHold_12
+   u1   sendlogBook_11
+   v1   receivelogBook_11
+   w1   sendreserveBook_13
+   x1   receivereserveBook_13
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1 → q1 → r1
+       │   ├── s1 → t1 → u1 → v1 → w1 → x1
+       │   └── s2 → t2 → w1 → x1
+       └── o2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsyncShelf_1
+       └── b1 receivesyncShelf_1
+           └── c1 sendreserveShelf_2
+               └── d1 receivereserveShelf_2
+                   └── e1 sendnotifyHold_3
+                       └── f1 receivenotifyHold_3
+                           └── g1 sendrequestBook_4_opt1
+                               └── h1 receiverequestBook_4_opt1
+                                   └── i1 sendupdateHold_5_opt1
+                                       └── j1 receiveupdateHold_5_opt1
+                                           └── k1 sendapproveBook_6
+                                               └── l1 receiveapproveBook_6
+                                                   └── m1 sendreportBook_7
+                                                       └── n1 receivereportBook_7
+                                                           ├── o1 sendsyncBook_8
+                                                           │   └── p1 receivesyncBook_8
+                                                           │       └── q1 sendrequestHold_9
+                                                           │           └── r1 receiverequestHold_9
+                                                           │               ├── s1 sendcancelShelf_10
+                                                           │               │   └── t1 receivecancelShelf_10
+                                                           │               │       └── u1 sendlogBook_11
+                                                           │               │           └── v1 receivelogBook_11
+                                                           │               │               └── w1 sendreserveBook_13
+                                                           │               │                   └── x1 receivereserveBook_13
+                                                           │               └── s2 sendcancelHold_12
+                                                           │                   └── t2 receivecancelHold_12
+                                                           │                       └── w1 sendreserveBook_13
+                                                           │                           └── x1 receivereserveBook_13
+                                                           └── o2 checkloop_notifyHold_3_loop1  ↺ วนกลับไป sendnotifyHold_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 -> t2 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ e1

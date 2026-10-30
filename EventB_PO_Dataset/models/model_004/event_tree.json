@@ -1,0 +1,181 @@
+{
+ "event_codes": {
+  "a1": "sendinitiateTransfer_1",
+  "b1": "receiveinitiateTransfer_1",
+  "c1": "sendcheckFraud_2",
+  "d1": "receivecheckFraud_2",
+  "e1": "sendriskScore_3",
+  "f1": "receiveriskScore_3",
+  "g1": "sendpostTransfer_4",
+  "g2": "sendholdTransfer_6",
+  "h1": "receivepostTransfer_4",
+  "h2": "receiveholdTransfer_6",
+  "i1": "sendpostingDone_5",
+  "j1": "receivepostingDone_5",
+  "k1": "sendtransferStatus_7",
+  "l1": "receivetransferStatus_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "riskFlag = 0"
+  ],
+  "g2": [
+   "riskFlag = 1"
+  ],
+  "h1": [
+   "riskFlag = 0"
+  ],
+  "h2": [
+   "riskFlag = 1"
+  ],
+  "i1": [
+   "riskFlag = 0"
+  ],
+  "j1": [
+   "riskFlag = 0"
+  ],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendinitiateTransfer_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveinitiateTransfer_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcheckFraud_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecheckFraud_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendriskScore_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveriskScore_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendpostTransfer_4",
+                "code": "g1",
+                "conditions": [
+                 "riskFlag = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivepostTransfer_4",
+                  "code": "h1",
+                  "conditions": [
+                   "riskFlag = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendpostingDone_5",
+                    "code": "i1",
+                    "conditions": [
+                     "riskFlag = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivepostingDone_5",
+                      "code": "j1",
+                      "conditions": [
+                       "riskFlag = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendtransferStatus_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivetransferStatus_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendholdTransfer_6",
+                "code": "g2",
+                "conditions": [
+                 "riskFlag = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveholdTransfer_6",
+                  "code": "h2",
+                  "conditions": [
+                   "riskFlag = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendtransferStatus_7",
+                    "code": "k1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivetransferStatus_7",
+                      "code": "l1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

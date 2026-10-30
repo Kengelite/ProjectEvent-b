@@ -1,0 +1,262 @@
+{
+ "event_codes": {
+  "a1": "sendreportEmergency_1",
+  "b1": "receivereportEmergency_1",
+  "c1": "sendaskDetails_2",
+  "d1": "receiveaskDetails_2",
+  "e1": "sendprovideDetails_3",
+  "f1": "receiveprovideDetails_3",
+  "g1": "senddispatchAmbulance_4",
+  "g2": "sendscheduleCallback_8",
+  "h1": "receivedispatchAmbulance_4",
+  "h2": "receivescheduleCallback_8",
+  "i1": "sendsendLocation_5",
+  "j1": "receivesendLocation_5",
+  "k1": "sendrerouteRequest_6_opt1",
+  "l1": "receivererouteRequest_6_opt1",
+  "m1": "sendnotifyHospital_7",
+  "m2": "checkloop_sendLocation_5_loop1",
+  "n1": "receivenotifyHospital_7",
+  "o1": "sendcloseCase_9",
+  "p1": "receivecloseCase_9"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "priority = HIGH"
+  ],
+  "g2": [
+   "priority = LOW"
+  ],
+  "h1": [
+   "priority = HIGH"
+  ],
+  "h2": [
+   "priority = LOW"
+  ],
+  "i1": [
+   "priority = HIGH",
+   "updateCount < 4"
+  ],
+  "j1": [
+   "priority = HIGH",
+   "updateCount < 4"
+  ],
+  "k1": [
+   "priority = HIGH",
+   "updateCount < 4",
+   "trafficJam = 1"
+  ],
+  "l1": [
+   "priority = HIGH",
+   "updateCount < 4",
+   "trafficJam = 1"
+  ],
+  "m1": [
+   "priority = HIGH"
+  ],
+  "m2": [
+   "priority = HIGH",
+   "updateCount < 4"
+  ],
+  "n1": [
+   "priority = HIGH"
+  ],
+  "o1": [],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreportEmergency_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereportEmergency_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendaskDetails_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveaskDetails_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendprovideDetails_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveprovideDetails_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "senddispatchAmbulance_4",
+                "code": "g1",
+                "conditions": [
+                 "priority = HIGH"
+                ],
+                "children": [
+                 {
+                  "event": "receivedispatchAmbulance_4",
+                  "code": "h1",
+                  "conditions": [
+                   "priority = HIGH"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsendLocation_5",
+                    "code": "i1",
+                    "conditions": [
+                     "priority = HIGH",
+                     "updateCount < 4"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesendLocation_5",
+                      "code": "j1",
+                      "conditions": [
+                       "priority = HIGH",
+                       "updateCount < 4"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendrerouteRequest_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "priority = HIGH",
+                         "updateCount < 4",
+                         "trafficJam = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivererouteRequest_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "priority = HIGH",
+                           "updateCount < 4",
+                           "trafficJam = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendnotifyHospital_7",
+                            "code": "m1",
+                            "conditions": [
+                             "priority = HIGH"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivenotifyHospital_7",
+                              "code": "n1",
+                              "conditions": [
+                               "priority = HIGH"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendcloseCase_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivecloseCase_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_sendLocation_5_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendsendLocation_5",
+                            "loop_back_to_code": "i1",
+                            "conditions": [
+                             "priority = HIGH",
+                             "updateCount < 4"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendscheduleCallback_8",
+                "code": "g2",
+                "conditions": [
+                 "priority = LOW"
+                ],
+                "children": [
+                 {
+                  "event": "receivescheduleCallback_8",
+                  "code": "h2",
+                  "conditions": [
+                   "priority = LOW"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcloseCase_9",
+                    "code": "o1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivecloseCase_9",
+                      "code": "p1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ i1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> o1 -> p1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

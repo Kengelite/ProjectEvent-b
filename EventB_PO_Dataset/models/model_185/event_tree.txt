@@ -1,0 +1,37 @@
+model_185  TaxFilingPortal  —  Event tree
+
+1) รหัส event
+   a1   sendreportReturn_1
+   b1   receivereportReturn_1
+   c1   sendreleaseRefund_2
+   d1   receivereleaseRefund_2
+   e1   sendassignRefund_3
+   f1   receiveassignRefund_3
+   g1   sendschedulePayment_4
+   h1   receiveschedulePayment_4
+   i1   sendupdatePayment_5
+   j1   receiveupdatePayment_5
+   k1   sendissueReturn_6
+   l1   receiveissueReturn_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreportReturn_1
+       └── b1 receivereportReturn_1
+           └── c1 sendreleaseRefund_2
+               └── d1 receivereleaseRefund_2
+                   └── e1 sendassignRefund_3
+                       └── f1 receiveassignRefund_3
+                           └── g1 sendschedulePayment_4
+                               └── h1 receiveschedulePayment_4
+                                   └── i1 sendupdatePayment_5
+                                       └── j1 receiveupdatePayment_5
+                                           └── k1 sendissueReturn_6
+                                               └── l1 receiveissueReturn_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

@@ -1,0 +1,262 @@
+{
+ "event_codes": {
+  "a1": "sendreportCredit_1",
+  "b1": "receivereportCredit_1",
+  "c1": "sendissueCredit_2",
+  "d1": "receiveissueCredit_2",
+  "e1": "sendreserveSwap_3_opt1",
+  "f1": "receivereserveSwap_3_opt1",
+  "g1": "sendnotifyCredit_4",
+  "h1": "receivenotifyCredit_4",
+  "i1": "sendreportBattery_5",
+  "j1": "receivereportBattery_5",
+  "k1": "sendissueSwap_6_opt2",
+  "l1": "receiveissueSwap_6_opt2",
+  "m1": "sendcheckCredit_7",
+  "n1": "receivecheckCredit_7",
+  "o1": "sendscheduleSwap_8",
+  "p1": "receivescheduleSwap_8",
+  "q1": "sendlogBattery_9",
+  "r1": "receivelogBattery_9",
+  "s1": "sendfetchSwap_10",
+  "t1": "receivefetchSwap_10",
+  "u1": "sendconfirmBattery_11",
+  "u2": "checkloop_logBattery_9_loop1",
+  "v1": "receiveconfirmBattery_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "useCache = 1"
+  ],
+  "f1": [
+   "useCache = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "optIn = 1"
+  ],
+  "l1": [
+   "optIn = 1"
+  ],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [
+   "retryNo < 11"
+  ],
+  "r1": [
+   "retryNo < 11"
+  ],
+  "s1": [
+   "retryNo < 11"
+  ],
+  "t1": [
+   "retryNo < 11"
+  ],
+  "u1": [],
+  "u2": [
+   "retryNo < 11"
+  ],
+  "v1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreportCredit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereportCredit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendissueCredit_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveissueCredit_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreserveSwap_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "useCache = 1"
+            ],
+            "children": [
+             {
+              "event": "receivereserveSwap_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "useCache = 1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyCredit_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivenotifyCredit_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendreportBattery_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereportBattery_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendissueSwap_6_opt2",
+                        "code": "k1",
+                        "conditions": [
+                         "optIn = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveissueSwap_6_opt2",
+                          "code": "l1",
+                          "conditions": [
+                           "optIn = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendcheckCredit_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivecheckCredit_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendscheduleSwap_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivescheduleSwap_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendlogBattery_9",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "retryNo < 11"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivelogBattery_9",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "retryNo < 11"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendfetchSwap_10",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "retryNo < 11"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivefetchSwap_10",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "retryNo < 11"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendconfirmBattery_11",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveconfirmBattery_11",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           },
+                                           {
+                                            "event": "checkloop_logBattery_9_loop1",
+                                            "code": "u2",
+                                            "loop_back_to": "sendlogBattery_9",
+                                            "loop_back_to_code": "q1",
+                                            "conditions": [
+                                             "retryNo < 11"
+                                            ],
+                                            "children": []
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ q1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

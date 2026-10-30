@@ -1,0 +1,143 @@
+{
+ "event_codes": {
+  "a1": "sendpublishReading_1",
+  "b1": "receivepublishReading_1",
+  "c1": "sendackReading_2",
+  "d1": "receiveackReading_2",
+  "e1": "sendaggregateBatch_3",
+  "f1": "receiveaggregateBatch_3",
+  "g1": "sendstoreConfirm_4",
+  "h1": "receivestoreConfirm_4",
+  "i1": "sendsyncClock_5",
+  "j1": "receivesyncClock_5",
+  "k1": "sendclockSynced_6",
+  "l1": "receiveclockSynced_6",
+  "m1": "sendheartbeat_7",
+  "n1": "receiveheartbeat_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendpublishReading_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivepublishReading_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendackReading_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveackReading_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendaggregateBatch_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveaggregateBatch_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendstoreConfirm_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivestoreConfirm_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendsyncClock_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesyncClock_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendclockSynced_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveclockSynced_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendheartbeat_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveheartbeat_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,159 @@
+{
+ "event_codes": {
+  "a1": "sendlogDim_1",
+  "b1": "receivelogDim_1",
+  "c1": "sendsyncSchedule_2",
+  "d1": "receivesyncSchedule_2",
+  "e1": "sendreleaseOccupancy_3_opt1",
+  "f1": "receivereleaseOccupancy_3_opt1",
+  "g1": "sendapproveOccupancy_4",
+  "h1": "receiveapproveOccupancy_4",
+  "i1": "sendlogSchedule_5",
+  "j1": "receivelogSchedule_5",
+  "k1": "sendqueryDim_6_opt2",
+  "l1": "receivequeryDim_6_opt2",
+  "m1": "sendfetchSchedule_7",
+  "n1": "receivefetchSchedule_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "needAck = 1"
+  ],
+  "f1": [
+   "needAck = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "express = 1"
+  ],
+  "l1": [
+   "express = 1"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendlogDim_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivelogDim_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsyncSchedule_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesyncSchedule_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreleaseOccupancy_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "needAck = 1"
+            ],
+            "children": [
+             {
+              "event": "receivereleaseOccupancy_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "needAck = 1"
+              ],
+              "children": [
+               {
+                "event": "sendapproveOccupancy_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveapproveOccupancy_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendlogSchedule_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivelogSchedule_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendqueryDim_6_opt2",
+                        "code": "k1",
+                        "conditions": [
+                         "express = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivequeryDim_6_opt2",
+                          "code": "l1",
+                          "conditions": [
+                           "express = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendfetchSchedule_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivefetchSchedule_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

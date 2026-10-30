@@ -1,0 +1,164 @@
+{
+ "event_codes": {
+  "a1": "sendfetchPermit_1",
+  "b1": "receivefetchPermit_1",
+  "c1": "sendapprovePlate_2",
+  "d1": "receiveapprovePlate_2",
+  "e1": "sendqueryFine_3",
+  "f1": "receivequeryFine_3",
+  "g1": "sendconfirmPlate_4",
+  "h1": "receiveconfirmPlate_4",
+  "i1": "sendfetchPlate_5",
+  "j1": "receivefetchPlate_5",
+  "k1": "sendreservePermit_6",
+  "k2": "checkloop_queryFine_3_loop1",
+  "l1": "receivereservePermit_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 9"
+  ],
+  "f1": [
+   "retryNo < 9"
+  ],
+  "g1": [
+   "retryNo < 9"
+  ],
+  "h1": [
+   "retryNo < 9"
+  ],
+  "i1": [
+   "retryNo < 9"
+  ],
+  "j1": [
+   "retryNo < 9"
+  ],
+  "k1": [],
+  "k2": [
+   "retryNo < 9"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendfetchPermit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivefetchPermit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendapprovePlate_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveapprovePlate_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendqueryFine_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 9"
+            ],
+            "children": [
+             {
+              "event": "receivequeryFine_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 9"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmPlate_4",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 9"
+                ],
+                "children": [
+                 {
+                  "event": "receiveconfirmPlate_4",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 9"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendfetchPlate_5",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 9"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivefetchPlate_5",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 9"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreservePermit_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereservePermit_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_queryFine_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendqueryFine_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "retryNo < 9"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

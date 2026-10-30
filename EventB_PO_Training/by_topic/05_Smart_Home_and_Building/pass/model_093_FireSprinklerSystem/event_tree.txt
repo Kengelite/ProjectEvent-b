@@ -1,0 +1,37 @@
+model_093  FireSprinklerSystem  —  Event tree
+
+1) รหัส event
+   a1   sendcheckValve_1
+   b1   receivecheckValve_1
+   c1   sendlogValve_2
+   d1   receivelogValve_2
+   e1   sendsendAlarm_3_opt1
+   f1   receivesendAlarm_3_opt1
+   g1   sendupdateFire_4_opt1
+   h1   receiveupdateFire_4_opt1
+   i1   sendnotifyFire_5
+   j1   receivenotifyFire_5
+   k1   sendconfirmFire_6
+   l1   receiveconfirmFire_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendcheckValve_1
+       └── b1 receivecheckValve_1
+           └── c1 sendlogValve_2
+               └── d1 receivelogValve_2
+                   └── e1 sendsendAlarm_3_opt1
+                       └── f1 receivesendAlarm_3_opt1
+                           └── g1 sendupdateFire_4_opt1
+                               └── h1 receiveupdateFire_4_opt1
+                                   └── i1 sendnotifyFire_5
+                                       └── j1 receivenotifyFire_5
+                                           └── k1 sendconfirmFire_6
+                                               └── l1 receiveconfirmFire_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

@@ -1,0 +1,189 @@
+{
+ "event_codes": {
+  "a1": "sendnotifyDrawer_1",
+  "b1": "receivenotifyDrawer_1",
+  "c1": "sendconfirmOrder_2",
+  "d1": "receiveconfirmOrder_2",
+  "e1": "sendreportOrder_3",
+  "e2": "sendcheckOrder_5",
+  "f1": "receivereportOrder_3",
+  "f2": "receivecheckOrder_5",
+  "g1": "sendackDrawer_4",
+  "g2": "sendassignDrawer_6",
+  "h1": "receiveackDrawer_4",
+  "h2": "receiveassignDrawer_6",
+  "i1": "sendreleaseDose_7",
+  "j1": "receivereleaseDose_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "t_obs ≤ 13"
+  ],
+  "e2": [
+   "t_obs > 13"
+  ],
+  "f1": [
+   "t_obs ≤ 13"
+  ],
+  "f2": [
+   "t_obs > 13"
+  ],
+  "g1": [
+   "t_obs ≤ 13"
+  ],
+  "g2": [
+   "t_obs > 13"
+  ],
+  "h1": [
+   "t_obs ≤ 13"
+  ],
+  "h2": [
+   "t_obs > 13"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendnotifyDrawer_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivenotifyDrawer_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendconfirmOrder_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveconfirmOrder_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreportOrder_3",
+            "code": "e1",
+            "conditions": [
+             "t_obs ≤ 13"
+            ],
+            "children": [
+             {
+              "event": "receivereportOrder_3",
+              "code": "f1",
+              "conditions": [
+               "t_obs ≤ 13"
+              ],
+              "children": [
+               {
+                "event": "sendackDrawer_4",
+                "code": "g1",
+                "conditions": [
+                 "t_obs ≤ 13"
+                ],
+                "children": [
+                 {
+                  "event": "receiveackDrawer_4",
+                  "code": "h1",
+                  "conditions": [
+                   "t_obs ≤ 13"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreleaseDose_7",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereleaseDose_7",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendcheckOrder_5",
+            "code": "e2",
+            "conditions": [
+             "t_obs > 13"
+            ],
+            "children": [
+             {
+              "event": "receivecheckOrder_5",
+              "code": "f2",
+              "conditions": [
+               "t_obs > 13"
+              ],
+              "children": [
+               {
+                "event": "sendassignDrawer_6",
+                "code": "g2",
+                "conditions": [
+                 "t_obs > 13"
+                ],
+                "children": [
+                 {
+                  "event": "receiveassignDrawer_6",
+                  "code": "h2",
+                  "conditions": [
+                   "t_obs > 13"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreleaseDose_7",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereleaseDose_7",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

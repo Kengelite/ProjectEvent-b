@@ -1,0 +1,171 @@
+{
+ "event_codes": {
+  "a1": "sendrequestBlood_1",
+  "b1": "receiverequestBlood_1",
+  "c1": "sendcrossMatch_2",
+  "c2": "sendbackorder_5",
+  "d1": "receivecrossMatch_2",
+  "d2": "receivebackorder_5",
+  "e1": "sendprepareCourier_3",
+  "f1": "receiveprepareCourier_3",
+  "g1": "senddeliverBlood_4",
+  "h1": "receivedeliverBlood_4",
+  "i1": "sendconfirmReceipt_6",
+  "j1": "receiveconfirmReceipt_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [
+   "stockUnits ≥ 2"
+  ],
+  "c2": [
+   "stockUnits < 2"
+  ],
+  "d1": [
+   "stockUnits ≥ 2"
+  ],
+  "d2": [
+   "stockUnits < 2"
+  ],
+  "e1": [
+   "stockUnits ≥ 2"
+  ],
+  "f1": [
+   "stockUnits ≥ 2"
+  ],
+  "g1": [
+   "stockUnits ≥ 2"
+  ],
+  "h1": [
+   "stockUnits ≥ 2"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendrequestBlood_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiverequestBlood_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcrossMatch_2",
+        "code": "c1",
+        "conditions": [
+         "stockUnits ≥ 2"
+        ],
+        "children": [
+         {
+          "event": "receivecrossMatch_2",
+          "code": "d1",
+          "conditions": [
+           "stockUnits ≥ 2"
+          ],
+          "children": [
+           {
+            "event": "sendprepareCourier_3",
+            "code": "e1",
+            "conditions": [
+             "stockUnits ≥ 2"
+            ],
+            "children": [
+             {
+              "event": "receiveprepareCourier_3",
+              "code": "f1",
+              "conditions": [
+               "stockUnits ≥ 2"
+              ],
+              "children": [
+               {
+                "event": "senddeliverBlood_4",
+                "code": "g1",
+                "conditions": [
+                 "stockUnits ≥ 2"
+                ],
+                "children": [
+                 {
+                  "event": "receivedeliverBlood_4",
+                  "code": "h1",
+                  "conditions": [
+                   "stockUnits ≥ 2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmReceipt_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmReceipt_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "event": "sendbackorder_5",
+        "code": "c2",
+        "conditions": [
+         "stockUnits < 2"
+        ],
+        "children": [
+         {
+          "event": "receivebackorder_5",
+          "code": "d2",
+          "conditions": [
+           "stockUnits < 2"
+          ],
+          "children": [
+           {
+            "event": "sendconfirmReceipt_6",
+            "code": "i1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveconfirmReceipt_6",
+              "code": "j1",
+              "conditions": [],
+              "children": []
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c2 -> d2 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,421 @@
+{
+ "event_codes": {
+  "a1": "sendapproveOrder_1",
+  "b1": "receiveapproveOrder_1",
+  "c1": "sendfetchSlot_2",
+  "d1": "receivefetchSlot_2",
+  "e1": "sendreleaseOrder_3",
+  "f1": "receivereleaseOrder_3",
+  "g1": "sendqueryOrder_4",
+  "g2": "sendreportSlot_5",
+  "h1": "receivequeryOrder_4",
+  "h2": "receivereportSlot_5",
+  "i1": "sendnotifySlot_12",
+  "j1": "receivenotifySlot_12",
+  "k1": "sendcancelSlot_13",
+  "k2": "checkloop_releaseOrder_3_loop1",
+  "l1": "receivecancelSlot_13",
+  "m1": "sendsyncSlot_6",
+  "n1": "receivesyncSlot_6",
+  "o1": "sendnotifyOrder_7",
+  "p1": "receivenotifyOrder_7",
+  "q1": "sendreportDelivery_8",
+  "r1": "receivereportDelivery_8",
+  "s1": "sendreserveOrder_9",
+  "t1": "receivereserveOrder_9",
+  "u1": "sendassignDelivery_10",
+  "v1": "receiveassignDelivery_10",
+  "w1": "sendfetchDelivery_11",
+  "x1": "receivefetchDelivery_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 8"
+  ],
+  "f1": [
+   "retryNo < 8"
+  ],
+  "g1": [
+   "retryNo < 8",
+   "retryNo mod 3 = 0"
+  ],
+  "g2": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "h1": [
+   "retryNo < 8",
+   "retryNo mod 3 = 0"
+  ],
+  "h2": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "i1": [
+   "retryNo < 8"
+  ],
+  "j1": [
+   "retryNo < 8"
+  ],
+  "k1": [],
+  "k2": [
+   "retryNo < 8"
+  ],
+  "l1": [],
+  "m1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "n1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "o1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "p1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "q1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "r1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "s1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "t1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "u1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "v1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "w1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ],
+  "x1": [
+   "retryNo < 8",
+   "retryNo mod 3 ≠ 0"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendapproveOrder_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveapproveOrder_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfetchSlot_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefetchSlot_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreleaseOrder_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 8"
+            ],
+            "children": [
+             {
+              "event": "receivereleaseOrder_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 8"
+              ],
+              "children": [
+               {
+                "event": "sendqueryOrder_4",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 8",
+                 "retryNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivequeryOrder_4",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 8",
+                   "retryNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendnotifySlot_12",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 8"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivenotifySlot_12",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 8"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelSlot_13",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivecancelSlot_13",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_releaseOrder_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendreleaseOrder_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "retryNo < 8"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendreportSlot_5",
+                "code": "g2",
+                "conditions": [
+                 "retryNo < 8",
+                 "retryNo mod 3 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivereportSlot_5",
+                  "code": "h2",
+                  "conditions": [
+                   "retryNo < 8",
+                   "retryNo mod 3 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsyncSlot_6",
+                    "code": "m1",
+                    "conditions": [
+                     "retryNo < 8",
+                     "retryNo mod 3 ≠ 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesyncSlot_6",
+                      "code": "n1",
+                      "conditions": [
+                       "retryNo < 8",
+                       "retryNo mod 3 ≠ 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendnotifyOrder_7",
+                        "code": "o1",
+                        "conditions": [
+                         "retryNo < 8",
+                         "retryNo mod 3 ≠ 0"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivenotifyOrder_7",
+                          "code": "p1",
+                          "conditions": [
+                           "retryNo < 8",
+                           "retryNo mod 3 ≠ 0"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreportDelivery_8",
+                            "code": "q1",
+                            "conditions": [
+                             "retryNo < 8",
+                             "retryNo mod 3 ≠ 0"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivereportDelivery_8",
+                              "code": "r1",
+                              "conditions": [
+                               "retryNo < 8",
+                               "retryNo mod 3 ≠ 0"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreserveOrder_9",
+                                "code": "s1",
+                                "conditions": [
+                                 "retryNo < 8",
+                                 "retryNo mod 3 ≠ 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivereserveOrder_9",
+                                  "code": "t1",
+                                  "conditions": [
+                                   "retryNo < 8",
+                                   "retryNo mod 3 ≠ 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendassignDelivery_10",
+                                    "code": "u1",
+                                    "conditions": [
+                                     "retryNo < 8",
+                                     "retryNo mod 3 ≠ 0"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveassignDelivery_10",
+                                      "code": "v1",
+                                      "conditions": [
+                                       "retryNo < 8",
+                                       "retryNo mod 3 ≠ 0"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendfetchDelivery_11",
+                                        "code": "w1",
+                                        "conditions": [
+                                         "retryNo < 8",
+                                         "retryNo mod 3 ≠ 0"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivefetchDelivery_11",
+                                          "code": "x1",
+                                          "conditions": [
+                                           "retryNo < 8",
+                                           "retryNo mod 3 ≠ 0"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendnotifySlot_12",
+                                            "code": "i1",
+                                            "conditions": [
+                                             "retryNo < 8"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receivenotifySlot_12",
+                                              "code": "j1",
+                                              "conditions": [
+                                               "retryNo < 8"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendcancelSlot_13",
+                                                "code": "k1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivecancelSlot_13",
+                                                  "code": "l1",
+                                                  "conditions": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               },
+                                               {
+                                                "event": "checkloop_releaseOrder_3_loop1",
+                                                "code": "k2",
+                                                "loop_back_to": "sendreleaseOrder_3",
+                                                "loop_back_to_code": "e1",
+                                                "conditions": [
+                                                 "retryNo < 8"
+                                                ],
+                                                "children": []
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> i1 -> j1 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

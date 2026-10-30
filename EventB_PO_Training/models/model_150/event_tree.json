@@ -1,0 +1,319 @@
+{
+ "event_codes": {
+  "a1": "sendqueryBalance_1",
+  "b1": "receivequeryBalance_1",
+  "c1": "sendassignBalance_2",
+  "d1": "receiveassignBalance_2",
+  "e1": "sendcheckFare_3_opt1",
+  "f1": "receivecheckFare_3_opt1",
+  "g1": "sendvalidateCard_4_opt1",
+  "h1": "receivevalidateCard_4_opt1",
+  "i1": "sendcheckCard_5",
+  "j1": "receivecheckCard_5",
+  "k1": "sendqueryFare_6",
+  "l1": "receivequeryFare_6",
+  "m1": "sendvalidateFare_7_opt2",
+  "n1": "receivevalidateFare_7_opt2",
+  "o1": "sendrequestCard_8_opt2",
+  "p1": "receiverequestCard_8_opt2",
+  "q1": "sendreportBalance_9",
+  "r1": "receivereportBalance_9",
+  "s1": "sendreleaseFare_10",
+  "t1": "receivereleaseFare_10",
+  "u1": "sendissueFare_11",
+  "v1": "receiveissueFare_11",
+  "w1": "sendlogBalance_12",
+  "x1": "receivelogBalance_12",
+  "y1": "sendvalidateBalance_13",
+  "z1": "receivevalidateBalance_13",
+  "aa1": "sendassignFare_14",
+  "ab1": "receiveassignFare_14",
+  "ac1": "sendcancelFare_15",
+  "ad1": "receivecancelFare_15"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "needAck = 1"
+  ],
+  "f1": [
+   "needAck = 1"
+  ],
+  "g1": [
+   "needAck = 1"
+  ],
+  "h1": [
+   "needAck = 1"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "withExtra = 1"
+  ],
+  "n1": [
+   "withExtra = 1"
+  ],
+  "o1": [
+   "withExtra = 1"
+  ],
+  "p1": [
+   "withExtra = 1"
+  ],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": [],
+  "u1": [],
+  "v1": [],
+  "w1": [],
+  "x1": [],
+  "y1": [],
+  "z1": [],
+  "aa1": [],
+  "ab1": [],
+  "ac1": [],
+  "ad1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendqueryBalance_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivequeryBalance_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignBalance_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignBalance_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcheckFare_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "needAck = 1"
+            ],
+            "children": [
+             {
+              "event": "receivecheckFare_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "needAck = 1"
+              ],
+              "children": [
+               {
+                "event": "sendvalidateCard_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "needAck = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receivevalidateCard_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "needAck = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcheckCard_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivecheckCard_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendqueryFare_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivequeryFare_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendvalidateFare_7_opt2",
+                            "code": "m1",
+                            "conditions": [
+                             "withExtra = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivevalidateFare_7_opt2",
+                              "code": "n1",
+                              "conditions": [
+                               "withExtra = 1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendrequestCard_8_opt2",
+                                "code": "o1",
+                                "conditions": [
+                                 "withExtra = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiverequestCard_8_opt2",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "withExtra = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendreportBalance_9",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivereportBalance_9",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendreleaseFare_10",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivereleaseFare_10",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": [
+                                           {
+                                            "event": "sendissueFare_11",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveissueFare_11",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": [
+                                               {
+                                                "event": "sendlogBalance_12",
+                                                "code": "w1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivelogBalance_12",
+                                                  "code": "x1",
+                                                  "conditions": [],
+                                                  "children": [
+                                                   {
+                                                    "event": "sendvalidateBalance_13",
+                                                    "code": "y1",
+                                                    "conditions": [],
+                                                    "children": [
+                                                     {
+                                                      "event": "receivevalidateBalance_13",
+                                                      "code": "z1",
+                                                      "conditions": [],
+                                                      "children": [
+                                                       {
+                                                        "event": "sendassignFare_14",
+                                                        "code": "aa1",
+                                                        "conditions": [],
+                                                        "children": [
+                                                         {
+                                                          "event": "receiveassignFare_14",
+                                                          "code": "ab1",
+                                                          "conditions": [],
+                                                          "children": [
+                                                           {
+                                                            "event": "sendcancelFare_15",
+                                                            "code": "ac1",
+                                                            "conditions": [],
+                                                            "children": [
+                                                             {
+                                                              "event": "receivecancelFare_15",
+                                                              "code": "ad1",
+                                                              "conditions": [],
+                                                              "children": []
+                                                             }
+                                                            ]
+                                                           }
+                                                          ]
+                                                         }
+                                                        ]
+                                                       }
+                                                      ]
+                                                     }
+                                                    ]
+                                                   }
+                                                  ]
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1 -> aa1 -> ab1 -> ac1 -> ad1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

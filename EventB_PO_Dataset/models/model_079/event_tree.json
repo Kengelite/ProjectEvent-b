@@ -1,0 +1,125 @@
+{
+ "event_codes": {
+  "a1": "sendcancelLimit_1",
+  "b1": "receivecancelLimit_1",
+  "c1": "sendvalidateAlarm_2",
+  "d1": "receivevalidateAlarm_2",
+  "e1": "sendackLimit_3",
+  "f1": "receiveackLimit_3",
+  "g1": "sendissueLimit_4",
+  "h1": "receiveissueLimit_4",
+  "i1": "sendcancelLoad_5",
+  "j1": "receivecancelLoad_5",
+  "k1": "sendscheduleLoad_6",
+  "l1": "receivescheduleLoad_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelLimit_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelLimit_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendvalidateAlarm_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivevalidateAlarm_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendackLimit_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveackLimit_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendissueLimit_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveissueLimit_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendcancelLoad_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivecancelLoad_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendscheduleLoad_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivescheduleLoad_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

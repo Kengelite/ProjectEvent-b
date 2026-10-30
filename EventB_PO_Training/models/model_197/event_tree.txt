@@ -1,0 +1,62 @@
+model_197  WaterLeakDetection  —  Event tree
+
+1) รหัส event
+   a1   sendfetchTicket_1
+   b1   receivefetchTicket_1
+   c1   sendupdateLeak_2
+   d1   receiveupdateLeak_2
+   e1   sendreserveValve_3
+   f1   receivereserveValve_3
+   g1   sendreleaseLeak_4_opt1
+   h1   receivereleaseLeak_4_opt1
+   i1   sendreleaseTicket_5
+   j1   receivereleaseTicket_5
+   k1   sendreportValve_6
+   l1   receivereportValve_6
+   m1   sendsyncTicket_7
+   n1   receivesyncTicket_7
+   o1   sendissueTicket_8
+   p1   receiveissueTicket_8
+   q1   sendcancelLeak_9
+   r1   receivecancelLeak_9
+   s1   sendackLeak_10
+   t1   receiveackLeak_10
+   u1   sendreportLeak_11
+   u2   checkloop_reserveValve_3_loop1
+   v1   receivereportLeak_11
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+       ├── u1 → v1
+       └── u2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendfetchTicket_1
+       └── b1 receivefetchTicket_1
+           └── c1 sendupdateLeak_2
+               └── d1 receiveupdateLeak_2
+                   └── e1 sendreserveValve_3
+                       └── f1 receivereserveValve_3
+                           └── g1 sendreleaseLeak_4_opt1
+                               └── h1 receivereleaseLeak_4_opt1
+                                   └── i1 sendreleaseTicket_5
+                                       └── j1 receivereleaseTicket_5
+                                           └── k1 sendreportValve_6
+                                               └── l1 receivereportValve_6
+                                                   └── m1 sendsyncTicket_7
+                                                       └── n1 receivesyncTicket_7
+                                                           └── o1 sendissueTicket_8
+                                                               └── p1 receiveissueTicket_8
+                                                                   └── q1 sendcancelLeak_9
+                                                                       └── r1 receivecancelLeak_9
+                                                                           └── s1 sendackLeak_10
+                                                                               └── t1 receiveackLeak_10
+                                                                                   ├── u1 sendreportLeak_11
+                                                                                   │   └── v1 receivereportLeak_11
+                                                                                   └── u2 checkloop_reserveValve_3_loop1  ↺ วนกลับไป sendreserveValve_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ e1

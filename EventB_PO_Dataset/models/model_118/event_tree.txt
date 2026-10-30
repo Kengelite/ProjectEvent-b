@@ -1,0 +1,37 @@
+model_118  LabEquipmentBooking  —  Event tree
+
+1) รหัส event
+   a1   sendreserveSample_1
+   b1   receivereserveSample_1
+   c1   sendreleaseSample_2
+   d1   receivereleaseSample_2
+   e1   sendsendSample_3
+   f1   receivesendSample_3
+   g1   sendcheckSample_4
+   h1   receivecheckSample_4
+   i1   sendsendSlot_5
+   j1   receivesendSlot_5
+   k1   sendissueSlot_6
+   l1   receiveissueSlot_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreserveSample_1
+       └── b1 receivereserveSample_1
+           └── c1 sendreleaseSample_2
+               └── d1 receivereleaseSample_2
+                   └── e1 sendsendSample_3
+                       └── f1 receivesendSample_3
+                           └── g1 sendcheckSample_4
+                               └── h1 receivecheckSample_4
+                                   └── i1 sendsendSlot_5
+                                       └── j1 receivesendSlot_5
+                                           └── k1 sendissueSlot_6
+                                               └── l1 receiveissueSlot_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

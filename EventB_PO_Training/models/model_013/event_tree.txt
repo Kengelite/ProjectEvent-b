@@ -1,0 +1,45 @@
+model_013  CourseEnrollment  —  Event tree
+
+1) รหัส event
+   a1   sendbrowseCourses_1
+   b1   receivebrowseCourses_1
+   c1   sendcourseList_2
+   d1   receivecourseList_2
+   e1   sendenrollRequest_3
+   f1   receiveenrollRequest_3
+   g1   sendcheckPrereq_4
+   h1   receivecheckPrereq_4
+   i1   sendprereqOK_5
+   j1   receiveprereqOK_5
+   k1   sendrequestApproval_6_opt1
+   l1   receiverequestApproval_6_opt1
+   m1   sendapproved_7_opt1
+   n1   receiveapproved_7_opt1
+   o1   sendenrollConfirm_8
+   p1   receiveenrollConfirm_8
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendbrowseCourses_1
+       └── b1 receivebrowseCourses_1
+           └── c1 sendcourseList_2
+               └── d1 receivecourseList_2
+                   └── e1 sendenrollRequest_3
+                       └── f1 receiveenrollRequest_3
+                           └── g1 sendcheckPrereq_4
+                               └── h1 receivecheckPrereq_4
+                                   └── i1 sendprereqOK_5
+                                       └── j1 receiveprereqOK_5
+                                           └── k1 sendrequestApproval_6_opt1
+                                               └── l1 receiverequestApproval_6_opt1
+                                                   └── m1 sendapproved_7_opt1
+                                                       └── n1 receiveapproved_7_opt1
+                                                           └── o1 sendenrollConfirm_8
+                                                               └── p1 receiveenrollConfirm_8
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1

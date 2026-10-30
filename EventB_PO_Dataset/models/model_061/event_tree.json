@@ -1,0 +1,194 @@
+{
+ "event_codes": {
+  "a1": "sendconfirmDelivery_1",
+  "b1": "receiveconfirmDelivery_1",
+  "c1": "sendapproveCampaign_2",
+  "d1": "receiveapproveCampaign_2",
+  "e1": "sendlogCampaign_3",
+  "f1": "receivelogCampaign_3",
+  "g1": "sendlogDelivery_4_opt1",
+  "h1": "receivelogDelivery_4_opt1",
+  "i1": "sendnotifyCampaign_5",
+  "j1": "receivenotifyCampaign_5",
+  "k1": "sendlogMessage_6",
+  "l1": "receivelogMessage_6",
+  "m1": "sendconfirmCampaign_7",
+  "m2": "checkloop_logCampaign_3_loop1",
+  "n1": "receiveconfirmCampaign_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 11"
+  ],
+  "f1": [
+   "retryNo < 11"
+  ],
+  "g1": [
+   "retryNo < 11",
+   "retryNo mod 3 = 0"
+  ],
+  "h1": [
+   "retryNo < 11",
+   "retryNo mod 3 = 0"
+  ],
+  "i1": [
+   "retryNo < 11"
+  ],
+  "j1": [
+   "retryNo < 11"
+  ],
+  "k1": [
+   "retryNo < 11"
+  ],
+  "l1": [
+   "retryNo < 11"
+  ],
+  "m1": [],
+  "m2": [
+   "retryNo < 11"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendconfirmDelivery_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveconfirmDelivery_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendapproveCampaign_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveapproveCampaign_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendlogCampaign_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 11"
+            ],
+            "children": [
+             {
+              "event": "receivelogCampaign_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 11"
+              ],
+              "children": [
+               {
+                "event": "sendlogDelivery_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 11",
+                 "retryNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivelogDelivery_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 11",
+                   "retryNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendnotifyCampaign_5",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 11"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivenotifyCampaign_5",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 11"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendlogMessage_6",
+                        "code": "k1",
+                        "conditions": [
+                         "retryNo < 11"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivelogMessage_6",
+                          "code": "l1",
+                          "conditions": [
+                           "retryNo < 11"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendconfirmCampaign_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveconfirmCampaign_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_logCampaign_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendlogCampaign_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "retryNo < 11"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

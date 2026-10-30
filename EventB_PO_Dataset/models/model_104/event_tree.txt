@@ -1,0 +1,81 @@
+model_104  GroceryDeliverySlot  —  Event tree
+
+1) รหัส event
+   a1   sendapproveOrder_1
+   b1   receiveapproveOrder_1
+   c1   sendfetchSlot_2
+   d1   receivefetchSlot_2
+   e1   sendreleaseOrder_3
+   f1   receivereleaseOrder_3
+   g1   sendqueryOrder_4
+   g2   sendreportSlot_5
+   h1   receivequeryOrder_4
+   h2   receivereportSlot_5
+   i1   sendnotifySlot_12
+   j1   receivenotifySlot_12
+   k1   sendcancelSlot_13
+   k2   checkloop_releaseOrder_3_loop1
+   l1   receivecancelSlot_13
+   m1   sendsyncSlot_6
+   n1   receivesyncSlot_6
+   o1   sendnotifyOrder_7
+   p1   receivenotifyOrder_7
+   q1   sendreportDelivery_8
+   r1   receivereportDelivery_8
+   s1   sendreserveOrder_9
+   t1   receivereserveOrder_9
+   u1   sendassignDelivery_10
+   v1   receiveassignDelivery_10
+   w1   sendfetchDelivery_11
+   x1   receivefetchDelivery_11
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1
+       │   ├── k1 → l1
+       │   └── k2 ↺ e1
+       └── g2 → h2 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → i1 → j1
+           ├── k1 → l1
+           └── k2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendapproveOrder_1
+       └── b1 receiveapproveOrder_1
+           └── c1 sendfetchSlot_2
+               └── d1 receivefetchSlot_2
+                   └── e1 sendreleaseOrder_3
+                       └── f1 receivereleaseOrder_3
+                           ├── g1 sendqueryOrder_4
+                           │   └── h1 receivequeryOrder_4
+                           │       └── i1 sendnotifySlot_12
+                           │           └── j1 receivenotifySlot_12
+                           │               ├── k1 sendcancelSlot_13
+                           │               │   └── l1 receivecancelSlot_13
+                           │               └── k2 checkloop_releaseOrder_3_loop1  ↺ วนกลับไป sendreleaseOrder_3
+                           └── g2 sendreportSlot_5
+                               └── h2 receivereportSlot_5
+                                   └── m1 sendsyncSlot_6
+                                       └── n1 receivesyncSlot_6
+                                           └── o1 sendnotifyOrder_7
+                                               └── p1 receivenotifyOrder_7
+                                                   └── q1 sendreportDelivery_8
+                                                       └── r1 receivereportDelivery_8
+                                                           └── s1 sendreserveOrder_9
+                                                               └── t1 receivereserveOrder_9
+                                                                   └── u1 sendassignDelivery_10
+                                                                       └── v1 receiveassignDelivery_10
+                                                                           └── w1 sendfetchDelivery_11
+                                                                               └── x1 receivefetchDelivery_11
+                                                                                   └── i1 sendnotifySlot_12
+                                                                                       └── j1 receivenotifySlot_12
+                                                                                           ├── k1 sendcancelSlot_13
+                                                                                           │   └── l1 receivecancelSlot_13
+                                                                                           └── k2 checkloop_releaseOrder_3_loop1  ↺ วนกลับไป sendreleaseOrder_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> i1 -> j1 -> k2 ↺ e1

@@ -1,0 +1,151 @@
+{
+ "event_codes": {
+  "a1": "sendrequestRide_1",
+  "b1": "receiverequestRide_1",
+  "c1": "sendfindDriver_2",
+  "d1": "receivefindDriver_2",
+  "e1": "senddriverAccept_3",
+  "f1": "receivedriverAccept_3",
+  "g1": "sendrideConfirmed_4",
+  "h1": "receiverideConfirmed_4",
+  "i1": "sendaddPassenger_5_opt1",
+  "j1": "receiveaddPassenger_5_opt1",
+  "k1": "sendtripComplete_6",
+  "l1": "receivetripComplete_6",
+  "m1": "sendchargeRider_7",
+  "n1": "receivechargeRider_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [
+   "shareRide = 1"
+  ],
+  "j1": [
+   "shareRide = 1"
+  ],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendrequestRide_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiverequestRide_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfindDriver_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefindDriver_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "senddriverAccept_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivedriverAccept_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendrideConfirmed_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiverideConfirmed_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendaddPassenger_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "shareRide = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveaddPassenger_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "shareRide = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendtripComplete_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivetripComplete_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendchargeRider_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivechargeRider_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,81 @@
+model_158  RuralTelehealthKiosk  —  Event tree
+
+1) รหัส event
+   a1   sendreportVital_1
+   b1   receivereportVital_1
+   c1   sendvalidateVital_2
+   d1   receivevalidateVital_2
+   e1   sendfetchPrescription_3
+   f1   receivefetchPrescription_3
+   g1   sendschedulePrescription_4
+   g2   sendreportPrescription_11
+   h1   receiveschedulePrescription_4
+   h2   receivereportPrescription_11
+   i1   sendcancelPrescription_5
+   j1   receivecancelPrescription_5
+   k1   sendnotifyConsult_6
+   l1   receivenotifyConsult_6
+   m1   sendsendVital_7
+   n1   receivesendVital_7
+   o1   sendfetchVital_8
+   p1   receivefetchVital_8
+   q1   sendackConsult_9
+   r1   receiveackConsult_9
+   s1   sendupdateConsult_10
+   t1   receiveupdateConsult_10
+   u1   sendconfirmVital_12
+   v1   receiveconfirmVital_12
+   w1   sendreleaseVital_13
+   w2   checkloop_fetchPrescription_3_loop1
+   x1   receivereleaseVital_13
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       │   ├── w1 → x1
+       │   └── w2 ↺ e1
+       └── g2 → h2 → u1 → v1
+           ├── w1 → x1
+           └── w2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreportVital_1
+       └── b1 receivereportVital_1
+           └── c1 sendvalidateVital_2
+               └── d1 receivevalidateVital_2
+                   └── e1 sendfetchPrescription_3
+                       └── f1 receivefetchPrescription_3
+                           ├── g1 sendschedulePrescription_4
+                           │   └── h1 receiveschedulePrescription_4
+                           │       └── i1 sendcancelPrescription_5
+                           │           └── j1 receivecancelPrescription_5
+                           │               └── k1 sendnotifyConsult_6
+                           │                   └── l1 receivenotifyConsult_6
+                           │                       └── m1 sendsendVital_7
+                           │                           └── n1 receivesendVital_7
+                           │                               └── o1 sendfetchVital_8
+                           │                                   └── p1 receivefetchVital_8
+                           │                                       └── q1 sendackConsult_9
+                           │                                           └── r1 receiveackConsult_9
+                           │                                               └── s1 sendupdateConsult_10
+                           │                                                   └── t1 receiveupdateConsult_10
+                           │                                                       └── u1 sendconfirmVital_12
+                           │                                                           └── v1 receiveconfirmVital_12
+                           │                                                               ├── w1 sendreleaseVital_13
+                           │                                                               │   └── x1 receivereleaseVital_13
+                           │                                                               └── w2 checkloop_fetchPrescription_3_loop1  ↺ วนกลับไป sendfetchPrescription_3
+                           └── g2 sendreportPrescription_11
+                               └── h2 receivereportPrescription_11
+                                   └── u1 sendconfirmVital_12
+                                       └── v1 receiveconfirmVital_12
+                                           ├── w1 sendreleaseVital_13
+                                           │   └── x1 receivereleaseVital_13
+                                           └── w2 checkloop_fetchPrescription_3_loop1  ↺ วนกลับไป sendfetchPrescription_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> u1 -> v1 -> w2 ↺ e1

@@ -1,0 +1,216 @@
+{
+ "event_codes": {
+  "a1": "sendinsertCard_1",
+  "b1": "receiveinsertCard_1",
+  "c1": "sendrequestPIN_2",
+  "d1": "receiverequestPIN_2",
+  "e1": "sendenterPIN_3",
+  "f1": "receiveenterPIN_3",
+  "g1": "sendinvalidPIN_4",
+  "h1": "receiveinvalidPIN_4",
+  "i1": "sendreenterPIN_5",
+  "j1": "receivereenterPIN_5",
+  "k1": "sendselectAmount_6",
+  "k2": "sendretainCard_8",
+  "k3": "checkloop_invalidPIN_4_loop1",
+  "l1": "receiveselectAmount_6",
+  "l2": "receiveretainCard_8",
+  "m1": "senddispenseCash_7",
+  "n1": "receivedispenseCash_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "pinAttempt < 3"
+  ],
+  "h1": [
+   "pinAttempt < 3"
+  ],
+  "i1": [
+   "pinAttempt < 3"
+  ],
+  "j1": [
+   "pinAttempt < 3"
+  ],
+  "k1": [
+   "pinValid = 1"
+  ],
+  "k2": [
+   "pinValid = 0"
+  ],
+  "k3": [
+   "pinAttempt < 3"
+  ],
+  "l1": [
+   "pinValid = 1"
+  ],
+  "l2": [
+   "pinValid = 0"
+  ],
+  "m1": [
+   "pinValid = 1"
+  ],
+  "n1": [
+   "pinValid = 1"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendinsertCard_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveinsertCard_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendrequestPIN_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiverequestPIN_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendenterPIN_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveenterPIN_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendinvalidPIN_4",
+                "code": "g1",
+                "conditions": [
+                 "pinAttempt < 3"
+                ],
+                "children": [
+                 {
+                  "event": "receiveinvalidPIN_4",
+                  "code": "h1",
+                  "conditions": [
+                   "pinAttempt < 3"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreenterPIN_5",
+                    "code": "i1",
+                    "conditions": [
+                     "pinAttempt < 3"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereenterPIN_5",
+                      "code": "j1",
+                      "conditions": [
+                       "pinAttempt < 3"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendselectAmount_6",
+                        "code": "k1",
+                        "conditions": [
+                         "pinValid = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveselectAmount_6",
+                          "code": "l1",
+                          "conditions": [
+                           "pinValid = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "senddispenseCash_7",
+                            "code": "m1",
+                            "conditions": [
+                             "pinValid = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivedispenseCash_7",
+                              "code": "n1",
+                              "conditions": [
+                               "pinValid = 1"
+                              ],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendretainCard_8",
+                        "code": "k2",
+                        "conditions": [
+                         "pinValid = 0"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveretainCard_8",
+                          "code": "l2",
+                          "conditions": [
+                           "pinValid = 0"
+                          ],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_invalidPIN_4_loop1",
+                        "code": "k3",
+                        "loop_back_to": "sendinvalidPIN_4",
+                        "loop_back_to_code": "g1",
+                        "conditions": [
+                         "pinAttempt < 3"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k3 ↺ g1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

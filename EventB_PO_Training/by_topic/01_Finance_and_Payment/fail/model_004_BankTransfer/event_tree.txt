@@ -1,0 +1,46 @@
+model_004  BankTransfer  —  Event tree
+
+1) รหัส event
+   a1   sendinitiateTransfer_1
+   b1   receiveinitiateTransfer_1
+   c1   sendcheckFraud_2
+   d1   receivecheckFraud_2
+   e1   sendriskScore_3
+   f1   receiveriskScore_3
+   g1   sendpostTransfer_4
+   g2   sendholdTransfer_6
+   h1   receivepostTransfer_4
+   h2   receiveholdTransfer_6
+   i1   sendpostingDone_5
+   j1   receivepostingDone_5
+   k1   sendtransferStatus_7
+   l1   receivetransferStatus_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendinitiateTransfer_1
+       └── b1 receiveinitiateTransfer_1
+           └── c1 sendcheckFraud_2
+               └── d1 receivecheckFraud_2
+                   └── e1 sendriskScore_3
+                       └── f1 receiveriskScore_3
+                           ├── g1 sendpostTransfer_4
+                           │   └── h1 receivepostTransfer_4
+                           │       └── i1 sendpostingDone_5
+                           │           └── j1 receivepostingDone_5
+                           │               └── k1 sendtransferStatus_7
+                           │                   └── l1 receivetransferStatus_7
+                           └── g2 sendholdTransfer_6
+                               └── h2 receiveholdTransfer_6
+                                   └── k1 sendtransferStatus_7
+                                       └── l1 receivetransferStatus_7
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1

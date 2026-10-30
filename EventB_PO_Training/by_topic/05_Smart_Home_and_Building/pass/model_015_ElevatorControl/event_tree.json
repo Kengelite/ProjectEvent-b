@@ -1,0 +1,232 @@
+{
+ "event_codes": {
+  "a1": "sendcallElevator_1",
+  "b1": "receivecallElevator_1",
+  "c1": "sendmoveCar_2",
+  "d1": "receivemoveCar_2",
+  "e1": "sendarrived_3",
+  "f1": "receivearrived_3",
+  "g1": "sendopenDoor_4",
+  "g2": "sendcloseDoor_6",
+  "h1": "receiveopenDoor_4",
+  "h2": "receivecloseDoor_6",
+  "i1": "senddoorOpened_5",
+  "i2": "senddoorSensor_7",
+  "j1": "receivedoorOpened_5",
+  "j2": "receivedoorSensor_7",
+  "k1": "sendnotifyPassenger_8",
+  "k2": "checkloop_closeDoor_6_loop1",
+  "l1": "receivenotifyPassenger_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "doorState = CLEAR"
+  ],
+  "g2": [
+   "doorState = BLOCKED",
+   "retryDoor < 3"
+  ],
+  "h1": [
+   "doorState = CLEAR"
+  ],
+  "h2": [
+   "doorState = BLOCKED",
+   "retryDoor < 3"
+  ],
+  "i1": [
+   "doorState = CLEAR"
+  ],
+  "i2": [
+   "doorState = BLOCKED",
+   "retryDoor < 3"
+  ],
+  "j1": [
+   "doorState = CLEAR"
+  ],
+  "j2": [
+   "doorState = BLOCKED",
+   "retryDoor < 3"
+  ],
+  "k1": [],
+  "k2": [
+   "doorState = BLOCKED",
+   "retryDoor < 3"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcallElevator_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecallElevator_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendmoveCar_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivemoveCar_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendarrived_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivearrived_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendopenDoor_4",
+                "code": "g1",
+                "conditions": [
+                 "doorState = CLEAR"
+                ],
+                "children": [
+                 {
+                  "event": "receiveopenDoor_4",
+                  "code": "h1",
+                  "conditions": [
+                   "doorState = CLEAR"
+                  ],
+                  "children": [
+                   {
+                    "event": "senddoorOpened_5",
+                    "code": "i1",
+                    "conditions": [
+                     "doorState = CLEAR"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivedoorOpened_5",
+                      "code": "j1",
+                      "conditions": [
+                       "doorState = CLEAR"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendnotifyPassenger_8",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyPassenger_8",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendcloseDoor_6",
+                "code": "g2",
+                "conditions": [
+                 "doorState = BLOCKED",
+                 "retryDoor < 3"
+                ],
+                "children": [
+                 {
+                  "event": "receivecloseDoor_6",
+                  "code": "h2",
+                  "conditions": [
+                   "doorState = BLOCKED",
+                   "retryDoor < 3"
+                  ],
+                  "children": [
+                   {
+                    "event": "senddoorSensor_7",
+                    "code": "i2",
+                    "conditions": [
+                     "doorState = BLOCKED",
+                     "retryDoor < 3"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivedoorSensor_7",
+                      "code": "j2",
+                      "conditions": [
+                       "doorState = BLOCKED",
+                       "retryDoor < 3"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendnotifyPassenger_8",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyPassenger_8",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_closeDoor_6_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendcloseDoor_6",
+                        "loop_back_to_code": "g2",
+                        "conditions": [
+                         "doorState = BLOCKED",
+                         "retryDoor < 3"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k2 ↺ g2"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

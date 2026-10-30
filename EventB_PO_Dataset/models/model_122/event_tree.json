@@ -1,0 +1,302 @@
+{
+ "event_codes": {
+  "a1": "sendassignSlot_1",
+  "b1": "receiveassignSlot_1",
+  "c1": "sendackNotice_2",
+  "d1": "receiveackNotice_2",
+  "e1": "sendcancelNotice_3",
+  "f1": "receivecancelNotice_3",
+  "g1": "sendissueNotice_4",
+  "h1": "receiveissueNotice_4",
+  "i1": "sendfetchSlot_5",
+  "j1": "receivefetchSlot_5",
+  "k1": "sendcheckParcel_6",
+  "l1": "receivecheckParcel_6",
+  "m1": "sendapproveNotice_7_opt1",
+  "n1": "receiveapproveNotice_7_opt1",
+  "o1": "sendlogParcel_8_opt1",
+  "p1": "receivelogParcel_8_opt1",
+  "q1": "sendcancelParcel_9_opt1",
+  "r1": "receivecancelParcel_9_opt1",
+  "s1": "sendreserveParcel_10_opt1",
+  "t1": "receivereserveParcel_10_opt1",
+  "u1": "sendreportParcel_11_opt1",
+  "u2": "checkloop_logParcel_8_loop1",
+  "v1": "receivereportParcel_11_opt1",
+  "w1": "sendvalidateSlot_12",
+  "x1": "receivevalidateSlot_12"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "withExtra = 1"
+  ],
+  "n1": [
+   "withExtra = 1"
+  ],
+  "o1": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "p1": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "q1": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "r1": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "s1": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "t1": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "u1": [
+   "withExtra = 1"
+  ],
+  "u2": [
+   "withExtra = 1",
+   "pollNo < 5"
+  ],
+  "v1": [
+   "withExtra = 1"
+  ],
+  "w1": [],
+  "x1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendassignSlot_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveassignSlot_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendackNotice_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveackNotice_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcancelNotice_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivecancelNotice_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendissueNotice_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveissueNotice_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendfetchSlot_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivefetchSlot_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendcheckParcel_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivecheckParcel_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendapproveNotice_7_opt1",
+                            "code": "m1",
+                            "conditions": [
+                             "withExtra = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveapproveNotice_7_opt1",
+                              "code": "n1",
+                              "conditions": [
+                               "withExtra = 1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendlogParcel_8_opt1",
+                                "code": "o1",
+                                "conditions": [
+                                 "withExtra = 1",
+                                 "pollNo < 5"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivelogParcel_8_opt1",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "withExtra = 1",
+                                   "pollNo < 5"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendcancelParcel_9_opt1",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "withExtra = 1",
+                                     "pollNo < 5"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivecancelParcel_9_opt1",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "withExtra = 1",
+                                       "pollNo < 5"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendreserveParcel_10_opt1",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "withExtra = 1",
+                                         "pollNo < 5"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivereserveParcel_10_opt1",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "withExtra = 1",
+                                           "pollNo < 5"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendreportParcel_11_opt1",
+                                            "code": "u1",
+                                            "conditions": [
+                                             "withExtra = 1"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receivereportParcel_11_opt1",
+                                              "code": "v1",
+                                              "conditions": [
+                                               "withExtra = 1"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendvalidateSlot_12",
+                                                "code": "w1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivevalidateSlot_12",
+                                                  "code": "x1",
+                                                  "conditions": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           },
+                                           {
+                                            "event": "checkloop_logParcel_8_loop1",
+                                            "code": "u2",
+                                            "loop_back_to": "sendlogParcel_8_opt1",
+                                            "loop_back_to_code": "o1",
+                                            "conditions": [
+                                             "withExtra = 1",
+                                             "pollNo < 5"
+                                            ],
+                                            "children": []
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ o1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

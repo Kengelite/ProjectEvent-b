@@ -1,0 +1,181 @@
+{
+ "event_codes": {
+  "a1": "sendlogTemperature_1",
+  "b1": "receivelogTemperature_1",
+  "c1": "senduploadLog_2",
+  "d1": "receiveuploadLog_2",
+  "e1": "senduploadAck_3",
+  "f1": "receiveuploadAck_3",
+  "g1": "sendraiseAlert_4",
+  "g2": "senddailySummary_6",
+  "h1": "receiveraiseAlert_4",
+  "h2": "receivedailySummary_6",
+  "i1": "sendalertAck_5",
+  "j1": "receivealertAck_5",
+  "k1": "sendcloseTrip_7",
+  "l1": "receivecloseTrip_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "tempBreach = 1"
+  ],
+  "g2": [
+   "tempBreach = 0"
+  ],
+  "h1": [
+   "tempBreach = 1"
+  ],
+  "h2": [
+   "tempBreach = 0"
+  ],
+  "i1": [
+   "tempBreach = 1"
+  ],
+  "j1": [
+   "tempBreach = 1"
+  ],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendlogTemperature_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivelogTemperature_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "senduploadLog_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveuploadLog_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "senduploadAck_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveuploadAck_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendraiseAlert_4",
+                "code": "g1",
+                "conditions": [
+                 "tempBreach = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveraiseAlert_4",
+                  "code": "h1",
+                  "conditions": [
+                   "tempBreach = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendalertAck_5",
+                    "code": "i1",
+                    "conditions": [
+                     "tempBreach = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivealertAck_5",
+                      "code": "j1",
+                      "conditions": [
+                       "tempBreach = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcloseTrip_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivecloseTrip_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "senddailySummary_6",
+                "code": "g2",
+                "conditions": [
+                 "tempBreach = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivedailySummary_6",
+                  "code": "h2",
+                  "conditions": [
+                   "tempBreach = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcloseTrip_7",
+                    "code": "k1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivecloseTrip_7",
+                      "code": "l1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

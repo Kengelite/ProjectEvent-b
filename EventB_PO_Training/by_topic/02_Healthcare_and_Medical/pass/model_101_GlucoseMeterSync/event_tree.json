@@ -1,0 +1,317 @@
+{
+ "event_codes": {
+  "a1": "sendconfirmInsulin_1",
+  "b1": "receiveconfirmInsulin_1",
+  "c1": "sendsyncReading_2",
+  "d1": "receivesyncReading_2",
+  "e1": "sendupdateAlert_3",
+  "f1": "receiveupdateAlert_3",
+  "g1": "sendqueryReading_4",
+  "h1": "receivequeryReading_4",
+  "i1": "sendnotifyAlert_5",
+  "j1": "receivenotifyAlert_5",
+  "k1": "sendreleaseAlert_6",
+  "l1": "receivereleaseAlert_6",
+  "m1": "sendqueryAlert_7",
+  "n1": "receivequeryAlert_7",
+  "o1": "sendreleaseInsulin_8_opt1",
+  "p1": "receivereleaseInsulin_8_opt1",
+  "q1": "sendrequestAlert_9_opt1",
+  "r1": "receiverequestAlert_9_opt1",
+  "s1": "sendreportInsulin_10_opt1",
+  "t1": "receivereportInsulin_10_opt1",
+  "u1": "sendupdateInsulin_11_opt1",
+  "v1": "receiveupdateInsulin_11_opt1",
+  "w1": "sendsendAlert_12_opt1",
+  "x1": "receivesendAlert_12_opt1",
+  "y1": "sendapproveAlert_13_opt1",
+  "z1": "receiveapproveAlert_13_opt1",
+  "aa1": "sendreserveAlert_14",
+  "ab1": "receivereserveAlert_14"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [
+   "needAck = 1"
+  ],
+  "p1": [
+   "needAck = 1"
+  ],
+  "q1": [
+   "needAck = 1"
+  ],
+  "r1": [
+   "needAck = 1"
+  ],
+  "s1": [
+   "needAck = 1"
+  ],
+  "t1": [
+   "needAck = 1"
+  ],
+  "u1": [
+   "needAck = 1"
+  ],
+  "v1": [
+   "needAck = 1"
+  ],
+  "w1": [
+   "needAck = 1"
+  ],
+  "x1": [
+   "needAck = 1"
+  ],
+  "y1": [
+   "needAck = 1"
+  ],
+  "z1": [
+   "needAck = 1"
+  ],
+  "aa1": [],
+  "ab1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendconfirmInsulin_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveconfirmInsulin_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsyncReading_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesyncReading_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendupdateAlert_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveupdateAlert_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendqueryReading_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivequeryReading_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendnotifyAlert_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivenotifyAlert_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreleaseAlert_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereleaseAlert_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendqueryAlert_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivequeryAlert_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendreleaseInsulin_8_opt1",
+                                "code": "o1",
+                                "conditions": [
+                                 "needAck = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivereleaseInsulin_8_opt1",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "needAck = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendrequestAlert_9_opt1",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "needAck = 1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiverequestAlert_9_opt1",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "needAck = 1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendreportInsulin_10_opt1",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "needAck = 1"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivereportInsulin_10_opt1",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "needAck = 1"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendupdateInsulin_11_opt1",
+                                            "code": "u1",
+                                            "conditions": [
+                                             "needAck = 1"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receiveupdateInsulin_11_opt1",
+                                              "code": "v1",
+                                              "conditions": [
+                                               "needAck = 1"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendsendAlert_12_opt1",
+                                                "code": "w1",
+                                                "conditions": [
+                                                 "needAck = 1"
+                                                ],
+                                                "children": [
+                                                 {
+                                                  "event": "receivesendAlert_12_opt1",
+                                                  "code": "x1",
+                                                  "conditions": [
+                                                   "needAck = 1"
+                                                  ],
+                                                  "children": [
+                                                   {
+                                                    "event": "sendapproveAlert_13_opt1",
+                                                    "code": "y1",
+                                                    "conditions": [
+                                                     "needAck = 1"
+                                                    ],
+                                                    "children": [
+                                                     {
+                                                      "event": "receiveapproveAlert_13_opt1",
+                                                      "code": "z1",
+                                                      "conditions": [
+                                                       "needAck = 1"
+                                                      ],
+                                                      "children": [
+                                                       {
+                                                        "event": "sendreserveAlert_14",
+                                                        "code": "aa1",
+                                                        "conditions": [],
+                                                        "children": [
+                                                         {
+                                                          "event": "receivereserveAlert_14",
+                                                          "code": "ab1",
+                                                          "conditions": [],
+                                                          "children": []
+                                                         }
+                                                        ]
+                                                       }
+                                                      ]
+                                                     }
+                                                    ]
+                                                   }
+                                                  ]
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1 -> aa1 -> ab1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

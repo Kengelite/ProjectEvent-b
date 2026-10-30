@@ -1,0 +1,163 @@
+{
+ "event_codes": {
+  "a1": "sendupdateArrival_1",
+  "b1": "receiveupdateArrival_1",
+  "c1": "sendconfirmStop_2",
+  "d1": "receiveconfirmStop_2",
+  "e1": "sendreportBus_3",
+  "e2": "sendsyncBus_5",
+  "f1": "receivereportBus_3",
+  "f2": "receivesyncBus_5",
+  "g1": "sendcancelStop_4",
+  "h1": "receivecancelStop_4",
+  "i1": "sendcheckBus_6",
+  "j1": "receivecheckBus_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "t_obs ≤ 2"
+  ],
+  "e2": [
+   "t_obs > 2"
+  ],
+  "f1": [
+   "t_obs ≤ 2"
+  ],
+  "f2": [
+   "t_obs > 2"
+  ],
+  "g1": [
+   "t_obs ≤ 2"
+  ],
+  "h1": [
+   "t_obs ≤ 2"
+  ],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendupdateArrival_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveupdateArrival_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendconfirmStop_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveconfirmStop_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreportBus_3",
+            "code": "e1",
+            "conditions": [
+             "t_obs ≤ 2"
+            ],
+            "children": [
+             {
+              "event": "receivereportBus_3",
+              "code": "f1",
+              "conditions": [
+               "t_obs ≤ 2"
+              ],
+              "children": [
+               {
+                "event": "sendcancelStop_4",
+                "code": "g1",
+                "conditions": [
+                 "t_obs ≤ 2"
+                ],
+                "children": [
+                 {
+                  "event": "receivecancelStop_4",
+                  "code": "h1",
+                  "conditions": [
+                   "t_obs ≤ 2"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcheckBus_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivecheckBus_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendsyncBus_5",
+            "code": "e2",
+            "conditions": [
+             "t_obs > 2"
+            ],
+            "children": [
+             {
+              "event": "receivesyncBus_5",
+              "code": "f2",
+              "conditions": [
+               "t_obs > 2"
+              ],
+              "children": [
+               {
+                "event": "sendcheckBus_6",
+                "code": "i1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivecheckBus_6",
+                  "code": "j1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

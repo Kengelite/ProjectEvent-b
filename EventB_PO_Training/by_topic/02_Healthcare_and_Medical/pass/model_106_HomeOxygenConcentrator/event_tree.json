@@ -1,0 +1,185 @@
+{
+ "event_codes": {
+  "a1": "sendreserveFlow_1",
+  "b1": "receivereserveFlow_1",
+  "c1": "sendupdateAlert_2",
+  "d1": "receiveupdateAlert_2",
+  "e1": "sendreserveAlert_3_opt1",
+  "f1": "receivereserveAlert_3_opt1",
+  "g1": "sendnotifyAlert_4",
+  "h1": "receivenotifyAlert_4",
+  "i1": "sendsyncAlert_5",
+  "j1": "receivesyncAlert_5",
+  "k1": "sendrequestFlow_6_opt2",
+  "l1": "receiverequestFlow_6_opt2",
+  "m1": "sendlogFlow_7_opt2",
+  "n1": "receivelogFlow_7_opt2",
+  "o1": "sendschedulePurity_8",
+  "p1": "receiveschedulePurity_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "withExtra = 1"
+  ],
+  "f1": [
+   "withExtra = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "needAck = 1"
+  ],
+  "l1": [
+   "needAck = 1"
+  ],
+  "m1": [
+   "needAck = 1"
+  ],
+  "n1": [
+   "needAck = 1"
+  ],
+  "o1": [],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreserveFlow_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereserveFlow_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendupdateAlert_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveupdateAlert_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreserveAlert_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "withExtra = 1"
+            ],
+            "children": [
+             {
+              "event": "receivereserveAlert_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "withExtra = 1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyAlert_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivenotifyAlert_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendsyncAlert_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesyncAlert_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendrequestFlow_6_opt2",
+                        "code": "k1",
+                        "conditions": [
+                         "needAck = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiverequestFlow_6_opt2",
+                          "code": "l1",
+                          "conditions": [
+                           "needAck = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendlogFlow_7_opt2",
+                            "code": "m1",
+                            "conditions": [
+                             "needAck = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivelogFlow_7_opt2",
+                              "code": "n1",
+                              "conditions": [
+                               "needAck = 1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendschedulePurity_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveschedulePurity_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

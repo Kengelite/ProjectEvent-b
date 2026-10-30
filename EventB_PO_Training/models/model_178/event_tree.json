@@ -1,0 +1,198 @@
+{
+ "event_codes": {
+  "a1": "sendackItem_1",
+  "b1": "receiveackItem_1",
+  "c1": "sendreportCharge_2",
+  "d1": "receivereportCharge_2",
+  "e1": "sendassignItem_3",
+  "f1": "receiveassignItem_3",
+  "g1": "sendfetchItem_4_opt1",
+  "h1": "receivefetchItem_4_opt1",
+  "i1": "sendsendRestock_5_opt1",
+  "j1": "receivesendRestock_5_opt1",
+  "k1": "sendreserveCharge_6",
+  "l1": "receivereserveCharge_6",
+  "m1": "sendlogRestock_7",
+  "m2": "checkloop_assignItem_3_loop1",
+  "n1": "receivelogRestock_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 9"
+  ],
+  "f1": [
+   "attemptNo < 9"
+  ],
+  "g1": [
+   "attemptNo < 9",
+   "attemptNo mod 4 = 0"
+  ],
+  "h1": [
+   "attemptNo < 9",
+   "attemptNo mod 4 = 0"
+  ],
+  "i1": [
+   "attemptNo < 9",
+   "attemptNo mod 4 = 0"
+  ],
+  "j1": [
+   "attemptNo < 9",
+   "attemptNo mod 4 = 0"
+  ],
+  "k1": [
+   "attemptNo < 9"
+  ],
+  "l1": [
+   "attemptNo < 9"
+  ],
+  "m1": [],
+  "m2": [
+   "attemptNo < 9"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendackItem_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveackItem_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreportCharge_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereportCharge_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendassignItem_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 9"
+            ],
+            "children": [
+             {
+              "event": "receiveassignItem_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 9"
+              ],
+              "children": [
+               {
+                "event": "sendfetchItem_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 9",
+                 "attemptNo mod 4 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivefetchItem_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 9",
+                   "attemptNo mod 4 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsendRestock_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 9",
+                     "attemptNo mod 4 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesendRestock_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 9",
+                       "attemptNo mod 4 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreserveCharge_6",
+                        "code": "k1",
+                        "conditions": [
+                         "attemptNo < 9"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereserveCharge_6",
+                          "code": "l1",
+                          "conditions": [
+                           "attemptNo < 9"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendlogRestock_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivelogRestock_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_assignItem_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendassignItem_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "attemptNo < 9"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

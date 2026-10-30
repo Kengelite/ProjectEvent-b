@@ -1,0 +1,317 @@
+{
+ "event_codes": {
+  "a1": "sendsyncRefill_1",
+  "b1": "receivesyncRefill_1",
+  "c1": "sendvalidateRefill_2",
+  "d1": "receivevalidateRefill_2",
+  "e1": "sendfetchReminder_3_opt1",
+  "f1": "receivefetchReminder_3_opt1",
+  "g1": "sendqueryReminder_4_opt1",
+  "h1": "receivequeryReminder_4_opt1",
+  "i1": "sendconfirmReminder_5",
+  "j1": "receiveconfirmReminder_5",
+  "k1": "sendissueDose_6",
+  "l1": "receiveissueDose_6",
+  "m1": "sendcancelRefill_7",
+  "m2": "sendqueryDose_9",
+  "m3": "sendscheduleRefill_11",
+  "n1": "receivecancelRefill_7",
+  "n2": "receivequeryDose_9",
+  "n3": "receivescheduleRefill_11",
+  "o1": "sendconfirmDose_8",
+  "o2": "sendackRefill_10",
+  "p1": "receiveconfirmDose_8",
+  "p2": "receiveackRefill_10",
+  "q1": "sendapproveReminder_12",
+  "r1": "receiveapproveReminder_12"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "needAck = 1"
+  ],
+  "f1": [
+   "needAck = 1"
+  ],
+  "g1": [
+   "needAck = 1"
+  ],
+  "h1": [
+   "needAck = 1"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "mode = GOLD"
+  ],
+  "m2": [
+   "mode = SILVER"
+  ],
+  "m3": [
+   "mode = BRONZE"
+  ],
+  "n1": [
+   "mode = GOLD"
+  ],
+  "n2": [
+   "mode = SILVER"
+  ],
+  "n3": [
+   "mode = BRONZE"
+  ],
+  "o1": [
+   "mode = GOLD"
+  ],
+  "o2": [
+   "mode = SILVER"
+  ],
+  "p1": [
+   "mode = GOLD"
+  ],
+  "p2": [
+   "mode = SILVER"
+  ],
+  "q1": [],
+  "r1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsyncRefill_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesyncRefill_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendvalidateRefill_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivevalidateRefill_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendfetchReminder_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "needAck = 1"
+            ],
+            "children": [
+             {
+              "event": "receivefetchReminder_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "needAck = 1"
+              ],
+              "children": [
+               {
+                "event": "sendqueryReminder_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "needAck = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receivequeryReminder_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "needAck = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendconfirmReminder_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmReminder_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendissueDose_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveissueDose_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendcancelRefill_7",
+                            "code": "m1",
+                            "conditions": [
+                             "mode = GOLD"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecancelRefill_7",
+                              "code": "n1",
+                              "conditions": [
+                               "mode = GOLD"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendconfirmDose_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "mode = GOLD"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveconfirmDose_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "mode = GOLD"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveReminder_12",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveReminder_12",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendqueryDose_9",
+                            "code": "m2",
+                            "conditions": [
+                             "mode = SILVER"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivequeryDose_9",
+                              "code": "n2",
+                              "conditions": [
+                               "mode = SILVER"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendackRefill_10",
+                                "code": "o2",
+                                "conditions": [
+                                 "mode = SILVER"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveackRefill_10",
+                                  "code": "p2",
+                                  "conditions": [
+                                   "mode = SILVER"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveReminder_12",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveReminder_12",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendscheduleRefill_11",
+                            "code": "m3",
+                            "conditions": [
+                             "mode = BRONZE"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivescheduleRefill_11",
+                              "code": "n3",
+                              "conditions": [
+                               "mode = BRONZE"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapproveReminder_12",
+                                "code": "q1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveReminder_12",
+                                  "code": "r1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> o2 -> p2 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m3 -> n3 -> q1 -> r1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

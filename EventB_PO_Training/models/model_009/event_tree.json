@@ -1,0 +1,182 @@
+{
+ "event_codes": {
+  "a1": "sendselectMovie_1",
+  "b1": "receiveselectMovie_1",
+  "c1": "sendshowtimes_2",
+  "d1": "receiveshowtimes_2",
+  "e1": "sendpickSeat_3",
+  "f1": "receivepickSeat_3",
+  "g1": "sendseatStatus_4",
+  "h1": "receiveseatStatus_4",
+  "i1": "sendreserveSeat_5",
+  "i2": "checkloop_pickSeat_3_loop1",
+  "j1": "receivereserveSeat_5",
+  "k1": "sendaddSnack_6_opt1",
+  "l1": "receiveaddSnack_6_opt1",
+  "m1": "sendissueTicket_7",
+  "n1": "receiveissueTicket_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "seatTry < 3"
+  ],
+  "f1": [
+   "seatTry < 3"
+  ],
+  "g1": [
+   "seatTry < 3"
+  ],
+  "h1": [
+   "seatTry < 3"
+  ],
+  "i1": [],
+  "i2": [
+   "seatTry < 3"
+  ],
+  "j1": [],
+  "k1": [
+   "wantSnack = 1"
+  ],
+  "l1": [
+   "wantSnack = 1"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendselectMovie_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveselectMovie_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendshowtimes_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveshowtimes_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendpickSeat_3",
+            "code": "e1",
+            "conditions": [
+             "seatTry < 3"
+            ],
+            "children": [
+             {
+              "event": "receivepickSeat_3",
+              "code": "f1",
+              "conditions": [
+               "seatTry < 3"
+              ],
+              "children": [
+               {
+                "event": "sendseatStatus_4",
+                "code": "g1",
+                "conditions": [
+                 "seatTry < 3"
+                ],
+                "children": [
+                 {
+                  "event": "receiveseatStatus_4",
+                  "code": "h1",
+                  "conditions": [
+                   "seatTry < 3"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreserveSeat_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereserveSeat_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendaddSnack_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "wantSnack = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveaddSnack_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "wantSnack = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendissueTicket_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveissueTicket_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_pickSeat_3_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendpickSeat_3",
+                    "loop_back_to_code": "e1",
+                    "conditions": [
+                     "seatTry < 3"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

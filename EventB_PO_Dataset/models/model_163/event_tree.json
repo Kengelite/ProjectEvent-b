@@ -1,0 +1,125 @@
+{
+ "event_codes": {
+  "a1": "sendqueryLock_1",
+  "b1": "receivequeryLock_1",
+  "c1": "sendscheduleLock_2",
+  "d1": "receivescheduleLock_2",
+  "e1": "sendreleaseLevel_3",
+  "f1": "receivereleaseLevel_3",
+  "g1": "sendapproveLevel_4",
+  "h1": "receiveapproveLevel_4",
+  "i1": "sendconfirmLock_5",
+  "j1": "receiveconfirmLock_5",
+  "k1": "sendassignLevel_6",
+  "l1": "receiveassignLevel_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendqueryLock_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivequeryLock_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendscheduleLock_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivescheduleLock_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreleaseLevel_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivereleaseLevel_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendapproveLevel_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveapproveLevel_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendconfirmLock_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveconfirmLock_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendassignLevel_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveassignLevel_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

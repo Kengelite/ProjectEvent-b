@@ -238,7 +238,7 @@ def main(release):
             bad("D", f"{mid}: same model text as {texts[h]} ({split.get(mid)} / {split.get(texts[h])})")
         texts[h] = mid
         # E copies
-        for f in ("model.txt", "label.json", "po_details.json", "features.json", "tree.txt", "tree.json"):
+        for f in ("model.txt", "label.json", "po_details.json", "features.json", "guard_tree.txt", "guard_tree.json", "event_tree.txt", "event_tree.json"):
             if open(os.path.join(d, f), "rb").read() != open(rel("models", mid, f), "rb").read():
                 bad("E", f"{mid}: release models/{mid}/{f} differs")
     ids = sorted(data)
@@ -275,14 +275,15 @@ def main(release):
         for g in os.listdir(f):
             if open(os.path.join(f, g), "rb").read() != open(rel("models", mid, g), "rb").read():
                 bad("E", f"{mid}: by_topic copy of {g} differs")
-    for f in glob.glob(rel("trees", "by_topic", "*", "*", "model_*.txt")):
+    for f in glob.glob(rel("trees", "*", "by_topic", "*", "*", "model_*.txt")):
         mid = os.path.basename(f)[:9]
-        seen["tree:" + mid] += 1
+        seen[f"tree:{f.split(os.sep)[-5]}:" + mid] += 1
         if f.split(os.sep)[-2] != ("fail" if data[mid]["failed"] else "pass"):
             bad("E", f"{mid}: trees/by_topic folder has the wrong result")
     for i in ids:
-        if seen[i] != 1 or seen["tree:" + i] != 1:
-            bad("E", f"{i}: appears {seen[i]}x in by_topic, {seen['tree:' + i]}x in trees/by_topic")
+        if seen[i] != 1 or seen["tree:guard:" + i] != 1 or seen["tree:event:" + i] != 1:
+            bad("E", f"{i}: appears {seen[i]}x in by_topic, {seen['tree:guard:' + i]}x in trees/guard, "
+                     f"{seen['tree:event:' + i]}x in trees/event")
     for f in glob.glob(rel("by_topic", "*", "list.csv")):
         for r in csv.DictReader(open(f, encoding="utf-8-sig")):
             d_ = data[r["model_id"]]

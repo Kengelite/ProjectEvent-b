@@ -1,0 +1,216 @@
+{
+ "event_codes": {
+  "a1": "sendopenApp_1",
+  "b1": "receiveopenApp_1",
+  "c1": "sendsearchCar_2",
+  "d1": "receivesearchCar_2",
+  "e1": "sendcarList_3",
+  "f1": "receivecarList_3",
+  "g1": "sendaddInsurance_4_opt1",
+  "g2": "checkloop_searchCar_2_loop1",
+  "h1": "receiveaddInsurance_4_opt1",
+  "i1": "sendrequestPayment_5",
+  "j1": "receiverequestPayment_5",
+  "k1": "sendpaymentResult_6",
+  "l1": "receivepaymentResult_6",
+  "m1": "sendconfirmBooking_7",
+  "m2": "sendcancelBooking_8",
+  "n1": "receiveconfirmBooking_7",
+  "n2": "receivecancelBooking_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [
+   "searchCount < 3"
+  ],
+  "d1": [
+   "searchCount < 3"
+  ],
+  "e1": [
+   "searchCount < 3"
+  ],
+  "f1": [
+   "searchCount < 3"
+  ],
+  "g1": [
+   "insurance = 1"
+  ],
+  "g2": [
+   "searchCount < 3"
+  ],
+  "h1": [
+   "insurance = 1"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "t_pay ≤ 10"
+  ],
+  "m2": [
+   "t_pay > 10"
+  ],
+  "n1": [
+   "t_pay ≤ 10"
+  ],
+  "n2": [
+   "t_pay > 10"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendopenApp_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveopenApp_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsearchCar_2",
+        "code": "c1",
+        "conditions": [
+         "searchCount < 3"
+        ],
+        "children": [
+         {
+          "event": "receivesearchCar_2",
+          "code": "d1",
+          "conditions": [
+           "searchCount < 3"
+          ],
+          "children": [
+           {
+            "event": "sendcarList_3",
+            "code": "e1",
+            "conditions": [
+             "searchCount < 3"
+            ],
+            "children": [
+             {
+              "event": "receivecarList_3",
+              "code": "f1",
+              "conditions": [
+               "searchCount < 3"
+              ],
+              "children": [
+               {
+                "event": "sendaddInsurance_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "insurance = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveaddInsurance_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "insurance = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendrequestPayment_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiverequestPayment_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendpaymentResult_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivepaymentResult_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendconfirmBooking_7",
+                            "code": "m1",
+                            "conditions": [
+                             "t_pay ≤ 10"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveconfirmBooking_7",
+                              "code": "n1",
+                              "conditions": [
+                               "t_pay ≤ 10"
+                              ],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendcancelBooking_8",
+                            "code": "m2",
+                            "conditions": [
+                             "t_pay > 10"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecancelBooking_8",
+                              "code": "n2",
+                              "conditions": [
+                               "t_pay > 10"
+                              ],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "checkloop_searchCar_2_loop1",
+                "code": "g2",
+                "loop_back_to": "sendsearchCar_2",
+                "loop_back_to_code": "c1",
+                "conditions": [
+                 "searchCount < 3"
+                ],
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ c1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,423 @@
+{
+ "event_codes": {
+  "a1": "sendreleaseBadge_1",
+  "b1": "receivereleaseBadge_1",
+  "c1": "sendsyncBadge_2",
+  "d1": "receivesyncBadge_2",
+  "e1": "sendnotifyEntry_3",
+  "f1": "receivenotifyEntry_3",
+  "g1": "sendsendBadge_4",
+  "g2": "sendupdateBadge_6",
+  "h1": "receivesendBadge_4",
+  "h2": "receiveupdateBadge_6",
+  "i1": "sendreportEntry_5",
+  "j1": "receivereportEntry_5",
+  "k1": "sendsyncPass_7",
+  "l1": "receivesyncPass_7",
+  "m1": "sendfetchBadge_8",
+  "m2": "checkloop_notifyEntry_3_loop1",
+  "n1": "receivefetchBadge_8",
+  "o1": "sendreportBadge_9",
+  "p1": "receivereportBadge_9",
+  "q1": "sendassignEntry_10_opt1",
+  "r1": "receiveassignEntry_10_opt1",
+  "s1": "sendlogEntry_11_opt1",
+  "t1": "receivelogEntry_11_opt1",
+  "u1": "sendissuePass_12",
+  "v1": "receiveissuePass_12"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "passNo < 8"
+  ],
+  "f1": [
+   "passNo < 8"
+  ],
+  "g1": [
+   "passNo < 8",
+   "passNo mod 4 = 0"
+  ],
+  "g2": [
+   "passNo < 8",
+   "passNo mod 4 ≠ 0"
+  ],
+  "h1": [
+   "passNo < 8",
+   "passNo mod 4 = 0"
+  ],
+  "h2": [
+   "passNo < 8",
+   "passNo mod 4 ≠ 0"
+  ],
+  "i1": [
+   "passNo < 8",
+   "passNo mod 4 = 0"
+  ],
+  "j1": [
+   "passNo < 8",
+   "passNo mod 4 = 0"
+  ],
+  "k1": [
+   "passNo < 8"
+  ],
+  "l1": [
+   "passNo < 8"
+  ],
+  "m1": [],
+  "m2": [
+   "passNo < 8"
+  ],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [
+   "withExtra = 1"
+  ],
+  "r1": [
+   "withExtra = 1"
+  ],
+  "s1": [
+   "withExtra = 1"
+  ],
+  "t1": [
+   "withExtra = 1"
+  ],
+  "u1": [],
+  "v1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreleaseBadge_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereleaseBadge_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsyncBadge_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesyncBadge_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendnotifyEntry_3",
+            "code": "e1",
+            "conditions": [
+             "passNo < 8"
+            ],
+            "children": [
+             {
+              "event": "receivenotifyEntry_3",
+              "code": "f1",
+              "conditions": [
+               "passNo < 8"
+              ],
+              "children": [
+               {
+                "event": "sendsendBadge_4",
+                "code": "g1",
+                "conditions": [
+                 "passNo < 8",
+                 "passNo mod 4 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivesendBadge_4",
+                  "code": "h1",
+                  "conditions": [
+                   "passNo < 8",
+                   "passNo mod 4 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreportEntry_5",
+                    "code": "i1",
+                    "conditions": [
+                     "passNo < 8",
+                     "passNo mod 4 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereportEntry_5",
+                      "code": "j1",
+                      "conditions": [
+                       "passNo < 8",
+                       "passNo mod 4 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsyncPass_7",
+                        "code": "k1",
+                        "conditions": [
+                         "passNo < 8"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesyncPass_7",
+                          "code": "l1",
+                          "conditions": [
+                           "passNo < 8"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendfetchBadge_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivefetchBadge_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendreportBadge_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivereportBadge_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendassignEntry_10_opt1",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "withExtra = 1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveassignEntry_10_opt1",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "withExtra = 1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendlogEntry_11_opt1",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "withExtra = 1"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivelogEntry_11_opt1",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "withExtra = 1"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendissuePass_12",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveissuePass_12",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_notifyEntry_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendnotifyEntry_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "passNo < 8"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendupdateBadge_6",
+                "code": "g2",
+                "conditions": [
+                 "passNo < 8",
+                 "passNo mod 4 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveupdateBadge_6",
+                  "code": "h2",
+                  "conditions": [
+                   "passNo < 8",
+                   "passNo mod 4 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsyncPass_7",
+                    "code": "k1",
+                    "conditions": [
+                     "passNo < 8"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesyncPass_7",
+                      "code": "l1",
+                      "conditions": [
+                       "passNo < 8"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendfetchBadge_8",
+                        "code": "m1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivefetchBadge_8",
+                          "code": "n1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendreportBadge_9",
+                            "code": "o1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereportBadge_9",
+                              "code": "p1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendassignEntry_10_opt1",
+                                "code": "q1",
+                                "conditions": [
+                                 "withExtra = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveassignEntry_10_opt1",
+                                  "code": "r1",
+                                  "conditions": [
+                                   "withExtra = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendlogEntry_11_opt1",
+                                    "code": "s1",
+                                    "conditions": [
+                                     "withExtra = 1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivelogEntry_11_opt1",
+                                      "code": "t1",
+                                      "conditions": [
+                                       "withExtra = 1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendissuePass_12",
+                                        "code": "u1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receiveissuePass_12",
+                                          "code": "v1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_notifyEntry_3_loop1",
+                        "code": "m2",
+                        "loop_back_to": "sendnotifyEntry_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "passNo < 8"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

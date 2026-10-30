@@ -1,0 +1,297 @@
+{
+ "event_codes": {
+  "a1": "sendissuePickup_1",
+  "b1": "receiveissuePickup_1",
+  "c1": "sendschedulePickup_2",
+  "d1": "receiveschedulePickup_2",
+  "e1": "sendqueryNote_3",
+  "e2": "sendreserveNote_5",
+  "f1": "receivequeryNote_3",
+  "f2": "receivereserveNote_5",
+  "g1": "sendackPickup_4",
+  "h1": "receiveackPickup_4",
+  "i1": "sendscheduleChild_6",
+  "j1": "receivescheduleChild_6",
+  "k1": "sendvalidateNote_7",
+  "l1": "receivevalidateNote_7",
+  "m1": "sendcheckChild_8",
+  "n1": "receivecheckChild_8",
+  "o1": "sendcancelChild_9",
+  "o2": "checkloop_checkChild_8_loop1",
+  "p1": "receivecancelChild_9"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "approved = 1"
+  ],
+  "e2": [
+   "approved = 0"
+  ],
+  "f1": [
+   "approved = 1"
+  ],
+  "f2": [
+   "approved = 0"
+  ],
+  "g1": [
+   "approved = 1"
+  ],
+  "h1": [
+   "approved = 1"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "retryNo < 4"
+  ],
+  "n1": [
+   "retryNo < 4"
+  ],
+  "o1": [],
+  "o2": [
+   "retryNo < 4"
+  ],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendissuePickup_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveissuePickup_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendschedulePickup_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveschedulePickup_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendqueryNote_3",
+            "code": "e1",
+            "conditions": [
+             "approved = 1"
+            ],
+            "children": [
+             {
+              "event": "receivequeryNote_3",
+              "code": "f1",
+              "conditions": [
+               "approved = 1"
+              ],
+              "children": [
+               {
+                "event": "sendackPickup_4",
+                "code": "g1",
+                "conditions": [
+                 "approved = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveackPickup_4",
+                  "code": "h1",
+                  "conditions": [
+                   "approved = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendscheduleChild_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivescheduleChild_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendvalidateNote_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivevalidateNote_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendcheckChild_8",
+                            "code": "m1",
+                            "conditions": [
+                             "retryNo < 4"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecheckChild_8",
+                              "code": "n1",
+                              "conditions": [
+                               "retryNo < 4"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendcancelChild_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivecancelChild_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               },
+                               {
+                                "event": "checkloop_checkChild_8_loop1",
+                                "code": "o2",
+                                "loop_back_to": "sendcheckChild_8",
+                                "loop_back_to_code": "m1",
+                                "conditions": [
+                                 "retryNo < 4"
+                                ],
+                                "children": []
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendreserveNote_5",
+            "code": "e2",
+            "conditions": [
+             "approved = 0"
+            ],
+            "children": [
+             {
+              "event": "receivereserveNote_5",
+              "code": "f2",
+              "conditions": [
+               "approved = 0"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleChild_6",
+                "code": "i1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescheduleChild_6",
+                  "code": "j1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendvalidateNote_7",
+                    "code": "k1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivevalidateNote_7",
+                      "code": "l1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendcheckChild_8",
+                        "code": "m1",
+                        "conditions": [
+                         "retryNo < 4"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecheckChild_8",
+                          "code": "n1",
+                          "conditions": [
+                           "retryNo < 4"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendcancelChild_9",
+                            "code": "o1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivecancelChild_9",
+                              "code": "p1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_checkChild_8_loop1",
+                            "code": "o2",
+                            "loop_back_to": "sendcheckChild_8",
+                            "loop_back_to_code": "m1",
+                            "conditions": [
+                             "retryNo < 4"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ m1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 ↺ m1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

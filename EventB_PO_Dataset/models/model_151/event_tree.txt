@@ -1,0 +1,63 @@
+model_151  RecyclingKiosk  —  Event tree
+
+1) รหัส event
+   a1   sendconfirmCredit_1
+   b1   receiveconfirmCredit_1
+   c1   sendfetchVoucher_2
+   d1   receivefetchVoucher_2
+   e1   sendsyncCredit_3_opt1
+   f1   receivesyncCredit_3_opt1
+   g1   sendnotifyCredit_4_opt1
+   h1   receivenotifyCredit_4_opt1
+   i1   sendconfirmBottle_5_opt1
+   i2   checkloop_notifyCredit_4_loop1
+   j1   receiveconfirmBottle_5_opt1
+   k1   sendconfirmVoucher_6
+   l1   receiveconfirmVoucher_6
+   m1   sendackVoucher_7
+   n1   receiveackVoucher_7
+   o1   sendassignBottle_8
+   o2   sendscheduleVoucher_9
+   p1   receiveassignBottle_8
+   p2   receivescheduleVoucher_9
+   q1   sendqueryCredit_10
+   r1   receivequeryCredit_10
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1 → m1 → n1
+       │   ├── o1 → p1 → q1 → r1
+       │   └── o2 → p2 → q1 → r1
+       └── i2 ↺ g1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendconfirmCredit_1
+       └── b1 receiveconfirmCredit_1
+           └── c1 sendfetchVoucher_2
+               └── d1 receivefetchVoucher_2
+                   └── e1 sendsyncCredit_3_opt1
+                       └── f1 receivesyncCredit_3_opt1
+                           └── g1 sendnotifyCredit_4_opt1
+                               └── h1 receivenotifyCredit_4_opt1
+                                   ├── i1 sendconfirmBottle_5_opt1
+                                   │   └── j1 receiveconfirmBottle_5_opt1
+                                   │       └── k1 sendconfirmVoucher_6
+                                   │           └── l1 receiveconfirmVoucher_6
+                                   │               └── m1 sendackVoucher_7
+                                   │                   └── n1 receiveackVoucher_7
+                                   │                       ├── o1 sendassignBottle_8
+                                   │                       │   └── p1 receiveassignBottle_8
+                                   │                       │       └── q1 sendqueryCredit_10
+                                   │                       │           └── r1 receivequeryCredit_10
+                                   │                       └── o2 sendscheduleVoucher_9
+                                   │                           └── p2 receivescheduleVoucher_9
+                                   │                               └── q1 sendqueryCredit_10
+                                   │                                   └── r1 receivequeryCredit_10
+                                   └── i2 checkloop_notifyCredit_4_loop1  ↺ วนกลับไป sendnotifyCredit_4_opt1
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> q1 -> r1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ g1

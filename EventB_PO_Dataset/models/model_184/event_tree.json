@@ -1,0 +1,133 @@
+{
+ "event_codes": {
+  "a1": "sendsyncReport_1",
+  "b1": "receivesyncReport_1",
+  "c1": "sendcancelAbsence_2",
+  "d1": "receivecancelAbsence_2",
+  "e1": "sendapproveAbsence_3_opt1",
+  "f1": "receiveapproveAbsence_3_opt1",
+  "g1": "sendqueryCheckin_4",
+  "h1": "receivequeryCheckin_4",
+  "i1": "sendupdateAbsence_5",
+  "j1": "receiveupdateAbsence_5",
+  "k1": "sendissueAbsence_6",
+  "l1": "receiveissueAbsence_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "useCache = 1"
+  ],
+  "f1": [
+   "useCache = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsyncReport_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesyncReport_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcancelAbsence_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecancelAbsence_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendapproveAbsence_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "useCache = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveapproveAbsence_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "useCache = 1"
+              ],
+              "children": [
+               {
+                "event": "sendqueryCheckin_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivequeryCheckin_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendupdateAbsence_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveupdateAbsence_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendissueAbsence_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveissueAbsence_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

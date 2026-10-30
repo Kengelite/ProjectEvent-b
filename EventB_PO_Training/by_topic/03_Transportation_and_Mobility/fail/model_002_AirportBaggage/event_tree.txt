@@ -1,0 +1,46 @@
+model_002  AirportBaggage  —  Event tree
+
+1) รหัส event
+   a1   sendtagBag_1
+   b1   receivetagBag_1
+   c1   sendrouteBag_2
+   d1   receiverouteBag_2
+   e1   sendsorted_3
+   f1   receivesorted_3
+   g1   sendloadBag_4
+   g2   senddivertBag_6
+   h1   receiveloadBag_4
+   h2   receivedivertBag_6
+   i1   sendloadedAck_5
+   j1   receiveloadedAck_5
+   k1   sendmanifestUpdate_7
+   l1   receivemanifestUpdate_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendtagBag_1
+       └── b1 receivetagBag_1
+           └── c1 sendrouteBag_2
+               └── d1 receiverouteBag_2
+                   └── e1 sendsorted_3
+                       └── f1 receivesorted_3
+                           ├── g1 sendloadBag_4
+                           │   └── h1 receiveloadBag_4
+                           │       └── i1 sendloadedAck_5
+                           │           └── j1 receiveloadedAck_5
+                           │               └── k1 sendmanifestUpdate_7
+                           │                   └── l1 receivemanifestUpdate_7
+                           └── g2 senddivertBag_6
+                               └── h2 receivedivertBag_6
+                                   └── k1 sendmanifestUpdate_7
+                                       └── l1 receivemanifestUpdate_7
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1

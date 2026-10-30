@@ -1,0 +1,125 @@
+{
+ "event_codes": {
+  "a1": "sendreserveSeat_1",
+  "b1": "receivereserveSeat_1",
+  "c1": "sendlogSeat_2",
+  "d1": "receivelogSeat_2",
+  "e1": "sendconfirmEntry_3",
+  "f1": "receiveconfirmEntry_3",
+  "g1": "sendlogEntry_4",
+  "h1": "receivelogEntry_4",
+  "i1": "sendsyncTicket_5",
+  "j1": "receivesyncTicket_5",
+  "k1": "sendscheduleEntry_6",
+  "l1": "receivescheduleEntry_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreserveSeat_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereserveSeat_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendlogSeat_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivelogSeat_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendconfirmEntry_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveconfirmEntry_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendlogEntry_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivelogEntry_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendsyncTicket_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivesyncTicket_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendscheduleEntry_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivescheduleEntry_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,389 @@
+{
+ "event_codes": {
+  "a1": "sendreserveRoute_1",
+  "b1": "receivereserveRoute_1",
+  "c1": "sendsendRoute_2",
+  "d1": "receivesendRoute_2",
+  "e1": "sendassignRoute_3",
+  "e2": "sendreservePickup_4",
+  "f1": "receiveassignRoute_3",
+  "f2": "receivereservePickup_4",
+  "g1": "sendscheduleFill_5",
+  "h1": "receivescheduleFill_5",
+  "i1": "sendupdatePickup_6",
+  "j1": "receiveupdatePickup_6",
+  "k1": "sendlogPickup_7",
+  "k2": "sendissueRoute_8",
+  "k3": "sendsyncPickup_9",
+  "l1": "receivelogPickup_7",
+  "l2": "receiveissueRoute_8",
+  "l3": "receivesyncPickup_9",
+  "m1": "sendreleaseRoute_10",
+  "n1": "receivereleaseRoute_10"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "hasKey = 1"
+  ],
+  "e2": [
+   "hasKey = 0"
+  ],
+  "f1": [
+   "hasKey = 1"
+  ],
+  "f2": [
+   "hasKey = 0"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "phase = GOLD"
+  ],
+  "k2": [
+   "phase = SILVER"
+  ],
+  "k3": [
+   "phase = BRONZE"
+  ],
+  "l1": [
+   "phase = GOLD"
+  ],
+  "l2": [
+   "phase = SILVER"
+  ],
+  "l3": [
+   "phase = BRONZE"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreserveRoute_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereserveRoute_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsendRoute_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesendRoute_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendassignRoute_3",
+            "code": "e1",
+            "conditions": [
+             "hasKey = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveassignRoute_3",
+              "code": "f1",
+              "conditions": [
+               "hasKey = 1"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleFill_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescheduleFill_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendupdatePickup_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveupdatePickup_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendlogPickup_7",
+                        "code": "k1",
+                        "conditions": [
+                         "phase = GOLD"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivelogPickup_7",
+                          "code": "l1",
+                          "conditions": [
+                           "phase = GOLD"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseRoute_10",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseRoute_10",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendissueRoute_8",
+                        "code": "k2",
+                        "conditions": [
+                         "phase = SILVER"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveissueRoute_8",
+                          "code": "l2",
+                          "conditions": [
+                           "phase = SILVER"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseRoute_10",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseRoute_10",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendsyncPickup_9",
+                        "code": "k3",
+                        "conditions": [
+                         "phase = BRONZE"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesyncPickup_9",
+                          "code": "l3",
+                          "conditions": [
+                           "phase = BRONZE"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseRoute_10",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseRoute_10",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendreservePickup_4",
+            "code": "e2",
+            "conditions": [
+             "hasKey = 0"
+            ],
+            "children": [
+             {
+              "event": "receivereservePickup_4",
+              "code": "f2",
+              "conditions": [
+               "hasKey = 0"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleFill_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescheduleFill_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendupdatePickup_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveupdatePickup_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendlogPickup_7",
+                        "code": "k1",
+                        "conditions": [
+                         "phase = GOLD"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivelogPickup_7",
+                          "code": "l1",
+                          "conditions": [
+                           "phase = GOLD"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseRoute_10",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseRoute_10",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendissueRoute_8",
+                        "code": "k2",
+                        "conditions": [
+                         "phase = SILVER"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveissueRoute_8",
+                          "code": "l2",
+                          "conditions": [
+                           "phase = SILVER"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseRoute_10",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseRoute_10",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendsyncPickup_9",
+                        "code": "k3",
+                        "conditions": [
+                         "phase = BRONZE"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesyncPickup_9",
+                          "code": "l3",
+                          "conditions": [
+                           "phase = BRONZE"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreleaseRoute_10",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereleaseRoute_10",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,177 @@
+{
+ "event_codes": {
+  "a1": "sendsendText_1",
+  "b1": "receivesendText_1",
+  "c1": "senddeliverText_2",
+  "d1": "receivedeliverText_2",
+  "e1": "sendreadReceipt_3",
+  "f1": "receivereadReceipt_3",
+  "g1": "sendforwardReceipt_4",
+  "h1": "receiveforwardReceipt_4",
+  "i1": "sendtypingIndicator_5_opt1",
+  "j1": "receivetypingIndicator_5_opt1",
+  "k1": "sendrelayTyping_6_opt1",
+  "l1": "receiverelayTyping_6_opt1",
+  "m1": "sendreplyText_7",
+  "n1": "receivereplyText_7",
+  "o1": "senddeliverReply_8",
+  "p1": "receivedeliverReply_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [
+   "typing = 1"
+  ],
+  "j1": [
+   "typing = 1"
+  ],
+  "k1": [
+   "typing = 1"
+  ],
+  "l1": [
+   "typing = 1"
+  ],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsendText_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesendText_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "senddeliverText_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivedeliverText_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreadReceipt_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivereadReceipt_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendforwardReceipt_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveforwardReceipt_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendtypingIndicator_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "typing = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivetypingIndicator_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "typing = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendrelayTyping_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "typing = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiverelayTyping_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "typing = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreplyText_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereplyText_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "senddeliverReply_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivedeliverReply_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -14,7 +14,8 @@ and messages, all by position. From that it derives what the trees must contain 
     C6 event codes   one code per event; at a branch the children share a letter, numbered 1..k;
                      a straight run never repeats a letter
     C7 guard paths   = the condition sequences of every way through the diagram
-    C8 files         release copies (models/, data/trees.jsonl, csv/guard_codes.csv) = the dataset
+    C8 files         release copies (models/, data/guard_trees.jsonl, data/event_trees.jsonl,
+                     trees/guard/guard_codes.csv, trees/event/event_codes.csv) = the dataset
 
 model_001 has no diagram; its tree is checked against the Rodin .bpo instead (C1, C3, C6, C8).
 A self-test breaks correct trees in ten ways and confirms the checks catch each one.
@@ -25,6 +26,7 @@ import argparse, csv, glob, html, itertools, json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATASET = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
+from extract_trees import load_tree     # noqa: E402
 
 
 # ── diagram ────────────────────────────────────────────────────────────────
@@ -262,23 +264,28 @@ def check_bpo(t, meta):
 
 def check_files(release, ids):
     errs = []
-    rows = {json.loads(l)["id"]: json.loads(l) for l in open(os.path.join(release, "data", "trees.jsonl"))}
-    if set(rows) != set(ids):
-        errs.append(f"C8 data/trees.jsonl has {len(rows)} models, dataset has {len(ids)}")
-    gcsv = {}
-    for r in csv.DictReader(open(os.path.join(release, "trees", "guard_codes.csv"), encoding="utf-8-sig")):
-        gcsv.setdefault(r["model_id"], {})[r["code"]] = r["guard"]
+    rows = {}
+    for kind in ("guard", "event"):
+        path = os.path.join(release, "data", f"{kind}_trees.jsonl")
+        rows[kind] = {json.loads(l)["id"]: json.loads(l) for l in open(path, encoding="utf-8")}
+        if set(rows[kind]) != set(ids):
+            errs.append(f"C8 data/{kind}_trees.jsonl has {len(rows[kind])} models, dataset has {len(ids)}")
+    codes = {"guard": {}, "event": {}}
+    for kind in ("guard", "event"):
+        for r in csv.DictReader(open(os.path.join(release, "trees", kind, f"{kind}_codes.csv"), encoding="utf-8-sig")):
+            codes[kind].setdefault(r["model_id"], {})[r["code"]] = r[kind]
     for mid in ids:
         src = os.path.join(DATASET, "models", mid)
-        t = json.load(open(os.path.join(src, "tree.json")))
-        for f in ("tree.json", "tree.txt"):
+        t = load_tree(src)
+        for f in ("guard_tree.json", "guard_tree.txt", "event_tree.json", "event_tree.txt"):
             if open(os.path.join(src, f), "rb").read() != open(os.path.join(release, "models", mid, f), "rb").read():
                 errs.append(f"C8 {mid}/{f} differs in release")
-        for k in ("guard_codes", "guard_paths", "event_codes", "event_paths"):
-            if rows.get(mid, {}).get(k) != t[k]:
-                errs.append(f"C8 {mid} {k} differs in data/trees.jsonl")
-        if gcsv.get(mid, {}) != t["guard_codes"]:
-            errs.append(f"C8 {mid} differs in trees/guard_codes.csv")
+        for kind, keys in (("guard", ("guard_codes", "guard_paths")), ("event", ("event_codes", "event_paths"))):
+            for k in keys:
+                if rows[kind].get(mid, {}).get(k) != t[k]:
+                    errs.append(f"C8 {mid} {k} differs in data/{kind}_trees.jsonl")
+            if codes[kind].get(mid, {}) != t[f"{kind}_codes"]:
+                errs.append(f"C8 {mid} differs in trees/{kind}/{kind}_codes.csv")
     return errs
 
 
@@ -287,7 +294,7 @@ def selftest():
     import copy
     def load(mid):
         meta = json.load(open(os.path.join(DATASET, "models", mid, "meta.json")))
-        return (json.load(open(os.path.join(DATASET, "models", mid, "tree.json"))),
+        return (load_tree(os.path.join(DATASET, "models", mid)),
                 glob.glob(os.path.join(DATASET, meta["source_dir"], "*.drawio.xml"))[0])
     def node(t, code):
         found = []
@@ -327,7 +334,7 @@ def main(release):
         mid = os.path.basename(d)
         ids.append(mid)
         meta = json.load(open(os.path.join(d, "meta.json")))
-        t = json.load(open(os.path.join(d, "tree.json")))
+        t = load_tree(d)
         diag = glob.glob(os.path.join(DATASET, meta["source_dir"], "*.drawio.xml")) if meta.get("source_dir") else []
         if diag:
             errs, info = check_model(mid, t, diag[0])

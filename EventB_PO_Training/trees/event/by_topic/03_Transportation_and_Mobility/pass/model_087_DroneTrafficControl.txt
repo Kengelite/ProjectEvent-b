@@ -1,0 +1,50 @@
+model_087  DroneTrafficControl  —  Event tree
+
+1) รหัส event
+   a1   sendreportCorridor_1
+   b1   receivereportCorridor_1
+   c1   sendsyncFlight_2
+   d1   receivesyncFlight_2
+   e1   sendackFlight_3
+   e2   sendcancelCorridor_7
+   f1   receiveackFlight_3
+   f2   receivecancelCorridor_7
+   g1   sendupdateCorridor_4_opt1
+   h1   receiveupdateCorridor_4_opt1
+   i1   sendqueryCorridor_5_opt1
+   j1   receivequeryCorridor_5_opt1
+   k1   sendconfirmFlight_6
+   l1   receiveconfirmFlight_6
+   m1   sendconfirmCorridor_8
+   n1   receiveconfirmCorridor_8
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       └── e2 → f2 → m1 → n1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreportCorridor_1
+       └── b1 receivereportCorridor_1
+           └── c1 sendsyncFlight_2
+               └── d1 receivesyncFlight_2
+                   ├── e1 sendackFlight_3
+                   │   └── f1 receiveackFlight_3
+                   │       └── g1 sendupdateCorridor_4_opt1
+                   │           └── h1 receiveupdateCorridor_4_opt1
+                   │               └── i1 sendqueryCorridor_5_opt1
+                   │                   └── j1 receivequeryCorridor_5_opt1
+                   │                       └── k1 sendconfirmFlight_6
+                   │                           └── l1 receiveconfirmFlight_6
+                   │                               └── m1 sendconfirmCorridor_8
+                   │                                   └── n1 receiveconfirmCorridor_8
+                   └── e2 sendcancelCorridor_7
+                       └── f2 receivecancelCorridor_7
+                           └── m1 sendconfirmCorridor_8
+                               └── n1 receiveconfirmCorridor_8
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1

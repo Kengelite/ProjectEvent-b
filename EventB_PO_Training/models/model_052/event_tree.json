@@ -1,0 +1,159 @@
+{
+ "event_codes": {
+  "a1": "sendapproveEta_1",
+  "b1": "receiveapproveEta_1",
+  "c1": "sendackPatient_2",
+  "d1": "receiveackPatient_2",
+  "e1": "sendassignPatient_3_opt1",
+  "f1": "receiveassignPatient_3_opt1",
+  "g1": "sendnotifyRoute_4",
+  "h1": "receivenotifyRoute_4",
+  "i1": "sendreserveEta_5",
+  "j1": "receivereserveEta_5",
+  "k1": "sendrequestRoute_6_opt2",
+  "l1": "receiverequestRoute_6_opt2",
+  "m1": "sendcheckPatient_7",
+  "n1": "receivecheckPatient_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "useCache = 1"
+  ],
+  "f1": [
+   "useCache = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "needAck = 1"
+  ],
+  "l1": [
+   "needAck = 1"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendapproveEta_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveapproveEta_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendackPatient_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveackPatient_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendassignPatient_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "useCache = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveassignPatient_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "useCache = 1"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyRoute_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivenotifyRoute_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendreserveEta_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereserveEta_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendrequestRoute_6_opt2",
+                        "code": "k1",
+                        "conditions": [
+                         "needAck = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiverequestRoute_6_opt2",
+                          "code": "l1",
+                          "conditions": [
+                           "needAck = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendcheckPatient_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivecheckPatient_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

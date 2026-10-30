@@ -1,0 +1,405 @@
+{
+ "event_codes": {
+  "a1": "sendapproveOrder_1",
+  "b1": "receiveapproveOrder_1",
+  "c1": "sendassignExpiry_2",
+  "d1": "receiveassignExpiry_2",
+  "e1": "sendsendOrder_3",
+  "f1": "receivesendOrder_3",
+  "g1": "sendassignItem_4",
+  "g2": "sendlogOrder_6",
+  "h1": "receiveassignItem_4",
+  "h2": "receivelogOrder_6",
+  "i1": "sendscheduleOrder_5",
+  "j1": "receivescheduleOrder_5",
+  "k1": "sendapproveExpiry_7",
+  "l1": "receiveapproveExpiry_7",
+  "m1": "sendqueryItem_8",
+  "m2": "checkloop_sendOrder_3_loop1",
+  "n1": "receivequeryItem_8",
+  "o1": "sendcheckOrder_9",
+  "p1": "receivecheckOrder_9",
+  "q1": "sendissueExpiry_10",
+  "r1": "receiveissueExpiry_10",
+  "s1": "sendsyncOrder_11",
+  "s2": "checkloop_issueExpiry_10_loop2",
+  "t1": "receivesyncOrder_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 2"
+  ],
+  "f1": [
+   "attemptNo < 2"
+  ],
+  "g1": [
+   "attemptNo < 2",
+   "tier = GREEN"
+  ],
+  "g2": [
+   "attemptNo < 2",
+   "tier = RED"
+  ],
+  "h1": [
+   "attemptNo < 2",
+   "tier = GREEN"
+  ],
+  "h2": [
+   "attemptNo < 2",
+   "tier = RED"
+  ],
+  "i1": [
+   "attemptNo < 2",
+   "tier = GREEN"
+  ],
+  "j1": [
+   "attemptNo < 2",
+   "tier = GREEN"
+  ],
+  "k1": [
+   "attemptNo < 2"
+  ],
+  "l1": [
+   "attemptNo < 2"
+  ],
+  "m1": [],
+  "m2": [
+   "attemptNo < 2"
+  ],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [
+   "stepNo < 11"
+  ],
+  "r1": [
+   "stepNo < 11"
+  ],
+  "s1": [],
+  "s2": [
+   "stepNo < 11"
+  ],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendapproveOrder_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveapproveOrder_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignExpiry_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignExpiry_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendOrder_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 2"
+            ],
+            "children": [
+             {
+              "event": "receivesendOrder_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 2"
+              ],
+              "children": [
+               {
+                "event": "sendassignItem_4",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 2",
+                 "tier = GREEN"
+                ],
+                "children": [
+                 {
+                  "event": "receiveassignItem_4",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 2",
+                   "tier = GREEN"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendscheduleOrder_5",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 2",
+                     "tier = GREEN"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivescheduleOrder_5",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 2",
+                       "tier = GREEN"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendapproveExpiry_7",
+                        "code": "k1",
+                        "conditions": [
+                         "attemptNo < 2"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveapproveExpiry_7",
+                          "code": "l1",
+                          "conditions": [
+                           "attemptNo < 2"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendqueryItem_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivequeryItem_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendcheckOrder_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivecheckOrder_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendissueExpiry_10",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "stepNo < 11"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveissueExpiry_10",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "stepNo < 11"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendsyncOrder_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesyncOrder_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "checkloop_issueExpiry_10_loop2",
+                                        "code": "s2",
+                                        "loop_back_to": "sendissueExpiry_10",
+                                        "loop_back_to_code": "q1",
+                                        "conditions": [
+                                         "stepNo < 11"
+                                        ],
+                                        "children": []
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_sendOrder_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendsendOrder_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "attemptNo < 2"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendlogOrder_6",
+                "code": "g2",
+                "conditions": [
+                 "attemptNo < 2",
+                 "tier = RED"
+                ],
+                "children": [
+                 {
+                  "event": "receivelogOrder_6",
+                  "code": "h2",
+                  "conditions": [
+                   "attemptNo < 2",
+                   "tier = RED"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendapproveExpiry_7",
+                    "code": "k1",
+                    "conditions": [
+                     "attemptNo < 2"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveapproveExpiry_7",
+                      "code": "l1",
+                      "conditions": [
+                       "attemptNo < 2"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendqueryItem_8",
+                        "code": "m1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivequeryItem_8",
+                          "code": "n1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendcheckOrder_9",
+                            "code": "o1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivecheckOrder_9",
+                              "code": "p1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendissueExpiry_10",
+                                "code": "q1",
+                                "conditions": [
+                                 "stepNo < 11"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveissueExpiry_10",
+                                  "code": "r1",
+                                  "conditions": [
+                                   "stepNo < 11"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendsyncOrder_11",
+                                    "code": "s1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivesyncOrder_11",
+                                      "code": "t1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_issueExpiry_10_loop2",
+                                    "code": "s2",
+                                    "loop_back_to": "sendissueExpiry_10",
+                                    "loop_back_to_code": "q1",
+                                    "conditions": [
+                                     "stepNo < 11"
+                                    ],
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_sendOrder_3_loop1",
+                        "code": "m2",
+                        "loop_back_to": "sendsendOrder_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "attemptNo < 2"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ q1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ q1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

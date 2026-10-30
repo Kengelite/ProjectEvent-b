@@ -1,0 +1,235 @@
+{
+ "event_codes": {
+  "a1": "sendstartCycle_1",
+  "b1": "receivestartCycle_1",
+  "c1": "sendreadClimate_2",
+  "d1": "receivereadClimate_2",
+  "e1": "sendclimateData_3",
+  "f1": "receiveclimateData_3",
+  "g1": "sendstartSprinkler_4",
+  "g2": "sendstartFan_6",
+  "h1": "receivestartSprinkler_4",
+  "h2": "receivestartFan_6",
+  "i1": "sendsprinklerOn_5",
+  "j1": "receivesprinklerOn_5",
+  "k1": "sendendCycle_7",
+  "k2": "checkloop_readClimate_2_loop1",
+  "l1": "receiveendCycle_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [
+   "cycleNo < 24"
+  ],
+  "d1": [
+   "cycleNo < 24"
+  ],
+  "e1": [
+   "cycleNo < 24"
+  ],
+  "f1": [
+   "cycleNo < 24"
+  ],
+  "g1": [
+   "cycleNo < 24",
+   "humidity < 40"
+  ],
+  "g2": [
+   "cycleNo < 24",
+   "humidity ≥ 40"
+  ],
+  "h1": [
+   "cycleNo < 24",
+   "humidity < 40"
+  ],
+  "h2": [
+   "cycleNo < 24",
+   "humidity ≥ 40"
+  ],
+  "i1": [
+   "cycleNo < 24",
+   "humidity < 40"
+  ],
+  "j1": [
+   "cycleNo < 24",
+   "humidity < 40"
+  ],
+  "k1": [],
+  "k2": [
+   "cycleNo < 24"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendstartCycle_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivestartCycle_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreadClimate_2",
+        "code": "c1",
+        "conditions": [
+         "cycleNo < 24"
+        ],
+        "children": [
+         {
+          "event": "receivereadClimate_2",
+          "code": "d1",
+          "conditions": [
+           "cycleNo < 24"
+          ],
+          "children": [
+           {
+            "event": "sendclimateData_3",
+            "code": "e1",
+            "conditions": [
+             "cycleNo < 24"
+            ],
+            "children": [
+             {
+              "event": "receiveclimateData_3",
+              "code": "f1",
+              "conditions": [
+               "cycleNo < 24"
+              ],
+              "children": [
+               {
+                "event": "sendstartSprinkler_4",
+                "code": "g1",
+                "conditions": [
+                 "cycleNo < 24",
+                 "humidity < 40"
+                ],
+                "children": [
+                 {
+                  "event": "receivestartSprinkler_4",
+                  "code": "h1",
+                  "conditions": [
+                   "cycleNo < 24",
+                   "humidity < 40"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsprinklerOn_5",
+                    "code": "i1",
+                    "conditions": [
+                     "cycleNo < 24",
+                     "humidity < 40"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesprinklerOn_5",
+                      "code": "j1",
+                      "conditions": [
+                       "cycleNo < 24",
+                       "humidity < 40"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendendCycle_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveendCycle_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_readClimate_2_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendreadClimate_2",
+                        "loop_back_to_code": "c1",
+                        "conditions": [
+                         "cycleNo < 24"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendstartFan_6",
+                "code": "g2",
+                "conditions": [
+                 "cycleNo < 24",
+                 "humidity ≥ 40"
+                ],
+                "children": [
+                 {
+                  "event": "receivestartFan_6",
+                  "code": "h2",
+                  "conditions": [
+                   "cycleNo < 24",
+                   "humidity ≥ 40"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendendCycle_7",
+                    "code": "k1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveendCycle_7",
+                      "code": "l1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_readClimate_2_loop1",
+                    "code": "k2",
+                    "loop_back_to": "sendreadClimate_2",
+                    "loop_back_to_code": "c1",
+                    "conditions": [
+                     "cycleNo < 24"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ c1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k2 ↺ c1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

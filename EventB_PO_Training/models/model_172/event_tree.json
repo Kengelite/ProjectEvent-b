@@ -1,0 +1,348 @@
+{
+ "event_codes": {
+  "a1": "sendreleaseWorkout_1",
+  "b1": "receivereleaseWorkout_1",
+  "c1": "sendreportRep_2",
+  "d1": "receivereportRep_2",
+  "e1": "sendapprovePlan_3",
+  "f1": "receiveapprovePlan_3",
+  "g1": "sendconfirmWorkout_4_opt1",
+  "h1": "receiveconfirmWorkout_4_opt1",
+  "i1": "sendlogWorkout_5_opt1",
+  "j1": "receivelogWorkout_5_opt1",
+  "k1": "sendissueWorkout_6_opt1",
+  "l1": "receiveissueWorkout_6_opt1",
+  "m1": "sendcancelRep_7_opt1",
+  "n1": "receivecancelRep_7_opt1",
+  "o1": "sendackRep_8_opt1",
+  "p1": "receiveackRep_8_opt1",
+  "q1": "sendreservePlan_9_opt1",
+  "r1": "receivereservePlan_9_opt1",
+  "s1": "sendsendWorkout_10_opt1",
+  "t1": "receivesendWorkout_10_opt1",
+  "u1": "sendscheduleWorkout_11",
+  "v1": "receivescheduleWorkout_11",
+  "w1": "sendsyncPlan_12",
+  "w2": "checkloop_approvePlan_3_loop1",
+  "x1": "receivesyncPlan_12"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 6"
+  ],
+  "f1": [
+   "attemptNo < 6"
+  ],
+  "g1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "h1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "i1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "j1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "k1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "l1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "m1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "n1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "o1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "p1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "q1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "r1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "s1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "t1": [
+   "attemptNo < 6",
+   "attemptNo mod 2 = 0"
+  ],
+  "u1": [
+   "attemptNo < 6"
+  ],
+  "v1": [
+   "attemptNo < 6"
+  ],
+  "w1": [],
+  "w2": [
+   "attemptNo < 6"
+  ],
+  "x1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreleaseWorkout_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereleaseWorkout_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreportRep_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereportRep_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendapprovePlan_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 6"
+            ],
+            "children": [
+             {
+              "event": "receiveapprovePlan_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 6"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmWorkout_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 6",
+                 "attemptNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveconfirmWorkout_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 6",
+                   "attemptNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendlogWorkout_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 6",
+                     "attemptNo mod 2 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivelogWorkout_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 6",
+                       "attemptNo mod 2 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendissueWorkout_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "attemptNo < 6",
+                         "attemptNo mod 2 = 0"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveissueWorkout_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "attemptNo < 6",
+                           "attemptNo mod 2 = 0"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendcancelRep_7_opt1",
+                            "code": "m1",
+                            "conditions": [
+                             "attemptNo < 6",
+                             "attemptNo mod 2 = 0"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecancelRep_7_opt1",
+                              "code": "n1",
+                              "conditions": [
+                               "attemptNo < 6",
+                               "attemptNo mod 2 = 0"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendackRep_8_opt1",
+                                "code": "o1",
+                                "conditions": [
+                                 "attemptNo < 6",
+                                 "attemptNo mod 2 = 0"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveackRep_8_opt1",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "attemptNo < 6",
+                                   "attemptNo mod 2 = 0"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendreservePlan_9_opt1",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "attemptNo < 6",
+                                     "attemptNo mod 2 = 0"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receivereservePlan_9_opt1",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "attemptNo < 6",
+                                       "attemptNo mod 2 = 0"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendsendWorkout_10_opt1",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "attemptNo < 6",
+                                         "attemptNo mod 2 = 0"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivesendWorkout_10_opt1",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "attemptNo < 6",
+                                           "attemptNo mod 2 = 0"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendscheduleWorkout_11",
+                                            "code": "u1",
+                                            "conditions": [
+                                             "attemptNo < 6"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receivescheduleWorkout_11",
+                                              "code": "v1",
+                                              "conditions": [
+                                               "attemptNo < 6"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendsyncPlan_12",
+                                                "code": "w1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivesyncPlan_12",
+                                                  "code": "x1",
+                                                  "conditions": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               },
+                                               {
+                                                "event": "checkloop_approvePlan_3_loop1",
+                                                "code": "w2",
+                                                "loop_back_to": "sendapprovePlan_3",
+                                                "loop_back_to_code": "e1",
+                                                "conditions": [
+                                                 "attemptNo < 6"
+                                                ],
+                                                "children": []
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

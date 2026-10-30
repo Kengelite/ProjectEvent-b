@@ -1,0 +1,359 @@
+{
+ "event_codes": {
+  "a1": "sendreleaseCall_1",
+  "b1": "receivereleaseCall_1",
+  "c1": "sendqueryCall_2",
+  "d1": "receivequeryCall_2",
+  "e1": "sendsyncFault_3_opt1",
+  "f1": "receivesyncFault_3_opt1",
+  "g1": "sendlogCall_4",
+  "h1": "receivelogCall_4",
+  "i1": "sendnotifyFault_5",
+  "j1": "receivenotifyFault_5",
+  "k1": "sendreportFault_6",
+  "k2": "sendcancelFault_7",
+  "l1": "receivereportFault_6",
+  "l2": "receivecancelFault_7",
+  "m1": "sendsendFault_8",
+  "n1": "receivesendFault_8",
+  "o1": "sendsyncCall_9",
+  "p1": "receivesyncCall_9",
+  "q1": "sendackFault_10",
+  "r1": "receiveackFault_10",
+  "s1": "sendnotifyDispatch_11",
+  "t1": "receivenotifyDispatch_11",
+  "u1": "sendconfirmDispatch_12",
+  "v1": "receiveconfirmDispatch_12",
+  "w1": "sendvalidateFault_13",
+  "x1": "receivevalidateFault_13"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "needAck = 1"
+  ],
+  "f1": [
+   "needAck = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "t_obs ≤ 23"
+  ],
+  "k2": [
+   "t_obs > 23"
+  ],
+  "l1": [
+   "t_obs ≤ 23"
+  ],
+  "l2": [
+   "t_obs > 23"
+  ],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": [],
+  "u1": [],
+  "v1": [],
+  "w1": [],
+  "x1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreleaseCall_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereleaseCall_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendqueryCall_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivequeryCall_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsyncFault_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "needAck = 1"
+            ],
+            "children": [
+             {
+              "event": "receivesyncFault_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "needAck = 1"
+              ],
+              "children": [
+               {
+                "event": "sendlogCall_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivelogCall_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendnotifyFault_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivenotifyFault_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreportFault_6",
+                        "code": "k1",
+                        "conditions": [
+                         "t_obs ≤ 23"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereportFault_6",
+                          "code": "l1",
+                          "conditions": [
+                           "t_obs ≤ 23"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsendFault_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivesendFault_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendsyncCall_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivesyncCall_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendackFault_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveackFault_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendnotifyDispatch_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivenotifyDispatch_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": [
+                                           {
+                                            "event": "sendconfirmDispatch_12",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveconfirmDispatch_12",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": [
+                                               {
+                                                "event": "sendvalidateFault_13",
+                                                "code": "w1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivevalidateFault_13",
+                                                  "code": "x1",
+                                                  "conditions": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendcancelFault_7",
+                        "code": "k2",
+                        "conditions": [
+                         "t_obs > 23"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecancelFault_7",
+                          "code": "l2",
+                          "conditions": [
+                           "t_obs > 23"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsendFault_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivesendFault_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendsyncCall_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivesyncCall_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendackFault_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveackFault_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendnotifyDispatch_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivenotifyDispatch_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": [
+                                           {
+                                            "event": "sendconfirmDispatch_12",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receiveconfirmDispatch_12",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": [
+                                               {
+                                                "event": "sendvalidateFault_13",
+                                                "code": "w1",
+                                                "conditions": [],
+                                                "children": [
+                                                 {
+                                                  "event": "receivevalidateFault_13",
+                                                  "code": "x1",
+                                                  "conditions": [],
+                                                  "children": []
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

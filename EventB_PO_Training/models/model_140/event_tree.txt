@@ -1,0 +1,66 @@
+model_140  PetDoorController  —  Event tree
+
+1) รหัส event
+   a1   sendrequestLog_1
+   b1   receiverequestLog_1
+   c1   sendscheduleEntry_2
+   d1   receivescheduleEntry_2
+   e1   sendcheckLog_3
+   f1   receivecheckLog_3
+   g1   sendcancelCurfew_4
+   h1   receivecancelCurfew_4
+   i1   sendreportCurfew_5
+   j1   receivereportCurfew_5
+   k1   sendqueryEntry_6
+   l1   receivequeryEntry_6
+   m1   sendrequestCurfew_7
+   n1   receiverequestCurfew_7
+   o1   sendapproveLog_8
+   o2   sendupdateEntry_10
+   p1   receiveapproveLog_8
+   p2   receiveupdateEntry_10
+   q1   sendsendCurfew_9
+   q2   sendsyncCurfew_11
+   r1   receivesendCurfew_9
+   r2   receivesyncCurfew_11
+   s1   sendsendEntry_12
+   t1   receivesendEntry_12
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1 → q1 → r1 → s1 → t1
+       └── o2 → p2 → q2 → r2 → s1 → t1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendrequestLog_1
+       └── b1 receiverequestLog_1
+           └── c1 sendscheduleEntry_2
+               └── d1 receivescheduleEntry_2
+                   └── e1 sendcheckLog_3
+                       └── f1 receivecheckLog_3
+                           └── g1 sendcancelCurfew_4
+                               └── h1 receivecancelCurfew_4
+                                   └── i1 sendreportCurfew_5
+                                       └── j1 receivereportCurfew_5
+                                           └── k1 sendqueryEntry_6
+                                               └── l1 receivequeryEntry_6
+                                                   └── m1 sendrequestCurfew_7
+                                                       └── n1 receiverequestCurfew_7
+                                                           ├── o1 sendapproveLog_8
+                                                           │   └── p1 receiveapproveLog_8
+                                                           │       └── q1 sendsendCurfew_9
+                                                           │           └── r1 receivesendCurfew_9
+                                                           │               └── s1 sendsendEntry_12
+                                                           │                   └── t1 receivesendEntry_12
+                                                           └── o2 sendupdateEntry_10
+                                                               └── p2 receiveupdateEntry_10
+                                                                   └── q2 sendsyncCurfew_11
+                                                                       └── r2 receivesyncCurfew_11
+                                                                           └── s1 sendsendEntry_12
+                                                                               └── t1 receivesendEntry_12
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> q2 -> r2 -> s1 -> t1

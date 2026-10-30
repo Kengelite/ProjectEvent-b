@@ -1,0 +1,46 @@
+model_178  SmartVendingFridge  —  Event tree
+
+1) รหัส event
+   a1   sendackItem_1
+   b1   receiveackItem_1
+   c1   sendreportCharge_2
+   d1   receivereportCharge_2
+   e1   sendassignItem_3
+   f1   receiveassignItem_3
+   g1   sendfetchItem_4_opt1
+   h1   receivefetchItem_4_opt1
+   i1   sendsendRestock_5_opt1
+   j1   receivesendRestock_5_opt1
+   k1   sendreserveCharge_6
+   l1   receivereserveCharge_6
+   m1   sendlogRestock_7
+   m2   checkloop_assignItem_3_loop1
+   n1   receivelogRestock_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1
+       └── m2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendackItem_1
+       └── b1 receiveackItem_1
+           └── c1 sendreportCharge_2
+               └── d1 receivereportCharge_2
+                   └── e1 sendassignItem_3
+                       └── f1 receiveassignItem_3
+                           └── g1 sendfetchItem_4_opt1
+                               └── h1 receivefetchItem_4_opt1
+                                   └── i1 sendsendRestock_5_opt1
+                                       └── j1 receivesendRestock_5_opt1
+                                           └── k1 sendreserveCharge_6
+                                               └── l1 receivereserveCharge_6
+                                                   ├── m1 sendlogRestock_7
+                                                   │   └── n1 receivelogRestock_7
+                                                   └── m2 checkloop_assignItem_3_loop1  ↺ วนกลับไป sendassignItem_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1

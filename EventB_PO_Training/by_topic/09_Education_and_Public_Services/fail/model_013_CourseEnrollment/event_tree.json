@@ -1,0 +1,177 @@
+{
+ "event_codes": {
+  "a1": "sendbrowseCourses_1",
+  "b1": "receivebrowseCourses_1",
+  "c1": "sendcourseList_2",
+  "d1": "receivecourseList_2",
+  "e1": "sendenrollRequest_3",
+  "f1": "receiveenrollRequest_3",
+  "g1": "sendcheckPrereq_4",
+  "h1": "receivecheckPrereq_4",
+  "i1": "sendprereqOK_5",
+  "j1": "receiveprereqOK_5",
+  "k1": "sendrequestApproval_6_opt1",
+  "l1": "receiverequestApproval_6_opt1",
+  "m1": "sendapproved_7_opt1",
+  "n1": "receiveapproved_7_opt1",
+  "o1": "sendenrollConfirm_8",
+  "p1": "receiveenrollConfirm_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "needsApproval = 1"
+  ],
+  "l1": [
+   "needsApproval = 1"
+  ],
+  "m1": [
+   "needsApproval = 1"
+  ],
+  "n1": [
+   "needsApproval = 1"
+  ],
+  "o1": [],
+  "p1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendbrowseCourses_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivebrowseCourses_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcourseList_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecourseList_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendenrollRequest_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveenrollRequest_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendcheckPrereq_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivecheckPrereq_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendprereqOK_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveprereqOK_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendrequestApproval_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "needsApproval = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiverequestApproval_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "needsApproval = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendapproved_7_opt1",
+                            "code": "m1",
+                            "conditions": [
+                             "needsApproval = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveapproved_7_opt1",
+                              "code": "n1",
+                              "conditions": [
+                               "needsApproval = 1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendenrollConfirm_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveenrollConfirm_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": []
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

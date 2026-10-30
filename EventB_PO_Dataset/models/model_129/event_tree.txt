@@ -1,0 +1,46 @@
+model_129  MuseumAudioGuide  —  Event tree
+
+1) รหัส event
+   a1   sendconfirmTour_1
+   b1   receiveconfirmTour_1
+   c1   sendnotifyTour_2
+   d1   receivenotifyTour_2
+   e1   sendreserveTour_3_opt1
+   f1   receivereserveTour_3_opt1
+   g1   sendcancelTour_4
+   h1   receivecancelTour_4
+   i1   sendvalidateTour_5
+   j1   receivevalidateTour_5
+   k1   sendcheckTour_6
+   l1   receivecheckTour_6
+   m1   sendvalidateAudio_7
+   m2   checkloop_checkTour_6_loop1
+   n1   receivevalidateAudio_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1
+       └── m2 ↺ k1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendconfirmTour_1
+       └── b1 receiveconfirmTour_1
+           └── c1 sendnotifyTour_2
+               └── d1 receivenotifyTour_2
+                   └── e1 sendreserveTour_3_opt1
+                       └── f1 receivereserveTour_3_opt1
+                           └── g1 sendcancelTour_4
+                               └── h1 receivecancelTour_4
+                                   └── i1 sendvalidateTour_5
+                                       └── j1 receivevalidateTour_5
+                                           └── k1 sendcheckTour_6
+                                               └── l1 receivecheckTour_6
+                                                   ├── m1 sendvalidateAudio_7
+                                                   │   └── n1 receivevalidateAudio_7
+                                                   └── m2 checkloop_checkTour_6_loop1  ↺ วนกลับไป sendcheckTour_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ k1

@@ -1,0 +1,241 @@
+{
+ "event_codes": {
+  "a1": "sendcheckImage_1",
+  "b1": "receivecheckImage_1",
+  "c1": "sendassignImage_2",
+  "d1": "receiveassignImage_2",
+  "e1": "sendassignReport_3",
+  "f1": "receiveassignReport_3",
+  "g1": "sendapproveReport_4",
+  "g2": "sendrequestImage_5",
+  "h1": "receiveapproveReport_4",
+  "h2": "receiverequestImage_5",
+  "i1": "sendvalidateImage_6",
+  "j1": "receivevalidateImage_6",
+  "k1": "sendsyncReport_7",
+  "k2": "checkloop_assignReport_3_loop1",
+  "l1": "receivesyncReport_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "roundNo < 6"
+  ],
+  "f1": [
+   "roundNo < 6"
+  ],
+  "g1": [
+   "roundNo < 6",
+   "roundNo mod 3 = 0"
+  ],
+  "g2": [
+   "roundNo < 6",
+   "roundNo mod 3 ≠ 0"
+  ],
+  "h1": [
+   "roundNo < 6",
+   "roundNo mod 3 = 0"
+  ],
+  "h2": [
+   "roundNo < 6",
+   "roundNo mod 3 ≠ 0"
+  ],
+  "i1": [
+   "roundNo < 6"
+  ],
+  "j1": [
+   "roundNo < 6"
+  ],
+  "k1": [],
+  "k2": [
+   "roundNo < 6"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcheckImage_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecheckImage_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendassignImage_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveassignImage_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendassignReport_3",
+            "code": "e1",
+            "conditions": [
+             "roundNo < 6"
+            ],
+            "children": [
+             {
+              "event": "receiveassignReport_3",
+              "code": "f1",
+              "conditions": [
+               "roundNo < 6"
+              ],
+              "children": [
+               {
+                "event": "sendapproveReport_4",
+                "code": "g1",
+                "conditions": [
+                 "roundNo < 6",
+                 "roundNo mod 3 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveapproveReport_4",
+                  "code": "h1",
+                  "conditions": [
+                   "roundNo < 6",
+                   "roundNo mod 3 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvalidateImage_6",
+                    "code": "i1",
+                    "conditions": [
+                     "roundNo < 6"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevalidateImage_6",
+                      "code": "j1",
+                      "conditions": [
+                       "roundNo < 6"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsyncReport_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivesyncReport_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_assignReport_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendassignReport_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "roundNo < 6"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendrequestImage_5",
+                "code": "g2",
+                "conditions": [
+                 "roundNo < 6",
+                 "roundNo mod 3 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiverequestImage_5",
+                  "code": "h2",
+                  "conditions": [
+                   "roundNo < 6",
+                   "roundNo mod 3 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendvalidateImage_6",
+                    "code": "i1",
+                    "conditions": [
+                     "roundNo < 6"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivevalidateImage_6",
+                      "code": "j1",
+                      "conditions": [
+                       "roundNo < 6"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsyncReport_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivesyncReport_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_assignReport_3_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendassignReport_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "roundNo < 6"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i1 -> j1 -> k2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

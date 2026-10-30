@@ -1,0 +1,141 @@
+{
+ "event_codes": {
+  "a1": "sendrequestPlate_1",
+  "b1": "receiverequestPlate_1",
+  "c1": "sendschedulePlate_2",
+  "d1": "receiveschedulePlate_2",
+  "e1": "sendvalidatePlate_3_opt1",
+  "f1": "receivevalidatePlate_3_opt1",
+  "g1": "sendvalidateToll_4_opt1",
+  "h1": "receivevalidateToll_4_opt1",
+  "i1": "sendqueryAccount_5",
+  "j1": "receivequeryAccount_5",
+  "k1": "sendreservePlate_6",
+  "l1": "receivereservePlate_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "withExtra = 1"
+  ],
+  "f1": [
+   "withExtra = 1"
+  ],
+  "g1": [
+   "withExtra = 1"
+  ],
+  "h1": [
+   "withExtra = 1"
+  ],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendrequestPlate_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiverequestPlate_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendschedulePlate_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveschedulePlate_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendvalidatePlate_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "withExtra = 1"
+            ],
+            "children": [
+             {
+              "event": "receivevalidatePlate_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "withExtra = 1"
+              ],
+              "children": [
+               {
+                "event": "sendvalidateToll_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "withExtra = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receivevalidateToll_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "withExtra = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendqueryAccount_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivequeryAccount_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreservePlate_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereservePlate_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

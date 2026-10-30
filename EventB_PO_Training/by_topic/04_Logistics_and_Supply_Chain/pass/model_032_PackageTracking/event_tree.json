@@ -1,0 +1,275 @@
+{
+ "event_codes": {
+  "a1": "sendcreateShipment_1",
+  "b1": "receivecreateShipment_1",
+  "c1": "sendpickupConfirm_2",
+  "d1": "receivepickupConfirm_2",
+  "e1": "sendarriveHub_3",
+  "f1": "receivearriveHub_3",
+  "g1": "sendscanIn_4",
+  "h1": "receivescanIn_4",
+  "i1": "sendcustomsHold_5_opt1",
+  "j1": "receivecustomsHold_5_opt1",
+  "k1": "senddispatchOut_6",
+  "l1": "receivedispatchOut_6",
+  "m1": "senddeliver_7",
+  "m2": "sendleaveNotice_9",
+  "n1": "receivedeliver_7",
+  "n2": "receiveleaveNotice_9",
+  "o1": "sendsignReceipt_8",
+  "p1": "receivesignReceipt_8",
+  "q1": "sendcloseShipment_10",
+  "r1": "receivecloseShipment_10",
+  "s1": "sendrateService_11",
+  "t1": "receiverateService_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [
+   "customsCheck = 1"
+  ],
+  "j1": [
+   "customsCheck = 1"
+  ],
+  "k1": [],
+  "l1": [],
+  "m1": [
+   "delivered = YES"
+  ],
+  "m2": [
+   "delivered = NO"
+  ],
+  "n1": [
+   "delivered = YES"
+  ],
+  "n2": [
+   "delivered = NO"
+  ],
+  "o1": [
+   "delivered = YES"
+  ],
+  "p1": [
+   "delivered = YES"
+  ],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcreateShipment_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecreateShipment_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendpickupConfirm_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivepickupConfirm_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendarriveHub_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivearriveHub_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendscanIn_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescanIn_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendcustomsHold_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "customsCheck = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivecustomsHold_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "customsCheck = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "senddispatchOut_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivedispatchOut_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "senddeliver_7",
+                            "code": "m1",
+                            "conditions": [
+                             "delivered = YES"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivedeliver_7",
+                              "code": "n1",
+                              "conditions": [
+                               "delivered = YES"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsignReceipt_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "delivered = YES"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesignReceipt_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "delivered = YES"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendcloseShipment_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivecloseShipment_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendrateService_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receiverateService_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendleaveNotice_9",
+                            "code": "m2",
+                            "conditions": [
+                             "delivered = NO"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveleaveNotice_9",
+                              "code": "n2",
+                              "conditions": [
+                               "delivered = NO"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendcloseShipment_10",
+                                "code": "q1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivecloseShipment_10",
+                                  "code": "r1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendrateService_11",
+                                    "code": "s1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiverateService_11",
+                                      "code": "t1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> q1 -> r1 -> s1 -> t1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

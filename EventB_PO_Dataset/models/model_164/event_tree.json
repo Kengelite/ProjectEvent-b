@@ -1,0 +1,271 @@
+{
+ "event_codes": {
+  "a1": "sendvalidatePh_1",
+  "b1": "receivevalidatePh_1",
+  "c1": "sendupdateFeed_2",
+  "d1": "receiveupdateFeed_2",
+  "e1": "sendreportFeed_3",
+  "f1": "receivereportFeed_3",
+  "g1": "sendapproveLight_4",
+  "g2": "sendnotifyFeed_6",
+  "h1": "receiveapproveLight_4",
+  "h2": "receivenotifyFeed_6",
+  "i1": "sendqueryFeed_5",
+  "j1": "receivequeryFeed_5",
+  "k1": "sendsendLight_7",
+  "l1": "receivesendLight_7",
+  "m1": "sendsyncLight_8",
+  "m2": "checkloop_reportFeed_3_loop1",
+  "n1": "receivesyncLight_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "cycleNo < 4"
+  ],
+  "f1": [
+   "cycleNo < 4"
+  ],
+  "g1": [
+   "cycleNo < 4",
+   "cycleNo mod 2 = 0"
+  ],
+  "g2": [
+   "cycleNo < 4",
+   "cycleNo mod 2 ≠ 0"
+  ],
+  "h1": [
+   "cycleNo < 4",
+   "cycleNo mod 2 = 0"
+  ],
+  "h2": [
+   "cycleNo < 4",
+   "cycleNo mod 2 ≠ 0"
+  ],
+  "i1": [
+   "cycleNo < 4",
+   "cycleNo mod 2 = 0"
+  ],
+  "j1": [
+   "cycleNo < 4",
+   "cycleNo mod 2 = 0"
+  ],
+  "k1": [
+   "cycleNo < 4"
+  ],
+  "l1": [
+   "cycleNo < 4"
+  ],
+  "m1": [],
+  "m2": [
+   "cycleNo < 4"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendvalidatePh_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivevalidatePh_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendupdateFeed_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveupdateFeed_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreportFeed_3",
+            "code": "e1",
+            "conditions": [
+             "cycleNo < 4"
+            ],
+            "children": [
+             {
+              "event": "receivereportFeed_3",
+              "code": "f1",
+              "conditions": [
+               "cycleNo < 4"
+              ],
+              "children": [
+               {
+                "event": "sendapproveLight_4",
+                "code": "g1",
+                "conditions": [
+                 "cycleNo < 4",
+                 "cycleNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveapproveLight_4",
+                  "code": "h1",
+                  "conditions": [
+                   "cycleNo < 4",
+                   "cycleNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendqueryFeed_5",
+                    "code": "i1",
+                    "conditions": [
+                     "cycleNo < 4",
+                     "cycleNo mod 2 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivequeryFeed_5",
+                      "code": "j1",
+                      "conditions": [
+                       "cycleNo < 4",
+                       "cycleNo mod 2 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsendLight_7",
+                        "code": "k1",
+                        "conditions": [
+                         "cycleNo < 4"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesendLight_7",
+                          "code": "l1",
+                          "conditions": [
+                           "cycleNo < 4"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendsyncLight_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivesyncLight_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_reportFeed_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendreportFeed_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "cycleNo < 4"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendnotifyFeed_6",
+                "code": "g2",
+                "conditions": [
+                 "cycleNo < 4",
+                 "cycleNo mod 2 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyFeed_6",
+                  "code": "h2",
+                  "conditions": [
+                   "cycleNo < 4",
+                   "cycleNo mod 2 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsendLight_7",
+                    "code": "k1",
+                    "conditions": [
+                     "cycleNo < 4"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesendLight_7",
+                      "code": "l1",
+                      "conditions": [
+                       "cycleNo < 4"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsyncLight_8",
+                        "code": "m1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivesyncLight_8",
+                          "code": "n1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_reportFeed_3_loop1",
+                        "code": "m2",
+                        "loop_back_to": "sendreportFeed_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "cycleNo < 4"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

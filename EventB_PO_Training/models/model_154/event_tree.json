@@ -1,0 +1,133 @@
+{
+ "event_codes": {
+  "a1": "sendfetchBattery_1",
+  "b1": "receivefetchBattery_1",
+  "c1": "sendrequestBattery_2",
+  "d1": "receiverequestBattery_2",
+  "e1": "sendupdateUnlock_3_opt1",
+  "f1": "receiveupdateUnlock_3_opt1",
+  "g1": "sendissueTrip_4",
+  "h1": "receiveissueTrip_4",
+  "i1": "sendscheduleTrip_5",
+  "j1": "receivescheduleTrip_5",
+  "k1": "sendfetchTrip_6",
+  "l1": "receivefetchTrip_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "express = 1"
+  ],
+  "f1": [
+   "express = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendfetchBattery_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivefetchBattery_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendrequestBattery_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiverequestBattery_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendupdateUnlock_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "express = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveupdateUnlock_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "express = 1"
+              ],
+              "children": [
+               {
+                "event": "sendissueTrip_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveissueTrip_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendscheduleTrip_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivescheduleTrip_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendfetchTrip_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivefetchTrip_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

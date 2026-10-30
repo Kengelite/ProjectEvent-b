@@ -13,7 +13,8 @@ Output (rebuilt from scratch each run):
     csv/summary.csv             per-model numbers (features + labels + topic + split)
     csv/pass_fail_list.csv      per-model pass / fail
     csv/model_categories.csv    topic, diagram error, expected vs Rodin (analysis only)
-    models/model_XXX/           model.txt, label.json, po_details.json, features.json, tree.txt, tree.json
+    models/model_XXX/           model.txt, label.json, po_details.json, features.json,
+                                guard_tree.txt|json, event_tree.txt|json
     by_topic/<NN_Topic>/<pass|fail>/<model_XXX_Case>/   the same models grouped by topic and
                                 Rodin result, with a list.csv per topic
     FLOW.pdf, FLOW.png          workflow diagram (tools/make_user_flow.py)
@@ -22,7 +23,7 @@ Output (rebuilt from scratch each run):
     SIMILAR_WORK.pdf, csv/similar_work.csv   published work similar to each model (related work)
     trees/                      event tree + guard tree of each model (tools/extract_trees.py): SUMMARY.pdf,
                                 TREES.pdf, csv tables, by_topic/ text files; checked against the diagrams by
-                                tools/verify_trees.py. data/trees.jsonl holds the same trees as data.
+                                tools/verify_trees.py. data/guard_trees.jsonl and data/event_trees.jsonl hold the same trees as data.
 
 tools/audit_release.py then checks the whole release against the Rodin files and diagrams.
 
@@ -601,7 +602,7 @@ def build(out, seed):
     for r in rows:
         src, dst = os.path.join(DATASET, "models", r["id"]), os.path.join(out, "models", r["id"])
         os.makedirs(dst)
-        for f in ("model.txt", "label.json", "po_details.json", "features.json", "tree.txt", "tree.json"):
+        for f in ("model.txt", "label.json", "po_details.json", "features.json", "guard_tree.txt", "guard_tree.json", "event_tree.txt", "event_tree.json"):
             if os.path.exists(os.path.join(src, f)):
                 shutil.copy2(os.path.join(src, f), dst)
 
@@ -636,25 +637,26 @@ def trees_folder(out, rows):
     """trees/: everything about the event and guard trees, checked against the diagrams."""
     tdir = os.path.join(out, "trees")
     os.makedirs(tdir)
-    trees = {r["id"]: json.load(open(os.path.join(DATASET, "models", r["id"], "tree.json"))) for r in rows}
-    with open(os.path.join(out, "data", "trees.jsonl"), "w", encoding="utf-8") as f:
+    trees = {r["id"]: extract_trees.load_tree(os.path.join(DATASET, "models", r["id"])) for r in rows}
+    for kind in ("guard", "event"):
+        with open(os.path.join(out, "data", f"{kind}_trees.jsonl"), "w", encoding="utf-8") as f:
+            for r in rows:
+                part = json.load(open(os.path.join(DATASET, "models", r["id"], f"{kind}_tree.json"), encoding="utf-8"))
+                keep = ("guard_codes", "guard_paths") if kind == "guard" else ("event_codes", "event_conditions", "event_paths")
+                f.write(json.dumps({"id": r["id"], "case": r["case"], "split": r["split"],
+                                    **{k: part[k] for k in keep}}, ensure_ascii=False) + "\n")
         for r in rows:
-            t = trees[r["id"]]
-            f.write(json.dumps({"id": r["id"], "case": r["case"], "split": r["split"],
-                                **{k: t[k] for k in ("guard_codes", "guard_paths", "event_codes", "event_guards",
-                                                     "event_paths")}}, ensure_ascii=False) + "\n")
-    for r in rows:
-        dst = os.path.join(tdir, "by_topic", topic_dir(r["topic"]), r["result"])
-        os.makedirs(dst, exist_ok=True)
-        shutil.copy2(os.path.join(DATASET, "models", r["id"], "tree.txt"), os.path.join(dst, model_dir(r) + ".txt"))
+            dst = os.path.join(tdir, kind, "by_topic", topic_dir(r["topic"]), r["result"])
+            os.makedirs(dst, exist_ok=True)
+            shutil.copy2(os.path.join(DATASET, "models", r["id"], f"{kind}_tree.txt"),
+                         os.path.join(dst, model_dir(r) + ".txt"))
     utf8 = lambda name, data, fields: write_csv_bom(os.path.join(tdir, name), data, fields)
-    utf8("guard_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "guard": g}
-                             for r in rows for c, g in trees[r["id"]]["guard_codes"].items()],
+    utf8("guard/guard_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "guard": g}
+                                   for r in rows for c, g in trees[r["id"]]["guard_codes"].items()],
          ["model_id", "case", "code", "guard"])
-    utf8("event_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "event": n,
-                              "guards": " ".join(trees[r["id"]]["event_guards"][c])}
-                             for r in rows for c, n in trees[r["id"]]["event_codes"].items()],
-         ["model_id", "case", "code", "event", "guards"])
+    utf8("event/event_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "event": n}
+                                   for r in rows for c, n in trees[r["id"]]["event_codes"].items()],
+         ["model_id", "case", "code", "event"])
     check = verify_trees.main(out)
     stats = []
     for r in rows:
@@ -669,11 +671,12 @@ def trees_folder(out, rows):
     utf8("tree_summary.csv", stats, list(stats[0]))
     utf8("check.csv", [{k: s_[k] for k in ("model_id", "case", "checked_against", "check")} for s_ in stats],
          ["model_id", "case", "checked_against", "check"])
-    make_tree_report.main(tdir, rows, trees)
+    make_tree_report.main(tdir, rows, trees)   # guard/GUARD_TREES.pdf, event/EVENT_TREES.pdf
     make_tree_report.summary(tdir, rows, trees, stats, check)
 
 
 def write_csv_bom(path, rows, fields):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
         w.writeheader()
@@ -762,7 +765,8 @@ def pdf(out, rows, po_rows):
             "│   ├── dataset.jsonl         ← ทุกโมเดล: ข้อความ Event-B + feature + label + topic + split",
             "│   ├── po_details.jsonl      ← ผลราย PO (ผ่าน / ไม่ผ่าน)",
             "│   ├── split.csv             ← โมเดลไหนอยู่ train / val / test",
-            "│   └── trees.jsonl           ← event tree + guard tree ของทุกโมเดล (รหัส + เส้นทาง)",
+            "│   ├── guard_trees.jsonl     ← guard tree ของทุกโมเดล (รหัส + เส้นทาง)",
+            "│   └── event_trees.jsonl     ← event tree ของทุกโมเดล (รหัส + เส้นทาง)",
             "├── csv/",
             "│   ├── summary.csv           ← ตัวเลขต่อโมเดล (feature + label)",
             "│   ├── pass_fail_list.csv    ← pass / fail ต่อโมเดล",
@@ -772,7 +776,8 @@ def pdf(out, rows, po_rows):
             "│   ├── label.json            ← total / discharged / failed",
             "│   ├── po_details.json       ← ผลราย PO",
             "│   ├── features.json",
-            "│   └── tree.txt · tree.json  ← event tree + guard tree",
+            "│   ├── guard_tree.txt · .json ← guard tree",
+            "│   └── event_tree.txt · .json ← event tree",
             "├── by_topic/                 ← โมเดลชุดเดียวกัน แยกตามหัวข้อ และผล Rodin",
             "│   ├── 01_Finance_and_Payment/",
             "│   │   ├── list.csv          ← รายชื่อ + ผล ของหัวข้อนี้",
@@ -782,11 +787,11 @@ def pdf(out, rows, po_rows):
             "├── FLOW.pdf · FLOW.png       ← แผนภาพขั้นตอนการดำเนินงาน",
             "├── PROVENANCE.pdf            ← ที่มาของแบบจำลองแต่ละตัว (csv/provenance.csv)",
             "├── SIMILAR_WORK.pdf          ← งานตีพิมพ์ที่คล้ายกับแบบจำลอง (csv/similar_work.csv)",
-            "├── trees/                    ← event tree + guard tree ของทุกโมเดล",
+            "├── trees/",
             "│   ├── SUMMARY.pdf           ← สรุปวิธีทำและผลตรวจความถูกต้อง",
-            "│   ├── TREES.pdf             ← รหัสและ tree ของทุกโมเดล",
-            "│   ├── guard_codes.csv · event_codes.csv · tree_summary.csv · check.csv",
-            "│   └── by_topic/<หัวข้อ>/<pass|fail>/<model>.txt",
+            "│   ├── tree_summary.csv · check.csv",
+            "│   ├── guard/                ← GUARD_TREES.pdf, guard_codes.csv, by_topic/",
+            "│   └── event/                ← EVENT_TREES.pdf, event_codes.csv, by_topic/",
             "└── SOURCES.md                ← แหล่งที่มาและเอกสารอ้างอิง"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
 

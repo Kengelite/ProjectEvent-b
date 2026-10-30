@@ -1,0 +1,309 @@
+{
+ "event_codes": {
+  "a1": "sendsubmitPayment_1_opt1",
+  "a2": "sendvalidatePayment_7_loop3",
+  "b1": "receivesubmitPayment_1_opt1",
+  "b2": "receivevalidatePayment_7_loop3",
+  "c1": "sendpaymentDetails_2_opt1",
+  "c2": "sendvalidationResult_8_loop3",
+  "d1": "receivePaymentDetails_2_opt1",
+  "d2": "recivevalidationResult_8_loop3",
+  "e1": "sendprocessLargePayment_3_alt2",
+  "e2": "sendProcessStandarddPayment_5_alt2",
+  "f1": "receiveprocessLargePayment_3_alt2",
+  "f2": "receiveProcessStandarddPayment_5_alt2",
+  "g1": "sendapprovalRequired_4_alt2",
+  "g2": "sendpaymentConfirmation_6_alt2",
+  "h1": "reciveapprovalRequired_4_alt2",
+  "h2": "recivepaymentConfirmation_6_alt2",
+  "i1": "unnamed_event_N",
+  "j1": "sendsendSMSNotification_9_par4",
+  "k1": "sendsendEmailNotification_10_par4",
+  "k2": "receivedsendSMSNotification_9_par4",
+  "l1": "receivedsendEmailNotification_10_par4",
+  "m1": "sendpaymentStatus_11",
+  "n1": "receivepaymentStatus_11"
+ },
+ "event_conditions": {
+  "a1": [
+   "Login = 1"
+  ],
+  "a2": [
+   "retry = 3"
+  ],
+  "b1": [
+   "Login = 1"
+  ],
+  "b2": [
+   "retry = 3"
+  ],
+  "c1": [
+   "Login = 1"
+  ],
+  "c2": [
+   "retry = 3"
+  ],
+  "d1": [
+   "Login = 1"
+  ],
+  "d2": [
+   "retry = 3"
+  ],
+  "e1": [
+   "amount_1 ≥ 1000"
+  ],
+  "e2": [
+   "amount_1 < 1000"
+  ],
+  "f1": [
+   "amount_1 ≥ 1000"
+  ],
+  "f2": [
+   "amount_1 < 1000"
+  ],
+  "g1": [
+   "amount_1 ≥ 1000"
+  ],
+  "g2": [
+   "amount_1 < 1000"
+  ],
+  "h1": [
+   "amount_1 ≥ 1000"
+  ],
+  "h2": [
+   "amount_1 < 1000"
+  ],
+  "i1": [
+   "retry < 3"
+  ],
+  "j1": [],
+  "k1": [],
+  "k2": [
+   "par_1 = 2"
+  ],
+  "l1": [
+   "par_1 = 2"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsubmitPayment_1_opt1",
+    "code": "a1",
+    "conditions": [
+     "Login = 1"
+    ],
+    "children": [
+     {
+      "event": "receivesubmitPayment_1_opt1",
+      "code": "b1",
+      "conditions": [
+       "Login = 1"
+      ],
+      "children": [
+       {
+        "event": "sendpaymentDetails_2_opt1",
+        "code": "c1",
+        "conditions": [
+         "Login = 1"
+        ],
+        "children": [
+         {
+          "event": "receivePaymentDetails_2_opt1",
+          "code": "d1",
+          "conditions": [
+           "Login = 1"
+          ],
+          "children": [
+           {
+            "event": "sendprocessLargePayment_3_alt2",
+            "code": "e1",
+            "conditions": [
+             "amount_1 ≥ 1000"
+            ],
+            "children": [
+             {
+              "event": "receiveprocessLargePayment_3_alt2",
+              "code": "f1",
+              "conditions": [
+               "amount_1 ≥ 1000"
+              ],
+              "children": [
+               {
+                "event": "sendapprovalRequired_4_alt2",
+                "code": "g1",
+                "conditions": [
+                 "amount_1 ≥ 1000"
+                ],
+                "children": [
+                 {
+                  "event": "reciveapprovalRequired_4_alt2",
+                  "code": "h1",
+                  "conditions": [
+                   "amount_1 ≥ 1000"
+                  ],
+                  "children": [
+                   {
+                    "event": "unnamed_event_N",
+                    "code": "i1",
+                    "conditions": [
+                     "retry < 3"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendProcessStandarddPayment_5_alt2",
+            "code": "e2",
+            "conditions": [
+             "amount_1 < 1000"
+            ],
+            "children": [
+             {
+              "event": "receiveProcessStandarddPayment_5_alt2",
+              "code": "f2",
+              "conditions": [
+               "amount_1 < 1000"
+              ],
+              "children": [
+               {
+                "event": "sendpaymentConfirmation_6_alt2",
+                "code": "g2",
+                "conditions": [
+                 "amount_1 < 1000"
+                ],
+                "children": [
+                 {
+                  "event": "recivepaymentConfirmation_6_alt2",
+                  "code": "h2",
+                  "conditions": [
+                   "amount_1 < 1000"
+                  ],
+                  "children": [
+                   {
+                    "event": "unnamed_event_N",
+                    "code": "i1",
+                    "conditions": [
+                     "retry < 3"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "event": "sendvalidatePayment_7_loop3",
+    "code": "a2",
+    "conditions": [
+     "retry = 3"
+    ],
+    "children": [
+     {
+      "event": "receivevalidatePayment_7_loop3",
+      "code": "b2",
+      "conditions": [
+       "retry = 3"
+      ],
+      "children": [
+       {
+        "event": "sendvalidationResult_8_loop3",
+        "code": "c2",
+        "conditions": [
+         "retry = 3"
+        ],
+        "children": [
+         {
+          "event": "recivevalidationResult_8_loop3",
+          "code": "d2",
+          "conditions": [
+           "retry = 3"
+          ],
+          "children": [
+           {
+            "event": "sendsendSMSNotification_9_par4",
+            "code": "j1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "sendsendEmailNotification_10_par4",
+              "code": "k1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "receivedsendEmailNotification_10_par4",
+                "code": "l1",
+                "conditions": [
+                 "par_1 = 2"
+                ],
+                "children": [
+                 {
+                  "event": "sendpaymentStatus_11",
+                  "code": "m1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "receivepaymentStatus_11",
+                    "code": "n1",
+                    "conditions": [],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             },
+             {
+              "event": "receivedsendSMSNotification_9_par4",
+              "code": "k2",
+              "conditions": [
+               "par_1 = 2"
+              ],
+              "children": []
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g2 -> h2 -> i1",
+  "a2 -> b2 -> c2 -> d2 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a2 -> b2 -> c2 -> d2 -> j1 -> k2"
+ ],
+ "unplaced_events": [],
+ "source": "rodin .bpo (model.txt has event names only)"
+}

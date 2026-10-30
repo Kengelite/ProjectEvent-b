@@ -1,0 +1,169 @@
+{
+ "event_codes": {
+  "a1": "sendapproveArea_1",
+  "b1": "receiveapproveArea_1",
+  "c1": "sendcheckMission_2",
+  "d1": "receivecheckMission_2",
+  "e1": "sendsyncSpray_3",
+  "e2": "sendassignSpray_4",
+  "f1": "receivesyncSpray_3",
+  "f2": "receiveassignSpray_4",
+  "g1": "sendscheduleSpray_5",
+  "h1": "receivescheduleSpray_5",
+  "i1": "sendassignMission_6",
+  "j1": "receiveassignMission_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "t_obs ≤ 11"
+  ],
+  "e2": [
+   "t_obs > 11"
+  ],
+  "f1": [
+   "t_obs ≤ 11"
+  ],
+  "f2": [
+   "t_obs > 11"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendapproveArea_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveapproveArea_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcheckMission_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecheckMission_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsyncSpray_3",
+            "code": "e1",
+            "conditions": [
+             "t_obs ≤ 11"
+            ],
+            "children": [
+             {
+              "event": "receivesyncSpray_3",
+              "code": "f1",
+              "conditions": [
+               "t_obs ≤ 11"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleSpray_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescheduleSpray_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendassignMission_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveassignMission_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendassignSpray_4",
+            "code": "e2",
+            "conditions": [
+             "t_obs > 11"
+            ],
+            "children": [
+             {
+              "event": "receiveassignSpray_4",
+              "code": "f2",
+              "conditions": [
+               "t_obs > 11"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleSpray_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescheduleSpray_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendassignMission_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveassignMission_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,37 @@
+model_082  DentalAppointment  —  Event tree
+
+1) รหัส event
+   a1   sendqueryAppointment_1
+   b1   receivequeryAppointment_1
+   c1   sendassignTreatment_2
+   d1   receiveassignTreatment_2
+   e1   sendupdateTreatment_3
+   f1   receiveupdateTreatment_3
+   g1   sendqueryClaim_4
+   h1   receivequeryClaim_4
+   i1   sendconfirmAppointment_5
+   j1   receiveconfirmAppointment_5
+   k1   sendreserveClaim_6
+   l1   receivereserveClaim_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendqueryAppointment_1
+       └── b1 receivequeryAppointment_1
+           └── c1 sendassignTreatment_2
+               └── d1 receiveassignTreatment_2
+                   └── e1 sendupdateTreatment_3
+                       └── f1 receiveupdateTreatment_3
+                           └── g1 sendqueryClaim_4
+                               └── h1 receivequeryClaim_4
+                                   └── i1 sendconfirmAppointment_5
+                                       └── j1 receiveconfirmAppointment_5
+                                           └── k1 sendreserveClaim_6
+                                               └── l1 receivereserveClaim_6
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

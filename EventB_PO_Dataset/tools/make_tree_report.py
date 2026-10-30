@@ -1,8 +1,8 @@
-"""TREES.pdf: how the event tree and guard tree are extracted, and the codes of every model.
+"""Documents for the two trees, kept apart: guard/GUARD_TREES.pdf, event/EVENT_TREES.pdf, and SUMMARY.pdf.
 
-Called by make_release.py after extract_trees.py has written models/<id>/tree.json.
+Called by make_release.py after extract_trees.py has written models/<id>/guard_tree.json and event_tree.json.
 """
-import json, os, subprocess, sys, tempfile
+import os, subprocess, sys, tempfile
 from collections import Counter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -15,18 +15,23 @@ pre.tree { font-family: Menlo, monospace; font-size: 8pt; line-height: 1.35; bac
            border-radius: 5px; padding: 6px 9px; margin: 4px 0; white-space: pre; overflow: hidden; }
 .model { break-inside: avoid; border-top: 1.5px solid #cfd6e1; padding-top: 5px; margin-top: 10px; }
 .model h4 { margin: 0 0 3px; font-size: 10.4pt; color: #12325c; }
-.model h4 .res-pass { color: #2e7d5b; } .model h4 .res-fail { color: #c0392b; }
-.cols { display: grid; grid-template-columns: minmax(0, 42fr) minmax(0, 58fr); gap: 10px; }
-.cols .lbl { font-size: 8.4pt; color: #5a6475; font-weight: bold; margin-top: 2px; }
+.model h4 .res-pass, span.res-pass { color: #2e7d5b; } .model h4 .res-fail, span.res-fail { color: #c0392b; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.lbl { font-size: 8.4pt; color: #5a6475; font-weight: bold; margin-top: 2px; }
 table.codes { font-size: 8.2pt; margin: 2px 0 4px; } table.codes td { padding: 1px 6px; line-height: 1.3; }
 table.codes td.k { font-family: Menlo, monospace; font-weight: bold; color: #2f5fa8; width: 34px; }
 table.ev { font-size: 7.6pt; } table.ev th { font-size: 7.6pt; padding: 1px 6px; }
-table.ev td { font-family: Menlo, monospace; overflow-wrap: anywhere; padding: 0 6px; line-height: 1.3; } table.ev td.g { color: #5a6475; width: 22%; }
+table.ev td { font-family: Menlo, monospace; overflow-wrap: anywhere; padding: 0 6px; line-height: 1.3; }
 .paths { font-family: Menlo, monospace; font-size: 7.6pt; line-height: 1.4; overflow-wrap: normal; word-break: normal; }
-.none { color: #8a93a3; font-size: 8.6pt; }
+.none { color: #5a6475; font-size: 8.8pt; }
 .rule { border-left: 4px solid #2f5fa8; background: #eef3fb; padding: 6px 10px; margin: 6px 0; }
 .rule ul { margin: 3px 0 0; padding-left: 18px; } .rule li { margin: 1px 0; }
 """
+
+
+def path_html(p):
+    """A path that wraps only between steps, never inside an arrow."""
+    return esc(p).replace("-&gt;", "-⁠&gt;")
 
 
 def guard_block(t):
@@ -35,22 +40,18 @@ def guard_block(t):
         return "<div class='none'>ไม่มีเงื่อนไขจากแผนภาพ</div>"
     rows = "".join(f"<tr><td class='k'>{c}</td><td>{esc(g)}</td></tr>" for c, g in gc.items())
     tree = "\n".join(["(root)"] + draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}"))
-    return (f"<table class='codes'>{rows}</table><pre class='tree'>{esc(tree)}</pre>"
-            "<div class='lbl'>เส้นทาง</div><div class='paths'>" + "<br>".join(path_html(p) for p in t["guard_paths"]) + "</div>")
-
-
-def path_html(p):
-    """A path that wraps only between steps, never inside an arrow."""
-    return esc(p).replace("-&gt;", "-\u2060&gt;")
+    return (f"<div class='cols'><div><div class='lbl'>รหัส guard</div><table class='codes'>{rows}</table>"
+            "<div class='lbl'>เส้นทาง</div><div class='paths'>" + "<br>".join(path_html(p) for p in t["guard_paths"])
+            + f"</div></div><div><div class='lbl'>Guard tree</div><pre class='tree'>{esc(tree)}</pre></div></div>")
 
 
 def event_block(t):
-    rows = "".join(f"<tr><td class='k'>{c}</td><td>{esc(n)}</td><td class='g'>{' '.join(t['event_guards'][c])}</td></tr>"
-                   for c, n in t["event_codes"].items())
+    rows = "".join(f"<tr><td class='k'>{c}</td><td>{esc(n)}</td></tr>" for c, n in t["event_codes"].items())
     tree = "\n".join(["(root) INITIALISATION"] + draw_events_compact(t["event_tree"], width=8))
-    return (f"<table class='codes ev'><tr><th>รหัส</th><th>event</th><th>guard</th></tr>{rows}</table>"
-            f"<pre class='tree'>{esc(tree)}</pre><div class='lbl'>เส้นทาง</div>"
-            "<div class='paths'>" + "<br>".join(path_html(p) for p in t["event_paths"]) + "</div>")
+    return (f"<div class='cols'><div><div class='lbl'>รหัส event</div><table class='codes ev'>{rows}</table></div>"
+            f"<div><div class='lbl'>Event tree (แบบย่อ)</div><pre class='tree'>{esc(tree)}</pre>"
+            "<div class='lbl'>เส้นทาง</div><div class='paths'>"
+            + "<br>".join(path_html(p) for p in t["event_paths"]) + "</div></div></div>")
 
 
 GUARD_RULE = ("<div class='rule'><b>รหัส guard</b><ul>"
@@ -64,87 +65,108 @@ EVENT_RULE = ("<div class='rule'><b>รหัส event</b> (send และ recei
               "เช่น กิ่ง GOLD, SILVER, BRONZE ได้ m1, m2, m3 และขั้นถัดไปได้ n1, n2, n3</li>"
               "<li>ท้าย loop เป็นจุดแยกเช่นกัน คือทำต่อ (o1) หรือวนรอบใหม่ (o2)</li>"
               "<li>event ที่กิ่งมารวมกันได้ตัวอักษรใหม่ (q1)</li></ul></div>")
+NOTE = ("<p class='none'>รหัส guard และรหัส event เป็นคนละชุด อยู่คนละเอกสารและคนละไฟล์ "
+        "ตัวอักษรเดียวกันในสองชุดจึงไม่เกี่ยวข้องกัน</p>")
+EXAMPLES = (("model_141", "opt ตามด้วย alt 3 ทาง"), ("model_109", "alt ใน loop และกิ่งแรกมี loop ซ้อน"))
 
 
-def render(rows, trees):
+def page(title, body):
+    return (f"<!doctype html><html lang='th'><head><meta charset='utf-8'><title>{title}</title>"
+            f"<style>{CSS}{EXTRA_CSS}</style></head><body>{''.join(body)}</body></html>")
+
+
+def render_guard(rows, trees):
     have = [r for r in rows if r["id"] in trees]
-    n_guard = sum(bool(trees[r["id"]]["guard_codes"]) for r in have)
+    with_g = [r for r in have if trees[r["id"]]["guard_codes"]]
     gp = Counter(len(trees[r["id"]]["guard_paths"]) for r in have)
-    h = ["<h1>Event tree และ Guard tree</h1>",
-         f"<div class='sub'>แบบจำลอง {len(have)} ตัว · มีเงื่อนไขจากแผนภาพ {n_guard} ตัว · "
-         f"ไม่มีเงื่อนไข {len(have) - n_guard} ตัว</div>"]
-
-    h.append("<h2>1. ที่มาของ tree</h2>")
-    h.append("<p>tree ทั้งสองแบบสร้างจาก guard ในแบบจำลอง Event-B ที่ได้จาก ChronoSeq-B โดยไม่แก้ไขแบบจำลอง</p>"
-             "<p>guard ในแบบจำลองแบ่งเป็น 2 กลุ่ม ดังนี้</p>"
-             "<table><tr><th style='width:34%'>กลุ่ม</th><th>ตัวอย่าง</th><th style='width:16%'>ใช้สร้าง</th></tr>"
-             "<tr><td>guard ลำดับข้อความ (สูตรแปลงสร้างให้ทุกข้อความ)</td><td><code>m ∉ sentMessages</code>, "
-             "<code>p ∈ receivedMessages</code>, <code>currentMessage = ∅</code></td><td>Event tree</td></tr>"
-             "<tr><td>guard เงื่อนไขจากแผนภาพ (loop, alt, opt)</td><td><code>cycleNo &lt; 8</code>, "
-             "<code>mode = GOLD</code>, <code>cycleNo mod 3 = 0</code></td><td>Guard tree</td></tr></table>")
-
-    h.append("<h2>2. การตั้งรหัส</h2>" + GUARD_RULE + EVENT_RULE)
-
-    h.append("<h2>3. การสร้าง tree</h2><ul>"
-             "<li><b>Event tree</b> — receive ตามหลัง send ของข้อความเดียวกัน และ send ของข้อความ m ตามหลัง receive "
-             "ของข้อความ p เมื่อ send m มี guard <code>p ∈ receivedMessages</code></li>"
-             "<li>alt ทำให้ tree แยกกิ่ง และกิ่งกลับมารวมที่ event ที่มี guard "
-             "<code>p ∈ receivedMessages ∨ q ∈ receivedMessages</code></li>"
-             "<li>event นับรอบ loop อยู่ท้าย loop เครื่องหมาย ↺ ชี้กลับไปยัง event แรกของ loop</li>"
-             "<li><b>Guard tree</b> — ไล่ตามแต่ละเส้นทางของ event tree แล้วบันทึกรหัส guard ตามลำดับที่พบครั้งแรก "
-             "จึงแสดงได้ทั้งเงื่อนไขที่ซ้อนกัน (alt ใน loop) และเงื่อนไขที่ต่อกัน (opt ตามด้วย alt)</li>"
-             "<li>เอกสารนี้แสดง event tree แบบย่อ คือ event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว "
-             "และขึ้นบรรทัดใหม่เฉพาะที่จุดแยก รูปเต็มอยู่ใน <code>models/&lt;id&gt;/tree.txt</code></li></ul>")
-
+    h = ["<h1>Guard tree</h1>",
+         f"<div class='sub'>แบบจำลอง {len(have)} ตัว · มีเงื่อนไขจากแผนภาพ {len(with_g)} ตัว · "
+         f"ไม่มีเงื่อนไข {len(have) - len(with_g)} ตัว</div>", NOTE]
+    h.append("<h2>1. ที่มา</h2><p>guard tree สร้างจาก guard เงื่อนไขที่มาจากแผนภาพ (loop, alt, opt) "
+             "เช่น <code>cycleNo &lt; 8</code>, <code>mode = GOLD</code> ในแบบจำลอง Event-B ที่ได้จาก ChronoSeq-B "
+             "โดยไม่แก้ไขแบบจำลอง และไม่รวม guard ที่สูตรแปลงสร้างเพื่อควบคุมลำดับข้อความ</p>")
+    h.append("<h2>2. การตั้งรหัส</h2>" + GUARD_RULE)
+    h.append("<h2>3. การสร้าง tree</h2><p>ไล่ตามทุกทางที่ระบบทำงานได้ แล้วบันทึกรหัส guard ตามลำดับที่พบครั้งแรก "
+             "จึงแสดงได้ทั้งเงื่อนไขที่ซ้อนกัน (alt ใน loop) และเงื่อนไขที่ต่อกัน (opt ตามด้วย alt) "
+             "แต่ละทางคือ 1 เส้นทาง เช่น a1 -&gt; b1</p>")
     h.append("<h2>4. ตัวอย่าง</h2>")
     h.append("<p><b>ตัวอย่างพื้นฐาน</b> เงื่อนไขแรกคือ <code>age &gt; 50</code> จากนั้นมี 2 ทางเลือก คือ "
              "<code>salary ≥ 500</code> และ <code>salary &lt; 500</code></p>")
-    h.append("<table class='codes'><tr><td class='k'>a1</td><td>age &gt; 50</td></tr>"
-             "<tr><td class='k'>b1</td><td>salary ≥ 500</td></tr><tr><td class='k'>b2</td><td>salary &lt; 500</td></tr></table>"
-             "<pre class='tree'>(root)\n└── a1  age &gt; 50\n    ├── b1  salary ≥ 500\n    └── b2  salary &lt; 500\n\n"
-             "เส้นทาง:  a1 -&gt; b1\n           a1 -&gt; b2</pre>")
-    for mid, why in (("model_141", "opt ตามด้วย alt 3 ทาง (เงื่อนไขต่อกัน)"),
-                     ("model_109", "alt ใน loop และกิ่งแรกมี loop ซ้อน (เงื่อนไขซ้อนกัน)")):
+    h.append("<div class='cols'><div><table class='codes'><tr><td class='k'>a1</td><td>age &gt; 50</td></tr>"
+             "<tr><td class='k'>b1</td><td>salary ≥ 500</td></tr><tr><td class='k'>b2</td><td>salary &lt; 500</td></tr>"
+             "</table><div class='lbl'>เส้นทาง</div><div class='paths'>a1 -&gt; b1<br>a1 -&gt; b2</div></div>"
+             "<div><pre class='tree'>(root)\n└── a1  age &gt; 50\n    ├── b1  salary ≥ 500\n    └── b2  salary &lt; 500</pre>"
+             "</div></div>")
+    for mid, why in EXAMPLES:
         r = next(x for x in rows if x["id"] == mid)
-        t = trees[mid]
-        h.append(f"<div class='model'><h3>{mid} {esc(r['case'])} — {esc(why)}</h3>"
-                 f"<div class='cols'><div><div class='lbl'>Guard tree</div>{guard_block(t)}</div>"
-                 f"<div><div class='lbl'>Event tree</div>{event_block(t)}</div></div></div>")
-
+        h.append(f"<div class='model'><h3>{mid} {esc(r['case'])} — {esc(why)}</h3>{guard_block(trees[mid])}</div>")
     h.append("<h2>5. ภาพรวมทั้งชุด</h2>")
     h.append("<table><tr><th>จำนวนเส้นทางใน guard tree</th>" + "".join(f"<th>{k}</th>" for k in sorted(gp)) + "</tr>"
              "<tr><td>จำนวนแบบจำลอง</td>" + "".join(f"<td class='n'>{gp[k]}</td>" for k in sorted(gp)) + "</tr></table>")
-    h.append("<ul><li>0 คือแบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพ จึงมีเฉพาะ event tree</li>"
-             "<li>tree ของแต่ละแบบจำลองอยู่ใน <code>models/&lt;id&gt;/tree.txt</code> และ <code>tree.json</code> "
-             "ส่วนข้อมูลรวมทุกแบบจำลองอยู่ใน <code>data/trees.jsonl</code>, <code>trees/guard_codes.csv</code> "
-             "และ <code>trees/event_codes.csv</code></li>"
-             "<li><b>model_001</b> — model.txt มีเพียงชื่อ event จึงใช้ event และ guard จากไฟล์ .bpo ของ Rodin แทน "
-             "มี 1 event ที่ไม่มีชื่อในไฟล์ (unnamed_event_N, guard <code>retry &lt; 3</code>) "
-             "และเนื่องจากแปลงด้วยสูตรรุ่นแรก event tree จึงแยกเป็นหลายกิ่งจาก root</li></ul>")
-
-    h.append("<h2 style='break-before:page'>6. tree ของแต่ละแบบจำลอง</h2>")
-    h.append("<p>แต่ละแบบจำลองแสดง 2 ส่วน ด้านซ้ายคือ guard (รหัส, tree, เส้นทาง) ด้านขวาคือ event "
-             "(รหัส, tree แบบย่อ, เส้นทาง) คอลัมน์ guard ในตาราง event คือรหัส guard ของ event นั้น "
-             "และ ↺ x หมายถึงวนกลับไปที่ event x</p>")
+    h.append("<p>0 คือแบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพ · ไฟล์ของแต่ละแบบจำลองอยู่ใน "
+             "<code>models/&lt;id&gt;/guard_tree.txt</code> และ <code>guard_tree.json</code> · "
+             "ข้อมูลรวมอยู่ใน <code>data/guard_trees.jsonl</code> และ <code>guard_codes.csv</code></p>")
+    h.append("<h2 style='break-before:page'>6. guard tree ของแต่ละแบบจำลอง</h2>"
+             "<p>แบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพแสดงเป็นรายชื่อท้ายแต่ละหัวข้อ</p>")
     for code, (en, th) in TOPIC_NAMES.items():
         group = [r for r in have if r["topic"] == en]
         h.append(f"<h3>{esc(th)} · {esc(en)} ({len(group)})</h3>")
         for r in group:
-            t = trees[r["id"]]
-            h.append(f"<div class='model'><h4>{r['id']} {esc(r['case'])} · <span class='res-{r['result']}'>{r['result']}</span></h4>"
-                     f"<div class='cols'><div><div class='lbl'>Guard</div>{guard_block(t)}</div>"
-                     f"<div><div class='lbl'>Event</div>{event_block(t)}</div></div></div>")
-    return (f"<!doctype html><html lang='th'><head><meta charset='utf-8'><style>{CSS}{EXTRA_CSS}</style></head>"
-            f"<body>{''.join(h)}</body></html>")
+            if trees[r["id"]]["guard_codes"]:
+                h.append(f"<div class='model'><h4>{r['id']} {esc(r['case'])} · "
+                         f"<span class='res-{r['result']}'>{r['result']}</span></h4>{guard_block(trees[r['id']])}</div>")
+        empty = [r for r in group if not trees[r["id"]]["guard_codes"]]
+        if empty:
+            h.append("<p class='none'><b>ไม่มีเงื่อนไขจากแผนภาพ:</b> "
+                     + ", ".join(f"{r['id']} {esc(r['case'])}" for r in empty) + "</p>")
+    return page("Guard tree", h)
+
+
+def render_event(rows, trees):
+    have = [r for r in rows if r["id"] in trees]
+    h = ["<h1>Event tree</h1>",
+         f"<div class='sub'>แบบจำลอง {len(have)} ตัว · event รวม "
+         f"{sum(len(trees[r['id']]['event_codes']) for r in have):,} event</div>", NOTE]
+    h.append("<h2>1. ที่มา</h2><p>event tree สร้างจาก guard ที่สูตรแปลงใช้ควบคุมลำดับข้อความในแบบจำลอง Event-B "
+             "ที่ได้จาก ChronoSeq-B โดยไม่แก้ไขแบบจำลอง</p><ul>"
+             "<li>receive ตามหลัง send ของข้อความเดียวกัน (<code>m ∈ sentMessages</code>)</li>"
+             "<li>send ของข้อความ m ตามหลัง receive ของข้อความ p เมื่อ send m มี guard <code>p ∈ receivedMessages</code></li>"
+             "<li>alt ทำให้ tree แยกกิ่ง และกิ่งกลับมารวมที่ event ที่มี guard "
+             "<code>p ∈ receivedMessages ∨ q ∈ receivedMessages</code></li>"
+             "<li>event นับรอบ loop อยู่ท้าย loop เครื่องหมาย ↺ ชี้กลับไปยัง event แรกของ loop</li></ul>")
+    h.append("<h2>2. การตั้งรหัส</h2>" + EVENT_RULE)
+    h.append("<h2>3. การแสดงผล</h2><p>เอกสารนี้แสดง event tree แบบย่อ คือ event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว "
+             "และขึ้นบรรทัดใหม่เฉพาะที่จุดแยก รูปเต็มอยู่ใน <code>models/&lt;id&gt;/event_tree.txt</code> "
+             "ข้อมูลรวมอยู่ใน <code>data/event_trees.jsonl</code> และ <code>event_codes.csv</code> · "
+             "↺ x หมายถึงวนกลับไปที่ event x</p>")
+    h.append("<h2>4. ตัวอย่าง</h2>")
+    for mid, why in EXAMPLES:
+        r = next(x for x in rows if x["id"] == mid)
+        h.append(f"<div class='model'><h3>{mid} {esc(r['case'])} — {esc(why)}</h3>{event_block(trees[mid])}</div>")
+    h.append("<p class='none'><b>model_001</b> — model.txt มีเพียงชื่อ event จึงใช้ event จากไฟล์ .bpo ของ Rodin แทน "
+             "มี 1 event ที่ไม่มีชื่อในไฟล์ (unnamed_event_N) และเนื่องจากแปลงด้วยสูตรรุ่นแรก "
+             "event tree จึงแยกเป็นหลายกิ่งจาก root</p>")
+    h.append("<h2 style='break-before:page'>5. event tree ของแต่ละแบบจำลอง</h2>")
+    for code, (en, th) in TOPIC_NAMES.items():
+        group = [r for r in have if r["topic"] == en]
+        h.append(f"<h3>{esc(th)} · {esc(en)} ({len(group)})</h3>")
+        for r in group:
+            h.append(f"<div class='model'><h4>{r['id']} {esc(r['case'])} · "
+                     f"<span class='res-{r['result']}'>{r['result']}</span></h4>{event_block(trees[r['id']])}</div>")
+    return page("Event tree", h)
+
+
+def print_pdf(html_text, path):
+    with tempfile.TemporaryDirectory() as tmp:
+        src = os.path.join(tmp, "page.html")
+        open(src, "w").write(html_text)
+        subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer",
+                        f"--print-to-pdf={path}", f"file://{src}"], check=True, capture_output=True)
 
 
 def main(out, rows, trees):
-    with tempfile.TemporaryDirectory() as tmp:
-        page = os.path.join(tmp, "trees.html")
-        open(page, "w").write(render(rows, trees))
-        subprocess.run([CHROME, "--headless", "--disable-gpu", "--no-pdf-header-footer",
-                        f"--print-to-pdf={os.path.join(out, 'TREES.pdf')}", f"file://{page}"],
-                       check=True, capture_output=True)
+    print_pdf(render_guard(rows, trees), os.path.join(out, "guard", "GUARD_TREES.pdf"))
+    print_pdf(render_event(rows, trees), os.path.join(out, "event", "EVENT_TREES.pdf"))
 
 
 CHECKS = [("C1", "ข้อความ", "ทุกข้อความในแผนภาพมี event send และ receive ครบ และเรียงลำดับตรงกัน"),
@@ -155,7 +177,7 @@ CHECKS = [("C1", "ข้อความ", "ทุกข้อความใน�
           ("C6", "รหัส event", "event หนึ่งมีรหัสเดียว ทางเลือกที่จุดแยกใช้ตัวอักษรเดียวกันโดยตัวเลขไม่ซ้ำ "
                               "และเส้นตรงไม่ใช้ตัวอักษรซ้ำ"),
           ("C7", "เส้นทาง guard", "เส้นทางใน guard tree ครบทุกทางที่เป็นไปได้ในแผนภาพ"),
-          ("C8", "ไฟล์", "ไฟล์ในชุดเทรน (models/, data/trees.jsonl, trees/guard_codes.csv) ตรงกับต้นฉบับ")]
+          ("C8", "ไฟล์", "ไฟล์ในชุดเทรน (models/, data/*_trees.jsonl, guard_codes.csv, event_codes.csv) ตรงกับต้นฉบับ")]
 
 
 def summary(out, rows, trees, stats, check):
@@ -198,8 +220,9 @@ def summary(out, rows, trees, stats, check):
     gtree = "\n".join(["(root)"] + draw(t["guard_tree"], lambda c: f"{c}  {t['guard_codes'][c]}"))
     etree = "\n".join(["(root)"] + draw_events_compact(t["event_tree"], width=8))
     h.append("<h3>ตัวอย่าง: model_141 PharmacyDelivery (opt ตามด้วย alt 3 ทาง)</h3>"
-             f"<div class='cols'><div><div class='lbl'>Guard tree</div><pre class='tree'>{esc(gtree)}</pre></div>"
-             f"<div><div class='lbl'>Event tree</div><pre class='tree'>{esc(etree)}</pre></div></div>")
+             f"<div class='cols'><div><div class='lbl'>Guard tree (guard_tree.txt)</div><pre class='tree'>{esc(gtree)}</pre></div>"
+             f"<div><div class='lbl'>Event tree (event_tree.txt)</div><pre class='tree'>{esc(etree)}</pre></div></div>"
+             "<p>tree ทั้งสองแบบเก็บแยกไฟล์และแยกเอกสาร รหัส guard และรหัส event เป็นคนละชุด</p>")
 
     h.append("<h2>3. การตรวจสอบความถูกต้อง</h2>")
     h.append("<p>เขียนโปรแกรมตรวจแยกต่างหาก (<code>tools/verify_trees.py</code>) ให้อ่านแผนภาพ draw.io ต้นฉบับโดยตรง "
@@ -264,14 +287,18 @@ def summary(out, rows, trees, stats, check):
     tree = ["EventB_PO_Training/",
             "├── trees/",
             "│   ├── SUMMARY.pdf          ← เอกสารนี้",
-            "│   ├── TREES.pdf            ← หลักการ ตัวอย่าง และ tree ของทุกแบบจำลอง",
-            "│   ├── guard_codes.csv      ← รหัส guard ของทุกแบบจำลอง",
-            "│   ├── event_codes.csv      ← รหัส event ของทุกแบบจำลอง",
             "│   ├── tree_summary.csv     ← ตัวเลขสรุปรายแบบจำลอง",
             "│   ├── check.csv            ← ผลตรวจรายแบบจำลอง",
-            "│   └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>.txt   ← tree ของแต่ละแบบจำลอง",
-            "├── models/<id>/tree.txt, tree.json   ← ชุดเดียวกัน เก็บคู่กับ model.txt",
-            "└── data/trees.jsonl                 ← ทุกแบบจำลองในไฟล์เดียว สำหรับใช้กับโปรแกรม"]
+            "│   ├── guard/",
+            "│   │   ├── GUARD_TREES.pdf  ← หลักการ ตัวอย่าง และ guard tree ของทุกแบบจำลอง",
+            "│   │   ├── guard_codes.csv  ← รหัส guard ของทุกแบบจำลอง",
+            "│   │   └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>.txt",
+            "│   └── event/",
+            "│       ├── EVENT_TREES.pdf  ← หลักการ ตัวอย่าง และ event tree ของทุกแบบจำลอง",
+            "│       ├── event_codes.csv  ← รหัส event ของทุกแบบจำลอง",
+            "│       └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>.txt",
+            "├── models/<id>/guard_tree.txt · .json, event_tree.txt · .json   ← เก็บคู่กับ model.txt",
+            "└── data/guard_trees.jsonl, data/event_trees.jsonl               ← ทุกแบบจำลอง สำหรับใช้กับโปรแกรม"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
     h.append("<p>สร้างใหม่ทั้งหมดได้ด้วยคำสั่ง <code>python tools/make_release.py</code> "
              "ซึ่งจะสร้าง tree ตรวจความถูกต้อง และทำเอกสารตามลำดับ</p>")

@@ -1,0 +1,88 @@
+model_168  SmartFridgeInventory  —  Event tree
+
+1) รหัส event
+   a1   sendapproveOrder_1
+   b1   receiveapproveOrder_1
+   c1   sendassignExpiry_2
+   d1   receiveassignExpiry_2
+   e1   sendsendOrder_3
+   f1   receivesendOrder_3
+   g1   sendassignItem_4
+   g2   sendlogOrder_6
+   h1   receiveassignItem_4
+   h2   receivelogOrder_6
+   i1   sendscheduleOrder_5
+   j1   receivescheduleOrder_5
+   k1   sendapproveExpiry_7
+   l1   receiveapproveExpiry_7
+   m1   sendqueryItem_8
+   m2   checkloop_sendOrder_3_loop1
+   n1   receivequeryItem_8
+   o1   sendcheckOrder_9
+   p1   receivecheckOrder_9
+   q1   sendissueExpiry_10
+   r1   receiveissueExpiry_10
+   s1   sendsyncOrder_11
+   s2   checkloop_issueExpiry_10_loop2
+   t1   receivesyncOrder_11
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1 → o1 → p1 → q1 → r1
+       │   │   ├── s1 → t1
+       │   │   └── s2 ↺ q1
+       │   └── m2 ↺ e1
+       └── g2 → h2 → k1 → l1
+           ├── m1 → n1 → o1 → p1 → q1 → r1
+           │   ├── s1 → t1
+           │   └── s2 ↺ q1
+           └── m2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendapproveOrder_1
+       └── b1 receiveapproveOrder_1
+           └── c1 sendassignExpiry_2
+               └── d1 receiveassignExpiry_2
+                   └── e1 sendsendOrder_3
+                       └── f1 receivesendOrder_3
+                           ├── g1 sendassignItem_4
+                           │   └── h1 receiveassignItem_4
+                           │       └── i1 sendscheduleOrder_5
+                           │           └── j1 receivescheduleOrder_5
+                           │               └── k1 sendapproveExpiry_7
+                           │                   └── l1 receiveapproveExpiry_7
+                           │                       ├── m1 sendqueryItem_8
+                           │                       │   └── n1 receivequeryItem_8
+                           │                       │       └── o1 sendcheckOrder_9
+                           │                       │           └── p1 receivecheckOrder_9
+                           │                       │               └── q1 sendissueExpiry_10
+                           │                       │                   └── r1 receiveissueExpiry_10
+                           │                       │                       ├── s1 sendsyncOrder_11
+                           │                       │                       │   └── t1 receivesyncOrder_11
+                           │                       │                       └── s2 checkloop_issueExpiry_10_loop2  ↺ วนกลับไป sendissueExpiry_10
+                           │                       └── m2 checkloop_sendOrder_3_loop1  ↺ วนกลับไป sendsendOrder_3
+                           └── g2 sendlogOrder_6
+                               └── h2 receivelogOrder_6
+                                   └── k1 sendapproveExpiry_7
+                                       └── l1 receiveapproveExpiry_7
+                                           ├── m1 sendqueryItem_8
+                                           │   └── n1 receivequeryItem_8
+                                           │       └── o1 sendcheckOrder_9
+                                           │           └── p1 receivecheckOrder_9
+                                           │               └── q1 sendissueExpiry_10
+                                           │                   └── r1 receiveissueExpiry_10
+                                           │                       ├── s1 sendsyncOrder_11
+                                           │                       │   └── t1 receivesyncOrder_11
+                                           │                       └── s2 checkloop_issueExpiry_10_loop2  ↺ วนกลับไป sendissueExpiry_10
+                                           └── m2 checkloop_sendOrder_3_loop1  ↺ วนกลับไป sendsendOrder_3
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ q1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ q1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1

@@ -1,0 +1,125 @@
+{
+ "event_codes": {
+  "a1": "sendcancelTariff_1",
+  "b1": "receivecancelTariff_1",
+  "c1": "sendnotifySession_2",
+  "d1": "receivenotifySession_2",
+  "e1": "sendupdateTariff_3",
+  "f1": "receiveupdateTariff_3",
+  "g1": "sendrequestEnergy_4",
+  "h1": "receiverequestEnergy_4",
+  "i1": "sendvalidateSession_5",
+  "j1": "receivevalidateSession_5",
+  "k1": "sendackSession_6",
+  "l1": "receiveackSession_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelTariff_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelTariff_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendnotifySession_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivenotifySession_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendupdateTariff_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receiveupdateTariff_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendrequestEnergy_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiverequestEnergy_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendvalidateSession_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivevalidateSession_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendackSession_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receiveackSession_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

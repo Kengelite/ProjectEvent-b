@@ -1,0 +1,385 @@
+{
+ "event_codes": {
+  "a1": "sendvalidateOrder_1",
+  "b1": "receivevalidateOrder_1",
+  "c1": "sendcheckPickup_2",
+  "d1": "receivecheckPickup_2",
+  "e1": "sendreleasePickup_3",
+  "f1": "receivereleasePickup_3",
+  "g1": "sendissueDish_4_opt1",
+  "h1": "receiveissueDish_4_opt1",
+  "i1": "sendcheckDish_5",
+  "j1": "receivecheckDish_5",
+  "k1": "sendcancelDish_6_opt2",
+  "l1": "receivecancelDish_6_opt2",
+  "m1": "sendcancelPickup_7_opt2",
+  "m2": "sendassignPickup_8_opt2",
+  "n1": "receivecancelPickup_7_opt2",
+  "n2": "receiveassignPickup_8_opt2",
+  "o1": "sendapprovePickup_9_opt2",
+  "p1": "receiveapprovePickup_9_opt2",
+  "q1": "sendackOrder_10",
+  "r1": "receiveackOrder_10",
+  "s1": "sendcheckOrder_11",
+  "s2": "checkloop_releasePickup_3_loop1",
+  "t1": "receivecheckOrder_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "pollNo < 5"
+  ],
+  "f1": [
+   "pollNo < 5"
+  ],
+  "g1": [
+   "pollNo < 5",
+   "needAck = 1"
+  ],
+  "h1": [
+   "pollNo < 5",
+   "needAck = 1"
+  ],
+  "i1": [
+   "pollNo < 5"
+  ],
+  "j1": [
+   "pollNo < 5"
+  ],
+  "k1": [
+   "pollNo < 5",
+   "express = 1"
+  ],
+  "l1": [
+   "pollNo < 5",
+   "express = 1"
+  ],
+  "m1": [
+   "pollNo < 5",
+   "express = 1",
+   "tier = GREEN"
+  ],
+  "m2": [
+   "pollNo < 5",
+   "express = 1",
+   "tier = RED"
+  ],
+  "n1": [
+   "pollNo < 5",
+   "express = 1",
+   "tier = GREEN"
+  ],
+  "n2": [
+   "pollNo < 5",
+   "express = 1",
+   "tier = RED"
+  ],
+  "o1": [
+   "pollNo < 5",
+   "express = 1"
+  ],
+  "p1": [
+   "pollNo < 5",
+   "express = 1"
+  ],
+  "q1": [
+   "pollNo < 5"
+  ],
+  "r1": [
+   "pollNo < 5"
+  ],
+  "s1": [],
+  "s2": [
+   "pollNo < 5"
+  ],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendvalidateOrder_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivevalidateOrder_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcheckPickup_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecheckPickup_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreleasePickup_3",
+            "code": "e1",
+            "conditions": [
+             "pollNo < 5"
+            ],
+            "children": [
+             {
+              "event": "receivereleasePickup_3",
+              "code": "f1",
+              "conditions": [
+               "pollNo < 5"
+              ],
+              "children": [
+               {
+                "event": "sendissueDish_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "pollNo < 5",
+                 "needAck = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveissueDish_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "pollNo < 5",
+                   "needAck = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendcheckDish_5",
+                    "code": "i1",
+                    "conditions": [
+                     "pollNo < 5"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivecheckDish_5",
+                      "code": "j1",
+                      "conditions": [
+                       "pollNo < 5"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelDish_6_opt2",
+                        "code": "k1",
+                        "conditions": [
+                         "pollNo < 5",
+                         "express = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecancelDish_6_opt2",
+                          "code": "l1",
+                          "conditions": [
+                           "pollNo < 5",
+                           "express = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendcancelPickup_7_opt2",
+                            "code": "m1",
+                            "conditions": [
+                             "pollNo < 5",
+                             "express = 1",
+                             "tier = GREEN"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivecancelPickup_7_opt2",
+                              "code": "n1",
+                              "conditions": [
+                               "pollNo < 5",
+                               "express = 1",
+                               "tier = GREEN"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapprovePickup_9_opt2",
+                                "code": "o1",
+                                "conditions": [
+                                 "pollNo < 5",
+                                 "express = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveapprovePickup_9_opt2",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "pollNo < 5",
+                                   "express = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendackOrder_10",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "pollNo < 5"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveackOrder_10",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "pollNo < 5"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendcheckOrder_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivecheckOrder_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "checkloop_releasePickup_3_loop1",
+                                        "code": "s2",
+                                        "loop_back_to": "sendreleasePickup_3",
+                                        "loop_back_to_code": "e1",
+                                        "conditions": [
+                                         "pollNo < 5"
+                                        ],
+                                        "children": []
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           },
+                           {
+                            "event": "sendassignPickup_8_opt2",
+                            "code": "m2",
+                            "conditions": [
+                             "pollNo < 5",
+                             "express = 1",
+                             "tier = RED"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveassignPickup_8_opt2",
+                              "code": "n2",
+                              "conditions": [
+                               "pollNo < 5",
+                               "express = 1",
+                               "tier = RED"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendapprovePickup_9_opt2",
+                                "code": "o1",
+                                "conditions": [
+                                 "pollNo < 5",
+                                 "express = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receiveapprovePickup_9_opt2",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "pollNo < 5",
+                                   "express = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendackOrder_10",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "pollNo < 5"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveackOrder_10",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "pollNo < 5"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendcheckOrder_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivecheckOrder_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       },
+                                       {
+                                        "event": "checkloop_releasePickup_3_loop1",
+                                        "code": "s2",
+                                        "loop_back_to": "sendreleasePickup_3",
+                                        "loop_back_to_code": "e1",
+                                        "conditions": [
+                                         "pollNo < 5"
+                                        ],
+                                        "children": []
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2 -> o1 -> p1 -> q1 -> r1 -> s2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

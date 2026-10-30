@@ -1,0 +1,239 @@
+{
+ "event_codes": {
+  "a1": "sendstartMonitoring_1",
+  "b1": "receivestartMonitoring_1",
+  "c1": "sendreportLoad_2",
+  "d1": "receivereportLoad_2",
+  "e1": "sendaddVM_3",
+  "e2": "sendkeepCapacity_6",
+  "f1": "receiveaddVM_3",
+  "f2": "receivekeepCapacity_6",
+  "g1": "sendvmReady_4",
+  "h1": "receivevmReady_4",
+  "i1": "sendregisterVM_5",
+  "j1": "receiveregisterVM_5",
+  "k1": "sendstopMonitoring_7",
+  "k2": "checkloop_reportLoad_2_loop1",
+  "l1": "receivestopMonitoring_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [
+   "checkNo < 12"
+  ],
+  "d1": [
+   "checkNo < 12"
+  ],
+  "e1": [
+   "checkNo < 12",
+   "cpu > 80"
+  ],
+  "e2": [
+   "checkNo < 12",
+   "cpu ≤ 80"
+  ],
+  "f1": [
+   "checkNo < 12",
+   "cpu > 80"
+  ],
+  "f2": [
+   "checkNo < 12",
+   "cpu ≤ 80"
+  ],
+  "g1": [
+   "checkNo < 12",
+   "cpu > 80"
+  ],
+  "h1": [
+   "checkNo < 12",
+   "cpu > 80"
+  ],
+  "i1": [
+   "checkNo < 12",
+   "cpu > 80"
+  ],
+  "j1": [
+   "checkNo < 12",
+   "cpu > 80"
+  ],
+  "k1": [],
+  "k2": [
+   "checkNo < 12"
+  ],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendstartMonitoring_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivestartMonitoring_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreportLoad_2",
+        "code": "c1",
+        "conditions": [
+         "checkNo < 12"
+        ],
+        "children": [
+         {
+          "event": "receivereportLoad_2",
+          "code": "d1",
+          "conditions": [
+           "checkNo < 12"
+          ],
+          "children": [
+           {
+            "event": "sendaddVM_3",
+            "code": "e1",
+            "conditions": [
+             "checkNo < 12",
+             "cpu > 80"
+            ],
+            "children": [
+             {
+              "event": "receiveaddVM_3",
+              "code": "f1",
+              "conditions": [
+               "checkNo < 12",
+               "cpu > 80"
+              ],
+              "children": [
+               {
+                "event": "sendvmReady_4",
+                "code": "g1",
+                "conditions": [
+                 "checkNo < 12",
+                 "cpu > 80"
+                ],
+                "children": [
+                 {
+                  "event": "receivevmReady_4",
+                  "code": "h1",
+                  "conditions": [
+                   "checkNo < 12",
+                   "cpu > 80"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendregisterVM_5",
+                    "code": "i1",
+                    "conditions": [
+                     "checkNo < 12",
+                     "cpu > 80"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveregisterVM_5",
+                      "code": "j1",
+                      "conditions": [
+                       "checkNo < 12",
+                       "cpu > 80"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendstopMonitoring_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivestopMonitoring_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_reportLoad_2_loop1",
+                        "code": "k2",
+                        "loop_back_to": "sendreportLoad_2",
+                        "loop_back_to_code": "c1",
+                        "conditions": [
+                         "checkNo < 12"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendkeepCapacity_6",
+            "code": "e2",
+            "conditions": [
+             "checkNo < 12",
+             "cpu ≤ 80"
+            ],
+            "children": [
+             {
+              "event": "receivekeepCapacity_6",
+              "code": "f2",
+              "conditions": [
+               "checkNo < 12",
+               "cpu ≤ 80"
+              ],
+              "children": [
+               {
+                "event": "sendstopMonitoring_7",
+                "code": "k1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivestopMonitoring_7",
+                  "code": "l1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               },
+               {
+                "event": "checkloop_reportLoad_2_loop1",
+                "code": "k2",
+                "loop_back_to": "sendreportLoad_2",
+                "loop_back_to_code": "c1",
+                "conditions": [
+                 "checkNo < 12"
+                ],
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ c1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> k2 ↺ c1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

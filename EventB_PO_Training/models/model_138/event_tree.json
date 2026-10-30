@@ -1,0 +1,361 @@
+{
+ "event_codes": {
+  "a1": "sendackPhoto_1",
+  "b1": "receiveackPhoto_1",
+  "c1": "sendreportForm_2",
+  "d1": "receivereportForm_2",
+  "e1": "sendsendPassport_3",
+  "e2": "sendcancelPassport_4",
+  "f1": "receivesendPassport_3",
+  "f2": "receivecancelPassport_4",
+  "g1": "sendreserveForm_5",
+  "h1": "receivereserveForm_5",
+  "i1": "sendlogPassport_6",
+  "j1": "receivelogPassport_6",
+  "k1": "sendfetchPassport_7",
+  "l1": "receivefetchPassport_7",
+  "m1": "sendvalidatePhoto_8",
+  "n1": "receivevalidatePhoto_8",
+  "o1": "sendvalidateForm_9",
+  "p1": "receivevalidateForm_9",
+  "q1": "sendcheckPhoto_10",
+  "r1": "receivecheckPhoto_10",
+  "s1": "sendsendForm_11",
+  "t1": "receivesendForm_11",
+  "u1": "sendsyncPhoto_12",
+  "v1": "receivesyncPhoto_12"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "t_obs ≤ 4"
+  ],
+  "e2": [
+   "t_obs > 4"
+  ],
+  "f1": [
+   "t_obs ≤ 4"
+  ],
+  "f2": [
+   "t_obs > 4"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": [],
+  "u1": [],
+  "v1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendackPhoto_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveackPhoto_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreportForm_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereportForm_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendPassport_3",
+            "code": "e1",
+            "conditions": [
+             "t_obs ≤ 4"
+            ],
+            "children": [
+             {
+              "event": "receivesendPassport_3",
+              "code": "f1",
+              "conditions": [
+               "t_obs ≤ 4"
+              ],
+              "children": [
+               {
+                "event": "sendreserveForm_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivereserveForm_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendlogPassport_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivelogPassport_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendfetchPassport_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivefetchPassport_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendvalidatePhoto_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivevalidatePhoto_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendvalidateForm_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivevalidateForm_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendcheckPhoto_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivecheckPhoto_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendsendForm_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesendForm_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": [
+                                           {
+                                            "event": "sendsyncPhoto_12",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receivesyncPhoto_12",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendcancelPassport_4",
+            "code": "e2",
+            "conditions": [
+             "t_obs > 4"
+            ],
+            "children": [
+             {
+              "event": "receivecancelPassport_4",
+              "code": "f2",
+              "conditions": [
+               "t_obs > 4"
+              ],
+              "children": [
+               {
+                "event": "sendreserveForm_5",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivereserveForm_5",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendlogPassport_6",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivelogPassport_6",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendfetchPassport_7",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivefetchPassport_7",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendvalidatePhoto_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivevalidatePhoto_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendvalidateForm_9",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receivevalidateForm_9",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendcheckPhoto_10",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receivecheckPhoto_10",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendsendForm_11",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivesendForm_11",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": [
+                                           {
+                                            "event": "sendsyncPhoto_12",
+                                            "code": "u1",
+                                            "conditions": [],
+                                            "children": [
+                                             {
+                                              "event": "receivesyncPhoto_12",
+                                              "code": "v1",
+                                              "conditions": [],
+                                              "children": []
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

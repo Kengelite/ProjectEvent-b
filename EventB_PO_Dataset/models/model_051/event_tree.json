@@ -1,0 +1,355 @@
+{
+ "event_codes": {
+  "a1": "sendcancelFan_1",
+  "b1": "receivecancelFan_1",
+  "c1": "sendreleaseAlert_2",
+  "d1": "receivereleaseAlert_2",
+  "e1": "sendsendAlert_3_opt1",
+  "f1": "receivesendAlert_3_opt1",
+  "g1": "sendfetchFan_4",
+  "h1": "receivefetchFan_4",
+  "i1": "sendlogFan_5",
+  "j1": "receivelogFan_5",
+  "k1": "sendqueryAlert_6",
+  "k2": "sendcancelAlert_13",
+  "l1": "receivequeryAlert_6",
+  "l2": "receivecancelAlert_13",
+  "m1": "sendnotifyAlert_7",
+  "n1": "receivenotifyAlert_7",
+  "o1": "sendreservePm_8",
+  "p1": "receivereservePm_8",
+  "q1": "sendapproveFan_9",
+  "r1": "receiveapproveFan_9",
+  "s1": "sendreportFan_10",
+  "t1": "receivereportFan_10",
+  "u1": "sendrequestPm_11",
+  "v1": "receiverequestPm_11",
+  "w1": "sendfetchPm_12",
+  "x1": "receivefetchPm_12",
+  "y1": "sendvalidateFan_14",
+  "z1": "receivevalidateFan_14"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "useCache = 1"
+  ],
+  "f1": [
+   "useCache = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [
+   "online = 1"
+  ],
+  "k2": [
+   "online = 0"
+  ],
+  "l1": [
+   "online = 1"
+  ],
+  "l2": [
+   "online = 0"
+  ],
+  "m1": [
+   "online = 1"
+  ],
+  "n1": [
+   "online = 1"
+  ],
+  "o1": [
+   "online = 1"
+  ],
+  "p1": [
+   "online = 1"
+  ],
+  "q1": [
+   "online = 1"
+  ],
+  "r1": [
+   "online = 1"
+  ],
+  "s1": [
+   "online = 1"
+  ],
+  "t1": [
+   "online = 1"
+  ],
+  "u1": [
+   "online = 1"
+  ],
+  "v1": [
+   "online = 1"
+  ],
+  "w1": [
+   "online = 1"
+  ],
+  "x1": [
+   "online = 1"
+  ],
+  "y1": [],
+  "z1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelFan_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelFan_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendreleaseAlert_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivereleaseAlert_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendAlert_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "useCache = 1"
+            ],
+            "children": [
+             {
+              "event": "receivesendAlert_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "useCache = 1"
+              ],
+              "children": [
+               {
+                "event": "sendfetchFan_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivefetchFan_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendlogFan_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivelogFan_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendqueryAlert_6",
+                        "code": "k1",
+                        "conditions": [
+                         "online = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivequeryAlert_6",
+                          "code": "l1",
+                          "conditions": [
+                           "online = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendnotifyAlert_7",
+                            "code": "m1",
+                            "conditions": [
+                             "online = 1"
+                            ],
+                            "children": [
+                             {
+                              "event": "receivenotifyAlert_7",
+                              "code": "n1",
+                              "conditions": [
+                               "online = 1"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendreservePm_8",
+                                "code": "o1",
+                                "conditions": [
+                                 "online = 1"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivereservePm_8",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "online = 1"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendapproveFan_9",
+                                    "code": "q1",
+                                    "conditions": [
+                                     "online = 1"
+                                    ],
+                                    "children": [
+                                     {
+                                      "event": "receiveapproveFan_9",
+                                      "code": "r1",
+                                      "conditions": [
+                                       "online = 1"
+                                      ],
+                                      "children": [
+                                       {
+                                        "event": "sendreportFan_10",
+                                        "code": "s1",
+                                        "conditions": [
+                                         "online = 1"
+                                        ],
+                                        "children": [
+                                         {
+                                          "event": "receivereportFan_10",
+                                          "code": "t1",
+                                          "conditions": [
+                                           "online = 1"
+                                          ],
+                                          "children": [
+                                           {
+                                            "event": "sendrequestPm_11",
+                                            "code": "u1",
+                                            "conditions": [
+                                             "online = 1"
+                                            ],
+                                            "children": [
+                                             {
+                                              "event": "receiverequestPm_11",
+                                              "code": "v1",
+                                              "conditions": [
+                                               "online = 1"
+                                              ],
+                                              "children": [
+                                               {
+                                                "event": "sendfetchPm_12",
+                                                "code": "w1",
+                                                "conditions": [
+                                                 "online = 1"
+                                                ],
+                                                "children": [
+                                                 {
+                                                  "event": "receivefetchPm_12",
+                                                  "code": "x1",
+                                                  "conditions": [
+                                                   "online = 1"
+                                                  ],
+                                                  "children": [
+                                                   {
+                                                    "event": "sendvalidateFan_14",
+                                                    "code": "y1",
+                                                    "conditions": [],
+                                                    "children": [
+                                                     {
+                                                      "event": "receivevalidateFan_14",
+                                                      "code": "z1",
+                                                      "conditions": [],
+                                                      "children": []
+                                                     }
+                                                    ]
+                                                   }
+                                                  ]
+                                                 }
+                                                ]
+                                               }
+                                              ]
+                                             }
+                                            ]
+                                           }
+                                          ]
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       },
+                       {
+                        "event": "sendcancelAlert_13",
+                        "code": "k2",
+                        "conditions": [
+                         "online = 0"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecancelAlert_13",
+                          "code": "l2",
+                          "conditions": [
+                           "online = 0"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendvalidateFan_14",
+                            "code": "y1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivevalidateFan_14",
+                              "code": "z1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> y1 -> z1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

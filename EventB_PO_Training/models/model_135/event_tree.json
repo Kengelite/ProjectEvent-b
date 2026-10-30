@@ -1,0 +1,205 @@
+{
+ "event_codes": {
+  "a1": "sendsyncReturn_1",
+  "b1": "receivesyncReturn_1",
+  "c1": "sendsendRefund_2",
+  "d1": "receivesendRefund_2",
+  "e1": "sendnotifyReturn_3_opt1",
+  "f1": "receivenotifyReturn_3_opt1",
+  "g1": "sendscheduleReturn_4",
+  "h1": "receivescheduleReturn_4",
+  "i1": "sendackReturn_5",
+  "j1": "receiveackReturn_5",
+  "k1": "sendreportReturn_6",
+  "l1": "receivereportReturn_6",
+  "m1": "sendlogRefund_7",
+  "n1": "receivelogRefund_7",
+  "o1": "sendapproveRefund_8",
+  "p1": "receiveapproveRefund_8",
+  "q1": "sendassignLabel_9",
+  "r1": "receiveassignLabel_9",
+  "s1": "sendvalidateRefund_10",
+  "t1": "receivevalidateRefund_10"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "useCache = 1"
+  ],
+  "f1": [
+   "useCache = 1"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": [],
+  "m1": [],
+  "n1": [],
+  "o1": [],
+  "p1": [],
+  "q1": [],
+  "r1": [],
+  "s1": [],
+  "t1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendsyncReturn_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivesyncReturn_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsendRefund_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesendRefund_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendnotifyReturn_3_opt1",
+            "code": "e1",
+            "conditions": [
+             "useCache = 1"
+            ],
+            "children": [
+             {
+              "event": "receivenotifyReturn_3_opt1",
+              "code": "f1",
+              "conditions": [
+               "useCache = 1"
+              ],
+              "children": [
+               {
+                "event": "sendscheduleReturn_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivescheduleReturn_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendackReturn_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receiveackReturn_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreportReturn_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereportReturn_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": [
+                           {
+                            "event": "sendlogRefund_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivelogRefund_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": [
+                               {
+                                "event": "sendapproveRefund_8",
+                                "code": "o1",
+                                "conditions": [],
+                                "children": [
+                                 {
+                                  "event": "receiveapproveRefund_8",
+                                  "code": "p1",
+                                  "conditions": [],
+                                  "children": [
+                                   {
+                                    "event": "sendassignLabel_9",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveassignLabel_9",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": [
+                                       {
+                                        "event": "sendvalidateRefund_10",
+                                        "code": "s1",
+                                        "conditions": [],
+                                        "children": [
+                                         {
+                                          "event": "receivevalidateRefund_10",
+                                          "code": "t1",
+                                          "conditions": [],
+                                          "children": []
+                                         }
+                                        ]
+                                       }
+                                      ]
+                                     }
+                                    ]
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

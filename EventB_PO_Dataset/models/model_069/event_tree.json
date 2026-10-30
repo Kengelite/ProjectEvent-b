@@ -1,0 +1,194 @@
+{
+ "event_codes": {
+  "a1": "sendcancelSlot_1",
+  "b1": "receivecancelSlot_1",
+  "c1": "sendfetchWash_2",
+  "d1": "receivefetchWash_2",
+  "e1": "sendcancelPayment_3",
+  "f1": "receivecancelPayment_3",
+  "g1": "sendapproveWash_4",
+  "h1": "receiveapproveWash_4",
+  "i1": "sendissueWash_5_opt1",
+  "j1": "receiveissueWash_5_opt1",
+  "k1": "sendconfirmPayment_6",
+  "l1": "receiveconfirmPayment_6",
+  "m1": "sendconfirmWash_7",
+  "m2": "checkloop_cancelPayment_3_loop1",
+  "n1": "receiveconfirmWash_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "roundNo < 12"
+  ],
+  "f1": [
+   "roundNo < 12"
+  ],
+  "g1": [
+   "roundNo < 12"
+  ],
+  "h1": [
+   "roundNo < 12"
+  ],
+  "i1": [
+   "roundNo < 12",
+   "withExtra = 1"
+  ],
+  "j1": [
+   "roundNo < 12",
+   "withExtra = 1"
+  ],
+  "k1": [
+   "roundNo < 12"
+  ],
+  "l1": [
+   "roundNo < 12"
+  ],
+  "m1": [],
+  "m2": [
+   "roundNo < 12"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelSlot_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelSlot_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfetchWash_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefetchWash_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendcancelPayment_3",
+            "code": "e1",
+            "conditions": [
+             "roundNo < 12"
+            ],
+            "children": [
+             {
+              "event": "receivecancelPayment_3",
+              "code": "f1",
+              "conditions": [
+               "roundNo < 12"
+              ],
+              "children": [
+               {
+                "event": "sendapproveWash_4",
+                "code": "g1",
+                "conditions": [
+                 "roundNo < 12"
+                ],
+                "children": [
+                 {
+                  "event": "receiveapproveWash_4",
+                  "code": "h1",
+                  "conditions": [
+                   "roundNo < 12"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendissueWash_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "roundNo < 12",
+                     "withExtra = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveissueWash_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "roundNo < 12",
+                       "withExtra = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendconfirmPayment_6",
+                        "code": "k1",
+                        "conditions": [
+                         "roundNo < 12"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveconfirmPayment_6",
+                          "code": "l1",
+                          "conditions": [
+                           "roundNo < 12"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendconfirmWash_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveconfirmWash_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_cancelPayment_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendcancelPayment_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "roundNo < 12"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

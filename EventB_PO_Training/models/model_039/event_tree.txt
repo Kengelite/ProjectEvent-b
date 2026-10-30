@@ -1,0 +1,41 @@
+model_039  SmartMeterBilling  —  Event tree
+
+1) รหัส event
+   a1   sendsendUsage_1
+   b1   receivesendUsage_1
+   c1   sendusageAck_2
+   d1   receiveusageAck_2
+   e1   sendgenerateBill_3
+   f1   receivegenerateBill_3
+   g1   sendpayBill_4
+   h1   receivepayBill_4
+   i1   sendsetAutoPay_5_opt1
+   j1   receivesetAutoPay_5_opt1
+   k1   sendautoPayOK_6_opt1
+   l1   receiveautoPayOK_6_opt1
+   m1   sendreceiptIssued_7
+   n1   receivereceiptIssued_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsendUsage_1
+       └── b1 receivesendUsage_1
+           └── c1 sendusageAck_2
+               └── d1 receiveusageAck_2
+                   └── e1 sendgenerateBill_3
+                       └── f1 receivegenerateBill_3
+                           └── g1 sendpayBill_4
+                               └── h1 receivepayBill_4
+                                   └── i1 sendsetAutoPay_5_opt1
+                                       └── j1 receivesetAutoPay_5_opt1
+                                           └── k1 sendautoPayOK_6_opt1
+                                               └── l1 receiveautoPayOK_6_opt1
+                                                   └── m1 sendreceiptIssued_7
+                                                       └── n1 receivereceiptIssued_7
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

@@ -1,0 +1,205 @@
+{
+ "event_codes": {
+  "a1": "sendregister_1",
+  "b1": "receiveregister_1",
+  "c1": "sendsendCode_2",
+  "d1": "receivesendCode_2",
+  "e1": "sendresendRequest_3",
+  "f1": "receiveresendRequest_3",
+  "g1": "sendresendCode_4",
+  "h1": "receiveresendCode_4",
+  "i1": "sendsubmitCode_5",
+  "i2": "checkloop_resendRequest_3_loop1",
+  "j1": "receivesubmitCode_5",
+  "k1": "sendverifyResult_6",
+  "l1": "receiveverifyResult_6",
+  "m1": "sendaccountActivated_7",
+  "m2": "checkloop_submitCode_5_loop2",
+  "n1": "receiveaccountActivated_7"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "resendCount < 3"
+  ],
+  "f1": [
+   "resendCount < 3"
+  ],
+  "g1": [
+   "resendCount < 3"
+  ],
+  "h1": [
+   "resendCount < 3"
+  ],
+  "i1": [
+   "verifyAttempt < 5"
+  ],
+  "i2": [
+   "resendCount < 3"
+  ],
+  "j1": [
+   "verifyAttempt < 5"
+  ],
+  "k1": [
+   "verifyAttempt < 5"
+  ],
+  "l1": [
+   "verifyAttempt < 5"
+  ],
+  "m1": [],
+  "m2": [
+   "verifyAttempt < 5"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendregister_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveregister_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsendCode_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesendCode_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendresendRequest_3",
+            "code": "e1",
+            "conditions": [
+             "resendCount < 3"
+            ],
+            "children": [
+             {
+              "event": "receiveresendRequest_3",
+              "code": "f1",
+              "conditions": [
+               "resendCount < 3"
+              ],
+              "children": [
+               {
+                "event": "sendresendCode_4",
+                "code": "g1",
+                "conditions": [
+                 "resendCount < 3"
+                ],
+                "children": [
+                 {
+                  "event": "receiveresendCode_4",
+                  "code": "h1",
+                  "conditions": [
+                   "resendCount < 3"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendsubmitCode_5",
+                    "code": "i1",
+                    "conditions": [
+                     "verifyAttempt < 5"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivesubmitCode_5",
+                      "code": "j1",
+                      "conditions": [
+                       "verifyAttempt < 5"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendverifyResult_6",
+                        "code": "k1",
+                        "conditions": [
+                         "verifyAttempt < 5"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveverifyResult_6",
+                          "code": "l1",
+                          "conditions": [
+                           "verifyAttempt < 5"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendaccountActivated_7",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveaccountActivated_7",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_submitCode_5_loop2",
+                            "code": "m2",
+                            "loop_back_to": "sendsubmitCode_5",
+                            "loop_back_to_code": "i1",
+                            "conditions": [
+                             "verifyAttempt < 5"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_resendRequest_3_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendresendRequest_3",
+                    "loop_back_to_code": "e1",
+                    "conditions": [
+                     "resendCount < 3"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ i1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

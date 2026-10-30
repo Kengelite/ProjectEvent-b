@@ -1,0 +1,148 @@
+{
+ "event_codes": {
+  "a1": "sendassignReport_1",
+  "b1": "receiveassignReport_1",
+  "c1": "sendsendNutrient_2",
+  "d1": "receivesendNutrient_2",
+  "e1": "sendreleaseReport_3",
+  "f1": "receivereleaseReport_3",
+  "g1": "sendcancelNutrient_4",
+  "g2": "checkloop_releaseReport_3_loop1",
+  "h1": "receivecancelNutrient_4",
+  "i1": "sendquerySample_5",
+  "j1": "receivequerySample_5",
+  "k1": "sendnotifyReport_6",
+  "l1": "receivenotifyReport_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "roundNo < 12"
+  ],
+  "f1": [
+   "roundNo < 12"
+  ],
+  "g1": [],
+  "g2": [
+   "roundNo < 12"
+  ],
+  "h1": [],
+  "i1": [],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendassignReport_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveassignReport_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsendNutrient_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesendNutrient_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendreleaseReport_3",
+            "code": "e1",
+            "conditions": [
+             "roundNo < 12"
+            ],
+            "children": [
+             {
+              "event": "receivereleaseReport_3",
+              "code": "f1",
+              "conditions": [
+               "roundNo < 12"
+              ],
+              "children": [
+               {
+                "event": "sendcancelNutrient_4",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivecancelNutrient_4",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": [
+                   {
+                    "event": "sendquerySample_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivequerySample_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendnotifyReport_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivenotifyReport_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "checkloop_releaseReport_3_loop1",
+                "code": "g2",
+                "loop_back_to": "sendreleaseReport_3",
+                "loop_back_to_code": "e1",
+                "conditions": [
+                 "roundNo < 12"
+                ],
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

@@ -1,0 +1,271 @@
+{
+ "event_codes": {
+  "a1": "sendackPower_1",
+  "b1": "receiveackPower_1",
+  "c1": "sendapproveExport_2",
+  "d1": "receiveapproveExport_2",
+  "e1": "sendissuePower_3",
+  "f1": "receiveissuePower_3",
+  "g1": "sendconfirmFault_4",
+  "g2": "sendcheckPower_6",
+  "h1": "receiveconfirmFault_4",
+  "h2": "receivecheckPower_6",
+  "i1": "sendreportFault_5",
+  "j1": "receivereportFault_5",
+  "k1": "sendreportExport_7",
+  "l1": "receivereportExport_7",
+  "m1": "sendreserveExport_8",
+  "m2": "checkloop_issuePower_3_loop1",
+  "n1": "receivereserveExport_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "attemptNo < 8"
+  ],
+  "f1": [
+   "attemptNo < 8"
+  ],
+  "g1": [
+   "attemptNo < 8",
+   "attemptNo mod 2 = 0"
+  ],
+  "g2": [
+   "attemptNo < 8",
+   "attemptNo mod 2 ≠ 0"
+  ],
+  "h1": [
+   "attemptNo < 8",
+   "attemptNo mod 2 = 0"
+  ],
+  "h2": [
+   "attemptNo < 8",
+   "attemptNo mod 2 ≠ 0"
+  ],
+  "i1": [
+   "attemptNo < 8",
+   "attemptNo mod 2 = 0"
+  ],
+  "j1": [
+   "attemptNo < 8",
+   "attemptNo mod 2 = 0"
+  ],
+  "k1": [
+   "attemptNo < 8"
+  ],
+  "l1": [
+   "attemptNo < 8"
+  ],
+  "m1": [],
+  "m2": [
+   "attemptNo < 8"
+  ],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendackPower_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveackPower_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendapproveExport_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receiveapproveExport_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendissuePower_3",
+            "code": "e1",
+            "conditions": [
+             "attemptNo < 8"
+            ],
+            "children": [
+             {
+              "event": "receiveissuePower_3",
+              "code": "f1",
+              "conditions": [
+               "attemptNo < 8"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmFault_4",
+                "code": "g1",
+                "conditions": [
+                 "attemptNo < 8",
+                 "attemptNo mod 2 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receiveconfirmFault_4",
+                  "code": "h1",
+                  "conditions": [
+                   "attemptNo < 8",
+                   "attemptNo mod 2 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreportFault_5",
+                    "code": "i1",
+                    "conditions": [
+                     "attemptNo < 8",
+                     "attemptNo mod 2 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereportFault_5",
+                      "code": "j1",
+                      "conditions": [
+                       "attemptNo < 8",
+                       "attemptNo mod 2 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreportExport_7",
+                        "code": "k1",
+                        "conditions": [
+                         "attemptNo < 8"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivereportExport_7",
+                          "code": "l1",
+                          "conditions": [
+                           "attemptNo < 8"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendreserveExport_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivereserveExport_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           },
+                           {
+                            "event": "checkloop_issuePower_3_loop1",
+                            "code": "m2",
+                            "loop_back_to": "sendissuePower_3",
+                            "loop_back_to_code": "e1",
+                            "conditions": [
+                             "attemptNo < 8"
+                            ],
+                            "children": []
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendcheckPower_6",
+                "code": "g2",
+                "conditions": [
+                 "attemptNo < 8",
+                 "attemptNo mod 2 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivecheckPower_6",
+                  "code": "h2",
+                  "conditions": [
+                   "attemptNo < 8",
+                   "attemptNo mod 2 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreportExport_7",
+                    "code": "k1",
+                    "conditions": [
+                     "attemptNo < 8"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivereportExport_7",
+                      "code": "l1",
+                      "conditions": [
+                       "attemptNo < 8"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendreserveExport_8",
+                        "code": "m1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereserveExport_8",
+                          "code": "n1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       },
+                       {
+                        "event": "checkloop_issuePower_3_loop1",
+                        "code": "m2",
+                        "loop_back_to": "sendissuePower_3",
+                        "loop_back_to_code": "e1",
+                        "conditions": [
+                         "attemptNo < 8"
+                        ],
+                        "children": []
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

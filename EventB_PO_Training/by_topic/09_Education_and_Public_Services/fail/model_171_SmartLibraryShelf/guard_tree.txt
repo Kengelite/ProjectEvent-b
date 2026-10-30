@@ -1,0 +1,18 @@
+model_171  SmartLibraryShelf  —  Guard tree
+
+1) รหัส guard
+   a1   roundNo < 12
+   b1   roundNo mod 4 = 0
+   c1   grade = ACTIVE
+   c2   grade = IDLE
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 12
+       └── b1  roundNo mod 4 = 0
+           ├── c1  grade = ACTIVE
+           └── c2  grade = IDLE
+
+3) เส้นทาง
+   a1 -> b1 -> c1
+   a1 -> b1 -> c2

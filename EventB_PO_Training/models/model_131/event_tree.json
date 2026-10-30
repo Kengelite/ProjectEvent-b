@@ -1,0 +1,389 @@
+{
+ "event_codes": {
+  "a1": "sendconfirmTransfer_1",
+  "b1": "receiveconfirmTransfer_1",
+  "c1": "sendsendOtp_2",
+  "d1": "receivesendOtp_2",
+  "e1": "sendsendTransfer_3",
+  "f1": "receivesendTransfer_3",
+  "g1": "sendvalidateAccount_4",
+  "g2": "sendsyncOtp_6",
+  "h1": "receivevalidateAccount_4",
+  "h2": "receivesyncOtp_6",
+  "i1": "sendupdateOtp_5",
+  "i2": "sendapproveOtp_7",
+  "j1": "receiveupdateOtp_5",
+  "j2": "receiveapproveOtp_7",
+  "k1": "sendcancelTransfer_8",
+  "l1": "receivecancelTransfer_8",
+  "m1": "sendapproveAccount_9",
+  "n1": "receiveapproveAccount_9",
+  "o1": "sendsendAccount_10",
+  "p1": "receivesendAccount_10",
+  "q1": "sendissueOtp_11",
+  "q2": "checkloop_sendTransfer_3_loop1",
+  "r1": "receiveissueOtp_11"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "retryNo < 12"
+  ],
+  "f1": [
+   "retryNo < 12"
+  ],
+  "g1": [
+   "retryNo < 12",
+   "retryNo mod 4 = 0"
+  ],
+  "g2": [
+   "retryNo < 12",
+   "retryNo mod 4 ≠ 0"
+  ],
+  "h1": [
+   "retryNo < 12",
+   "retryNo mod 4 = 0"
+  ],
+  "h2": [
+   "retryNo < 12",
+   "retryNo mod 4 ≠ 0"
+  ],
+  "i1": [
+   "retryNo < 12",
+   "retryNo mod 4 = 0"
+  ],
+  "i2": [
+   "retryNo < 12",
+   "retryNo mod 4 ≠ 0"
+  ],
+  "j1": [
+   "retryNo < 12",
+   "retryNo mod 4 = 0"
+  ],
+  "j2": [
+   "retryNo < 12",
+   "retryNo mod 4 ≠ 0"
+  ],
+  "k1": [
+   "retryNo < 12"
+  ],
+  "l1": [
+   "retryNo < 12"
+  ],
+  "m1": [
+   "retryNo < 12"
+  ],
+  "n1": [
+   "retryNo < 12"
+  ],
+  "o1": [
+   "retryNo < 12"
+  ],
+  "p1": [
+   "retryNo < 12"
+  ],
+  "q1": [],
+  "q2": [
+   "retryNo < 12"
+  ],
+  "r1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendconfirmTransfer_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receiveconfirmTransfer_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsendOtp_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesendOtp_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendsendTransfer_3",
+            "code": "e1",
+            "conditions": [
+             "retryNo < 12"
+            ],
+            "children": [
+             {
+              "event": "receivesendTransfer_3",
+              "code": "f1",
+              "conditions": [
+               "retryNo < 12"
+              ],
+              "children": [
+               {
+                "event": "sendvalidateAccount_4",
+                "code": "g1",
+                "conditions": [
+                 "retryNo < 12",
+                 "retryNo mod 4 = 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivevalidateAccount_4",
+                  "code": "h1",
+                  "conditions": [
+                   "retryNo < 12",
+                   "retryNo mod 4 = 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendupdateOtp_5",
+                    "code": "i1",
+                    "conditions": [
+                     "retryNo < 12",
+                     "retryNo mod 4 = 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveupdateOtp_5",
+                      "code": "j1",
+                      "conditions": [
+                       "retryNo < 12",
+                       "retryNo mod 4 = 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelTransfer_8",
+                        "code": "k1",
+                        "conditions": [
+                         "retryNo < 12"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecancelTransfer_8",
+                          "code": "l1",
+                          "conditions": [
+                           "retryNo < 12"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendapproveAccount_9",
+                            "code": "m1",
+                            "conditions": [
+                             "retryNo < 12"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveapproveAccount_9",
+                              "code": "n1",
+                              "conditions": [
+                               "retryNo < 12"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsendAccount_10",
+                                "code": "o1",
+                                "conditions": [
+                                 "retryNo < 12"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesendAccount_10",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "retryNo < 12"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendissueOtp_11",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveissueOtp_11",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_sendTransfer_3_loop1",
+                                    "code": "q2",
+                                    "loop_back_to": "sendsendTransfer_3",
+                                    "loop_back_to_code": "e1",
+                                    "conditions": [
+                                     "retryNo < 12"
+                                    ],
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendsyncOtp_6",
+                "code": "g2",
+                "conditions": [
+                 "retryNo < 12",
+                 "retryNo mod 4 ≠ 0"
+                ],
+                "children": [
+                 {
+                  "event": "receivesyncOtp_6",
+                  "code": "h2",
+                  "conditions": [
+                   "retryNo < 12",
+                   "retryNo mod 4 ≠ 0"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendapproveOtp_7",
+                    "code": "i2",
+                    "conditions": [
+                     "retryNo < 12",
+                     "retryNo mod 4 ≠ 0"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiveapproveOtp_7",
+                      "code": "j2",
+                      "conditions": [
+                       "retryNo < 12",
+                       "retryNo mod 4 ≠ 0"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendcancelTransfer_8",
+                        "code": "k1",
+                        "conditions": [
+                         "retryNo < 12"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivecancelTransfer_8",
+                          "code": "l1",
+                          "conditions": [
+                           "retryNo < 12"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendapproveAccount_9",
+                            "code": "m1",
+                            "conditions": [
+                             "retryNo < 12"
+                            ],
+                            "children": [
+                             {
+                              "event": "receiveapproveAccount_9",
+                              "code": "n1",
+                              "conditions": [
+                               "retryNo < 12"
+                              ],
+                              "children": [
+                               {
+                                "event": "sendsendAccount_10",
+                                "code": "o1",
+                                "conditions": [
+                                 "retryNo < 12"
+                                ],
+                                "children": [
+                                 {
+                                  "event": "receivesendAccount_10",
+                                  "code": "p1",
+                                  "conditions": [
+                                   "retryNo < 12"
+                                  ],
+                                  "children": [
+                                   {
+                                    "event": "sendissueOtp_11",
+                                    "code": "q1",
+                                    "conditions": [],
+                                    "children": [
+                                     {
+                                      "event": "receiveissueOtp_11",
+                                      "code": "r1",
+                                      "conditions": [],
+                                      "children": []
+                                     }
+                                    ]
+                                   },
+                                   {
+                                    "event": "checkloop_sendTransfer_3_loop1",
+                                    "code": "q2",
+                                    "loop_back_to": "sendsendTransfer_3",
+                                    "loop_back_to_code": "e1",
+                                    "conditions": [
+                                     "retryNo < 12"
+                                    ],
+                                    "children": []
+                                   }
+                                  ]
+                                 }
+                                ]
+                               }
+                              ]
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ e1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

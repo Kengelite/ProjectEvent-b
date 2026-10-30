@@ -1,0 +1,163 @@
+{
+ "event_codes": {
+  "a1": "sendcancelTray_1",
+  "b1": "receivecancelTray_1",
+  "c1": "sendvalidateTray_2",
+  "d1": "receivevalidateTray_2",
+  "e1": "sendrequestScan_3",
+  "e2": "sendreleaseScan_4",
+  "f1": "receiverequestScan_3",
+  "f2": "receivereleaseScan_4",
+  "g1": "sendreserveTray_6",
+  "h1": "receivereserveTray_6",
+  "i1": "sendupdateTray_5",
+  "j1": "receiveupdateTray_5"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "usage < 10"
+  ],
+  "e2": [
+   "usage ≥ 10"
+  ],
+  "f1": [
+   "usage < 10"
+  ],
+  "f2": [
+   "usage ≥ 10"
+  ],
+  "g1": [],
+  "h1": [],
+  "i1": [
+   "usage ≥ 10"
+  ],
+  "j1": [
+   "usage ≥ 10"
+  ]
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelTray_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelTray_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendvalidateTray_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivevalidateTray_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendrequestScan_3",
+            "code": "e1",
+            "conditions": [
+             "usage < 10"
+            ],
+            "children": [
+             {
+              "event": "receiverequestScan_3",
+              "code": "f1",
+              "conditions": [
+               "usage < 10"
+              ],
+              "children": [
+               {
+                "event": "sendreserveTray_6",
+                "code": "g1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receivereserveTray_6",
+                  "code": "h1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendreleaseScan_4",
+            "code": "e2",
+            "conditions": [
+             "usage ≥ 10"
+            ],
+            "children": [
+             {
+              "event": "receivereleaseScan_4",
+              "code": "f2",
+              "conditions": [
+               "usage ≥ 10"
+              ],
+              "children": [
+               {
+                "event": "sendupdateTray_5",
+                "code": "i1",
+                "conditions": [
+                 "usage ≥ 10"
+                ],
+                "children": [
+                 {
+                  "event": "receiveupdateTray_5",
+                  "code": "j1",
+                  "conditions": [
+                   "usage ≥ 10"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreserveTray_6",
+                    "code": "g1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereserveTray_6",
+                      "code": "h1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1 -> g1 -> h1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

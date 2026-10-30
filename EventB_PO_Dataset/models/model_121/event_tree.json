@@ -1,0 +1,223 @@
+{
+ "event_codes": {
+  "a1": "sendreportRation_1",
+  "b1": "receivereportRation_1",
+  "c1": "sendsyncFeed_2",
+  "d1": "receivesyncFeed_2",
+  "e1": "sendackFeed_3",
+  "e2": "sendcancelRation_7",
+  "f1": "receiveackFeed_3",
+  "f2": "receivecancelRation_7",
+  "g1": "sendupdateRation_4_opt1",
+  "h1": "receiveupdateRation_4_opt1",
+  "i1": "sendqueryRation_5_opt1",
+  "j1": "receivequeryRation_5_opt1",
+  "k1": "sendconfirmFeed_6",
+  "l1": "receiveconfirmFeed_6",
+  "m1": "sendconfirmRation_8",
+  "n1": "receiveconfirmRation_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "approved = 1"
+  ],
+  "e2": [
+   "approved = 0"
+  ],
+  "f1": [
+   "approved = 1"
+  ],
+  "f2": [
+   "approved = 0"
+  ],
+  "g1": [
+   "approved = 1",
+   "express = 1"
+  ],
+  "h1": [
+   "approved = 1",
+   "express = 1"
+  ],
+  "i1": [
+   "approved = 1",
+   "express = 1"
+  ],
+  "j1": [
+   "approved = 1",
+   "express = 1"
+  ],
+  "k1": [
+   "approved = 1"
+  ],
+  "l1": [
+   "approved = 1"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendreportRation_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivereportRation_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendsyncFeed_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivesyncFeed_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendackFeed_3",
+            "code": "e1",
+            "conditions": [
+             "approved = 1"
+            ],
+            "children": [
+             {
+              "event": "receiveackFeed_3",
+              "code": "f1",
+              "conditions": [
+               "approved = 1"
+              ],
+              "children": [
+               {
+                "event": "sendupdateRation_4_opt1",
+                "code": "g1",
+                "conditions": [
+                 "approved = 1",
+                 "express = 1"
+                ],
+                "children": [
+                 {
+                  "event": "receiveupdateRation_4_opt1",
+                  "code": "h1",
+                  "conditions": [
+                   "approved = 1",
+                   "express = 1"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendqueryRation_5_opt1",
+                    "code": "i1",
+                    "conditions": [
+                     "approved = 1",
+                     "express = 1"
+                    ],
+                    "children": [
+                     {
+                      "event": "receivequeryRation_5_opt1",
+                      "code": "j1",
+                      "conditions": [
+                       "approved = 1",
+                       "express = 1"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendconfirmFeed_6",
+                        "code": "k1",
+                        "conditions": [
+                         "approved = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receiveconfirmFeed_6",
+                          "code": "l1",
+                          "conditions": [
+                           "approved = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendconfirmRation_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receiveconfirmRation_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           },
+           {
+            "event": "sendcancelRation_7",
+            "code": "e2",
+            "conditions": [
+             "approved = 0"
+            ],
+            "children": [
+             {
+              "event": "receivecancelRation_7",
+              "code": "f2",
+              "conditions": [
+               "approved = 0"
+              ],
+              "children": [
+               {
+                "event": "sendconfirmRation_8",
+                "code": "m1",
+                "conditions": [],
+                "children": [
+                 {
+                  "event": "receiveconfirmRation_8",
+                  "code": "n1",
+                  "conditions": [],
+                  "children": []
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

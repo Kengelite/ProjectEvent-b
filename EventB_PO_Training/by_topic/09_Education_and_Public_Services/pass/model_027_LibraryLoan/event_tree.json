@@ -1,0 +1,211 @@
+{
+ "event_codes": {
+  "a1": "sendscanCard_1",
+  "b1": "receivescanCard_1",
+  "c1": "sendcheckMember_2",
+  "d1": "receivecheckMember_2",
+  "e1": "sendmemberInfo_3",
+  "f1": "receivememberInfo_3",
+  "g1": "sendborrowBook_4",
+  "g2": "sendrejectLoan_7",
+  "h1": "receiveborrowBook_4",
+  "h2": "receiverejectLoan_7",
+  "i1": "sendrecordLoan_5",
+  "j1": "receiverecordLoan_5",
+  "k1": "sendsetReminder_6_opt1",
+  "l1": "receivesetReminder_6_opt1",
+  "m1": "sendlogout_8",
+  "n1": "receivelogout_8"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [],
+  "f1": [],
+  "g1": [
+   "fine ≤ 100"
+  ],
+  "g2": [
+   "fine > 100"
+  ],
+  "h1": [
+   "fine ≤ 100"
+  ],
+  "h2": [
+   "fine > 100"
+  ],
+  "i1": [
+   "fine ≤ 100"
+  ],
+  "j1": [
+   "fine ≤ 100"
+  ],
+  "k1": [
+   "fine ≤ 100",
+   "wantReminder = 1"
+  ],
+  "l1": [
+   "fine ≤ 100",
+   "wantReminder = 1"
+  ],
+  "m1": [],
+  "n1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendscanCard_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivescanCard_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendcheckMember_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivecheckMember_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendmemberInfo_3",
+            "code": "e1",
+            "conditions": [],
+            "children": [
+             {
+              "event": "receivememberInfo_3",
+              "code": "f1",
+              "conditions": [],
+              "children": [
+               {
+                "event": "sendborrowBook_4",
+                "code": "g1",
+                "conditions": [
+                 "fine ≤ 100"
+                ],
+                "children": [
+                 {
+                  "event": "receiveborrowBook_4",
+                  "code": "h1",
+                  "conditions": [
+                   "fine ≤ 100"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendrecordLoan_5",
+                    "code": "i1",
+                    "conditions": [
+                     "fine ≤ 100"
+                    ],
+                    "children": [
+                     {
+                      "event": "receiverecordLoan_5",
+                      "code": "j1",
+                      "conditions": [
+                       "fine ≤ 100"
+                      ],
+                      "children": [
+                       {
+                        "event": "sendsetReminder_6_opt1",
+                        "code": "k1",
+                        "conditions": [
+                         "fine ≤ 100",
+                         "wantReminder = 1"
+                        ],
+                        "children": [
+                         {
+                          "event": "receivesetReminder_6_opt1",
+                          "code": "l1",
+                          "conditions": [
+                           "fine ≤ 100",
+                           "wantReminder = 1"
+                          ],
+                          "children": [
+                           {
+                            "event": "sendlogout_8",
+                            "code": "m1",
+                            "conditions": [],
+                            "children": [
+                             {
+                              "event": "receivelogout_8",
+                              "code": "n1",
+                              "conditions": [],
+                              "children": []
+                             }
+                            ]
+                           }
+                          ]
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               },
+               {
+                "event": "sendrejectLoan_7",
+                "code": "g2",
+                "conditions": [
+                 "fine > 100"
+                ],
+                "children": [
+                 {
+                  "event": "receiverejectLoan_7",
+                  "code": "h2",
+                  "conditions": [
+                   "fine > 100"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendlogout_8",
+                    "code": "m1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivelogout_8",
+                      "code": "n1",
+                      "conditions": [],
+                      "children": []
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 -> n1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

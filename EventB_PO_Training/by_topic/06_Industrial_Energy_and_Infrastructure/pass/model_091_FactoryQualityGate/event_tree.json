@@ -1,0 +1,156 @@
+{
+ "event_codes": {
+  "a1": "sendcancelPart_1",
+  "b1": "receivecancelPart_1",
+  "c1": "sendfetchDefect_2",
+  "d1": "receivefetchDefect_2",
+  "e1": "sendlogDefect_3",
+  "f1": "receivelogDefect_3",
+  "g1": "sendnotifyPart_4",
+  "h1": "receivenotifyPart_4",
+  "i1": "sendreportPart_5",
+  "i2": "checkloop_logDefect_3_loop1",
+  "j1": "receivereportPart_5",
+  "k1": "sendreleaseBatch_6",
+  "l1": "receivereleaseBatch_6"
+ },
+ "event_conditions": {
+  "a1": [],
+  "b1": [],
+  "c1": [],
+  "d1": [],
+  "e1": [
+   "roundNo < 7"
+  ],
+  "f1": [
+   "roundNo < 7"
+  ],
+  "g1": [
+   "roundNo < 7"
+  ],
+  "h1": [
+   "roundNo < 7"
+  ],
+  "i1": [],
+  "i2": [
+   "roundNo < 7"
+  ],
+  "j1": [],
+  "k1": [],
+  "l1": []
+ },
+ "event_tree": {
+  "event": "ROOT",
+  "code": "root",
+  "conditions": [],
+  "children": [
+   {
+    "event": "sendcancelPart_1",
+    "code": "a1",
+    "conditions": [],
+    "children": [
+     {
+      "event": "receivecancelPart_1",
+      "code": "b1",
+      "conditions": [],
+      "children": [
+       {
+        "event": "sendfetchDefect_2",
+        "code": "c1",
+        "conditions": [],
+        "children": [
+         {
+          "event": "receivefetchDefect_2",
+          "code": "d1",
+          "conditions": [],
+          "children": [
+           {
+            "event": "sendlogDefect_3",
+            "code": "e1",
+            "conditions": [
+             "roundNo < 7"
+            ],
+            "children": [
+             {
+              "event": "receivelogDefect_3",
+              "code": "f1",
+              "conditions": [
+               "roundNo < 7"
+              ],
+              "children": [
+               {
+                "event": "sendnotifyPart_4",
+                "code": "g1",
+                "conditions": [
+                 "roundNo < 7"
+                ],
+                "children": [
+                 {
+                  "event": "receivenotifyPart_4",
+                  "code": "h1",
+                  "conditions": [
+                   "roundNo < 7"
+                  ],
+                  "children": [
+                   {
+                    "event": "sendreportPart_5",
+                    "code": "i1",
+                    "conditions": [],
+                    "children": [
+                     {
+                      "event": "receivereportPart_5",
+                      "code": "j1",
+                      "conditions": [],
+                      "children": [
+                       {
+                        "event": "sendreleaseBatch_6",
+                        "code": "k1",
+                        "conditions": [],
+                        "children": [
+                         {
+                          "event": "receivereleaseBatch_6",
+                          "code": "l1",
+                          "conditions": [],
+                          "children": []
+                         }
+                        ]
+                       }
+                      ]
+                     }
+                    ]
+                   },
+                   {
+                    "event": "checkloop_logDefect_3_loop1",
+                    "code": "i2",
+                    "loop_back_to": "sendlogDefect_3",
+                    "loop_back_to_code": "e1",
+                    "conditions": [
+                     "roundNo < 7"
+                    ],
+                    "children": []
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "event_paths": [
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1",
+  "a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1"
+ ],
+ "unplaced_events": [],
+ "source": "model.txt"
+}

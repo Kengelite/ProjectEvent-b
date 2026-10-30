@@ -1,0 +1,58 @@
+model_047  VoiceAssistant  —  Event tree
+
+1) รหัส event
+   a1   sendwakeWord_1
+   b1   receivewakeWord_1
+   c1   sendstreamAudio_2
+   d1   receivestreamAudio_2
+   e1   sendintentResult_3
+   f1   receiveintentResult_3
+   g1   sendplaySong_4
+   g2   sendfetchWeather_5
+   g3   sendaskRepeat_8
+   h1   receiveplaySong_4
+   h2   receivefetchWeather_5
+   h3   receiveaskRepeat_8
+   i1   sendsleepMode_9
+   j1   receivesleepMode_9
+   k1   sendweatherInfo_6
+   l1   receiveweatherInfo_6
+   m1   sendspeakWeather_7
+   n1   receivespeakWeather_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1
+       ├── g2 → h2 → k1 → l1 → m1 → n1 → i1 → j1
+       └── g3 → h3 → i1 → j1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendwakeWord_1
+       └── b1 receivewakeWord_1
+           └── c1 sendstreamAudio_2
+               └── d1 receivestreamAudio_2
+                   └── e1 sendintentResult_3
+                       └── f1 receiveintentResult_3
+                           ├── g1 sendplaySong_4
+                           │   └── h1 receiveplaySong_4
+                           │       └── i1 sendsleepMode_9
+                           │           └── j1 receivesleepMode_9
+                           ├── g2 sendfetchWeather_5
+                           │   └── h2 receivefetchWeather_5
+                           │       └── k1 sendweatherInfo_6
+                           │           └── l1 receiveweatherInfo_6
+                           │               └── m1 sendspeakWeather_7
+                           │                   └── n1 receivespeakWeather_7
+                           │                       └── i1 sendsleepMode_9
+                           │                           └── j1 receivesleepMode_9
+                           └── g3 sendaskRepeat_8
+                               └── h3 receiveaskRepeat_8
+                                   └── i1 sendsleepMode_9
+                                       └── j1 receivesleepMode_9
+
+4) เส้นทาง
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1 -> m1 -> n1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g3 -> h3 -> i1 -> j1
