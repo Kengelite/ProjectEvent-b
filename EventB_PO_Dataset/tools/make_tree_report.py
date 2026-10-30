@@ -94,7 +94,9 @@ def render(rows, trees):
              "<tr><td>จำนวนแบบจำลอง</td>" + "".join(f"<td class='n'>{gp[k]}</td>" for k in sorted(gp)) + "</tr></table>")
     h.append("<p>0 = ไม่มีเงื่อนไขจากแผนภาพ · ไฟล์ของแต่ละแบบจำลอง: <code>models/&lt;id&gt;/tree.txt</code> (รูป tree เต็ม) และ "
              "<code>tree.json</code> · รวมทุกแบบจำลอง: <code>data/trees.jsonl</code>, <code>csv/guard_codes.csv</code> · "
-             "model_001 ไม่มี tree เพราะ model.txt มีเฉพาะชื่อ event (สร้างกลับจากไฟล์ Rodin)</p>")
+             "<b>model_001</b>: model.txt มีเฉพาะชื่อ event จึงอ่าน event และ guard จากไฟล์ proof obligation ของ Rodin (.bpo) แทน · "
+             "มี 1 event ที่ไฟล์ Rodin ไม่เก็บชื่อไว้ (แสดงเป็น unnamed_event_N, guard <code>retry &lt; 3</code>) · "
+             "แบบจำลองนี้แปลงด้วยสูตรรุ่นแรก ส่วน loop และ par จึงไม่มี guard อ้างข้อความก่อนหน้า event tree จึงแยกเป็นหลายกิ่งจาก root</p>")
 
     h.append("<h2 style='break-before:page'>4. รหัสและเส้นทางของแต่ละแบบจำลอง</h2>")
     h.append("<p>ซ้าย: รหัส guard, guard tree และเส้นทาง · ขวา: รหัส event (ในวงเล็บคือ guard ของ event นั้น), "

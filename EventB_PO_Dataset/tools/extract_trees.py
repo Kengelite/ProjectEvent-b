@@ -10,9 +10,10 @@ gives one path (a1 -> b1 -> c1) and the paths together form the tree.
 Event tree: send m → receive m, and receive p → send m when send m has the guard p ∈ receivedMessages.
 Events are coded e1, e2, ... in file order. A loop-counter event hangs under the last event of its loop body.
 
-Writes models/<id>/tree.json and tree.txt. model_001 has no guards in model.txt, so it gets no tree.
+Writes models/<id>/tree.json and tree.txt. model_001's model.txt has event names only, so its events and guards
+are read from the Rodin proof-obligation file (.bpo) instead; one of its events has no name there.
 """
-import glob, json, os, re
+import glob, html, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATASET = os.path.dirname(HERE)
@@ -42,6 +43,21 @@ def parse(path):
             if m:
                 cur[1].append(m.group(1).strip())
     return events
+
+
+def from_bpo(path):
+    """Events and guards as Rodin stored them in a .bpo (used when model.txt has no guards)."""
+    s = open(path, encoding="utf-8").read()
+    names = {}
+    for m in re.finditer(r'<org.eventb.core.poSequent name="([^"]+)".*?</org.eventb.core.poSequent>', s, re.S):
+        for eid in re.findall(r'poRole="DEFAULT" org.eventb.core.source="[^"]*event#([^"|]+)"', m.group(0)):
+            names.setdefault(html.unescape(eid), html.unescape(m.group(1)).split("/")[0])
+    guards = {}
+    for m in re.finditer(r'predicate="([^"]*)" org.eventb.core.source="[^"]*event#([^"|]+)\|org.eventb.core.guard#([^"]+)"', s):
+        g = html.unescape(m.group(1)).replace("(∅ ⦂ ℙ(Messages))", "∅")
+        g = re.sub(r"\s*(∉|∈|∨|≥|≤|≠|=|<|>)\s*", r" \1 ", g).strip()
+        guards.setdefault(html.unescape(m.group(2)), {})[html.unescape(m.group(3))] = g
+    return [(names.get(e, f"unnamed_event_{e}"), [gs[k] for k in sorted(gs)]) for e, gs in sorted(guards.items())]
 
 
 def lhs(g):
@@ -86,6 +102,8 @@ def build(events):
                 send[m.group(1)] = name; kind[name] = ("send", m.group(1))
             elif (m := re.fullmatch(r"(\w+) ∉ receivedMessages", g)):
                 recv[m.group(1)] = name; kind[name] = ("receive", m.group(1))
+        if name not in kind and any("∈ receivedMessages" in g for g in guards):
+            kind[name] = ("other", None)
     children = {n: [] for n, _ in events}
     children["ROOT"] = []
     for name, guards in events:
@@ -96,7 +114,8 @@ def build(events):
             parents = [send[k[1]]] if k[1] in send else ["ROOT"]
         else:
             prev = [p for g in guards if "∈ receivedMessages" in g for p in re.findall(r"(\w+) ∈ receivedMessages", g)]
-            parents = [recv[p] for p in prev if p in recv] or ["ROOT"]
+            sent = [p for g in guards for p in re.findall(r"^(\w+) ∈ sentMessages$", g) if p != k[1]]
+            parents = [recv[p] for p in prev if p in recv] + [send[p] for p in sent if p in send] or ["ROOT"]
         for p in parents:
             children[p].append(name)
     # loop-counter events: under the last event(s) of the loop body
@@ -212,10 +231,15 @@ def main():
     for d in sorted(glob.glob(os.path.join(DATASET, "models", "model_*"))):
         meta = json.load(open(os.path.join(d, "meta.json")))
         events = parse(os.path.join(d, "model.txt"))
+        source = "model.txt"
         if not any(g for _, g in events):
-            print("skip (no guards):", meta["model_id"])
-            continue
+            bpo = glob.glob(os.path.join(DATASET, meta.get("rodin_raw_dir") or "-", "*.bpo"))
+            if not bpo:
+                print("skip (no guards):", meta["model_id"])
+                continue
+            events, source = from_bpo(bpo[0]), "rodin .bpo (model.txt has event names only)"
         t = build(events)
+        t["source"] = source
         json.dump(t, open(os.path.join(d, "tree.json"), "w"), ensure_ascii=False, indent=1)
         open(os.path.join(d, "tree.txt"), "w", encoding="utf-8").write(text(meta["model_id"], meta["case"], t))
         n += 1

@@ -1,0 +1,91 @@
+model_001  Payment & Notification
+
+1) รหัสเงื่อนไข (guard)
+   a1   Login = 1
+   b1   amount_1 ≥ 1000
+   b2   amount_1 < 1000
+   c1   retry < 3
+   c2   retry = 3
+   d1   par_1 = 2
+
+2) Guard tree
+   (root)
+   ├── a1  Login = 1
+   │   ├── b1  amount_1 ≥ 1000
+   │   │   └── c1  retry < 3
+   │   └── b2  amount_1 < 1000
+   │       └── c1  retry < 3
+   └── c2  retry = 3
+       └── d1  par_1 = 2
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+   a1 -> b2 -> c1
+   c2 -> d1
+
+3) รหัสเหตุการณ์ (event)
+   e1   sendsubmitPayment_1_opt1  [a1]
+   e2   receivesubmitPayment_1_opt1  [a1]
+   e3   sendpaymentDetails_2_opt1  [a1]
+   e4   receivePaymentDetails_2_opt1  [a1]
+   e5   sendprocessLargePayment_3_alt2  [b1]
+   e6   receiveprocessLargePayment_3_alt2  [b1]
+   e7   sendapprovalRequired_4_alt2  [b1]
+   e8   reciveapprovalRequired_4_alt2  [b1]
+   e9   sendProcessStandarddPayment_5_alt2  [b2]
+   e10  receiveProcessStandarddPayment_5_alt2  [b2]
+   e11  sendpaymentConfirmation_6_alt2  [b2]
+   e12  recivepaymentConfirmation_6_alt2  [b2]
+   e13  unnamed_event_N  [c1]
+   e14  sendvalidatePayment_7_loop3  [c2]
+   e15  receivevalidatePayment_7_loop3  [c2]
+   e16  sendvalidationResult_8_loop3  [c2]
+   e17  recivevalidationResult_8_loop3  [c2]
+   e18  sendsendSMSNotification_9_par4
+   e19  sendsendEmailNotification_10_par4
+   e20  receivedsendSMSNotification_9_par4  [d1]
+   e21  receivedsendEmailNotification_10_par4  [d1]
+   e22  sendpaymentStatus_11
+   e23  receivepaymentStatus_11
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   ├── e1 → e2 → e3 → e4
+   │   ├── e5 → e6 → e7 → e8 → e13
+   │   └── e9 → e10 → e11 → e12 → e13
+   └── e14 → e15 → e16 → e17 → e18
+       ├── e19 → e21 → e22 → e23
+       └── e20
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   ├── e1 sendsubmitPayment_1_opt1  [a1]
+   │   └── e2 receivesubmitPayment_1_opt1  [a1]
+   │       └── e3 sendpaymentDetails_2_opt1  [a1]
+   │           └── e4 receivePaymentDetails_2_opt1  [a1]
+   │               ├── e5 sendprocessLargePayment_3_alt2  [b1]
+   │               │   └── e6 receiveprocessLargePayment_3_alt2  [b1]
+   │               │       └── e7 sendapprovalRequired_4_alt2  [b1]
+   │               │           └── e8 reciveapprovalRequired_4_alt2  [b1]
+   │               │               └── e13 unnamed_event_N  [c1]
+   │               └── e9 sendProcessStandarddPayment_5_alt2  [b2]
+   │                   └── e10 receiveProcessStandarddPayment_5_alt2  [b2]
+   │                       └── e11 sendpaymentConfirmation_6_alt2  [b2]
+   │                           └── e12 recivepaymentConfirmation_6_alt2  [b2]
+   │                               └── e13 unnamed_event_N  [c1]
+   └── e14 sendvalidatePayment_7_loop3  [c2]
+       └── e15 receivevalidatePayment_7_loop3  [c2]
+           └── e16 sendvalidationResult_8_loop3  [c2]
+               └── e17 recivevalidationResult_8_loop3  [c2]
+                   └── e18 sendsendSMSNotification_9_par4
+                       ├── e19 sendsendEmailNotification_10_par4
+                       │   └── e21 receivedsendEmailNotification_10_par4  [d1]
+                       │       └── e22 sendpaymentStatus_11
+                       │           └── e23 receivepaymentStatus_11
+                       └── e20 receivedsendSMSNotification_9_par4  [d1]
+
+   เส้นทาง:
+   e1 -> e2 -> e3 -> e4 -> e5 -> e6 -> e7 -> e8 -> e13
+   e1 -> e2 -> e3 -> e4 -> e9 -> e10 -> e11 -> e12 -> e13
+   e14 -> e15 -> e16 -> e17 -> e18 -> e19 -> e21 -> e22 -> e23
+   e14 -> e15 -> e16 -> e17 -> e18 -> e20
