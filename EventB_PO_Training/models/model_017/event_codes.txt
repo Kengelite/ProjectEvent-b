@@ -1,0 +1,56 @@
+model_017  EmergencyDispatch  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendreportEmergency_1
+   b1   receivereportEmergency_1
+   c1   sendaskDetails_2
+   d1   receiveaskDetails_2
+   e1   sendprovideDetails_3
+   f1   receiveprovideDetails_3
+   g1   senddispatchAmbulance_4
+   g2   sendscheduleCallback_8
+   h1   receivedispatchAmbulance_4
+   h2   receivescheduleCallback_8
+   i1   sendsendLocation_5
+   j1   receivesendLocation_5
+   k1   sendrerouteRequest_6_opt1
+   l1   receivererouteRequest_6_opt1
+   m1   sendnotifyHospital_7
+   m2   checkloop_sendLocation_5_loop1
+   n1   receivenotifyHospital_7
+   o1   sendcloseCase_9
+   p1   receivecloseCase_9
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1 → o1 → p1
+       │   └── m2 ↺ i1
+       └── g2 → h2 → o1 → p1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendreportEmergency_1
+       └── b1 receivereportEmergency_1
+           └── c1 sendaskDetails_2
+               └── d1 receiveaskDetails_2
+                   └── e1 sendprovideDetails_3
+                       └── f1 receiveprovideDetails_3
+                           ├── g1 senddispatchAmbulance_4
+                           │   └── h1 receivedispatchAmbulance_4
+                           │       └── i1 sendsendLocation_5
+                           │           └── j1 receivesendLocation_5
+                           │               └── k1 sendrerouteRequest_6_opt1
+                           │                   └── l1 receivererouteRequest_6_opt1
+                           │                       ├── m1 sendnotifyHospital_7
+                           │                       │   └── n1 receivenotifyHospital_7
+                           │                       │       └── o1 sendcloseCase_9
+                           │                       │           └── p1 receivecloseCase_9
+                           │                       └── m2 checkloop_sendLocation_5_loop1  ↺ วนกลับไป sendsendLocation_5
+                           └── g2 sendscheduleCallback_8
+                               └── h2 receivescheduleCallback_8
+                                   └── o1 sendcloseCase_9
+                                       └── p1 receivecloseCase_9
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

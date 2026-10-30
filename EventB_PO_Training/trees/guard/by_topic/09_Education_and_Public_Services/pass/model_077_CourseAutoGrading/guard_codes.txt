@@ -1,0 +1,18 @@
+model_077  CourseAutoGrading  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   mode = MANUAL
+   a2   mode = AUTO
+   b1   t_obs ≤ 27
+   b2   t_obs > 27
+
+2) Guard tree
+   (root)
+   ├── a1  mode = MANUAL
+   │   ├── b1  t_obs ≤ 27
+   │   └── b2  t_obs > 27
+   └── a2  mode = AUTO
+       ├── b1  t_obs ≤ 27
+       └── b2  t_obs > 27
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

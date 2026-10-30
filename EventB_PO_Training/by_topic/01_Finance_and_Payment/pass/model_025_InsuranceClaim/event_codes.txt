@@ -1,0 +1,60 @@
+model_025  InsuranceClaim  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsubmitClaim_1
+   b1   receivesubmitClaim_1
+   c1   senduploadDocs_2_opt1
+   d1   receiveuploadDocs_2_opt1
+   e1   sendapprovalNotice_3
+   e2   sendassignAssessor_4
+   f1   receiveapprovalNotice_3
+   f2   receiveassignAssessor_4
+   g1   sendpayout_8
+   h1   receivepayout_8
+   i1   sendtransferDone_9
+   j1   receivetransferDone_9
+   k1   sendnotifyClaimant_10
+   l1   receivenotifyClaimant_10
+   m1   sendsiteVisit_5
+   n1   receivesiteVisit_5
+   o1   sendvisitDone_6
+   p1   receivevisitDone_6
+   q1   sendassessmentReport_7
+   r1   receiveassessmentReport_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       └── e2 → f2 → m1 → n1 → o1 → p1 → q1 → r1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsubmitClaim_1
+       └── b1 receivesubmitClaim_1
+           └── c1 senduploadDocs_2_opt1
+               └── d1 receiveuploadDocs_2_opt1
+                   ├── e1 sendapprovalNotice_3
+                   │   └── f1 receiveapprovalNotice_3
+                   │       └── g1 sendpayout_8
+                   │           └── h1 receivepayout_8
+                   │               └── i1 sendtransferDone_9
+                   │                   └── j1 receivetransferDone_9
+                   │                       └── k1 sendnotifyClaimant_10
+                   │                           └── l1 receivenotifyClaimant_10
+                   └── e2 sendassignAssessor_4
+                       └── f2 receiveassignAssessor_4
+                           └── m1 sendsiteVisit_5
+                               └── n1 receivesiteVisit_5
+                                   └── o1 sendvisitDone_6
+                                       └── p1 receivevisitDone_6
+                                           └── q1 sendassessmentReport_7
+                                               └── r1 receiveassessmentReport_7
+                                                   └── g1 sendpayout_8
+                                                       └── h1 receivepayout_8
+                                                           └── i1 sendtransferDone_9
+                                                               └── j1 receivetransferDone_9
+                                                                   └── k1 sendnotifyClaimant_10
+                                                                       └── l1 receivenotifyClaimant_10
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

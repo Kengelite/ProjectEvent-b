@@ -1,0 +1,21 @@
+model_098  ForestFireSensor  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   grade = MANUAL
+   a2   grade = AUTO
+   b1   t_obs ≤ 3
+   c1   retryNo < 11
+   b2   t_obs > 3
+
+2) Guard tree
+   (root)
+   ├── a1  grade = MANUAL
+   │   ├── b1  t_obs ≤ 3
+   │   │   └── c1  retryNo < 11
+   │   └── b2  t_obs > 3
+   └── a2  grade = AUTO
+       ├── b1  t_obs ≤ 3
+       │   └── c1  retryNo < 11
+       └── b2  t_obs > 3
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

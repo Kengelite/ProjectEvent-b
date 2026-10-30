@@ -1,0 +1,44 @@
+model_128  MobileTopUp  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendnotifyCredit_1
+   b1   receivenotifyCredit_1
+   c1   sendconfirmBundle_2
+   d1   receiveconfirmBundle_2
+   e1   sendreportBundle_3
+   e2   sendcheckBundle_5
+   f1   receivereportBundle_3
+   f2   receivecheckBundle_5
+   g1   sendackCredit_4
+   g2   sendassignCredit_6
+   h1   receiveackCredit_4
+   h2   receiveassignCredit_6
+   i1   sendreleaseTopup_7
+   j1   receivereleaseTopup_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → g2 → h2 → i1 → j1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendnotifyCredit_1
+       └── b1 receivenotifyCredit_1
+           └── c1 sendconfirmBundle_2
+               └── d1 receiveconfirmBundle_2
+                   ├── e1 sendreportBundle_3
+                   │   └── f1 receivereportBundle_3
+                   │       └── g1 sendackCredit_4
+                   │           └── h1 receiveackCredit_4
+                   │               └── i1 sendreleaseTopup_7
+                   │                   └── j1 receivereleaseTopup_7
+                   └── e2 sendcheckBundle_5
+                       └── f2 receivecheckBundle_5
+                           └── g2 sendassignCredit_6
+                               └── h2 receiveassignCredit_6
+                                   └── i1 sendreleaseTopup_7
+                                       └── j1 receivereleaseTopup_7
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

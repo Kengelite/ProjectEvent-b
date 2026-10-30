@@ -1,0 +1,47 @@
+model_046  VendingMachine  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendinsertCoin_1
+   b1   receiveinsertCoin_1
+   c1   sendselectItem_2
+   d1   receiveselectItem_2
+   e1   senddispenseItem_3
+   e2   sendrequestMoreCoins_5
+   e3   sendrejectCoin_6
+   f1   receivedispenseItem_3
+   f2   receiverequestMoreCoins_5
+   f3   receiverejectCoin_6
+   g1   sendreturnChange_4
+   h1   receivereturnChange_4
+   i1   sendshowIdle_7
+   j1   receiveshowIdle_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       ├── e2 → f2 → i1 → j1
+       └── e3 → f3 → i1 → j1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendinsertCoin_1
+       └── b1 receiveinsertCoin_1
+           └── c1 sendselectItem_2
+               └── d1 receiveselectItem_2
+                   ├── e1 senddispenseItem_3
+                   │   └── f1 receivedispenseItem_3
+                   │       └── g1 sendreturnChange_4
+                   │           └── h1 receivereturnChange_4
+                   │               └── i1 sendshowIdle_7
+                   │                   └── j1 receiveshowIdle_7
+                   ├── e2 sendrequestMoreCoins_5
+                   │   └── f2 receiverequestMoreCoins_5
+                   │       └── i1 sendshowIdle_7
+                   │           └── j1 receiveshowIdle_7
+                   └── e3 sendrejectCoin_6
+                       └── f3 receiverejectCoin_6
+                           └── i1 sendshowIdle_7
+                               └── j1 receiveshowIdle_7
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

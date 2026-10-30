@@ -1,0 +1,15 @@
+model_162  SelfCheckoutLane  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   t_obs ≤ 10
+   a2   t_obs > 10
+   b1   stepNo < 3
+
+2) Guard tree
+   (root)
+   ├── a1  t_obs ≤ 10
+   │   └── b1  stepNo < 3
+   └── a2  t_obs > 10
+       └── b1  stepNo < 3
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

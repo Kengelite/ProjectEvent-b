@@ -1,0 +1,44 @@
+model_030  OnlineAuction  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendplaceBid_1
+   b1   receiveplaceBid_1
+   c1   sendbidAccepted_2
+   d1   receivebidAccepted_2
+   e1   sendoutbidNotice_3
+   f1   receiveoutbidNotice_3
+   g1   sendraiseBid_4
+   h1   receiveraiseBid_4
+   i1   sendcloseAuction_5
+   i2   checkloop_outbidNotice_3_loop1
+   j1   receivecloseAuction_5
+   k1   sendsaleConfirm_6
+   l1   receivesaleConfirm_6
+   m1   sendwinnerNotice_7
+   n1   receivewinnerNotice_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1 → m1 → n1
+       └── i2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendplaceBid_1
+       └── b1 receiveplaceBid_1
+           └── c1 sendbidAccepted_2
+               └── d1 receivebidAccepted_2
+                   └── e1 sendoutbidNotice_3
+                       └── f1 receiveoutbidNotice_3
+                           └── g1 sendraiseBid_4
+                               └── h1 receiveraiseBid_4
+                                   ├── i1 sendcloseAuction_5
+                                   │   └── j1 receivecloseAuction_5
+                                   │       └── k1 sendsaleConfirm_6
+                                   │           └── l1 receivesaleConfirm_6
+                                   │               └── m1 sendwinnerNotice_7
+                                   │                   └── n1 receivewinnerNotice_7
+                                   └── i2 checkloop_outbidNotice_3_loop1  ↺ วนกลับไป sendoutbidNotice_3
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

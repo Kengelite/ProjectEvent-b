@@ -1,0 +1,40 @@
+model_127  MeetingRoomDisplay  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendcancelMeeting_1
+   b1   receivecancelMeeting_1
+   c1   sendconfirmCheckin_2
+   d1   receiveconfirmCheckin_2
+   e1   sendconfirmMeeting_3
+   e2   sendrequestMeeting_5
+   f1   receiveconfirmMeeting_3
+   f2   receiverequestMeeting_5
+   g1   sendupdateRoom_4
+   h1   receiveupdateRoom_4
+   i1   sendconfirmRoom_6
+   j1   receiveconfirmRoom_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → i1 → j1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendcancelMeeting_1
+       └── b1 receivecancelMeeting_1
+           └── c1 sendconfirmCheckin_2
+               └── d1 receiveconfirmCheckin_2
+                   ├── e1 sendconfirmMeeting_3
+                   │   └── f1 receiveconfirmMeeting_3
+                   │       └── g1 sendupdateRoom_4
+                   │           └── h1 receiveupdateRoom_4
+                   │               └── i1 sendconfirmRoom_6
+                   │                   └── j1 receiveconfirmRoom_6
+                   └── e2 sendrequestMeeting_5
+                       └── f2 receiverequestMeeting_5
+                           └── i1 sendconfirmRoom_6
+                               └── j1 receiveconfirmRoom_6
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

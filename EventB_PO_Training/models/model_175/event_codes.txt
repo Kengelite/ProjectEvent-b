@@ -1,0 +1,36 @@
+model_175  SmartShoppingCart  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsyncTotal_1
+   b1   receivesyncTotal_1
+   c1   sendcancelCoupon_2
+   d1   receivecancelCoupon_2
+   e1   sendapproveCoupon_3_opt1
+   f1   receiveapproveCoupon_3_opt1
+   g1   sendqueryItem_4
+   h1   receivequeryItem_4
+   i1   sendupdateCoupon_5
+   j1   receiveupdateCoupon_5
+   k1   sendissueCoupon_6
+   l1   receiveissueCoupon_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsyncTotal_1
+       └── b1 receivesyncTotal_1
+           └── c1 sendcancelCoupon_2
+               └── d1 receivecancelCoupon_2
+                   └── e1 sendapproveCoupon_3_opt1
+                       └── f1 receiveapproveCoupon_3_opt1
+                           └── g1 sendqueryItem_4
+                               └── h1 receivequeryItem_4
+                                   └── i1 sendupdateCoupon_5
+                                       └── j1 receiveupdateCoupon_5
+                                           └── k1 sendissueCoupon_6
+                                               └── l1 receiveissueCoupon_6
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

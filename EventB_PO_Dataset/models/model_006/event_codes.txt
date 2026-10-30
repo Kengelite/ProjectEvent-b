@@ -1,0 +1,40 @@
+model_006  BloodBankRequest  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendrequestBlood_1
+   b1   receiverequestBlood_1
+   c1   sendcrossMatch_2
+   c2   sendbackorder_5
+   d1   receivecrossMatch_2
+   d2   receivebackorder_5
+   e1   sendprepareCourier_3
+   f1   receiveprepareCourier_3
+   g1   senddeliverBlood_4
+   h1   receivedeliverBlood_4
+   i1   sendconfirmReceipt_6
+   j1   receiveconfirmReceipt_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1
+       ├── c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
+       └── c2 → d2 → i1 → j1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendrequestBlood_1
+       └── b1 receiverequestBlood_1
+           ├── c1 sendcrossMatch_2
+           │   └── d1 receivecrossMatch_2
+           │       └── e1 sendprepareCourier_3
+           │           └── f1 receiveprepareCourier_3
+           │               └── g1 senddeliverBlood_4
+           │                   └── h1 receivedeliverBlood_4
+           │                       └── i1 sendconfirmReceipt_6
+           │                           └── j1 receiveconfirmReceipt_6
+           └── c2 sendbackorder_5
+               └── d2 receivebackorder_5
+                   └── i1 sendconfirmReceipt_6
+                       └── j1 receiveconfirmReceipt_6
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

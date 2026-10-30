@@ -1,0 +1,14 @@
+model_114  InventoryReorder  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   retryNo < 12
+   b1   retryNo mod 3 = 0
+   c1   express = 1
+
+2) Guard tree
+   (root)
+   └── a1  retryNo < 12
+       └── b1  retryNo mod 3 = 0
+           └── c1  express = 1
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

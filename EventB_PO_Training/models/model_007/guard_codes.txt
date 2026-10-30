@@ -1,0 +1,16 @@
+model_007  CarRentalBooking  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   searchCount < 3
+   b1   insurance = 1
+   c1   t_pay ≤ 10
+   c2   t_pay > 10
+
+2) Guard tree
+   (root)
+   └── a1  searchCount < 3
+       └── b1  insurance = 1
+           ├── c1  t_pay ≤ 10
+           └── c2  t_pay > 10
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

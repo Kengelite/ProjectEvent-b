@@ -1,0 +1,40 @@
+model_045  TrafficLightController  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsetGreen_1
+   b1   receivesetGreen_1
+   c1   sendgreenAck_2
+   d1   receivegreenAck_2
+   e1   sendsetYellow_3
+   f1   receivesetYellow_3
+   g1   sendsetRed_4
+   h1   receivesetRed_4
+   i1   sendphaseDone_5
+   j1   receivephaseDone_5
+   k1   sendshutdown_6
+   k2   checkloop_setYellow_3_loop1
+   l1   receiveshutdown_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
+       ├── k1 → l1
+       └── k2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsetGreen_1
+       └── b1 receivesetGreen_1
+           └── c1 sendgreenAck_2
+               └── d1 receivegreenAck_2
+                   └── e1 sendsetYellow_3
+                       └── f1 receivesetYellow_3
+                           └── g1 sendsetRed_4
+                               └── h1 receivesetRed_4
+                                   └── i1 sendphaseDone_5
+                                       └── j1 receivephaseDone_5
+                                           ├── k1 sendshutdown_6
+                                           │   └── l1 receiveshutdown_6
+                                           └── k2 checkloop_setYellow_3_loop1  ↺ วนกลับไป sendsetYellow_3
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

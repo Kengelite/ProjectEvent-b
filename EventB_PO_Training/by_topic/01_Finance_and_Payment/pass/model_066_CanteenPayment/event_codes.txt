@@ -1,0 +1,64 @@
+model_066  CanteenPayment  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendupdateBalance_1
+   b1   receiveupdateBalance_1
+   c1   sendlogTopup_2
+   d1   receivelogTopup_2
+   e1   sendrequestTopup_3
+   f1   receiverequestTopup_3
+   g1   sendassignBalance_4
+   h1   receiveassignBalance_4
+   i1   sendcheckTopup_5
+   j1   receivecheckTopup_5
+   k1   sendreleaseMeal_6
+   l1   receivereleaseMeal_6
+   m1   sendreportMeal_7
+   n1   receivereportMeal_7
+   o1   sendupdateTopup_8
+   p1   receiveupdateTopup_8
+   q1   sendscheduleMeal_9
+   r1   receivescheduleMeal_9
+   s1   sendsendBalance_10
+   t1   receivesendBalance_10
+   u1   sendscheduleBalance_11
+   v1   receivescheduleBalance_11
+   w1   sendvalidateMeal_12
+   x1   receivevalidateMeal_12
+   y1   sendconfirmTopup_13
+   z1   receiveconfirmTopup_13
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendupdateBalance_1
+       └── b1 receiveupdateBalance_1
+           └── c1 sendlogTopup_2
+               └── d1 receivelogTopup_2
+                   └── e1 sendrequestTopup_3
+                       └── f1 receiverequestTopup_3
+                           └── g1 sendassignBalance_4
+                               └── h1 receiveassignBalance_4
+                                   └── i1 sendcheckTopup_5
+                                       └── j1 receivecheckTopup_5
+                                           └── k1 sendreleaseMeal_6
+                                               └── l1 receivereleaseMeal_6
+                                                   └── m1 sendreportMeal_7
+                                                       └── n1 receivereportMeal_7
+                                                           └── o1 sendupdateTopup_8
+                                                               └── p1 receiveupdateTopup_8
+                                                                   └── q1 sendscheduleMeal_9
+                                                                       └── r1 receivescheduleMeal_9
+                                                                           └── s1 sendsendBalance_10
+                                                                               └── t1 receivesendBalance_10
+                                                                                   └── u1 sendscheduleBalance_11
+                                                                                       └── v1 receivescheduleBalance_11
+                                                                                           └── w1 sendvalidateMeal_12
+                                                                                               └── x1 receivevalidateMeal_12
+                                                                                                   └── y1 sendconfirmTopup_13
+                                                                                                       └── z1 receiveconfirmTopup_13
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

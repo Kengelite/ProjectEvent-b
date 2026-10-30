@@ -1,0 +1,36 @@
+model_074  ConcertTicketQueue  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsyncSeat_1
+   b1   receivesyncSeat_1
+   c1   sendassignSeat_2
+   d1   receiveassignSeat_2
+   e1   sendfetchTicket_3
+   f1   receivefetchTicket_3
+   g1   sendvalidateQueue_4
+   h1   receivevalidateQueue_4
+   i1   sendquerySeat_5
+   j1   receivequerySeat_5
+   k1   sendreserveQueue_6
+   l1   receivereserveQueue_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsyncSeat_1
+       └── b1 receivesyncSeat_1
+           └── c1 sendassignSeat_2
+               └── d1 receiveassignSeat_2
+                   └── e1 sendfetchTicket_3
+                       └── f1 receivefetchTicket_3
+                           └── g1 sendvalidateQueue_4
+                               └── h1 receivevalidateQueue_4
+                                   └── i1 sendquerySeat_5
+                                       └── j1 receivequerySeat_5
+                                           └── k1 sendreserveQueue_6
+                                               └── l1 receivereserveQueue_6
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

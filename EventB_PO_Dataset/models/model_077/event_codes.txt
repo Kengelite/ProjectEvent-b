@@ -1,0 +1,78 @@
+model_077  CourseAutoGrading  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendissueFeedback_1
+   b1   receiveissueFeedback_1
+   c1   sendassignFeedback_2
+   d1   receiveassignFeedback_2
+   e1   sendreserveGrade_3
+   e2   sendlogGrade_4
+   f1   receivereserveGrade_3
+   f2   receivelogGrade_4
+   g1   sendackGrade_6
+   h1   receiveackGrade_6
+   i1   sendnotifyGrade_7
+   j1   receivenotifyGrade_7
+   k1   sendupdateGrade_8
+   k2   sendvalidateSubmission_9
+   l1   receiveupdateGrade_8
+   l2   receivevalidateSubmission_9
+   m1   sendreleaseSubmission_11
+   n1   receivereleaseSubmission_11
+   o1   sendackSubmission_10
+   p1   receiveackSubmission_10
+   q1   sendcheckSubmission_5
+   r1   receivecheckSubmission_5
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       │   ├── k1 → l1 → m1 → n1
+       │   └── k2 → l2 → o1 → p1 → m1 → n1
+       └── e2 → f2 → q1 → r1 → g1 → h1 → i1 → j1
+           ├── k1 → l1 → m1 → n1
+           └── k2 → l2 → o1 → p1 → m1 → n1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendissueFeedback_1
+       └── b1 receiveissueFeedback_1
+           └── c1 sendassignFeedback_2
+               └── d1 receiveassignFeedback_2
+                   ├── e1 sendreserveGrade_3
+                   │   └── f1 receivereserveGrade_3
+                   │       └── g1 sendackGrade_6
+                   │           └── h1 receiveackGrade_6
+                   │               └── i1 sendnotifyGrade_7
+                   │                   └── j1 receivenotifyGrade_7
+                   │                       ├── k1 sendupdateGrade_8
+                   │                       │   └── l1 receiveupdateGrade_8
+                   │                       │       └── m1 sendreleaseSubmission_11
+                   │                       │           └── n1 receivereleaseSubmission_11
+                   │                       └── k2 sendvalidateSubmission_9
+                   │                           └── l2 receivevalidateSubmission_9
+                   │                               └── o1 sendackSubmission_10
+                   │                                   └── p1 receiveackSubmission_10
+                   │                                       └── m1 sendreleaseSubmission_11
+                   │                                           └── n1 receivereleaseSubmission_11
+                   └── e2 sendlogGrade_4
+                       └── f2 receivelogGrade_4
+                           └── q1 sendcheckSubmission_5
+                               └── r1 receivecheckSubmission_5
+                                   └── g1 sendackGrade_6
+                                       └── h1 receiveackGrade_6
+                                           └── i1 sendnotifyGrade_7
+                                               └── j1 receivenotifyGrade_7
+                                                   ├── k1 sendupdateGrade_8
+                                                   │   └── l1 receiveupdateGrade_8
+                                                   │       └── m1 sendreleaseSubmission_11
+                                                   │           └── n1 receivereleaseSubmission_11
+                                                   └── k2 sendvalidateSubmission_9
+                                                       └── l2 receivevalidateSubmission_9
+                                                           └── o1 sendackSubmission_10
+                                                               └── p1 receiveackSubmission_10
+                                                                   └── m1 sendreleaseSubmission_11
+                                                                       └── n1 receivereleaseSubmission_11
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

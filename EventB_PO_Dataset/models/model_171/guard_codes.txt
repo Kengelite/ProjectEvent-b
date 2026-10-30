@@ -1,0 +1,16 @@
+model_171  SmartLibraryShelf  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   roundNo < 12
+   b1   roundNo mod 4 = 0
+   c1   grade = ACTIVE
+   c2   grade = IDLE
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 12
+       └── b1  roundNo mod 4 = 0
+           ├── c1  grade = ACTIVE
+           └── c2  grade = IDLE
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

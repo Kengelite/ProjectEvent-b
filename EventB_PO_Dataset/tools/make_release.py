@@ -14,7 +14,8 @@ Output (rebuilt from scratch each run):
     csv/pass_fail_list.csv      per-model pass / fail
     csv/model_categories.csv    topic, diagram error, expected vs Rodin (analysis only)
     models/model_XXX/           model.txt, label.json, po_details.json, features.json,
-                                guard_tree.txt|json, event_tree.txt|json
+                                guard_tree.txt / event_tree.txt (paths only: a1,b1), guard_codes.txt /
+                                event_codes.txt (what the codes mean), guard_tree.json / event_tree.json
     by_topic/<NN_Topic>/<pass|fail>/<model_XXX_Case>/   the same models grouped by topic and
                                 Rodin result, with a list.csv per topic
     FLOW.pdf, FLOW.png          workflow diagram (tools/make_user_flow.py)
@@ -602,7 +603,7 @@ def build(out, seed):
     for r in rows:
         src, dst = os.path.join(DATASET, "models", r["id"]), os.path.join(out, "models", r["id"])
         os.makedirs(dst)
-        for f in ("model.txt", "label.json", "po_details.json", "features.json", "guard_tree.txt", "guard_tree.json", "event_tree.txt", "event_tree.json"):
+        for f in ("model.txt", "label.json", "po_details.json", "features.json") + extract_trees.TREE_FILES:
             if os.path.exists(os.path.join(src, f)):
                 shutil.copy2(os.path.join(src, f), dst)
 
@@ -646,10 +647,10 @@ def trees_folder(out, rows):
                 f.write(json.dumps({"id": r["id"], "case": r["case"], "split": r["split"],
                                     **{k: part[k] for k in keep}}, ensure_ascii=False) + "\n")
         for r in rows:
-            dst = os.path.join(tdir, kind, "by_topic", topic_dir(r["topic"]), r["result"])
-            os.makedirs(dst, exist_ok=True)
-            shutil.copy2(os.path.join(DATASET, "models", r["id"], f"{kind}_tree.txt"),
-                         os.path.join(dst, model_dir(r) + ".txt"))
+            dst = os.path.join(tdir, kind, "by_topic", topic_dir(r["topic"]), r["result"], model_dir(r))
+            os.makedirs(dst)
+            for name in (f"{kind}_tree.txt", f"{kind}_codes.txt"):
+                shutil.copy2(os.path.join(DATASET, "models", r["id"], name), dst)
     utf8 = lambda name, data, fields: write_csv_bom(os.path.join(tdir, name), data, fields)
     utf8("guard/guard_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "guard": g}
                                    for r in rows for c, g in trees[r["id"]]["guard_codes"].items()],
@@ -776,8 +777,11 @@ def pdf(out, rows, po_rows):
             "│   ├── label.json            ← total / discharged / failed",
             "│   ├── po_details.json       ← ผลราย PO",
             "│   ├── features.json",
-            "│   ├── guard_tree.txt · .json ← guard tree",
-            "│   └── event_tree.txt · .json ← event tree",
+            "│   ├── guard_tree.txt        ← เส้นทาง guard บรรทัดละเส้น (a1,b1)",
+            "│   ├── guard_codes.txt       ← ความหมายของรหัส guard + รูป tree",
+            "│   ├── event_tree.txt        ← เส้นทาง event บรรทัดละเส้น",
+            "│   ├── event_codes.txt       ← ความหมายของรหัส event + รูป tree",
+            "│   └── guard_tree.json · event_tree.json",
             "├── by_topic/                 ← โมเดลชุดเดียวกัน แยกตามหัวข้อ และผล Rodin",
             "│   ├── 01_Finance_and_Payment/",
             "│   │   ├── list.csv          ← รายชื่อ + ผล ของหัวข้อนี้",

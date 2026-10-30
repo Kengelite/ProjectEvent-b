@@ -22,6 +22,7 @@ from collections import Counter, defaultdict
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATASET = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
+from extract_trees import TREE_FILES                              # noqa: E402
 from verify_trees import cells                                    # noqa: E402
 
 problems = defaultdict(list)
@@ -238,7 +239,7 @@ def main(release):
             bad("D", f"{mid}: same model text as {texts[h]} ({split.get(mid)} / {split.get(texts[h])})")
         texts[h] = mid
         # E copies
-        for f in ("model.txt", "label.json", "po_details.json", "features.json", "guard_tree.txt", "guard_tree.json", "event_tree.txt", "event_tree.json"):
+        for f in ("model.txt", "label.json", "po_details.json", "features.json") + TREE_FILES:
             if open(os.path.join(d, f), "rb").read() != open(rel("models", mid, f), "rb").read():
                 bad("E", f"{mid}: release models/{mid}/{f} differs")
     ids = sorted(data)
@@ -275,11 +276,16 @@ def main(release):
         for g in os.listdir(f):
             if open(os.path.join(f, g), "rb").read() != open(rel("models", mid, g), "rb").read():
                 bad("E", f"{mid}: by_topic copy of {g} differs")
-    for f in glob.glob(rel("trees", "*", "by_topic", "*", "*", "model_*.txt")):
-        mid = os.path.basename(f)[:9]
-        seen[f"tree:{f.split(os.sep)[-5]}:" + mid] += 1
+    for f in glob.glob(rel("trees", "*", "by_topic", "*", "*", "model_*")):
+        mid, kind = os.path.basename(f)[:9], f.split(os.sep)[-5]
+        seen[f"tree:{kind}:" + mid] += 1
         if f.split(os.sep)[-2] != ("fail" if data[mid]["failed"] else "pass"):
-            bad("E", f"{mid}: trees/by_topic folder has the wrong result")
+            bad("E", f"{mid}: trees/{kind}/by_topic folder has the wrong result")
+        if sorted(os.listdir(f)) != sorted([f"{kind}_codes.txt", f"{kind}_tree.txt"]):
+            bad("E", f"{mid}: trees/{kind}/by_topic folder holds {sorted(os.listdir(f))}")
+        for g in os.listdir(f):
+            if open(os.path.join(f, g), "rb").read() != open(rel("models", mid, g), "rb").read():
+                bad("E", f"{mid}: trees/{kind}/by_topic copy of {g} differs")
     for i in ids:
         if seen[i] != 1 or seen["tree:guard:" + i] != 1 or seen["tree:event:" + i] != 1:
             bad("E", f"{i}: appears {seen[i]}x in by_topic, {seen['tree:guard:' + i]}x in trees/guard, "

@@ -103,9 +103,13 @@ def render_guard(rows, trees):
     h.append("<h2>5. ภาพรวมทั้งชุด</h2>")
     h.append("<table><tr><th>จำนวนเส้นทางใน guard tree</th>" + "".join(f"<th>{k}</th>" for k in sorted(gp)) + "</tr>"
              "<tr><td>จำนวนแบบจำลอง</td>" + "".join(f"<td class='n'>{gp[k]}</td>" for k in sorted(gp)) + "</tr></table>")
-    h.append("<p>0 คือแบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพ · ไฟล์ของแต่ละแบบจำลองอยู่ใน "
-             "<code>models/&lt;id&gt;/guard_tree.txt</code> และ <code>guard_tree.json</code> · "
-             "ข้อมูลรวมอยู่ใน <code>data/guard_trees.jsonl</code> และ <code>guard_codes.csv</code></p>")
+    h.append("<p>0 คือแบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพ</p>"
+             "<p><b>ไฟล์ของแต่ละแบบจำลอง</b></p><ul>"
+             "<li><code>guard_tree.txt</code> — มีเฉพาะเส้นทาง บรรทัดละ 1 เส้นทาง เช่น <code>a1,b1</code> "
+             "(ไฟล์ว่างถ้าไม่มีเงื่อนไข)</li>"
+             "<li><code>guard_codes.txt</code> — ความหมายของรหัส และรูป guard tree</li>"
+             "<li><code>guard_tree.json</code> — ข้อมูลทั้งหมดสำหรับโปรแกรม</li></ul>"
+             "<p>ข้อมูลรวมทุกแบบจำลองอยู่ใน <code>data/guard_trees.jsonl</code> และ <code>guard_codes.csv</code></p>")
     h.append("<h2 style='break-before:page'>6. guard tree ของแต่ละแบบจำลอง</h2>"
              "<p>แบบจำลองที่ไม่มีเงื่อนไขจากแผนภาพแสดงเป็นรายชื่อท้ายแต่ละหัวข้อ</p>")
     for code, (en, th) in TOPIC_NAMES.items():
@@ -136,9 +140,13 @@ def render_event(rows, trees):
              "<li>event นับรอบ loop อยู่ท้าย loop เครื่องหมาย ↺ ชี้กลับไปยัง event แรกของ loop</li></ul>")
     h.append("<h2>2. การตั้งรหัส</h2>" + EVENT_RULE)
     h.append("<h2>3. การแสดงผล</h2><p>เอกสารนี้แสดง event tree แบบย่อ คือ event ที่ต่อกันเป็นเส้นตรงเขียนในบรรทัดเดียว "
-             "และขึ้นบรรทัดใหม่เฉพาะที่จุดแยก รูปเต็มอยู่ใน <code>models/&lt;id&gt;/event_tree.txt</code> "
-             "ข้อมูลรวมอยู่ใน <code>data/event_trees.jsonl</code> และ <code>event_codes.csv</code> · "
-             "↺ x หมายถึงวนกลับไปที่ event x</p>")
+             "และขึ้นบรรทัดใหม่เฉพาะที่จุดแยก ↺ x หมายถึงวนกลับไปที่ event x</p>"
+             "<p><b>ไฟล์ของแต่ละแบบจำลอง</b></p><ul>"
+             "<li><code>event_tree.txt</code> — มีเฉพาะเส้นทาง บรรทัดละ 1 เส้นทาง เช่น <code>a1,b1,c1</code> "
+             "เส้นทางที่วน loop ลงท้ายด้วย <code>↺x</code></li>"
+             "<li><code>event_codes.txt</code> — ความหมายของรหัส และรูป event tree ทั้งแบบย่อและแบบเต็ม</li>"
+             "<li><code>event_tree.json</code> — ข้อมูลทั้งหมดสำหรับโปรแกรม</li></ul>"
+             "<p>ข้อมูลรวมทุกแบบจำลองอยู่ใน <code>data/event_trees.jsonl</code> และ <code>event_codes.csv</code></p>")
     h.append("<h2>4. ตัวอย่าง</h2>")
     for mid, why in EXAMPLES:
         r = next(x for x in rows if x["id"] == mid)
@@ -220,9 +228,12 @@ def summary(out, rows, trees, stats, check):
     gtree = "\n".join(["(root)"] + draw(t["guard_tree"], lambda c: f"{c}  {t['guard_codes'][c]}"))
     etree = "\n".join(["(root)"] + draw_events_compact(t["event_tree"], width=8))
     h.append("<h3>ตัวอย่าง: model_141 PharmacyDelivery (opt ตามด้วย alt 3 ทาง)</h3>"
-             f"<div class='cols'><div><div class='lbl'>Guard tree (guard_tree.txt)</div><pre class='tree'>{esc(gtree)}</pre></div>"
-             f"<div><div class='lbl'>Event tree (event_tree.txt)</div><pre class='tree'>{esc(etree)}</pre></div></div>"
-             "<p>tree ทั้งสองแบบเก็บแยกไฟล์และแยกเอกสาร รหัส guard และรหัส event เป็นคนละชุด</p>")
+             f"<div class='cols'><div><div class='lbl'>Guard tree</div><pre class='tree'>{esc(gtree)}</pre></div>"
+             f"<div><div class='lbl'>Event tree</div><pre class='tree'>{esc(etree)}</pre></div></div>"
+             "<p>tree ทั้งสองแบบเก็บแยกไฟล์และแยกเอกสาร รหัส guard และรหัส event เป็นคนละชุด "
+             "ไฟล์ <code>guard_tree.txt</code> และ <code>event_tree.txt</code> มีเฉพาะเส้นทาง บรรทัดละ 1 เส้นทาง "
+             "เช่น <code>a1,b1</code> ส่วนความหมายของรหัสอยู่ในไฟล์ <code>guard_codes.txt</code> และ "
+             "<code>event_codes.txt</code></p>")
 
     h.append("<h2>3. การตรวจสอบความถูกต้อง</h2>")
     h.append("<p>เขียนโปรแกรมตรวจแยกต่างหาก (<code>tools/verify_trees.py</code>) ให้อ่านแผนภาพ draw.io ต้นฉบับโดยตรง "
@@ -292,12 +303,12 @@ def summary(out, rows, trees, stats, check):
             "│   ├── guard/",
             "│   │   ├── GUARD_TREES.pdf  ← หลักการ ตัวอย่าง และ guard tree ของทุกแบบจำลอง",
             "│   │   ├── guard_codes.csv  ← รหัส guard ของทุกแบบจำลอง",
-            "│   │   └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>.txt",
+            "│   │   └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>/  ← guard_tree.txt, guard_codes.txt",
             "│   └── event/",
             "│       ├── EVENT_TREES.pdf  ← หลักการ ตัวอย่าง และ event tree ของทุกแบบจำลอง",
             "│       ├── event_codes.csv  ← รหัส event ของทุกแบบจำลอง",
-            "│       └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>.txt",
-            "├── models/<id>/guard_tree.txt · .json, event_tree.txt · .json   ← เก็บคู่กับ model.txt",
+            "│       └── by_topic/<หัวข้อ>/<pass|fail>/<แบบจำลอง>/  ← event_tree.txt, event_codes.txt",
+            "├── models/<id>/   ← guard_tree.txt, guard_codes.txt, event_tree.txt, event_codes.txt, *.json",
             "└── data/guard_trees.jsonl, data/event_trees.jsonl               ← ทุกแบบจำลอง สำหรับใช้กับโปรแกรม"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
     h.append("<p>สร้างใหม่ทั้งหมดได้ด้วยคำสั่ง <code>python tools/make_release.py</code> "

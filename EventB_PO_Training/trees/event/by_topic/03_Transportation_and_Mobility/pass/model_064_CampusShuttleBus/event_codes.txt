@@ -1,0 +1,66 @@
+model_064  CampusShuttleBus  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendscheduleArrival_1
+   b1   receivescheduleArrival_1
+   c1   sendscheduleSeat_2
+   d1   receivescheduleSeat_2
+   e1   sendvalidateArrival_3
+   f1   receivevalidateArrival_3
+   g1   sendupdateStop_4
+   h1   receiveupdateStop_4
+   i1   sendvalidateStop_5
+   j1   receivevalidateStop_5
+   k1   sendreserveSeat_6
+   l1   receivereserveSeat_6
+   m1   sendupdateArrival_7_opt1
+   n1   receiveupdateArrival_7_opt1
+   o1   sendapproveArrival_8_opt1
+   o2   sendsendStop_10_opt1
+   p1   receiveapproveArrival_8_opt1
+   p2   receivesendStop_10_opt1
+   q1   sendquerySeat_9_opt1
+   r1   receivequerySeat_9_opt1
+   s1   sendissueStop_11_opt1
+   t1   receiveissueStop_11_opt1
+   u1   sendissueArrival_12
+   v1   receiveissueArrival_12
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       └── o2 → p2 → s1 → t1 → u1 → v1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendscheduleArrival_1
+       └── b1 receivescheduleArrival_1
+           └── c1 sendscheduleSeat_2
+               └── d1 receivescheduleSeat_2
+                   └── e1 sendvalidateArrival_3
+                       └── f1 receivevalidateArrival_3
+                           └── g1 sendupdateStop_4
+                               └── h1 receiveupdateStop_4
+                                   └── i1 sendvalidateStop_5
+                                       └── j1 receivevalidateStop_5
+                                           └── k1 sendreserveSeat_6
+                                               └── l1 receivereserveSeat_6
+                                                   └── m1 sendupdateArrival_7_opt1
+                                                       └── n1 receiveupdateArrival_7_opt1
+                                                           ├── o1 sendapproveArrival_8_opt1
+                                                           │   └── p1 receiveapproveArrival_8_opt1
+                                                           │       └── q1 sendquerySeat_9_opt1
+                                                           │           └── r1 receivequerySeat_9_opt1
+                                                           │               └── s1 sendissueStop_11_opt1
+                                                           │                   └── t1 receiveissueStop_11_opt1
+                                                           │                       └── u1 sendissueArrival_12
+                                                           │                           └── v1 receiveissueArrival_12
+                                                           └── o2 sendsendStop_10_opt1
+                                                               └── p2 receivesendStop_10_opt1
+                                                                   └── s1 sendissueStop_11_opt1
+                                                                       └── t1 receiveissueStop_11_opt1
+                                                                           └── u1 sendissueArrival_12
+                                                                               └── v1 receiveissueArrival_12
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

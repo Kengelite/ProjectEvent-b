@@ -1,0 +1,36 @@
+model_050  AirportShuttle  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsendRoute_1
+   b1   receivesendRoute_1
+   c1   sendnotifyPickup_2
+   d1   receivenotifyPickup_2
+   e1   sendupdateSeat_3
+   f1   receiveupdateSeat_3
+   g1   sendconfirmPickup_4
+   h1   receiveconfirmPickup_4
+   i1   sendscheduleRoute_5
+   j1   receivescheduleRoute_5
+   k1   sendfetchSeat_6
+   l1   receivefetchSeat_6
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsendRoute_1
+       └── b1 receivesendRoute_1
+           └── c1 sendnotifyPickup_2
+               └── d1 receivenotifyPickup_2
+                   └── e1 sendupdateSeat_3
+                       └── f1 receiveupdateSeat_3
+                           └── g1 sendconfirmPickup_4
+                               └── h1 receiveconfirmPickup_4
+                                   └── i1 sendscheduleRoute_5
+                                       └── j1 receivescheduleRoute_5
+                                           └── k1 sendfetchSeat_6
+                                               └── l1 receivefetchSeat_6
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

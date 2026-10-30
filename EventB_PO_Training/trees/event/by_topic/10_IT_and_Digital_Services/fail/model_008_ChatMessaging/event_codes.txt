@@ -1,0 +1,44 @@
+model_008  ChatMessaging  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsendText_1
+   b1   receivesendText_1
+   c1   senddeliverText_2
+   d1   receivedeliverText_2
+   e1   sendreadReceipt_3
+   f1   receivereadReceipt_3
+   g1   sendforwardReceipt_4
+   h1   receiveforwardReceipt_4
+   i1   sendtypingIndicator_5_opt1
+   j1   receivetypingIndicator_5_opt1
+   k1   sendrelayTyping_6_opt1
+   l1   receiverelayTyping_6_opt1
+   m1   sendreplyText_7
+   n1   receivereplyText_7
+   o1   senddeliverReply_8
+   p1   receivedeliverReply_8
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsendText_1
+       └── b1 receivesendText_1
+           └── c1 senddeliverText_2
+               └── d1 receivedeliverText_2
+                   └── e1 sendreadReceipt_3
+                       └── f1 receivereadReceipt_3
+                           └── g1 sendforwardReceipt_4
+                               └── h1 receiveforwardReceipt_4
+                                   └── i1 sendtypingIndicator_5_opt1
+                                       └── j1 receivetypingIndicator_5_opt1
+                                           └── k1 sendrelayTyping_6_opt1
+                                               └── l1 receiverelayTyping_6_opt1
+                                                   └── m1 sendreplyText_7
+                                                       └── n1 receivereplyText_7
+                                                           └── o1 senddeliverReply_8
+                                                               └── p1 receivedeliverReply_8
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

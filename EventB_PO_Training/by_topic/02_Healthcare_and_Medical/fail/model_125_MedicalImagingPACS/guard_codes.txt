@@ -1,0 +1,14 @@
+model_125  MedicalImagingPACS  —  รหัส guard
+
+1) ความหมายของรหัส
+   a1   roundNo < 6
+   b1   roundNo mod 3 = 0
+   b2   roundNo mod 3 ≠ 0
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 6
+       ├── b1  roundNo mod 3 = 0
+       └── b2  roundNo mod 3 ≠ 0
+
+เส้นทางอยู่ในไฟล์ guard_tree.txt

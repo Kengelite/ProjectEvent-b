@@ -26,7 +26,7 @@ import argparse, csv, glob, html, itertools, json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATASET = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
-from extract_trees import load_tree     # noqa: E402
+from extract_trees import TREE_FILES, as_csv_path, load_tree     # noqa: E402
 
 
 # ── diagram ────────────────────────────────────────────────────────────────
@@ -277,7 +277,11 @@ def check_files(release, ids):
     for mid in ids:
         src = os.path.join(DATASET, "models", mid)
         t = load_tree(src)
-        for f in ("guard_tree.json", "guard_tree.txt", "event_tree.json", "event_tree.txt"):
+        for kind in ("guard", "event"):
+            lines = open(os.path.join(src, f"{kind}_tree.txt"), encoding="utf-8").read().splitlines()
+            if lines != [as_csv_path(p) for p in t[f"{kind}_paths"]]:
+                errs.append(f"C8 {mid}/{kind}_tree.txt does not hold exactly the {kind} paths")
+        for f in TREE_FILES:
             if open(os.path.join(src, f), "rb").read() != open(os.path.join(release, "models", mid, f), "rb").read():
                 errs.append(f"C8 {mid}/{f} differs in release")
         for kind, keys in (("guard", ("guard_codes", "guard_paths")), ("event", ("event_codes", "event_paths"))):

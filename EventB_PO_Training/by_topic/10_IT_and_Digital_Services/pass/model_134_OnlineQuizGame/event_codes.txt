@@ -1,0 +1,68 @@
+model_134  OnlineQuizGame  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendcheckRound_1
+   b1   receivecheckRound_1
+   c1   sendscheduleAnswer_2
+   d1   receivescheduleAnswer_2
+   e1   sendackRound_3
+   f1   receiveackRound_3
+   g1   sendfetchAnswer_4
+   g2   checkloop_ackRound_3_loop1
+   h1   receivefetchAnswer_4
+   i1   sendqueryScore_5
+   j1   receivequeryScore_5
+   k1   sendissueAnswer_6
+   l1   receiveissueAnswer_6
+   m1   sendapproveAnswer_7
+   n1   receiveapproveAnswer_7
+   o1   sendassignScore_8
+   p1   receiveassignScore_8
+   q1   sendcancelScore_9
+   r1   receivecancelScore_9
+   s1   sendrequestScore_10
+   t1   receiverequestScore_10
+   u1   sendreportScore_11
+   v1   receivereportScore_11
+   w1   sendreserveRound_12
+   w2   checkloop_issueAnswer_6_loop2
+   x1   receivereserveRound_12
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       │   ├── w1 → x1
+       │   └── w2 ↺ k1
+       └── g2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendcheckRound_1
+       └── b1 receivecheckRound_1
+           └── c1 sendscheduleAnswer_2
+               └── d1 receivescheduleAnswer_2
+                   └── e1 sendackRound_3
+                       └── f1 receiveackRound_3
+                           ├── g1 sendfetchAnswer_4
+                           │   └── h1 receivefetchAnswer_4
+                           │       └── i1 sendqueryScore_5
+                           │           └── j1 receivequeryScore_5
+                           │               └── k1 sendissueAnswer_6
+                           │                   └── l1 receiveissueAnswer_6
+                           │                       └── m1 sendapproveAnswer_7
+                           │                           └── n1 receiveapproveAnswer_7
+                           │                               └── o1 sendassignScore_8
+                           │                                   └── p1 receiveassignScore_8
+                           │                                       └── q1 sendcancelScore_9
+                           │                                           └── r1 receivecancelScore_9
+                           │                                               └── s1 sendrequestScore_10
+                           │                                                   └── t1 receiverequestScore_10
+                           │                                                       └── u1 sendreportScore_11
+                           │                                                           └── v1 receivereportScore_11
+                           │                                                               ├── w1 sendreserveRound_12
+                           │                                                               │   └── x1 receivereserveRound_12
+                           │                                                               └── w2 checkloop_issueAnswer_6_loop2  ↺ วนกลับไป sendissueAnswer_6
+                           └── g2 checkloop_ackRound_3_loop1  ↺ วนกลับไป sendackRound_3
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

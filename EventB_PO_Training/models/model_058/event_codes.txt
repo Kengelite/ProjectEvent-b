@@ -1,0 +1,44 @@
+model_058  BloodDonationDrive  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendackScreening_1
+   b1   receiveackScreening_1
+   c1   sendlogSlot_2
+   d1   receivelogSlot_2
+   e1   sendsyncSlot_3
+   e2   sendlogDonation_6
+   f1   receivesyncSlot_3
+   f2   receivelogDonation_6
+   g1   sendnotifyDonation_4_opt1
+   h1   receivenotifyDonation_4_opt1
+   i1   sendvalidateScreening_5
+   j1   receivevalidateScreening_5
+   k1   sendfetchScreening_7
+   l1   receivefetchScreening_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       └── e2 → f2 → k1 → l1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendackScreening_1
+       └── b1 receiveackScreening_1
+           └── c1 sendlogSlot_2
+               └── d1 receivelogSlot_2
+                   ├── e1 sendsyncSlot_3
+                   │   └── f1 receivesyncSlot_3
+                   │       └── g1 sendnotifyDonation_4_opt1
+                   │           └── h1 receivenotifyDonation_4_opt1
+                   │               └── i1 sendvalidateScreening_5
+                   │                   └── j1 receivevalidateScreening_5
+                   │                       └── k1 sendfetchScreening_7
+                   │                           └── l1 receivefetchScreening_7
+                   └── e2 sendlogDonation_6
+                       └── f2 receivelogDonation_6
+                           └── k1 sendfetchScreening_7
+                               └── l1 receivefetchScreening_7
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

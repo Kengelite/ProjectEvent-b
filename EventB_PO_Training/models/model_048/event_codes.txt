@@ -1,0 +1,44 @@
+model_048  WarehouseRobotFleet  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendstartShift_1
+   b1   receivestartShift_1
+   c1   sendassignTaskA_2
+   d1   receiveassignTaskA_2
+   e1   sendassignTaskB_3
+   f1   receiveassignTaskB_3
+   g1   sendtaskDone_4
+   h1   receivetaskDone_4
+   i1   sendreserveDock_5_opt1
+   j1   receivereserveDock_5_opt1
+   k1   senddockReady_6_opt1
+   l1   receivedockReady_6_opt1
+   m1   sendendShift_7
+   m2   checkloop_assignTaskA_2_loop1
+   n1   receiveendShift_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       ├── m1 → n1
+       └── m2 ↺ c1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendstartShift_1
+       └── b1 receivestartShift_1
+           └── c1 sendassignTaskA_2
+               └── d1 receiveassignTaskA_2
+                   └── e1 sendassignTaskB_3
+                       └── f1 receiveassignTaskB_3
+                           └── g1 sendtaskDone_4
+                               └── h1 receivetaskDone_4
+                                   └── i1 sendreserveDock_5_opt1
+                                       └── j1 receivereserveDock_5_opt1
+                                           └── k1 senddockReady_6_opt1
+                                               └── l1 receivedockReady_6_opt1
+                                                   ├── m1 sendendShift_7
+                                                   │   └── n1 receiveendShift_7
+                                                   └── m2 checkloop_assignTaskA_2_loop1  ↺ วนกลับไป sendassignTaskA_2
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

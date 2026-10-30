@@ -1,0 +1,40 @@
+model_170  SmartHelmetMining  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendsyncAlarm_1
+   b1   receivesyncAlarm_1
+   c1   sendackGas_2
+   d1   receiveackGas_2
+   e1   sendscheduleGas_3
+   e2   sendcheckAlarm_4
+   f1   receivescheduleGas_3
+   f2   receivecheckAlarm_4
+   g1   sendupdateAlarm_6
+   h1   receiveupdateAlarm_6
+   i1   sendreserveLocation_5
+   j1   receivereserveLocation_5
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1
+       └── e2 → f2 → i1 → j1 → g1 → h1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendsyncAlarm_1
+       └── b1 receivesyncAlarm_1
+           └── c1 sendackGas_2
+               └── d1 receiveackGas_2
+                   ├── e1 sendscheduleGas_3
+                   │   └── f1 receivescheduleGas_3
+                   │       └── g1 sendupdateAlarm_6
+                   │           └── h1 receiveupdateAlarm_6
+                   └── e2 sendcheckAlarm_4
+                       └── f2 receivecheckAlarm_4
+                           └── i1 sendreserveLocation_5
+                               └── j1 receivereserveLocation_5
+                                   └── g1 sendupdateAlarm_6
+                                       └── h1 receiveupdateAlarm_6
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

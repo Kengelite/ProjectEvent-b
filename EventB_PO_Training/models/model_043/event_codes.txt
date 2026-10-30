@@ -1,0 +1,51 @@
+model_043  ThermostatControl  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendstartHeating_1
+   b1   receivestartHeating_1
+   c1   sendheatingAck_2
+   d1   receiveheatingAck_2
+   e1   sendqueryTemp_3
+   f1   receivequeryTemp_3
+   g1   sendtempReport_4
+   h1   receivetempReport_4
+   i1   sendreducePower_5
+   i2   sendkeepPower_6
+   j1   receivereducePower_5
+   j2   receivekeepPower_6
+   k1   sendstopHeating_7
+   k2   checkloop_queryTemp_3_loop1
+   l1   receivestopHeating_7
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1
+       │   ├── k1 → l1
+       │   └── k2 ↺ e1
+       └── i2 → j2
+           ├── k1 → l1
+           └── k2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendstartHeating_1
+       └── b1 receivestartHeating_1
+           └── c1 sendheatingAck_2
+               └── d1 receiveheatingAck_2
+                   └── e1 sendqueryTemp_3
+                       └── f1 receivequeryTemp_3
+                           └── g1 sendtempReport_4
+                               └── h1 receivetempReport_4
+                                   ├── i1 sendreducePower_5
+                                   │   └── j1 receivereducePower_5
+                                   │       ├── k1 sendstopHeating_7
+                                   │       │   └── l1 receivestopHeating_7
+                                   │       └── k2 checkloop_queryTemp_3_loop1  ↺ วนกลับไป sendqueryTemp_3
+                                   └── i2 sendkeepPower_6
+                                       └── j2 receivekeepPower_6
+                                           ├── k1 sendstopHeating_7
+                                           │   └── l1 receivestopHeating_7
+                                           └── k2 checkloop_queryTemp_3_loop1  ↺ วนกลับไป sendqueryTemp_3
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)

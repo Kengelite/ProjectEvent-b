@@ -12,8 +12,9 @@ A loop-counter event hangs under the last event of its loop body. Events are cod
 the step, the number the alternative where the tree branches (an alt, or loop-again vs. go on). Events at the
 same step of sibling branches share a letter (m1 / m2 / m3); an event where branches merge starts a new letter.
 
-Writes the two trees to separate files: models/<id>/guard_tree.txt|json and event_tree.txt|json.
-The event files name conditions by their text, never by guard code, so the two code sets never mix. model_001's model.txt has event names only, so its events and guards
+Writes, per model: guard_tree.txt and event_tree.txt (the paths only, one per line: a1,b1), guard_codes.txt and
+event_codes.txt (what each code means, with the tree drawn), and guard_tree.json / event_tree.json (all of it as
+data). The event files name conditions by their text, never by guard code, so the two code sets never mix. model_001's model.txt has event names only, so its events and guards
 are read from the Rodin proof-obligation file (.bpo) instead; one of its events has no name there.
 """
 import glob, html, json, os, re
@@ -285,24 +286,44 @@ def load_tree(model_dir):
             "unplaced_events": event["unplaced_events"]}
 
 
-def guard_text(model_id, case, t):
+def as_csv_path(p):
+    """'a1 -> b1 ↺ e1' → 'a1,b1,↺e1'."""
+    p = p.replace(" ↺ ", " -> ↺")
+    return ",".join(x.strip() for x in p.split("->"))
+
+
+def guard_tree_text(t):
+    """guard_tree.txt: the paths only, one per line (a1,b1). Empty when the diagram has no condition."""
+    return "".join(as_csv_path(p) + "\n" for p in t["guard_paths"])
+
+
+def event_tree_text(t):
+    """event_tree.txt: the paths only, one per line; ↺x ends a path that loops back to event x."""
+    return "".join(as_csv_path(p) + "\n" for p in t["event_paths"])
+
+
+def guard_codes_text(model_id, case, t):
     gc = t["guard_codes"]
-    lines = [f"{model_id}  {case}  —  Guard tree", "", "1) รหัส guard"]
+    lines = [f"{model_id}  {case}  —  รหัส guard", "", "1) ความหมายของรหัส"]
     lines += [f"   {c:<4} {g}" for c, g in gc.items()] or ["   (ไม่มีเงื่อนไขจากแผนภาพ)"]
-    lines += ["", "2) Guard tree", "   (root)"]
-    lines += ["   " + l for l in draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}")]
-    lines += ["", "3) เส้นทาง"] + ([f"   {p}" for p in t["guard_paths"]] or ["   -"])
+    if gc:
+        lines += ["", "2) Guard tree", "   (root)"]
+        lines += ["   " + l for l in draw(t["guard_tree"], lambda c: f"{c}  {gc[c]}")]
+    lines += ["", "เส้นทางอยู่ในไฟล์ guard_tree.txt"]
     return "\n".join(lines) + "\n"
 
 
-def event_text(model_id, case, t):
-    lines = [f"{model_id}  {case}  —  Event tree", "", "1) รหัส event"]
+def event_codes_text(model_id, case, t):
+    lines = [f"{model_id}  {case}  —  รหัส event", "", "1) ความหมายของรหัส"]
     lines += [f"   {c:<4} {n}" for c, n in t["event_codes"].items()]
     lines += ["", "2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)", "   (root) INITIALISATION"]
     lines += ["   " + l for l in draw_events_compact(t["event_tree"])]
     lines += ["", "3) Event tree แบบเต็ม", "   (root) INITIALISATION"] + ["   " + l for l in draw_events(t["event_tree"])]
-    lines += ["", "4) เส้นทาง"] + [f"   {p}" for p in t["event_paths"]]
+    lines += ["", "เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)"]
     return "\n".join(lines) + "\n"
+
+
+TREE_FILES = ("guard_tree.txt", "guard_codes.txt", "guard_tree.json", "event_tree.txt", "event_codes.txt", "event_tree.json")
 
 
 def main():
@@ -320,9 +341,13 @@ def main():
         t = build(events)
         t["source"] = source
         guard, event = split_tree(t)
-        for name, part, txt in (("guard_tree", guard, guard_text), ("event_tree", event, event_text)):
-            json.dump(part, open(os.path.join(d, f"{name}.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-            open(os.path.join(d, f"{name}.txt"), "w", encoding="utf-8").write(txt(meta["model_id"], meta["case"], t))
+        for kind, part in (("guard", guard), ("event", event)):
+            json.dump(part, open(os.path.join(d, f"{kind}_tree.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        files = {"guard_tree.txt": guard_tree_text(t), "event_tree.txt": event_tree_text(t),
+                 "guard_codes.txt": guard_codes_text(meta["model_id"], meta["case"], t),
+                 "event_codes.txt": event_codes_text(meta["model_id"], meta["case"], t)}
+        for name, body in files.items():
+            open(os.path.join(d, name), "w", encoding="utf-8").write(body)
         for old in ("tree.json", "tree.txt"):
             if os.path.exists(os.path.join(d, old)):
                 os.remove(os.path.join(d, old))

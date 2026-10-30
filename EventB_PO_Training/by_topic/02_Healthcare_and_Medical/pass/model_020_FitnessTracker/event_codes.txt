@@ -1,0 +1,36 @@
+model_020  FitnessTracker  —  รหัส event
+
+1) ความหมายของรหัส
+   a1   sendpairDevice_1
+   b1   receivepairDevice_1
+   c1   sendpairOK_2
+   d1   receivepairOK_2
+   e1   sendsyncSteps_3
+   f1   receivesyncSteps_3
+   g1   sendsyncAck_4
+   h1   receivesyncAck_4
+   i1   sendshowDashboard_5
+   i2   checkloop_syncSteps_3_loop1
+   j1   receiveshowDashboard_5
+
+2) Event tree แบบย่อ (event ที่ต่อกันเป็นเส้นตรงอยู่ในบรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1
+       └── i2 ↺ e1
+
+3) Event tree แบบเต็ม
+   (root) INITIALISATION
+   └── a1 sendpairDevice_1
+       └── b1 receivepairDevice_1
+           └── c1 sendpairOK_2
+               └── d1 receivepairOK_2
+                   └── e1 sendsyncSteps_3
+                       └── f1 receivesyncSteps_3
+                           └── g1 sendsyncAck_4
+                               └── h1 receivesyncAck_4
+                                   ├── i1 sendshowDashboard_5
+                                   │   └── j1 receiveshowDashboard_5
+                                   └── i2 checkloop_syncSteps_3_loop1  ↺ วนกลับไป sendsyncSteps_3
+
+เส้นทางอยู่ในไฟล์ event_tree.txt (↺x = วนกลับไปที่ event x)
