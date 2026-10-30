@@ -1,0 +1,63 @@
+model_135  ParcelReturnDropoff
+
+1) รหัสเงื่อนไข (guard)
+   a1   useCache = 1
+
+2) Guard tree
+   (root)
+   └── a1  useCache = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendsyncReturn_1
+   b1   receivesyncReturn_1
+   c1   sendsendRefund_2
+   d1   receivesendRefund_2
+   e1   sendnotifyReturn_3_opt1  (guard a1)
+   f1   receivenotifyReturn_3_opt1  (guard a1)
+   g1   sendscheduleReturn_4
+   h1   receivescheduleReturn_4
+   i1   sendackReturn_5
+   j1   receiveackReturn_5
+   k1   sendreportReturn_6
+   l1   receivereportReturn_6
+   m1   sendlogRefund_7
+   n1   receivelogRefund_7
+   o1   sendapproveRefund_8
+   p1   receiveapproveRefund_8
+   q1   sendassignLabel_9
+   r1   receiveassignLabel_9
+   s1   sendvalidateRefund_10
+   t1   receivevalidateRefund_10
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendsyncReturn_1
+       └── b1 receivesyncReturn_1
+           └── c1 sendsendRefund_2
+               └── d1 receivesendRefund_2
+                   └── e1 sendnotifyReturn_3_opt1  (guard a1)
+                       └── f1 receivenotifyReturn_3_opt1  (guard a1)
+                           └── g1 sendscheduleReturn_4
+                               └── h1 receivescheduleReturn_4
+                                   └── i1 sendackReturn_5
+                                       └── j1 receiveackReturn_5
+                                           └── k1 sendreportReturn_6
+                                               └── l1 receivereportReturn_6
+                                                   └── m1 sendlogRefund_7
+                                                       └── n1 receivelogRefund_7
+                                                           └── o1 sendapproveRefund_8
+                                                               └── p1 receiveapproveRefund_8
+                                                                   └── q1 sendassignLabel_9
+                                                                       └── r1 receiveassignLabel_9
+                                                                           └── s1 sendvalidateRefund_10
+                                                                               └── t1 receivevalidateRefund_10
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1

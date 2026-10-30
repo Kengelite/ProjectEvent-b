@@ -1,0 +1,46 @@
+model_187  ThermalCameraScreening
+
+1) รหัสเงื่อนไข (guard)
+   (ไม่มีเงื่อนไขจาก diagram)
+
+2) Guard tree
+   (root)
+
+   เส้นทาง:
+   -
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcancelScan_1
+   b1   receivecancelScan_1
+   c1   sendackScan_2
+   d1   receiveackScan_2
+   e1   sendassignAlert_3
+   f1   receiveassignAlert_3
+   g1   sendconfirmAlert_4
+   h1   receiveconfirmAlert_4
+   i1   sendackAlert_5
+   j1   receiveackAlert_5
+   k1   sendqueryFever_6
+   l1   receivequeryFever_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcancelScan_1
+       └── b1 receivecancelScan_1
+           └── c1 sendackScan_2
+               └── d1 receiveackScan_2
+                   └── e1 sendassignAlert_3
+                       └── f1 receiveassignAlert_3
+                           └── g1 sendconfirmAlert_4
+                               └── h1 receiveconfirmAlert_4
+                                   └── i1 sendackAlert_5
+                                       └── j1 receiveackAlert_5
+                                           └── k1 sendqueryFever_6
+                                               └── l1 receivequeryFever_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

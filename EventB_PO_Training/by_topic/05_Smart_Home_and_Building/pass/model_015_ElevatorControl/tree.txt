@@ -31,8 +31,8 @@ model_015  ElevatorControl
    j1   receivedoorOpened_5  (guard a1)
    j2   receivedoorSensor_7  (guard a2 b1)
    k1   sendnotifyPassenger_8
+   k2   checkloop_closeDoor_6_loop1  (guard a2 b1)
    l1   receivenotifyPassenger_8
-   m1   checkloop_closeDoor_6_loop1  (guard a2 b1)
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
@@ -40,7 +40,7 @@ model_015  ElevatorControl
        ├── g1 → h1 → i1 → j1 → k1 → l1
        └── g2 → h2 → i2 → j2
            ├── k1 → l1
-           └── m1 ↺ g2
+           └── k2 ↺ g2
 
    Event tree (เต็ม)
    (root) INITIALISATION
@@ -62,9 +62,9 @@ model_015  ElevatorControl
                                        └── j2 receivedoorSensor_7  (guard a2 b1)
                                            ├── k1 sendnotifyPassenger_8
                                            │   └── l1 receivenotifyPassenger_8
-                                           └── m1 checkloop_closeDoor_6_loop1  (guard a2 b1)  ↺ กลับไป sendcloseDoor_6
+                                           └── k2 checkloop_closeDoor_6_loop1  (guard a2 b1)  ↺ กลับไป sendcloseDoor_6
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k1 -> l1
-   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> m1 ↺ g2
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i2 -> j2 -> k2 ↺ g2

@@ -29,18 +29,18 @@ model_038  SmartGreenhouse
    i1   sendsprinklerOn_5  (guard a1 b1)
    j1   receivesprinklerOn_5  (guard a1 b1)
    k1   sendendCycle_7
+   k2   checkloop_readClimate_2_loop1  (guard a1)
    l1   receiveendCycle_7
-   m1   checkloop_readClimate_2_loop1  (guard a1)
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1
        ├── g1 → h1 → i1 → j1
        │   ├── k1 → l1
-       │   └── m1 ↺ c1
+       │   └── k2 ↺ c1
        └── g2 → h2
            ├── k1 → l1
-           └── m1 ↺ c1
+           └── k2 ↺ c1
 
    Event tree (เต็ม)
    (root) INITIALISATION
@@ -56,15 +56,15 @@ model_038  SmartGreenhouse
                            │           └── j1 receivesprinklerOn_5  (guard a1 b1)
                            │               ├── k1 sendendCycle_7
                            │               │   └── l1 receiveendCycle_7
-                           │               └── m1 checkloop_readClimate_2_loop1  (guard a1)  ↺ กลับไป sendreadClimate_2
+                           │               └── k2 checkloop_readClimate_2_loop1  (guard a1)  ↺ กลับไป sendreadClimate_2
                            └── g2 sendstartFan_6  (guard a1 b2)
                                └── h2 receivestartFan_6  (guard a1 b2)
                                    ├── k1 sendendCycle_7
                                    │   └── l1 receiveendCycle_7
-                                   └── m1 checkloop_readClimate_2_loop1  (guard a1)  ↺ กลับไป sendreadClimate_2
+                                   └── k2 checkloop_readClimate_2_loop1  (guard a1)  ↺ กลับไป sendreadClimate_2
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
-   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> m1 ↺ c1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ c1
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1
-   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> m1 ↺ c1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k2 ↺ c1

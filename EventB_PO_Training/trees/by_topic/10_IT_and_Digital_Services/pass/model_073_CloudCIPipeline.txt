@@ -1,0 +1,76 @@
+model_073  CloudCIPipeline
+
+1) รหัสเงื่อนไข (guard)
+   a1   useCache = 1
+   b1   optIn = 1
+   c1   retryNo < 11
+
+2) Guard tree
+   (root)
+   └── a1  useCache = 1
+       └── b1  optIn = 1
+           └── c1  retryNo < 11
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendreportImage_1
+   b1   receivereportImage_1
+   c1   sendissueImage_2
+   d1   receiveissueImage_2
+   e1   sendreserveBuild_3_opt1  (guard a1)
+   f1   receivereserveBuild_3_opt1  (guard a1)
+   g1   sendnotifyImage_4
+   h1   receivenotifyImage_4
+   i1   sendreportCommit_5
+   j1   receivereportCommit_5
+   k1   sendissueBuild_6_opt2  (guard b1)
+   l1   receiveissueBuild_6_opt2  (guard b1)
+   m1   sendcheckImage_7
+   n1   receivecheckImage_7
+   o1   sendscheduleBuild_8
+   p1   receivescheduleBuild_8
+   q1   sendlogCommit_9  (guard c1)
+   r1   receivelogCommit_9  (guard c1)
+   s1   sendfetchBuild_10  (guard c1)
+   t1   receivefetchBuild_10  (guard c1)
+   u1   sendconfirmCommit_11
+   u2   checkloop_logCommit_9_loop1  (guard c1)
+   v1   receiveconfirmCommit_11
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+       ├── u1 → v1
+       └── u2 ↺ q1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendreportImage_1
+       └── b1 receivereportImage_1
+           └── c1 sendissueImage_2
+               └── d1 receiveissueImage_2
+                   └── e1 sendreserveBuild_3_opt1  (guard a1)
+                       └── f1 receivereserveBuild_3_opt1  (guard a1)
+                           └── g1 sendnotifyImage_4
+                               └── h1 receivenotifyImage_4
+                                   └── i1 sendreportCommit_5
+                                       └── j1 receivereportCommit_5
+                                           └── k1 sendissueBuild_6_opt2  (guard b1)
+                                               └── l1 receiveissueBuild_6_opt2  (guard b1)
+                                                   └── m1 sendcheckImage_7
+                                                       └── n1 receivecheckImage_7
+                                                           └── o1 sendscheduleBuild_8
+                                                               └── p1 receivescheduleBuild_8
+                                                                   └── q1 sendlogCommit_9  (guard c1)
+                                                                       └── r1 receivelogCommit_9  (guard c1)
+                                                                           └── s1 sendfetchBuild_10  (guard c1)
+                                                                               └── t1 receivefetchBuild_10  (guard c1)
+                                                                                   ├── u1 sendconfirmCommit_11
+                                                                                   │   └── v1 receiveconfirmCommit_11
+                                                                                   └── u2 checkloop_logCommit_9_loop1  (guard c1)  ↺ กลับไป sendlogCommit_9
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ q1

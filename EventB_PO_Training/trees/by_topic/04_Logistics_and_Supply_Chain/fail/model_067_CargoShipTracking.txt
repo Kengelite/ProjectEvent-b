@@ -1,0 +1,54 @@
+model_067  CargoShipTracking
+
+1) รหัสเงื่อนไข (guard)
+   a1   cycleNo < 7
+   b1   useCache = 1
+
+2) Guard tree
+   (root)
+   └── a1  cycleNo < 7
+       └── b1  useCache = 1
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendsyncManifest_1
+   b1   receivesyncManifest_1
+   c1   sendassignContainer_2
+   d1   receiveassignContainer_2
+   e1   sendackContainer_3  (guard a1)
+   f1   receiveackContainer_3  (guard a1)
+   g1   sendupdateManifest_4_opt1  (guard a1 b1)
+   h1   receiveupdateManifest_4_opt1  (guard a1 b1)
+   i1   sendupdateBerth_5  (guard a1)
+   j1   receiveupdateBerth_5  (guard a1)
+   k1   sendreleaseContainer_6
+   k2   checkloop_ackContainer_3_loop1  (guard a1)
+   l1   receivereleaseContainer_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1
+       ├── k1 → l1
+       └── k2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendsyncManifest_1
+       └── b1 receivesyncManifest_1
+           └── c1 sendassignContainer_2
+               └── d1 receiveassignContainer_2
+                   └── e1 sendackContainer_3  (guard a1)
+                       └── f1 receiveackContainer_3  (guard a1)
+                           └── g1 sendupdateManifest_4_opt1  (guard a1 b1)
+                               └── h1 receiveupdateManifest_4_opt1  (guard a1 b1)
+                                   └── i1 sendupdateBerth_5  (guard a1)
+                                       └── j1 receiveupdateBerth_5  (guard a1)
+                                           ├── k1 sendreleaseContainer_6
+                                           │   └── l1 receivereleaseContainer_6
+                                           └── k2 checkloop_ackContainer_3_loop1  (guard a1)  ↺ กลับไป sendackContainer_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1

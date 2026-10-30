@@ -1,0 +1,46 @@
+model_079  CraneLoadMonitor
+
+1) รหัสเงื่อนไข (guard)
+   (ไม่มีเงื่อนไขจาก diagram)
+
+2) Guard tree
+   (root)
+
+   เส้นทาง:
+   -
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcancelLimit_1
+   b1   receivecancelLimit_1
+   c1   sendvalidateAlarm_2
+   d1   receivevalidateAlarm_2
+   e1   sendackLimit_3
+   f1   receiveackLimit_3
+   g1   sendissueLimit_4
+   h1   receiveissueLimit_4
+   i1   sendcancelLoad_5
+   j1   receivecancelLoad_5
+   k1   sendscheduleLoad_6
+   l1   receivescheduleLoad_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcancelLimit_1
+       └── b1 receivecancelLimit_1
+           └── c1 sendvalidateAlarm_2
+               └── d1 receivevalidateAlarm_2
+                   └── e1 sendackLimit_3
+                       └── f1 receiveackLimit_3
+                           └── g1 sendissueLimit_4
+                               └── h1 receiveissueLimit_4
+                                   └── i1 sendcancelLoad_5
+                                       └── j1 receivecancelLoad_5
+                                           └── k1 sendscheduleLoad_6
+                                               └── l1 receivescheduleLoad_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

@@ -1,0 +1,46 @@
+model_193  VeterinaryClinic
+
+1) รหัสเงื่อนไข (guard)
+   (ไม่มีเงื่อนไขจาก diagram)
+
+2) Guard tree
+   (root)
+
+   เส้นทาง:
+   -
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendreleaseAppointment_1
+   b1   receivereleaseAppointment_1
+   c1   sendcancelAppointment_2
+   d1   receivecancelAppointment_2
+   e1   sendreportInvoice_3
+   f1   receivereportInvoice_3
+   g1   sendsendAppointment_4
+   h1   receivesendAppointment_4
+   i1   sendapproveAppointment_5
+   j1   receiveapproveAppointment_5
+   k1   sendvalidateInvoice_6
+   l1   receivevalidateInvoice_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendreleaseAppointment_1
+       └── b1 receivereleaseAppointment_1
+           └── c1 sendcancelAppointment_2
+               └── d1 receivecancelAppointment_2
+                   └── e1 sendreportInvoice_3
+                       └── f1 receivereportInvoice_3
+                           └── g1 sendsendAppointment_4
+                               └── h1 receivesendAppointment_4
+                                   └── i1 sendapproveAppointment_5
+                                       └── j1 receiveapproveAppointment_5
+                                           └── k1 sendvalidateInvoice_6
+                                               └── l1 receivevalidateInvoice_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

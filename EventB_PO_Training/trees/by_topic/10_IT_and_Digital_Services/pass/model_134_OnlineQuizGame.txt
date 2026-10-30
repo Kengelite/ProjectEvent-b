@@ -1,0 +1,83 @@
+model_134  OnlineQuizGame
+
+1) รหัสเงื่อนไข (guard)
+   a1   attemptNo < 10
+   b1   roundNo < 6
+
+2) Guard tree
+   (root)
+   └── a1  attemptNo < 10
+       └── b1  roundNo < 6
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcheckRound_1
+   b1   receivecheckRound_1
+   c1   sendscheduleAnswer_2
+   d1   receivescheduleAnswer_2
+   e1   sendackRound_3  (guard a1)
+   f1   receiveackRound_3  (guard a1)
+   g1   sendfetchAnswer_4
+   g2   checkloop_ackRound_3_loop1  (guard a1)
+   h1   receivefetchAnswer_4
+   i1   sendqueryScore_5
+   j1   receivequeryScore_5
+   k1   sendissueAnswer_6  (guard b1)
+   l1   receiveissueAnswer_6  (guard b1)
+   m1   sendapproveAnswer_7  (guard b1)
+   n1   receiveapproveAnswer_7  (guard b1)
+   o1   sendassignScore_8  (guard b1)
+   p1   receiveassignScore_8  (guard b1)
+   q1   sendcancelScore_9  (guard b1)
+   r1   receivecancelScore_9  (guard b1)
+   s1   sendrequestScore_10  (guard b1)
+   t1   receiverequestScore_10  (guard b1)
+   u1   sendreportScore_11  (guard b1)
+   v1   receivereportScore_11  (guard b1)
+   w1   sendreserveRound_12
+   w2   checkloop_issueAnswer_6_loop2  (guard b1)
+   x1   receivereserveRound_12
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1
+       │   ├── w1 → x1
+       │   └── w2 ↺ k1
+       └── g2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcheckRound_1
+       └── b1 receivecheckRound_1
+           └── c1 sendscheduleAnswer_2
+               └── d1 receivescheduleAnswer_2
+                   └── e1 sendackRound_3  (guard a1)
+                       └── f1 receiveackRound_3  (guard a1)
+                           ├── g1 sendfetchAnswer_4
+                           │   └── h1 receivefetchAnswer_4
+                           │       └── i1 sendqueryScore_5
+                           │           └── j1 receivequeryScore_5
+                           │               └── k1 sendissueAnswer_6  (guard b1)
+                           │                   └── l1 receiveissueAnswer_6  (guard b1)
+                           │                       └── m1 sendapproveAnswer_7  (guard b1)
+                           │                           └── n1 receiveapproveAnswer_7  (guard b1)
+                           │                               └── o1 sendassignScore_8  (guard b1)
+                           │                                   └── p1 receiveassignScore_8  (guard b1)
+                           │                                       └── q1 sendcancelScore_9  (guard b1)
+                           │                                           └── r1 receivecancelScore_9  (guard b1)
+                           │                                               └── s1 sendrequestScore_10  (guard b1)
+                           │                                                   └── t1 receiverequestScore_10  (guard b1)
+                           │                                                       └── u1 sendreportScore_11  (guard b1)
+                           │                                                           └── v1 receivereportScore_11  (guard b1)
+                           │                                                               ├── w1 sendreserveRound_12
+                           │                                                               │   └── x1 receivereserveRound_12
+                           │                                                               └── w2 checkloop_issueAnswer_6_loop2  (guard b1)  ↺ กลับไป sendissueAnswer_6
+                           └── g2 checkloop_ackRound_3_loop1  (guard a1)  ↺ กลับไป sendackRound_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w2 ↺ k1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ e1

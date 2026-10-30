@@ -1,0 +1,80 @@
+model_153  RemotePatientMonitor
+
+1) รหัสเงื่อนไข (guard)
+   a1   passNo < 12
+
+2) Guard tree
+   (root)
+   └── a1  passNo < 12
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendsyncAlert_1
+   b1   receivesyncAlert_1
+   c1   sendcancelReport_2
+   d1   receivecancelReport_2
+   e1   sendapproveVital_3  (guard a1)
+   f1   receiveapproveVital_3  (guard a1)
+   g1   sendscheduleReport_4  (guard a1)
+   h1   receivescheduleReport_4  (guard a1)
+   i1   sendreleaseReport_5
+   i2   checkloop_approveVital_3_loop1  (guard a1)
+   j1   receivereleaseReport_5
+   k1   sendsendAlert_6
+   l1   receivesendAlert_6
+   m1   sendreportVital_7
+   n1   receivereportVital_7
+   o1   sendnotifyAlert_8
+   p1   receivenotifyAlert_8
+   q1   sendfetchVital_9
+   r1   receivefetchVital_9
+   s1   sendreportAlert_10
+   t1   receivereportAlert_10
+   u1   sendreportReport_11
+   v1   receivereportReport_11
+   w1   sendconfirmVital_12
+   x1   receiveconfirmVital_12
+   y1   sendassignAlert_13
+   z1   receiveassignAlert_13
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1
+       └── i2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendsyncAlert_1
+       └── b1 receivesyncAlert_1
+           └── c1 sendcancelReport_2
+               └── d1 receivecancelReport_2
+                   └── e1 sendapproveVital_3  (guard a1)
+                       └── f1 receiveapproveVital_3  (guard a1)
+                           └── g1 sendscheduleReport_4  (guard a1)
+                               └── h1 receivescheduleReport_4  (guard a1)
+                                   ├── i1 sendreleaseReport_5
+                                   │   └── j1 receivereleaseReport_5
+                                   │       └── k1 sendsendAlert_6
+                                   │           └── l1 receivesendAlert_6
+                                   │               └── m1 sendreportVital_7
+                                   │                   └── n1 receivereportVital_7
+                                   │                       └── o1 sendnotifyAlert_8
+                                   │                           └── p1 receivenotifyAlert_8
+                                   │                               └── q1 sendfetchVital_9
+                                   │                                   └── r1 receivefetchVital_9
+                                   │                                       └── s1 sendreportAlert_10
+                                   │                                           └── t1 receivereportAlert_10
+                                   │                                               └── u1 sendreportReport_11
+                                   │                                                   └── v1 receivereportReport_11
+                                   │                                                       └── w1 sendconfirmVital_12
+                                   │                                                           └── x1 receiveconfirmVital_12
+                                   │                                                               └── y1 sendassignAlert_13
+                                   │                                                                   └── z1 receiveassignAlert_13
+                                   └── i2 checkloop_approveVital_3_loop1  (guard a1)  ↺ กลับไป sendapproveVital_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1

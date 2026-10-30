@@ -1,0 +1,52 @@
+model_091  FactoryQualityGate
+
+1) รหัสเงื่อนไข (guard)
+   a1   roundNo < 7
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 7
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcancelPart_1
+   b1   receivecancelPart_1
+   c1   sendfetchDefect_2
+   d1   receivefetchDefect_2
+   e1   sendlogDefect_3  (guard a1)
+   f1   receivelogDefect_3  (guard a1)
+   g1   sendnotifyPart_4  (guard a1)
+   h1   receivenotifyPart_4  (guard a1)
+   i1   sendreportPart_5
+   i2   checkloop_logDefect_3_loop1  (guard a1)
+   j1   receivereportPart_5
+   k1   sendreleaseBatch_6
+   l1   receivereleaseBatch_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1
+       └── i2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcancelPart_1
+       └── b1 receivecancelPart_1
+           └── c1 sendfetchDefect_2
+               └── d1 receivefetchDefect_2
+                   └── e1 sendlogDefect_3  (guard a1)
+                       └── f1 receivelogDefect_3  (guard a1)
+                           └── g1 sendnotifyPart_4  (guard a1)
+                               └── h1 receivenotifyPart_4  (guard a1)
+                                   ├── i1 sendreportPart_5
+                                   │   └── j1 receivereportPart_5
+                                   │       └── k1 sendreleaseBatch_6
+                                   │           └── l1 receivereleaseBatch_6
+                                   └── i2 checkloop_logDefect_3_loop1  (guard a1)  ↺ กลับไป sendlogDefect_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1

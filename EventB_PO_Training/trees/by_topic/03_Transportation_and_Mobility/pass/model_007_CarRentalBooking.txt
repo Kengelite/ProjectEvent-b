@@ -1,0 +1,70 @@
+model_007  CarRentalBooking
+
+1) รหัสเงื่อนไข (guard)
+   a1   searchCount < 3
+   b1   insurance = 1
+   c1   t_pay ≤ 10
+   c2   t_pay > 10
+
+2) Guard tree
+   (root)
+   └── a1  searchCount < 3
+       └── b1  insurance = 1
+           ├── c1  t_pay ≤ 10
+           └── c2  t_pay > 10
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+   a1 -> b1 -> c2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendopenApp_1
+   b1   receiveopenApp_1
+   c1   sendsearchCar_2  (guard a1)
+   d1   receivesearchCar_2  (guard a1)
+   e1   sendcarList_3  (guard a1)
+   f1   receivecarList_3  (guard a1)
+   g1   sendaddInsurance_4_opt1  (guard b1)
+   g2   checkloop_searchCar_2_loop1  (guard a1)
+   h1   receiveaddInsurance_4_opt1  (guard b1)
+   i1   sendrequestPayment_5
+   j1   receiverequestPayment_5
+   k1   sendpaymentResult_6
+   l1   receivepaymentResult_6
+   m1   sendconfirmBooking_7  (guard c1)
+   m2   sendcancelBooking_8  (guard c2)
+   n1   receiveconfirmBooking_7  (guard c1)
+   n2   receivecancelBooking_8  (guard c2)
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       │   ├── m1 → n1
+       │   └── m2 → n2
+       └── g2 ↺ c1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendopenApp_1
+       └── b1 receiveopenApp_1
+           └── c1 sendsearchCar_2  (guard a1)
+               └── d1 receivesearchCar_2  (guard a1)
+                   └── e1 sendcarList_3  (guard a1)
+                       └── f1 receivecarList_3  (guard a1)
+                           ├── g1 sendaddInsurance_4_opt1  (guard b1)
+                           │   └── h1 receiveaddInsurance_4_opt1  (guard b1)
+                           │       └── i1 sendrequestPayment_5
+                           │           └── j1 receiverequestPayment_5
+                           │               └── k1 sendpaymentResult_6
+                           │                   └── l1 receivepaymentResult_6
+                           │                       ├── m1 sendconfirmBooking_7  (guard c1)
+                           │                       │   └── n1 receiveconfirmBooking_7  (guard c1)
+                           │                       └── m2 sendcancelBooking_8  (guard c2)
+                           │                           └── n2 receivecancelBooking_8  (guard c2)
+                           └── g2 checkloop_searchCar_2_loop1  (guard a1)  ↺ กลับไป sendsearchCar_2
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m2 -> n2
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ c1

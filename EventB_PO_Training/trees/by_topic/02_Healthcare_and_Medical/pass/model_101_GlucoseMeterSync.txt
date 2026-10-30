@@ -1,0 +1,79 @@
+model_101  GlucoseMeterSync
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendconfirmInsulin_1
+   b1   receiveconfirmInsulin_1
+   c1   sendsyncReading_2
+   d1   receivesyncReading_2
+   e1   sendupdateAlert_3
+   f1   receiveupdateAlert_3
+   g1   sendqueryReading_4
+   h1   receivequeryReading_4
+   i1   sendnotifyAlert_5
+   j1   receivenotifyAlert_5
+   k1   sendreleaseAlert_6
+   l1   receivereleaseAlert_6
+   m1   sendqueryAlert_7
+   n1   receivequeryAlert_7
+   o1   sendreleaseInsulin_8_opt1  (guard a1)
+   p1   receivereleaseInsulin_8_opt1  (guard a1)
+   q1   sendrequestAlert_9_opt1  (guard a1)
+   r1   receiverequestAlert_9_opt1  (guard a1)
+   s1   sendreportInsulin_10_opt1  (guard a1)
+   t1   receivereportInsulin_10_opt1  (guard a1)
+   u1   sendupdateInsulin_11_opt1  (guard a1)
+   v1   receiveupdateInsulin_11_opt1  (guard a1)
+   w1   sendsendAlert_12_opt1  (guard a1)
+   x1   receivesendAlert_12_opt1  (guard a1)
+   y1   sendapproveAlert_13_opt1  (guard a1)
+   z1   receiveapproveAlert_13_opt1  (guard a1)
+   aa1  sendreserveAlert_14
+   ab1  receivereserveAlert_14
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1 → u1 → v1 → w1 → x1 → y1 → z1 → aa1 → ab1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendconfirmInsulin_1
+       └── b1 receiveconfirmInsulin_1
+           └── c1 sendsyncReading_2
+               └── d1 receivesyncReading_2
+                   └── e1 sendupdateAlert_3
+                       └── f1 receiveupdateAlert_3
+                           └── g1 sendqueryReading_4
+                               └── h1 receivequeryReading_4
+                                   └── i1 sendnotifyAlert_5
+                                       └── j1 receivenotifyAlert_5
+                                           └── k1 sendreleaseAlert_6
+                                               └── l1 receivereleaseAlert_6
+                                                   └── m1 sendqueryAlert_7
+                                                       └── n1 receivequeryAlert_7
+                                                           └── o1 sendreleaseInsulin_8_opt1  (guard a1)
+                                                               └── p1 receivereleaseInsulin_8_opt1  (guard a1)
+                                                                   └── q1 sendrequestAlert_9_opt1  (guard a1)
+                                                                       └── r1 receiverequestAlert_9_opt1  (guard a1)
+                                                                           └── s1 sendreportInsulin_10_opt1  (guard a1)
+                                                                               └── t1 receivereportInsulin_10_opt1  (guard a1)
+                                                                                   └── u1 sendupdateInsulin_11_opt1  (guard a1)
+                                                                                       └── v1 receiveupdateInsulin_11_opt1  (guard a1)
+                                                                                           └── w1 sendsendAlert_12_opt1  (guard a1)
+                                                                                               └── x1 receivesendAlert_12_opt1  (guard a1)
+                                                                                                   └── y1 sendapproveAlert_13_opt1  (guard a1)
+                                                                                                       └── z1 receiveapproveAlert_13_opt1  (guard a1)
+                                                                                                           └── aa1 sendreserveAlert_14
+                                                                                                               └── ab1 receivereserveAlert_14
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1 -> y1 -> z1 -> aa1 -> ab1

@@ -1,0 +1,112 @@
+model_179  SmartWasteBin
+
+1) รหัสเงื่อนไข (guard)
+   a1   hasKey = 1
+   a2   hasKey = 0
+   b1   phase = GOLD
+   b2   phase = SILVER
+   b3   phase = BRONZE
+
+2) Guard tree
+   (root)
+   ├── a1  hasKey = 1
+   │   ├── b1  phase = GOLD
+   │   ├── b2  phase = SILVER
+   │   └── b3  phase = BRONZE
+   └── a2  hasKey = 0
+       ├── b1  phase = GOLD
+       ├── b2  phase = SILVER
+       └── b3  phase = BRONZE
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+   a1 -> b3
+   a2 -> b1
+   a2 -> b2
+   a2 -> b3
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendreserveRoute_1
+   b1   receivereserveRoute_1
+   c1   sendsendRoute_2
+   d1   receivesendRoute_2
+   e1   sendassignRoute_3  (guard a1)
+   e2   sendreservePickup_4  (guard a2)
+   f1   receiveassignRoute_3  (guard a1)
+   f2   receivereservePickup_4  (guard a2)
+   g1   sendscheduleFill_5
+   h1   receivescheduleFill_5
+   i1   sendupdatePickup_6
+   j1   receiveupdatePickup_6
+   k1   sendlogPickup_7  (guard b1)
+   k2   sendissueRoute_8  (guard b2)
+   k3   sendsyncPickup_9  (guard b3)
+   l1   receivelogPickup_7  (guard b1)
+   l2   receiveissueRoute_8  (guard b2)
+   l3   receivesyncPickup_9  (guard b3)
+   m1   sendreleaseRoute_10
+   n1   receivereleaseRoute_10
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       │   ├── k1 → l1 → m1 → n1
+       │   ├── k2 → l2 → m1 → n1
+       │   └── k3 → l3 → m1 → n1
+       └── e2 → f2 → g1 → h1 → i1 → j1
+           ├── k1 → l1 → m1 → n1
+           ├── k2 → l2 → m1 → n1
+           └── k3 → l3 → m1 → n1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendreserveRoute_1
+       └── b1 receivereserveRoute_1
+           └── c1 sendsendRoute_2
+               └── d1 receivesendRoute_2
+                   ├── e1 sendassignRoute_3  (guard a1)
+                   │   └── f1 receiveassignRoute_3  (guard a1)
+                   │       └── g1 sendscheduleFill_5
+                   │           └── h1 receivescheduleFill_5
+                   │               └── i1 sendupdatePickup_6
+                   │                   └── j1 receiveupdatePickup_6
+                   │                       ├── k1 sendlogPickup_7  (guard b1)
+                   │                       │   └── l1 receivelogPickup_7  (guard b1)
+                   │                       │       └── m1 sendreleaseRoute_10
+                   │                       │           └── n1 receivereleaseRoute_10
+                   │                       ├── k2 sendissueRoute_8  (guard b2)
+                   │                       │   └── l2 receiveissueRoute_8  (guard b2)
+                   │                       │       └── m1 sendreleaseRoute_10
+                   │                       │           └── n1 receivereleaseRoute_10
+                   │                       └── k3 sendsyncPickup_9  (guard b3)
+                   │                           └── l3 receivesyncPickup_9  (guard b3)
+                   │                               └── m1 sendreleaseRoute_10
+                   │                                   └── n1 receivereleaseRoute_10
+                   └── e2 sendreservePickup_4  (guard a2)
+                       └── f2 receivereservePickup_4  (guard a2)
+                           └── g1 sendscheduleFill_5
+                               └── h1 receivescheduleFill_5
+                                   └── i1 sendupdatePickup_6
+                                       └── j1 receiveupdatePickup_6
+                                           ├── k1 sendlogPickup_7  (guard b1)
+                                           │   └── l1 receivelogPickup_7  (guard b1)
+                                           │       └── m1 sendreleaseRoute_10
+                                           │           └── n1 receivereleaseRoute_10
+                                           ├── k2 sendissueRoute_8  (guard b2)
+                                           │   └── l2 receiveissueRoute_8  (guard b2)
+                                           │       └── m1 sendreleaseRoute_10
+                                           │           └── n1 receivereleaseRoute_10
+                                           └── k3 sendsyncPickup_9  (guard b3)
+                                               └── l3 receivesyncPickup_9  (guard b3)
+                                                   └── m1 sendreleaseRoute_10
+                                                       └── n1 receivereleaseRoute_10
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1 -> i1 -> j1 -> k3 -> l3 -> m1 -> n1

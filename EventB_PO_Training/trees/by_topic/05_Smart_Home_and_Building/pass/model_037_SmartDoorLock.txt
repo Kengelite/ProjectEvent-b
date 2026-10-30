@@ -1,0 +1,61 @@
+model_037  SmartDoorLock
+
+1) รหัสเงื่อนไข (guard)
+   a1   authResult = PASS
+   b1   autoLock = 1
+   a2   authResult = FAIL
+
+2) Guard tree
+   (root)
+   ├── a1  authResult = PASS
+   │   └── b1  autoLock = 1
+   └── a2  authResult = FAIL
+
+   เส้นทาง:
+   a1 -> b1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendunlockRequest_1
+   b1   receiveunlockRequest_1
+   c1   sendchallenge_2
+   d1   receivechallenge_2
+   e1   sendrespond_3
+   f1   receiverespond_3
+   g1   senddoorUnlocked_4  (guard a1)
+   g2   sendaccessDenied_6  (guard a2)
+   h1   receivedoorUnlocked_4  (guard a1)
+   h2   receiveaccessDenied_6  (guard a2)
+   i1   sendscheduleRelock_5_opt1  (guard a1 b1)
+   j1   receivescheduleRelock_5_opt1  (guard a1 b1)
+   k1   sendstatusUpdate_7
+   l1   receivestatusUpdate_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendunlockRequest_1
+       └── b1 receiveunlockRequest_1
+           └── c1 sendchallenge_2
+               └── d1 receivechallenge_2
+                   └── e1 sendrespond_3
+                       └── f1 receiverespond_3
+                           ├── g1 senddoorUnlocked_4  (guard a1)
+                           │   └── h1 receivedoorUnlocked_4  (guard a1)
+                           │       └── i1 sendscheduleRelock_5_opt1  (guard a1 b1)
+                           │           └── j1 receivescheduleRelock_5_opt1  (guard a1 b1)
+                           │               └── k1 sendstatusUpdate_7
+                           │                   └── l1 receivestatusUpdate_7
+                           └── g2 sendaccessDenied_6  (guard a2)
+                               └── h2 receiveaccessDenied_6  (guard a2)
+                                   └── k1 sendstatusUpdate_7
+                                       └── l1 receivestatusUpdate_7
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1

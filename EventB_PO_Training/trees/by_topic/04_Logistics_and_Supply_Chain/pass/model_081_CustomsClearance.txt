@@ -1,0 +1,47 @@
+model_081  CustomsClearance
+
+1) รหัสเงื่อนไข (guard)
+   a1   useCache = 1
+
+2) Guard tree
+   (root)
+   └── a1  useCache = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendsendRelease_1
+   b1   receivesendRelease_1
+   c1   sendrequestDuty_2
+   d1   receiverequestDuty_2
+   e1   sendcancelDuty_3_opt1  (guard a1)
+   f1   receivecancelDuty_3_opt1  (guard a1)
+   g1   sendapproveDeclaration_4
+   h1   receiveapproveDeclaration_4
+   i1   sendsyncDeclaration_5
+   j1   receivesyncDeclaration_5
+   k1   sendfetchRelease_6
+   l1   receivefetchRelease_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendsendRelease_1
+       └── b1 receivesendRelease_1
+           └── c1 sendrequestDuty_2
+               └── d1 receiverequestDuty_2
+                   └── e1 sendcancelDuty_3_opt1  (guard a1)
+                       └── f1 receivecancelDuty_3_opt1  (guard a1)
+                           └── g1 sendapproveDeclaration_4
+                               └── h1 receiveapproveDeclaration_4
+                                   └── i1 sendsyncDeclaration_5
+                                       └── j1 receivesyncDeclaration_5
+                                           └── k1 sendfetchRelease_6
+                                               └── l1 receivefetchRelease_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

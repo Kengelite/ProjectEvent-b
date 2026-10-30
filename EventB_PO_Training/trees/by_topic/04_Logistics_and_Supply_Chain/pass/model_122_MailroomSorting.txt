@@ -1,0 +1,78 @@
+model_122  MailroomSorting
+
+1) รหัสเงื่อนไข (guard)
+   a1   withExtra = 1
+   b1   pollNo < 5
+
+2) Guard tree
+   (root)
+   └── a1  withExtra = 1
+       └── b1  pollNo < 5
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendassignSlot_1
+   b1   receiveassignSlot_1
+   c1   sendackNotice_2
+   d1   receiveackNotice_2
+   e1   sendcancelNotice_3
+   f1   receivecancelNotice_3
+   g1   sendissueNotice_4
+   h1   receiveissueNotice_4
+   i1   sendfetchSlot_5
+   j1   receivefetchSlot_5
+   k1   sendcheckParcel_6
+   l1   receivecheckParcel_6
+   m1   sendapproveNotice_7_opt1  (guard a1)
+   n1   receiveapproveNotice_7_opt1  (guard a1)
+   o1   sendlogParcel_8_opt1  (guard a1 b1)
+   p1   receivelogParcel_8_opt1  (guard a1 b1)
+   q1   sendcancelParcel_9_opt1  (guard a1 b1)
+   r1   receivecancelParcel_9_opt1  (guard a1 b1)
+   s1   sendreserveParcel_10_opt1  (guard a1 b1)
+   t1   receivereserveParcel_10_opt1  (guard a1 b1)
+   u1   sendreportParcel_11_opt1  (guard a1)
+   u2   checkloop_logParcel_8_loop1  (guard a1 b1)
+   v1   receivereportParcel_11_opt1  (guard a1)
+   w1   sendvalidateSlot_12
+   x1   receivevalidateSlot_12
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+       ├── u1 → v1 → w1 → x1
+       └── u2 ↺ o1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendassignSlot_1
+       └── b1 receiveassignSlot_1
+           └── c1 sendackNotice_2
+               └── d1 receiveackNotice_2
+                   └── e1 sendcancelNotice_3
+                       └── f1 receivecancelNotice_3
+                           └── g1 sendissueNotice_4
+                               └── h1 receiveissueNotice_4
+                                   └── i1 sendfetchSlot_5
+                                       └── j1 receivefetchSlot_5
+                                           └── k1 sendcheckParcel_6
+                                               └── l1 receivecheckParcel_6
+                                                   └── m1 sendapproveNotice_7_opt1  (guard a1)
+                                                       └── n1 receiveapproveNotice_7_opt1  (guard a1)
+                                                           └── o1 sendlogParcel_8_opt1  (guard a1 b1)
+                                                               └── p1 receivelogParcel_8_opt1  (guard a1 b1)
+                                                                   └── q1 sendcancelParcel_9_opt1  (guard a1 b1)
+                                                                       └── r1 receivecancelParcel_9_opt1  (guard a1 b1)
+                                                                           └── s1 sendreserveParcel_10_opt1  (guard a1 b1)
+                                                                               └── t1 receivereserveParcel_10_opt1  (guard a1 b1)
+                                                                                   ├── u1 sendreportParcel_11_opt1  (guard a1)
+                                                                                   │   └── v1 receivereportParcel_11_opt1  (guard a1)
+                                                                                   │       └── w1 sendvalidateSlot_12
+                                                                                   │           └── x1 receivevalidateSlot_12
+                                                                                   └── u2 checkloop_logParcel_8_loop1  (guard a1 b1)  ↺ กลับไป sendlogParcel_8_opt1
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1 -> w1 -> x1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ o1

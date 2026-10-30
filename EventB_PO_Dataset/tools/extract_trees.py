@@ -92,26 +92,29 @@ def guard_codes(events):
 
 
 def event_codes(children):
-    """Letter = step, number = alternative. Walk depth-first from the root; the k-th event after branch point B
-    (before any merge) gets the letter of slot (B, k), every other event a letter of its own."""
+    """Letter = step, number = alternative. Walk depth-first from the root. The children of a branch point share
+    a letter; if one of them is a merge point (several parents) they all take that merge point's letter, so the
+    code does not depend on which branch is walked first. The k-th event of a straight run after a branch keeps
+    the slot of that branch (m1 → n1, m2 → n2); any other event starts a letter of its own."""
     parents = {}
     for p, cs in children.items():
         for c in cs:
             parents.setdefault(c, []).append(p)
+    merge = lambda x: len(parents.get(x, [])) > 1
     slot, letter, count, code = {}, {}, {}, {}
     def visit(n):
         for c in children[n]:
             if c in code:
                 continue
-            ps = parents[c]
-            if len(ps) > 1:
-                key = ("own", c)
-            elif len(children[ps[0]]) > 1:
-                key = (ps[0], 0)
-            elif ps[0] in slot and slot[ps[0]][0] != "own":
-                key = (slot[ps[0]][0], slot[ps[0]][1] + 1)
+            if len(children[n]) > 1:
+                m = [x for x in children[n] if merge(x)]
+                key = (("merge", m[0]), 0) if m else ((n,), 0)
+            elif merge(c):
+                key = (("merge", c), 0)
+            elif n in slot and slot[n][0][0] != "own" and not merge(n):
+                key = (slot[n][0], slot[n][1] + 1)
             else:
-                key = ("own", c)
+                key = (("own", c), 0)
             slot[c] = key
             if key not in letter:
                 letter[key] = letters(len(letter))

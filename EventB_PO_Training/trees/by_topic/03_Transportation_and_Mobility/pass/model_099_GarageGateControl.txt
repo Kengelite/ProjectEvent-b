@@ -1,0 +1,46 @@
+model_099  GarageGateControl
+
+1) รหัสเงื่อนไข (guard)
+   (ไม่มีเงื่อนไขจาก diagram)
+
+2) Guard tree
+   (root)
+
+   เส้นทาง:
+   -
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendsendTicket_1
+   b1   receivesendTicket_1
+   c1   sendassignTicket_2
+   d1   receiveassignTicket_2
+   e1   sendreserveTicket_3
+   f1   receivereserveTicket_3
+   g1   sendreserveFee_4
+   h1   receivereserveFee_4
+   i1   sendrequestSlot_5
+   j1   receiverequestSlot_5
+   k1   sendassignFee_6
+   l1   receiveassignFee_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendsendTicket_1
+       └── b1 receivesendTicket_1
+           └── c1 sendassignTicket_2
+               └── d1 receiveassignTicket_2
+                   └── e1 sendreserveTicket_3
+                       └── f1 receivereserveTicket_3
+                           └── g1 sendreserveFee_4
+                               └── h1 receivereserveFee_4
+                                   └── i1 sendrequestSlot_5
+                                       └── j1 receiverequestSlot_5
+                                           └── k1 sendassignFee_6
+                                               └── l1 receiveassignFee_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

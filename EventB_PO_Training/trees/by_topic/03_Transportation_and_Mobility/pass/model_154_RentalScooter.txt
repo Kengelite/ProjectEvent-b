@@ -1,0 +1,47 @@
+model_154  RentalScooter
+
+1) รหัสเงื่อนไข (guard)
+   a1   express = 1
+
+2) Guard tree
+   (root)
+   └── a1  express = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendfetchBattery_1
+   b1   receivefetchBattery_1
+   c1   sendrequestBattery_2
+   d1   receiverequestBattery_2
+   e1   sendupdateUnlock_3_opt1  (guard a1)
+   f1   receiveupdateUnlock_3_opt1  (guard a1)
+   g1   sendissueTrip_4
+   h1   receiveissueTrip_4
+   i1   sendscheduleTrip_5
+   j1   receivescheduleTrip_5
+   k1   sendfetchTrip_6
+   l1   receivefetchTrip_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendfetchBattery_1
+       └── b1 receivefetchBattery_1
+           └── c1 sendrequestBattery_2
+               └── d1 receiverequestBattery_2
+                   └── e1 sendupdateUnlock_3_opt1  (guard a1)
+                       └── f1 receiveupdateUnlock_3_opt1  (guard a1)
+                           └── g1 sendissueTrip_4
+                               └── h1 receiveissueTrip_4
+                                   └── i1 sendscheduleTrip_5
+                                       └── j1 receivescheduleTrip_5
+                                           └── k1 sendfetchTrip_6
+                                               └── l1 receivefetchTrip_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

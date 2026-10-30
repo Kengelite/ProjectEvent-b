@@ -20,14 +20,15 @@ Output (rebuilt from scratch each run):
     SOURCES.md                  provenance (tools, versions, dates) and references
     PROVENANCE.pdf, csv/provenance.csv   where every single model came from
     SIMILAR_WORK.pdf, csv/similar_work.csv   published work similar to each model (related work)
-    TREES.pdf, data/trees.jsonl, csv/guard_codes.csv   event tree + guard tree of each model
-                                (tools/extract_trees.py, tools/make_tree_report.py)
+    trees/                      event tree + guard tree of each model (tools/extract_trees.py): SUMMARY.pdf,
+                                TREES.pdf, csv tables, by_topic/ text files; checked against the diagrams by
+                                tools/verify_trees.py. data/trees.jsonl holds the same trees as data.
 
 Nothing that reveals the answer (meta.json, diagrams, Rodin files) is copied into the
 inputs. The split is stratified by result and by kind of failing PO; model_001 (the
 reconstructed Payment case kept for testing) always goes to test.
 """
-import argparse, csv, glob, hashlib, html, json, os, shutil, statistics, subprocess, sys, tempfile
+import argparse, csv, glob, hashlib, html, json, os, re, shutil, statistics, subprocess, sys, tempfile
 from collections import Counter, defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +36,7 @@ DATASET = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 from categorize import TOPIC, TOPIC_NAMES                       # noqa: E402
 from make_batch_report import CHROME, CSS, esc                  # noqa: E402
-import extract_trees, make_tree_report, make_user_flow          # noqa: E402
+import extract_trees, make_tree_report, make_user_flow, verify_trees   # noqa: E402
 
 SPLIT = (("train", 0.70), ("val", 0.15), ("test", 0.15))
 PROJECT = os.path.dirname(DATASET)
@@ -602,20 +603,7 @@ def build(out, seed):
             if os.path.exists(os.path.join(src, f)):
                 shutil.copy2(os.path.join(src, f), dst)
 
-    trees = {r["id"]: json.load(open(p)) for r in rows
-             if os.path.exists(p := os.path.join(DATASET, "models", r["id"], "tree.json"))}
-    with open(os.path.join(out, "data", "trees.jsonl"), "w", encoding="utf-8") as f:
-        for r in rows:
-            if r["id"] in trees:
-                t = trees[r["id"]]
-                f.write(json.dumps({"id": r["id"], "case": r["case"], "split": r["split"],
-                                    **{k: t[k] for k in ("guard_codes", "guard_paths", "event_codes", "event_guards",
-                                                         "event_paths")}}, ensure_ascii=False) + "\n")
-    write_csv(os.path.join(out, "csv", "guard_codes.csv"),
-              [{"id": r["id"], "case": r["case"], "code": c, "guard": g}
-               for r in rows if r["id"] in trees for c, g in trees[r["id"]]["guard_codes"].items()],
-              ["id", "case", "code", "guard"])
-    make_tree_report.main(out, rows, trees)
+    trees_folder(out, rows)
 
     by_topic(out, rows)
     sim = similar_rows(rows)
@@ -630,15 +618,71 @@ def build(out, seed):
     return rows
 
 
+def topic_dir(en):
+    k = [v[0] for v in TOPIC_NAMES.values()].index(en) + 1
+    return f"{k:02d}_" + en.replace(" & ", "_and_").replace(", ", "_").replace(" ", "_")
+
+
+def model_dir(r):
+    return f"{r['id']}_{r['case'].replace(' ', '').replace('&', 'And')}"
+
+
+def trees_folder(out, rows):
+    """trees/: everything about the event and guard trees, checked against the diagrams."""
+    tdir = os.path.join(out, "trees")
+    os.makedirs(tdir)
+    trees = {r["id"]: json.load(open(os.path.join(DATASET, "models", r["id"], "tree.json"))) for r in rows}
+    with open(os.path.join(out, "data", "trees.jsonl"), "w", encoding="utf-8") as f:
+        for r in rows:
+            t = trees[r["id"]]
+            f.write(json.dumps({"id": r["id"], "case": r["case"], "split": r["split"],
+                                **{k: t[k] for k in ("guard_codes", "guard_paths", "event_codes", "event_guards",
+                                                     "event_paths")}}, ensure_ascii=False) + "\n")
+    for r in rows:
+        dst = os.path.join(tdir, "by_topic", topic_dir(r["topic"]), r["result"])
+        os.makedirs(dst, exist_ok=True)
+        shutil.copy2(os.path.join(DATASET, "models", r["id"], "tree.txt"), os.path.join(dst, model_dir(r) + ".txt"))
+    utf8 = lambda name, data, fields: write_csv_bom(os.path.join(tdir, name), data, fields)
+    utf8("guard_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "guard": g}
+                             for r in rows for c, g in trees[r["id"]]["guard_codes"].items()],
+         ["model_id", "case", "code", "guard"])
+    utf8("event_codes.csv", [{"model_id": r["id"], "case": r["case"], "code": c, "event": n,
+                              "guards": " ".join(trees[r["id"]]["event_guards"][c])}
+                             for r in rows for c, n in trees[r["id"]]["event_codes"].items()],
+         ["model_id", "case", "code", "event", "guards"])
+    check = verify_trees.main(out)
+    stats = []
+    for r in rows:
+        t, c = trees[r["id"]], check["results"][r["id"]]
+        stats.append({"model_id": r["id"], "case": r["case"], "topic": r["topic"], "result": r["result"],
+                      "events": len(t["event_codes"]), "event_paths": len(t["event_paths"]),
+                      "loops": len({re.search(r"↺ (\w+)", p).group(1) for p in t["event_paths"] if "↺" in p}),
+                      "guard_codes": len(t["guard_codes"]), "guard_paths": len(t["guard_paths"]),
+                      "guard_path_list": " | ".join(t["guard_paths"]),
+                      "checked_against": "diagram" if "messages" in c else "rodin .bpo",
+                      "check": "pass" if not c["errors"] else "; ".join(c["errors"])})
+    utf8("tree_summary.csv", stats, list(stats[0]))
+    utf8("check.csv", [{k: s_[k] for k in ("model_id", "case", "checked_against", "check")} for s_ in stats],
+         ["model_id", "case", "checked_against", "check"])
+    make_tree_report.main(tdir, rows, trees)
+    make_tree_report.summary(tdir, rows, trees, stats, check)
+
+
+def write_csv_bom(path, rows, fields):
+    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=fields, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+
+
 def by_topic(out, rows):
     """by_topic/<NN_Topic>/<pass|fail>/<model_XXX_Case>/ + list.csv per topic (Rodin results)."""
-    for k, (code, (en, th)) in enumerate(TOPIC_NAMES.items(), start=1):
+    for code, (en, th) in TOPIC_NAMES.items():
         group = sorted((r for r in rows if r["topic"] == en), key=lambda r: r["id"])
-        name = en.replace(" & ", "_and_").replace(", ", "_").replace(" ", "_")
-        tdir = os.path.join(out, "by_topic", f"{k:02d}_{name}")
+        tdir = os.path.join(out, "by_topic", topic_dir(en))
         for r in group:
             res = "fail" if r["failed"] else "pass"
-            dst = os.path.join(tdir, res, f"{r['id']}_{r['case'].replace(' ', '').replace('&', 'And')}")
+            dst = os.path.join(tdir, res, model_dir(r))
             shutil.copytree(os.path.join(out, "models", r["id"]), dst)
         with open(os.path.join(tdir, "list.csv"), "w", newline="", encoding="utf-8-sig") as f:
             w = csv.writer(f)
@@ -717,8 +761,7 @@ def pdf(out, rows, po_rows):
             "├── csv/",
             "│   ├── summary.csv           ← ตัวเลขต่อโมเดล (feature + label)",
             "│   ├── pass_fail_list.csv    ← pass / fail ต่อโมเดล",
-            "│   ├── model_categories.csv  ← หัวข้อ + จุดผิดใน diagram (ใช้วิเคราะห์ ห้ามเป็น input)",
-            "│   └── guard_codes.csv       ← รหัส guard ของทุกโมเดล (a1 = cycleNo < 8 …)",
+            "│   └── model_categories.csv  ← หัวข้อ + จุดผิดใน diagram (ใช้วิเคราะห์ ห้ามเป็น input)",
             "├── models/model_001 … model_198/",
             "│   ├── model.txt             ← Event-B (input)",
             "│   ├── label.json            ← total / discharged / failed",
@@ -734,7 +777,11 @@ def pdf(out, rows, po_rows):
             "├── FLOW.pdf · FLOW.png       ← แผนภาพขั้นตอนการดำเนินงาน",
             "├── PROVENANCE.pdf            ← ที่มาของแบบจำลองแต่ละตัว (csv/provenance.csv)",
             "├── SIMILAR_WORK.pdf          ← งานตีพิมพ์ที่คล้ายกับแบบจำลอง (csv/similar_work.csv)",
-            "├── TREES.pdf                 ← วิธีสร้าง event tree / guard tree และรหัสของทุกโมเดล",
+            "├── trees/                    ← event tree + guard tree ของทุกโมเดล",
+            "│   ├── SUMMARY.pdf           ← สรุปวิธีทำและผลตรวจความถูกต้อง",
+            "│   ├── TREES.pdf             ← รหัสและ tree ของทุกโมเดล",
+            "│   ├── guard_codes.csv · event_codes.csv · tree_summary.csv · check.csv",
+            "│   └── by_topic/<หัวข้อ>/<pass|fail>/<model>.txt",
             "└── SOURCES.md                ← แหล่งที่มาและเอกสารอ้างอิง"]
     h.append("<pre>" + esc("\n".join(tree)) + "</pre>")
 

@@ -1,0 +1,58 @@
+model_009  CinemaTicketing
+
+1) รหัสเงื่อนไข (guard)
+   a1   seatTry < 3
+   b1   wantSnack = 1
+
+2) Guard tree
+   (root)
+   └── a1  seatTry < 3
+       └── b1  wantSnack = 1
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendselectMovie_1
+   b1   receiveselectMovie_1
+   c1   sendshowtimes_2
+   d1   receiveshowtimes_2
+   e1   sendpickSeat_3  (guard a1)
+   f1   receivepickSeat_3  (guard a1)
+   g1   sendseatStatus_4  (guard a1)
+   h1   receiveseatStatus_4  (guard a1)
+   i1   sendreserveSeat_5
+   i2   checkloop_pickSeat_3_loop1  (guard a1)
+   j1   receivereserveSeat_5
+   k1   sendaddSnack_6_opt1  (guard b1)
+   l1   receiveaddSnack_6_opt1  (guard b1)
+   m1   sendissueTicket_7
+   n1   receiveissueTicket_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1 → m1 → n1
+       └── i2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendselectMovie_1
+       └── b1 receiveselectMovie_1
+           └── c1 sendshowtimes_2
+               └── d1 receiveshowtimes_2
+                   └── e1 sendpickSeat_3  (guard a1)
+                       └── f1 receivepickSeat_3  (guard a1)
+                           └── g1 sendseatStatus_4  (guard a1)
+                               └── h1 receiveseatStatus_4  (guard a1)
+                                   ├── i1 sendreserveSeat_5
+                                   │   └── j1 receivereserveSeat_5
+                                   │       └── k1 sendaddSnack_6_opt1  (guard b1)
+                                   │           └── l1 receiveaddSnack_6_opt1  (guard b1)
+                                   │               └── m1 sendissueTicket_7
+                                   │                   └── n1 receiveissueTicket_7
+                                   └── i2 checkloop_pickSeat_3_loop1  (guard a1)  ↺ กลับไป sendpickSeat_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1

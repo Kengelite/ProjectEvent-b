@@ -1,0 +1,77 @@
+model_025  InsuranceClaim
+
+1) รหัสเงื่อนไข (guard)
+   a1   hasDocs = 1
+   b1   claimAmount ≤ 5000
+   b2   claimAmount > 5000
+
+2) Guard tree
+   (root)
+   └── a1  hasDocs = 1
+       ├── b1  claimAmount ≤ 5000
+       └── b2  claimAmount > 5000
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendsubmitClaim_1
+   b1   receivesubmitClaim_1
+   c1   senduploadDocs_2_opt1  (guard a1)
+   d1   receiveuploadDocs_2_opt1  (guard a1)
+   e1   sendapprovalNotice_3  (guard b1)
+   e2   sendassignAssessor_4  (guard b2)
+   f1   receiveapprovalNotice_3  (guard b1)
+   f2   receiveassignAssessor_4  (guard b2)
+   g1   sendpayout_8
+   h1   receivepayout_8
+   i1   sendtransferDone_9
+   j1   receivetransferDone_9
+   k1   sendnotifyClaimant_10
+   l1   receivenotifyClaimant_10
+   m1   sendsiteVisit_5  (guard b2)
+   n1   receivesiteVisit_5  (guard b2)
+   o1   sendvisitDone_6  (guard b2)
+   p1   receivevisitDone_6  (guard b2)
+   q1   sendassessmentReport_7  (guard b2)
+   r1   receiveassessmentReport_7  (guard b2)
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       └── e2 → f2 → m1 → n1 → o1 → p1 → q1 → r1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendsubmitClaim_1
+       └── b1 receivesubmitClaim_1
+           └── c1 senduploadDocs_2_opt1  (guard a1)
+               └── d1 receiveuploadDocs_2_opt1  (guard a1)
+                   ├── e1 sendapprovalNotice_3  (guard b1)
+                   │   └── f1 receiveapprovalNotice_3  (guard b1)
+                   │       └── g1 sendpayout_8
+                   │           └── h1 receivepayout_8
+                   │               └── i1 sendtransferDone_9
+                   │                   └── j1 receivetransferDone_9
+                   │                       └── k1 sendnotifyClaimant_10
+                   │                           └── l1 receivenotifyClaimant_10
+                   └── e2 sendassignAssessor_4  (guard b2)
+                       └── f2 receiveassignAssessor_4  (guard b2)
+                           └── m1 sendsiteVisit_5  (guard b2)
+                               └── n1 receivesiteVisit_5  (guard b2)
+                                   └── o1 sendvisitDone_6  (guard b2)
+                                       └── p1 receivevisitDone_6  (guard b2)
+                                           └── q1 sendassessmentReport_7  (guard b2)
+                                               └── r1 receiveassessmentReport_7  (guard b2)
+                                                   └── g1 sendpayout_8
+                                                       └── h1 receivepayout_8
+                                                           └── i1 sendtransferDone_9
+                                                               └── j1 receivetransferDone_9
+                                                                   └── k1 sendnotifyClaimant_10
+                                                                       └── l1 receivenotifyClaimant_10
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

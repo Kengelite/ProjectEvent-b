@@ -1,0 +1,65 @@
+model_121  LivestockFeeder
+
+1) รหัสเงื่อนไข (guard)
+   a1   approved = 1
+   b1   express = 1
+   a2   approved = 0
+
+2) Guard tree
+   (root)
+   ├── a1  approved = 1
+   │   └── b1  express = 1
+   └── a2  approved = 0
+
+   เส้นทาง:
+   a1 -> b1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendreportRation_1
+   b1   receivereportRation_1
+   c1   sendsyncFeed_2
+   d1   receivesyncFeed_2
+   e1   sendackFeed_3  (guard a1)
+   e2   sendcancelRation_7  (guard a2)
+   f1   receiveackFeed_3  (guard a1)
+   f2   receivecancelRation_7  (guard a2)
+   g1   sendupdateRation_4_opt1  (guard a1 b1)
+   h1   receiveupdateRation_4_opt1  (guard a1 b1)
+   i1   sendqueryRation_5_opt1  (guard a1 b1)
+   j1   receivequeryRation_5_opt1  (guard a1 b1)
+   k1   sendconfirmFeed_6  (guard a1)
+   l1   receiveconfirmFeed_6  (guard a1)
+   m1   sendconfirmRation_8
+   n1   receiveconfirmRation_8
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       └── e2 → f2 → m1 → n1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendreportRation_1
+       └── b1 receivereportRation_1
+           └── c1 sendsyncFeed_2
+               └── d1 receivesyncFeed_2
+                   ├── e1 sendackFeed_3  (guard a1)
+                   │   └── f1 receiveackFeed_3  (guard a1)
+                   │       └── g1 sendupdateRation_4_opt1  (guard a1 b1)
+                   │           └── h1 receiveupdateRation_4_opt1  (guard a1 b1)
+                   │               └── i1 sendqueryRation_5_opt1  (guard a1 b1)
+                   │                   └── j1 receivequeryRation_5_opt1  (guard a1 b1)
+                   │                       └── k1 sendconfirmFeed_6  (guard a1)
+                   │                           └── l1 receiveconfirmFeed_6  (guard a1)
+                   │                               └── m1 sendconfirmRation_8
+                   │                                   └── n1 receiveconfirmRation_8
+                   └── e2 sendcancelRation_7  (guard a2)
+                       └── f2 receivecancelRation_7  (guard a2)
+                           └── m1 sendconfirmRation_8
+                               └── n1 receiveconfirmRation_8
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> m1 -> n1

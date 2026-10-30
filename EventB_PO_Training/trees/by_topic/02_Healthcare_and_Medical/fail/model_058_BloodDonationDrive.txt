@@ -1,0 +1,61 @@
+model_058  BloodDonationDrive
+
+1) รหัสเงื่อนไข (guard)
+   a1   t_obs ≤ 8
+   b1   withExtra = 1
+   a2   t_obs > 8
+
+2) Guard tree
+   (root)
+   ├── a1  t_obs ≤ 8
+   │   └── b1  withExtra = 1
+   └── a2  t_obs > 8
+
+   เส้นทาง:
+   a1 -> b1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendackScreening_1
+   b1   receiveackScreening_1
+   c1   sendlogSlot_2
+   d1   receivelogSlot_2
+   e1   sendsyncSlot_3  (guard a1)
+   e2   sendlogDonation_6  (guard a2)
+   f1   receivesyncSlot_3  (guard a1)
+   f2   receivelogDonation_6  (guard a2)
+   g1   sendnotifyDonation_4_opt1  (guard a1 b1)
+   h1   receivenotifyDonation_4_opt1  (guard a1 b1)
+   i1   sendvalidateScreening_5  (guard a1)
+   j1   receivevalidateScreening_5  (guard a1)
+   k1   sendfetchScreening_7
+   l1   receivefetchScreening_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+       └── e2 → f2 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendackScreening_1
+       └── b1 receiveackScreening_1
+           └── c1 sendlogSlot_2
+               └── d1 receivelogSlot_2
+                   ├── e1 sendsyncSlot_3  (guard a1)
+                   │   └── f1 receivesyncSlot_3  (guard a1)
+                   │       └── g1 sendnotifyDonation_4_opt1  (guard a1 b1)
+                   │           └── h1 receivenotifyDonation_4_opt1  (guard a1 b1)
+                   │               └── i1 sendvalidateScreening_5  (guard a1)
+                   │                   └── j1 receivevalidateScreening_5  (guard a1)
+                   │                       └── k1 sendfetchScreening_7
+                   │                           └── l1 receivefetchScreening_7
+                   └── e2 sendlogDonation_6  (guard a2)
+                       └── f2 receivelogDonation_6  (guard a2)
+                           └── k1 sendfetchScreening_7
+                               └── l1 receivefetchScreening_7
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> k1 -> l1

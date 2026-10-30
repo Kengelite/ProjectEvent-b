@@ -1,0 +1,47 @@
+model_161  SeaportPilotBooking
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendnotifyArrival_1
+   b1   receivenotifyArrival_1
+   c1   sendreserveArrival_2
+   d1   receivereserveArrival_2
+   e1   sendsendBerth_3_opt1  (guard a1)
+   f1   receivesendBerth_3_opt1  (guard a1)
+   g1   sendlogPilot_4
+   h1   receivelogPilot_4
+   i1   sendrequestBerth_5
+   j1   receiverequestBerth_5
+   k1   sendcheckArrival_6
+   l1   receivecheckArrival_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendnotifyArrival_1
+       └── b1 receivenotifyArrival_1
+           └── c1 sendreserveArrival_2
+               └── d1 receivereserveArrival_2
+                   └── e1 sendsendBerth_3_opt1  (guard a1)
+                       └── f1 receivesendBerth_3_opt1  (guard a1)
+                           └── g1 sendlogPilot_4
+                               └── h1 receivelogPilot_4
+                                   └── i1 sendrequestBerth_5
+                                       └── j1 receiverequestBerth_5
+                                           └── k1 sendcheckArrival_6
+                                               └── l1 receivecheckArrival_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

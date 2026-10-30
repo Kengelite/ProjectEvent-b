@@ -1,0 +1,46 @@
+model_055  ArtGalleryTicketing
+
+1) รหัสเงื่อนไข (guard)
+   (ไม่มีเงื่อนไขจาก diagram)
+
+2) Guard tree
+   (root)
+
+   เส้นทาง:
+   -
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendvalidateEntry_1
+   b1   receivevalidateEntry_1
+   c1   sendapproveEntry_2
+   d1   receiveapproveEntry_2
+   e1   sendlogEntry_3
+   f1   receivelogEntry_3
+   g1   sendrequestEntry_4
+   h1   receiverequestEntry_4
+   i1   sendfetchEntry_5
+   j1   receivefetchEntry_5
+   k1   sendnotifyEntry_6
+   l1   receivenotifyEntry_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendvalidateEntry_1
+       └── b1 receivevalidateEntry_1
+           └── c1 sendapproveEntry_2
+               └── d1 receiveapproveEntry_2
+                   └── e1 sendlogEntry_3
+                       └── f1 receivelogEntry_3
+                           └── g1 sendrequestEntry_4
+                               └── h1 receiverequestEntry_4
+                                   └── i1 sendfetchEntry_5
+                                       └── j1 receivefetchEntry_5
+                                           └── k1 sendnotifyEntry_6
+                                               └── l1 receivenotifyEntry_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1

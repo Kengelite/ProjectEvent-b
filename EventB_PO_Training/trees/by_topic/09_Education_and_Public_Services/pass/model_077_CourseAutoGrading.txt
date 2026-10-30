@@ -1,0 +1,103 @@
+model_077  CourseAutoGrading
+
+1) รหัสเงื่อนไข (guard)
+   a1   mode = MANUAL
+   a2   mode = AUTO
+   b1   t_obs ≤ 27
+   b2   t_obs > 27
+
+2) Guard tree
+   (root)
+   ├── a1  mode = MANUAL
+   │   ├── b1  t_obs ≤ 27
+   │   └── b2  t_obs > 27
+   └── a2  mode = AUTO
+       ├── b1  t_obs ≤ 27
+       └── b2  t_obs > 27
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+   a2 -> b1
+   a2 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendissueFeedback_1
+   b1   receiveissueFeedback_1
+   c1   sendassignFeedback_2
+   d1   receiveassignFeedback_2
+   e1   sendreserveGrade_3  (guard a1)
+   e2   sendlogGrade_4  (guard a2)
+   f1   receivereserveGrade_3  (guard a1)
+   f2   receivelogGrade_4  (guard a2)
+   g1   sendackGrade_6
+   h1   receiveackGrade_6
+   i1   sendnotifyGrade_7
+   j1   receivenotifyGrade_7
+   k1   sendupdateGrade_8  (guard b1)
+   k2   sendvalidateSubmission_9  (guard b2)
+   l1   receiveupdateGrade_8  (guard b1)
+   l2   receivevalidateSubmission_9  (guard b2)
+   m1   sendreleaseSubmission_11
+   n1   receivereleaseSubmission_11
+   o1   sendackSubmission_10  (guard b2)
+   p1   receiveackSubmission_10  (guard b2)
+   q1   sendcheckSubmission_5  (guard a2)
+   r1   receivecheckSubmission_5  (guard a2)
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       │   ├── k1 → l1 → m1 → n1
+       │   └── k2 → l2 → o1 → p1 → m1 → n1
+       └── e2 → f2 → q1 → r1 → g1 → h1 → i1 → j1
+           ├── k1 → l1 → m1 → n1
+           └── k2 → l2 → o1 → p1 → m1 → n1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendissueFeedback_1
+       └── b1 receiveissueFeedback_1
+           └── c1 sendassignFeedback_2
+               └── d1 receiveassignFeedback_2
+                   ├── e1 sendreserveGrade_3  (guard a1)
+                   │   └── f1 receivereserveGrade_3  (guard a1)
+                   │       └── g1 sendackGrade_6
+                   │           └── h1 receiveackGrade_6
+                   │               └── i1 sendnotifyGrade_7
+                   │                   └── j1 receivenotifyGrade_7
+                   │                       ├── k1 sendupdateGrade_8  (guard b1)
+                   │                       │   └── l1 receiveupdateGrade_8  (guard b1)
+                   │                       │       └── m1 sendreleaseSubmission_11
+                   │                       │           └── n1 receivereleaseSubmission_11
+                   │                       └── k2 sendvalidateSubmission_9  (guard b2)
+                   │                           └── l2 receivevalidateSubmission_9  (guard b2)
+                   │                               └── o1 sendackSubmission_10  (guard b2)
+                   │                                   └── p1 receiveackSubmission_10  (guard b2)
+                   │                                       └── m1 sendreleaseSubmission_11
+                   │                                           └── n1 receivereleaseSubmission_11
+                   └── e2 sendlogGrade_4  (guard a2)
+                       └── f2 receivelogGrade_4  (guard a2)
+                           └── q1 sendcheckSubmission_5  (guard a2)
+                               └── r1 receivecheckSubmission_5  (guard a2)
+                                   └── g1 sendackGrade_6
+                                       └── h1 receiveackGrade_6
+                                           └── i1 sendnotifyGrade_7
+                                               └── j1 receivenotifyGrade_7
+                                                   ├── k1 sendupdateGrade_8  (guard b1)
+                                                   │   └── l1 receiveupdateGrade_8  (guard b1)
+                                                   │       └── m1 sendreleaseSubmission_11
+                                                   │           └── n1 receivereleaseSubmission_11
+                                                   └── k2 sendvalidateSubmission_9  (guard b2)
+                                                       └── l2 receivevalidateSubmission_9  (guard b2)
+                                                           └── o1 sendackSubmission_10  (guard b2)
+                                                               └── p1 receiveackSubmission_10  (guard b2)
+                                                                   └── m1 sendreleaseSubmission_11
+                                                                       └── n1 receivereleaseSubmission_11
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> o1 -> p1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> q1 -> r1 -> g1 -> h1 -> i1 -> j1 -> k2 -> l2 -> o1 -> p1 -> m1 -> n1

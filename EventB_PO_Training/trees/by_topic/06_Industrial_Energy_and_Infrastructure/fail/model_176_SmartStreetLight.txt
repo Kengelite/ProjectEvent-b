@@ -1,0 +1,75 @@
+model_176  SmartStreetLight
+
+1) รหัสเงื่อนไข (guard)
+   a1   urgent = 1
+   a2   urgent = 0
+
+2) Guard tree
+   (root)
+   ├── a1  urgent = 1
+   └── a2  urgent = 0
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcancelDim_1
+   b1   receivecancelDim_1
+   c1   sendqueryDim_2
+   d1   receivequeryDim_2
+   e1   sendrequestFault_3
+   f1   receiverequestFault_3
+   g1   sendreleaseLamp_4
+   h1   receivereleaseLamp_4
+   i1   sendsendDim_5
+   j1   receivesendDim_5
+   k1   sendlogLamp_6
+   l1   receivelogLamp_6
+   m1   sendconfirmDim_7
+   n1   receiveconfirmDim_7
+   o1   sendconfirmFault_8  (guard a1)
+   o2   sendapproveDim_10  (guard a2)
+   p1   receiveconfirmFault_8  (guard a1)
+   p2   receiveapproveDim_10  (guard a2)
+   q1   sendnotifyDim_9  (guard a1)
+   r1   receivenotifyDim_9  (guard a1)
+   s1   sendackFault_11
+   t1   receiveackFault_11
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+       ├── o1 → p1 → q1 → r1 → s1 → t1
+       └── o2 → p2 → s1 → t1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcancelDim_1
+       └── b1 receivecancelDim_1
+           └── c1 sendqueryDim_2
+               └── d1 receivequeryDim_2
+                   └── e1 sendrequestFault_3
+                       └── f1 receiverequestFault_3
+                           └── g1 sendreleaseLamp_4
+                               └── h1 receivereleaseLamp_4
+                                   └── i1 sendsendDim_5
+                                       └── j1 receivesendDim_5
+                                           └── k1 sendlogLamp_6
+                                               └── l1 receivelogLamp_6
+                                                   └── m1 sendconfirmDim_7
+                                                       └── n1 receiveconfirmDim_7
+                                                           ├── o1 sendconfirmFault_8  (guard a1)
+                                                           │   └── p1 receiveconfirmFault_8  (guard a1)
+                                                           │       └── q1 sendnotifyDim_9  (guard a1)
+                                                           │           └── r1 receivenotifyDim_9  (guard a1)
+                                                           │               └── s1 sendackFault_11
+                                                           │                   └── t1 receiveackFault_11
+                                                           └── o2 sendapproveDim_10  (guard a2)
+                                                               └── p2 receiveapproveDim_10  (guard a2)
+                                                                   └── s1 sendackFault_11
+                                                                       └── t1 receiveackFault_11
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o2 -> p2 -> s1 -> t1

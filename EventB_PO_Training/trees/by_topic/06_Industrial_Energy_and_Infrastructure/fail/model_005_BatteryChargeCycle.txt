@@ -1,0 +1,52 @@
+model_005  BatteryChargeCycle
+
+1) รหัสเงื่อนไข (guard)
+   a1   pulseNo < 8
+
+2) Guard tree
+   (root)
+   └── a1  pulseNo < 8
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendstartCharge_1
+   b1   receivestartCharge_1
+   c1   sendchargeAck_2
+   d1   receivechargeAck_2
+   e1   sendchargePulse_3  (guard a1)
+   f1   receivechargePulse_3  (guard a1)
+   g1   sendcellVoltage_4  (guard a1)
+   h1   receivecellVoltage_4  (guard a1)
+   i1   sendstopCharge_5
+   i2   checkloop_chargePulse_3_loop1  (guard a1)
+   j1   receivestopCharge_5
+   k1   sendfullReport_6
+   l1   receivefullReport_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
+       ├── i1 → j1 → k1 → l1
+       └── i2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendstartCharge_1
+       └── b1 receivestartCharge_1
+           └── c1 sendchargeAck_2
+               └── d1 receivechargeAck_2
+                   └── e1 sendchargePulse_3  (guard a1)
+                       └── f1 receivechargePulse_3  (guard a1)
+                           └── g1 sendcellVoltage_4  (guard a1)
+                               └── h1 receivecellVoltage_4  (guard a1)
+                                   ├── i1 sendstopCharge_5
+                                   │   └── j1 receivestopCharge_5
+                                   │       └── k1 sendfullReport_6
+                                   │           └── l1 receivefullReport_6
+                                   └── i2 checkloop_chargePulse_3_loop1  (guard a1)  ↺ กลับไป sendchargePulse_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 ↺ e1

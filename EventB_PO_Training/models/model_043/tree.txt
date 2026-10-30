@@ -29,18 +29,18 @@ model_043  ThermostatControl
    j1   receivereducePower_5  (guard a1 b1)
    j2   receivekeepPower_6  (guard a1 b2)
    k1   sendstopHeating_7
+   k2   checkloop_queryTemp_3_loop1  (guard a1)
    l1   receivestopHeating_7
-   m1   checkloop_queryTemp_3_loop1  (guard a1)
 
 4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
    (root) INITIALISATION
    └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1
        ├── i1 → j1
        │   ├── k1 → l1
-       │   └── m1 ↺ e1
+       │   └── k2 ↺ e1
        └── i2 → j2
            ├── k1 → l1
-           └── m1 ↺ e1
+           └── k2 ↺ e1
 
    Event tree (เต็ม)
    (root) INITIALISATION
@@ -56,15 +56,15 @@ model_043  ThermostatControl
                                    │   └── j1 receivereducePower_5  (guard a1 b1)
                                    │       ├── k1 sendstopHeating_7
                                    │       │   └── l1 receivestopHeating_7
-                                   │       └── m1 checkloop_queryTemp_3_loop1  (guard a1)  ↺ กลับไป sendqueryTemp_3
+                                   │       └── k2 checkloop_queryTemp_3_loop1  (guard a1)  ↺ กลับไป sendqueryTemp_3
                                    └── i2 sendkeepPower_6  (guard a1 b2)
                                        └── j2 receivekeepPower_6  (guard a1 b2)
                                            ├── k1 sendstopHeating_7
                                            │   └── l1 receivestopHeating_7
-                                           └── m1 checkloop_queryTemp_3_loop1  (guard a1)  ↺ กลับไป sendqueryTemp_3
+                                           └── k2 checkloop_queryTemp_3_loop1  (guard a1)  ↺ กลับไป sendqueryTemp_3
 
    เส้นทาง:
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
-   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> m1 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1
    a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> k1 -> l1
-   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> m1 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i2 -> j2 -> k2 ↺ e1

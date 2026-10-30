@@ -1,0 +1,76 @@
+model_114  InventoryReorder
+
+1) รหัสเงื่อนไข (guard)
+   a1   retryNo < 12
+   b1   retryNo mod 3 = 0
+   c1   express = 1
+
+2) Guard tree
+   (root)
+   └── a1  retryNo < 12
+       └── b1  retryNo mod 3 = 0
+           └── c1  express = 1
+
+   เส้นทาง:
+   a1 -> b1 -> c1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcheckInvoice_1
+   b1   receivecheckInvoice_1
+   c1   sendreportInvoice_2
+   d1   receivereportInvoice_2
+   e1   sendsendInvoice_3  (guard a1)
+   f1   receivesendInvoice_3  (guard a1)
+   g1   sendackInvoice_4_opt1  (guard a1 b1)
+   h1   receiveackInvoice_4_opt1  (guard a1 b1)
+   i1   sendlogStock_5_opt1  (guard a1 b1)
+   j1   receivelogStock_5_opt1  (guard a1 b1)
+   k1   sendrequestInvoice_6  (guard a1)
+   l1   receiverequestInvoice_6  (guard a1)
+   m1   sendscheduleStock_7_opt2  (guard a1 c1)
+   n1   receivescheduleStock_7_opt2  (guard a1 c1)
+   o1   sendscheduleOrder_8_opt2  (guard a1 c1)
+   p1   receivescheduleOrder_8_opt2  (guard a1 c1)
+   q1   sendupdateInvoice_9  (guard a1)
+   r1   receiveupdateInvoice_9  (guard a1)
+   s1   sendissueOrder_10  (guard a1)
+   t1   receiveissueOrder_10  (guard a1)
+   u1   sendfetchOrder_11
+   u2   checkloop_sendInvoice_3_loop1  (guard a1)
+   v1   receivefetchOrder_11
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1 → o1 → p1 → q1 → r1 → s1 → t1
+       ├── u1 → v1
+       └── u2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcheckInvoice_1
+       └── b1 receivecheckInvoice_1
+           └── c1 sendreportInvoice_2
+               └── d1 receivereportInvoice_2
+                   └── e1 sendsendInvoice_3  (guard a1)
+                       └── f1 receivesendInvoice_3  (guard a1)
+                           └── g1 sendackInvoice_4_opt1  (guard a1 b1)
+                               └── h1 receiveackInvoice_4_opt1  (guard a1 b1)
+                                   └── i1 sendlogStock_5_opt1  (guard a1 b1)
+                                       └── j1 receivelogStock_5_opt1  (guard a1 b1)
+                                           └── k1 sendrequestInvoice_6  (guard a1)
+                                               └── l1 receiverequestInvoice_6  (guard a1)
+                                                   └── m1 sendscheduleStock_7_opt2  (guard a1 c1)
+                                                       └── n1 receivescheduleStock_7_opt2  (guard a1 c1)
+                                                           └── o1 sendscheduleOrder_8_opt2  (guard a1 c1)
+                                                               └── p1 receivescheduleOrder_8_opt2  (guard a1 c1)
+                                                                   └── q1 sendupdateInvoice_9  (guard a1)
+                                                                       └── r1 receiveupdateInvoice_9  (guard a1)
+                                                                           └── s1 sendissueOrder_10  (guard a1)
+                                                                               └── t1 receiveissueOrder_10  (guard a1)
+                                                                                   ├── u1 sendfetchOrder_11
+                                                                                   │   └── v1 receivefetchOrder_11
+                                                                                   └── u2 checkloop_sendInvoice_3_loop1  (guard a1)  ↺ กลับไป sendsendInvoice_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u1 -> v1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1 -> o1 -> p1 -> q1 -> r1 -> s1 -> t1 -> u2 ↺ e1

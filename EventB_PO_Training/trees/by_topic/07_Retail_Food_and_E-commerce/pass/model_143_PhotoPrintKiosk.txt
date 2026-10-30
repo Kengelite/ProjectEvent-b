@@ -1,0 +1,55 @@
+model_143  PhotoPrintKiosk
+
+1) รหัสเงื่อนไข (guard)
+   a1   t_obs ≤ 13
+   a2   t_obs > 13
+
+2) Guard tree
+   (root)
+   ├── a1  t_obs ≤ 13
+   └── a2  t_obs > 13
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcheckPrint_1
+   b1   receivecheckPrint_1
+   c1   sendassignPrint_2
+   d1   receiveassignPrint_2
+   e1   sendassignOrder_3  (guard a1)
+   e2   sendupdatePhoto_5  (guard a2)
+   f1   receiveassignOrder_3  (guard a1)
+   f2   receiveupdatePhoto_5  (guard a2)
+   g1   sendreservePhoto_4  (guard a1)
+   h1   receivereservePhoto_4  (guard a1)
+   i1   sendschedulePrint_6
+   j1   receiveschedulePrint_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1 → i1 → j1
+       └── e2 → f2 → i1 → j1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcheckPrint_1
+       └── b1 receivecheckPrint_1
+           └── c1 sendassignPrint_2
+               └── d1 receiveassignPrint_2
+                   ├── e1 sendassignOrder_3  (guard a1)
+                   │   └── f1 receiveassignOrder_3  (guard a1)
+                   │       └── g1 sendreservePhoto_4  (guard a1)
+                   │           └── h1 receivereservePhoto_4  (guard a1)
+                   │               └── i1 sendschedulePrint_6
+                   │                   └── j1 receiveschedulePrint_6
+                   └── e2 sendupdatePhoto_5  (guard a2)
+                       └── f2 receiveupdatePhoto_5  (guard a2)
+                           └── i1 sendschedulePrint_6
+                               └── j1 receiveschedulePrint_6
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> i1 -> j1

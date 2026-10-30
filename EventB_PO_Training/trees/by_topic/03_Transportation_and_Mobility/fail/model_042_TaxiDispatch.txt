@@ -1,0 +1,51 @@
+model_042  TaxiDispatch
+
+1) รหัสเงื่อนไข (guard)
+   a1   shareRide = 1
+
+2) Guard tree
+   (root)
+   └── a1  shareRide = 1
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendrequestRide_1
+   b1   receiverequestRide_1
+   c1   sendfindDriver_2
+   d1   receivefindDriver_2
+   e1   senddriverAccept_3
+   f1   receivedriverAccept_3
+   g1   sendrideConfirmed_4
+   h1   receiverideConfirmed_4
+   i1   sendaddPassenger_5_opt1  (guard a1)
+   j1   receiveaddPassenger_5_opt1  (guard a1)
+   k1   sendtripComplete_6
+   l1   receivetripComplete_6
+   m1   sendchargeRider_7
+   n1   receivechargeRider_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendrequestRide_1
+       └── b1 receiverequestRide_1
+           └── c1 sendfindDriver_2
+               └── d1 receivefindDriver_2
+                   └── e1 senddriverAccept_3
+                       └── f1 receivedriverAccept_3
+                           └── g1 sendrideConfirmed_4
+                               └── h1 receiverideConfirmed_4
+                                   └── i1 sendaddPassenger_5_opt1  (guard a1)
+                                       └── j1 receiveaddPassenger_5_opt1  (guard a1)
+                                           └── k1 sendtripComplete_6
+                                               └── l1 receivetripComplete_6
+                                                   └── m1 sendchargeRider_7
+                                                       └── n1 receivechargeRider_7
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

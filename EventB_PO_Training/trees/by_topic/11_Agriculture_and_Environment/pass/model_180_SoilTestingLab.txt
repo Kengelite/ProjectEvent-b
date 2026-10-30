@@ -1,0 +1,52 @@
+model_180  SoilTestingLab
+
+1) รหัสเงื่อนไข (guard)
+   a1   roundNo < 12
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 12
+
+   เส้นทาง:
+   a1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendassignReport_1
+   b1   receiveassignReport_1
+   c1   sendsendNutrient_2
+   d1   receivesendNutrient_2
+   e1   sendreleaseReport_3  (guard a1)
+   f1   receivereleaseReport_3  (guard a1)
+   g1   sendcancelNutrient_4
+   g2   checkloop_releaseReport_3_loop1  (guard a1)
+   h1   receivecancelNutrient_4
+   i1   sendquerySample_5
+   j1   receivequerySample_5
+   k1   sendnotifyReport_6
+   l1   receivenotifyReport_6
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendassignReport_1
+       └── b1 receiveassignReport_1
+           └── c1 sendsendNutrient_2
+               └── d1 receivesendNutrient_2
+                   └── e1 sendreleaseReport_3  (guard a1)
+                       └── f1 receivereleaseReport_3  (guard a1)
+                           ├── g1 sendcancelNutrient_4
+                           │   └── h1 receivecancelNutrient_4
+                           │       └── i1 sendquerySample_5
+                           │           └── j1 receivequerySample_5
+                           │               └── k1 sendnotifyReport_6
+                           │                   └── l1 receivenotifyReport_6
+                           └── g2 checkloop_releaseReport_3_loop1  (guard a1)  ↺ กลับไป sendreleaseReport_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 ↺ e1

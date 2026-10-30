@@ -1,0 +1,51 @@
+model_022  GymCheckIn
+
+1) รหัสเงื่อนไข (guard)
+   a1   membership = ACTIVE
+   a2   membership = EXPIRED
+
+2) Guard tree
+   (root)
+   ├── a1  membership = ACTIVE
+   └── a2  membership = EXPIRED
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendscanQR_1
+   b1   receivescanQR_1
+   c1   sendaccessResult_2
+   d1   receiveaccessResult_2
+   e1   sendopenGate_3  (guard a1)
+   e2   sendrenewPrompt_4  (guard a2)
+   f1   receiveopenGate_3  (guard a1)
+   f2   receiverenewPrompt_4  (guard a2)
+   g1   sendexitScan_5
+   h1   receiveexitScan_5
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1
+       ├── e1 → f1 → g1 → h1
+       └── e2 → f2 → g1 → h1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendscanQR_1
+       └── b1 receivescanQR_1
+           └── c1 sendaccessResult_2
+               └── d1 receiveaccessResult_2
+                   ├── e1 sendopenGate_3  (guard a1)
+                   │   └── f1 receiveopenGate_3  (guard a1)
+                   │       └── g1 sendexitScan_5
+                   │           └── h1 receiveexitScan_5
+                   └── e2 sendrenewPrompt_4  (guard a2)
+                       └── f2 receiverenewPrompt_4  (guard a2)
+                           └── g1 sendexitScan_5
+                               └── h1 receiveexitScan_5
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1
+   a1 -> b1 -> c1 -> d1 -> e2 -> f2 -> g1 -> h1

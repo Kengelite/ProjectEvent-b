@@ -1,0 +1,53 @@
+model_130  OfficeLightingControl
+
+1) รหัสเงื่อนไข (guard)
+   a1   needAck = 1
+   b1   express = 1
+
+2) Guard tree
+   (root)
+   └── a1  needAck = 1
+       └── b1  express = 1
+
+   เส้นทาง:
+   a1 -> b1
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendlogDim_1
+   b1   receivelogDim_1
+   c1   sendsyncSchedule_2
+   d1   receivesyncSchedule_2
+   e1   sendreleaseOccupancy_3_opt1  (guard a1)
+   f1   receivereleaseOccupancy_3_opt1  (guard a1)
+   g1   sendapproveOccupancy_4
+   h1   receiveapproveOccupancy_4
+   i1   sendlogSchedule_5
+   j1   receivelogSchedule_5
+   k1   sendqueryDim_6_opt2  (guard b1)
+   l1   receivequeryDim_6_opt2  (guard b1)
+   m1   sendfetchSchedule_7
+   n1   receivefetchSchedule_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1 → g1 → h1 → i1 → j1 → k1 → l1 → m1 → n1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendlogDim_1
+       └── b1 receivelogDim_1
+           └── c1 sendsyncSchedule_2
+               └── d1 receivesyncSchedule_2
+                   └── e1 sendreleaseOccupancy_3_opt1  (guard a1)
+                       └── f1 receivereleaseOccupancy_3_opt1  (guard a1)
+                           └── g1 sendapproveOccupancy_4
+                               └── h1 receiveapproveOccupancy_4
+                                   └── i1 sendlogSchedule_5
+                                       └── j1 receivelogSchedule_5
+                                           └── k1 sendqueryDim_6_opt2  (guard b1)
+                                               └── l1 receivequeryDim_6_opt2  (guard b1)
+                                                   └── m1 sendfetchSchedule_7
+                                                       └── n1 receivefetchSchedule_7
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1 -> m1 -> n1

@@ -1,0 +1,72 @@
+model_125  MedicalImagingPACS
+
+1) รหัสเงื่อนไข (guard)
+   a1   roundNo < 6
+   b1   roundNo mod 3 = 0
+   b2   roundNo mod 3 ≠ 0
+
+2) Guard tree
+   (root)
+   └── a1  roundNo < 6
+       ├── b1  roundNo mod 3 = 0
+       └── b2  roundNo mod 3 ≠ 0
+
+   เส้นทาง:
+   a1 -> b1
+   a1 -> b2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendcheckImage_1
+   b1   receivecheckImage_1
+   c1   sendassignImage_2
+   d1   receiveassignImage_2
+   e1   sendassignReport_3  (guard a1)
+   f1   receiveassignReport_3  (guard a1)
+   g1   sendapproveReport_4  (guard a1 b1)
+   g2   sendrequestImage_5  (guard a1 b2)
+   h1   receiveapproveReport_4  (guard a1 b1)
+   h2   receiverequestImage_5  (guard a1 b2)
+   i1   sendvalidateImage_6  (guard a1)
+   j1   receivevalidateImage_6  (guard a1)
+   k1   sendsyncReport_7
+   k2   checkloop_assignReport_3_loop1  (guard a1)
+   l1   receivesyncReport_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1
+       │   ├── k1 → l1
+       │   └── k2 ↺ e1
+       └── g2 → h2 → i1 → j1
+           ├── k1 → l1
+           └── k2 ↺ e1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendcheckImage_1
+       └── b1 receivecheckImage_1
+           └── c1 sendassignImage_2
+               └── d1 receiveassignImage_2
+                   └── e1 sendassignReport_3  (guard a1)
+                       └── f1 receiveassignReport_3  (guard a1)
+                           ├── g1 sendapproveReport_4  (guard a1 b1)
+                           │   └── h1 receiveapproveReport_4  (guard a1 b1)
+                           │       └── i1 sendvalidateImage_6  (guard a1)
+                           │           └── j1 receivevalidateImage_6  (guard a1)
+                           │               ├── k1 sendsyncReport_7
+                           │               │   └── l1 receivesyncReport_7
+                           │               └── k2 checkloop_assignReport_3_loop1  (guard a1)  ↺ กลับไป sendassignReport_3
+                           └── g2 sendrequestImage_5  (guard a1 b2)
+                               └── h2 receiverequestImage_5  (guard a1 b2)
+                                   └── i1 sendvalidateImage_6  (guard a1)
+                                       └── j1 receivevalidateImage_6  (guard a1)
+                                           ├── k1 sendsyncReport_7
+                                           │   └── l1 receivesyncReport_7
+                                           └── k2 checkloop_assignReport_3_loop1  (guard a1)  ↺ กลับไป sendassignReport_3
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k2 ↺ e1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> i1 -> j1 -> k2 ↺ e1

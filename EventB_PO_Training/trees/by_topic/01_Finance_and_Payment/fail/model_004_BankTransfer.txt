@@ -1,0 +1,59 @@
+model_004  BankTransfer
+
+1) รหัสเงื่อนไข (guard)
+   a1   riskFlag = 0
+   a2   riskFlag = 1
+
+2) Guard tree
+   (root)
+   ├── a1  riskFlag = 0
+   └── a2  riskFlag = 1
+
+   เส้นทาง:
+   a1
+   a2
+
+3) รหัสเหตุการณ์ (event)
+   a1   sendinitiateTransfer_1
+   b1   receiveinitiateTransfer_1
+   c1   sendcheckFraud_2
+   d1   receivecheckFraud_2
+   e1   sendriskScore_3
+   f1   receiveriskScore_3
+   g1   sendpostTransfer_4  (guard a1)
+   g2   sendholdTransfer_6  (guard a2)
+   h1   receivepostTransfer_4  (guard a1)
+   h2   receiveholdTransfer_6  (guard a2)
+   i1   sendpostingDone_5  (guard a1)
+   j1   receivepostingDone_5  (guard a1)
+   k1   sendtransferStatus_7
+   l1   receivetransferStatus_7
+
+4) Event tree (ย่อ: event ที่ต่อกันเป็นเส้นตรงอยู่บรรทัดเดียว)
+   (root) INITIALISATION
+   └── a1 → b1 → c1 → d1 → e1 → f1
+       ├── g1 → h1 → i1 → j1 → k1 → l1
+       └── g2 → h2 → k1 → l1
+
+   Event tree (เต็ม)
+   (root) INITIALISATION
+   └── a1 sendinitiateTransfer_1
+       └── b1 receiveinitiateTransfer_1
+           └── c1 sendcheckFraud_2
+               └── d1 receivecheckFraud_2
+                   └── e1 sendriskScore_3
+                       └── f1 receiveriskScore_3
+                           ├── g1 sendpostTransfer_4  (guard a1)
+                           │   └── h1 receivepostTransfer_4  (guard a1)
+                           │       └── i1 sendpostingDone_5  (guard a1)
+                           │           └── j1 receivepostingDone_5  (guard a1)
+                           │               └── k1 sendtransferStatus_7
+                           │                   └── l1 receivetransferStatus_7
+                           └── g2 sendholdTransfer_6  (guard a2)
+                               └── h2 receiveholdTransfer_6  (guard a2)
+                                   └── k1 sendtransferStatus_7
+                                       └── l1 receivetransferStatus_7
+
+   เส้นทาง:
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g1 -> h1 -> i1 -> j1 -> k1 -> l1
+   a1 -> b1 -> c1 -> d1 -> e1 -> f1 -> g2 -> h2 -> k1 -> l1
